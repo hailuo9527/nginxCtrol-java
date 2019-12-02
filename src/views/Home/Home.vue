@@ -1,0 +1,305 @@
+<template>
+  <div style="height: 100%;width: 100%;overflow: auto; background-color: #333;justify-content: center;align-items: center">
+    <div class="father">
+      <div class="head">
+        <div class="left">
+          <h2>概览</h2>
+        </div>
+        <div class="right">
+          <ul>
+            <li
+              :class="number == index ? 'active' : 'disactive'"
+              v-for="(item,index) in items"
+              @click="change(index)"
+            >{{item}}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="content">
+        <div class="config common">
+          <div :class="active?'transition':''">
+            <span>
+              <Icon type="ios-settings" size="20" color="#ccc" @click="config=true" />
+            </span>
+            <h2>75%</h2>
+            <div class="configDes">Application Health Score</div>
+            <table width="290" border="0">
+              <tr>
+                <td>Succesful requests</td>
+                <td class="fromright">2</td>
+              </tr>
+              <tr>
+                <td>Request time (P95)</td>
+                <td class="fromright">2</td>
+              </tr>
+              <tr>
+                <td>Agent availability</td>
+                <td class="fromright">2</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="totalRequests common commonFive">
+          <div :class="active?'transition':''">
+            <h3>Total requests</h3>
+            <div class="commonUpLeft">
+              <h4>PAST {{items[number]}}</h4>
+              <span>5k</span>
+            </div>
+            <div class="commonUpRight">
+              <h4>PREVIOUS</h4>
+              <span>5k</span>
+            </div>
+            <div class="canvas">
+              <canvas id="canvas"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="http common commonFive">
+          <div :class="active?'transition':''">
+            <h3>HTTP 5xx errors</h3>
+            <div class="commonUpLeft">
+              <h4>PAST {{items[number]}}</h4>
+              <span>0</span>
+            </div>
+            <div class="commonUpRight">
+              <h4>PREVIOUS</h4>
+              <span>0</span>
+            </div>
+          </div>
+        </div>
+        <div class="requestTime common commonFive">
+          <div :class="active?'transition':''">
+            <h3>Request time (P95)</h3>
+            <div class="commonDownLeft">
+              <h4>PAST {{items[number]}}</h4>
+              <span>0.000</span>
+            </div>
+            <div class="commonDownRight">
+              <h4>PREVIOUS</h4>
+              <span>0.000</span>
+            </div>
+          </div>
+        </div>
+        <div class="traffic common commonFive">
+          <div :class="active?'transition':''">
+            <h3>Traffic</h3>
+            <div class="commonDownLeft">
+              <h4>PATH {{items[number]}}</h4>
+              <span>1111</span>
+            </div>
+            <div class="commonDownRight">
+              <h4>PREVIOUS</h4>
+              <span>1111</span>
+            </div>
+            <div class="canvas2">
+              <canvas id="canvas2"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="cpu common commonFive">
+          <div :class="active?'transition':''">
+            <h3>CPU usage</h3>
+            <div class="commonDownLeft">
+              <h4>PATH {{items[number]}}</h4>
+              <span>0</span>
+            </div>
+            <div class="commonDownRight">
+              <h4>PREVIOUS</h4>
+              <span>0</span>
+            </div>
+            <div class="canvas3">
+              <canvas id="canvas3"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <Modal v-model="config" title="Common Modal dialog box title">
+      <p>Content of dialog</p>
+      <p>Content of dialog</p>
+      <p>Content of dialog</p>
+    </Modal>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      active: "",
+      number: 0,
+      config: false,
+      items: ["1H", "4H", "1D", "2D", "1W"],
+      arr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    };
+  },
+  methods: {
+    change(index) {
+      this.number = index;
+      this.active = true;
+      var active = this.active;
+      setTimeout(this.changeAfter, 1000);
+    },
+    changeAfter() {
+      if (this.active) {
+        this.active = false;
+      }
+    },
+    //画布一
+    canvasOne() {
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
+      ctx.beginPath();
+      ctx.lineWidth = "3";
+      ctx.strokeStyle = "#01c864";
+      ctx.moveTo(0, 10);
+      var x = 0;
+      for (var y = 0; y < 10; y++) {
+        x += 30;
+        ctx.lineTo(x, Math.random()*this.arr.length);
+      }
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.lineWidth = "3";
+      ctx.strokeStyle = "grey";
+      ctx.moveTo(0, 10);
+      var x = 0;
+      for (var y = 0; y < 10; y++) {
+        x += 30;
+        ctx.lineTo(x, Math.random() * this.arr.length);
+      }
+      ctx.stroke();
+      setInterval(() =>{
+        canvas.setAttribute("height", 160);
+        ctx.beginPath();
+        ctx.lineWidth = "3";
+        ctx.strokeStyle = "#01c864";
+        ctx.moveTo(0, 10);
+        var a = 0;
+        for (var y = 0; y < 10; y++) {
+          a += 30;
+          ctx.lineTo(a, Math.random() * this.arr.length);
+        }
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.lineWidth = "3";
+        ctx.strokeStyle = "grey";
+        ctx.moveTo(0, 10);
+        var a = 0;
+        for (var y = 0; y < 10; y++) {
+          a += 30;
+          ctx.lineTo(a, Math.random() * this.arr.length);
+        }
+        ctx.stroke();
+      }, 5000);
+    },
+    //画布二
+    canvasTwo() {
+      var canvas = document.getElementById("canvas2");
+      var ctx = canvas.getContext("2d");
+      ctx.beginPath();
+      ctx.lineWidth = "3";
+      ctx.strokeStyle = "#01c864";
+      ctx.moveTo(0, 10);
+      var x = 0;
+      for (var y = 0; y < 10; y++) {
+        x += 30;
+        ctx.lineTo(x, Math.random() * this.arr.length);
+      }
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.lineWidth = "3";
+      ctx.strokeStyle = "grey";
+      ctx.moveTo(0, 10);
+      var x = 0;
+      for (var y = 0; y < 10; y++) {
+        x += 30;
+        ctx.lineTo(x, Math.random() * this.arr.length);
+      }
+      ctx.stroke();
+      setInterval(() => {
+        canvas.setAttribute("height", 160);
+        ctx.beginPath();
+        ctx.lineWidth = "3";
+        ctx.strokeStyle = "#01c864";
+        ctx.moveTo(0, 10);
+        var a = 0;
+        for (var y = 0; y < 10; y++) {
+          a += 30;
+          ctx.lineTo(a, Math.random() * this.arr.length);
+        }
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.lineWidth = "3";
+        ctx.strokeStyle = "grey";
+        ctx.moveTo(0, 10);
+        var a = 0;
+        for (var y = 0; y < 10; y++) {
+          a += 30;
+          ctx.lineTo(a, Math.random() * this.arr.length);
+        }
+        ctx.stroke();
+      }, 5000);
+    },
+    //画布三
+    canvasThree() {
+      var canvas = document.getElementById("canvas3");
+      var ctx = canvas.getContext("2d");
+      ctx.beginPath();
+      ctx.lineWidth = "3";
+      ctx.strokeStyle = "#01c864";
+      ctx.moveTo(0, 10);
+      var x = 0;
+      for (var y = 0; y < 10; y++) {
+        x += 30;
+        ctx.lineTo(x, Math.random() * 10);
+      }
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.lineWidth = "3";
+      ctx.strokeStyle = "grey";
+      ctx.moveTo(0, 10);
+      var x = 0;
+      for (var y = 0; y < 10; y++) {
+        x += 30;
+        ctx.lineTo(x, Math.random() * 10);
+      }
+      ctx.stroke();
+      setInterval(() => {
+        canvas.setAttribute("height", 160);
+        ctx.beginPath();
+        ctx.lineWidth = "3";
+        ctx.strokeStyle = "#01c864";
+        ctx.moveTo(0, 10);
+        var a = 0;
+        for (var y = 0; y < 10; y++) {
+          a += 30;
+          ctx.lineTo(a, Math.random() * 10);
+        }
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.lineWidth = "3";
+        ctx.strokeStyle = "grey";
+        ctx.moveTo(0, 10);
+        var a = 0;
+        for (var y = 0; y < 10; y++) {
+          a += 30;
+          ctx.lineTo(a, Math.random() * 10);
+        }
+        ctx.stroke();
+      }, 5000);
+    }
+  },
+  mounted() {
+    this.canvasOne();
+    this.canvasTwo();
+    this.canvasThree();
+  }
+};
+</script>
+
+<style lang="less" scoped>
+ @import "Home";
+</style>
