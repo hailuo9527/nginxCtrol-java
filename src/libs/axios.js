@@ -64,7 +64,7 @@ class HttpRequest {
           }
           break
         case 404:
-          window.location.href = '/404'
+         // window.location.href = '/404'
       }
       this.destroy(url)
       let errorInfo = error.response

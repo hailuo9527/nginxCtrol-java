@@ -1,173 +1,152 @@
 <template>
-  <div class="x-chart">
-    <div class="ngChart" v-for="item in dataList">
-      <div class="nc-tip">
-        <p>{{item.name}}</p>
-      </div>
-      <div class="ngChart-item" :id=item.id></div>
+  <div class="ngChart" >
+    <div class="nc-tip">
+      <p class="title">{{title}}</p>
+    </div>
+    <div class="ngChart-item" >
+      <ve-line :data="chartData" height="200px" :extend="chartExtend"  :data-empty="!chartData.rows.length" :settings="chartSettings" :loading="loading"></ve-line>
     </div>
   </div>
 </template>
-
 <script>
-  import HighCharts from 'highcharts';
-  import imgsrc from  "../../assets/images/logo.png"
+  import ChartOptions from './chartOptions'
   export default {
-    name: "my-chart",
-    data(){
-      return{
-        option:{
-          chart: {
-            height: 173,
-            type: 'line',
-            marginBottom:60
-          },
-          title: {
-            text: null
-          },
-          subtitle: {
-            text: null
-          },
-          credits: {
-            enabled: false
-          },
-          xAxis: {
-            lineColor: 'transparent',
-            gridLineColor: 'transparent',
-            crosshair: true, //十字准星线
-            title: {
-              text: null
-            }
-          },
-          yAxis: {
-            lineColor: 'transparent',
-            gridLineColor: 'transparent',
-            title: {
-              text: null
-            }
-          },
-          legend: {
-            useHTML:true,// 设置允许使用 html
-            layout: 'horizontal',
-            activeColor: '#3E576F',
-            // 使 legend 自带的 symbol 显示为 none 效果
-            symbolHeight:0.01,
-            symbolWidth:0.01,
-            symbolRadius:0.01,
-            labelFormatter(){
-              // 格式化 legend 的 label
-              // 这里的内容根据需求自行编写
-              let img = '\<\img src = "'+ imgsrc +'" width="14px" height="14px"\>'
-              return img + ' ' + this.name
+    name: 'myChart',
+    props: {
+      chartData: {
+        type: Object,
+        default:() => {
 
-            },
-            floating: true,
-            animation: true,
-            arrowSize: 12,
-            backgroundColor: '#FFFFFF',
-            align: 'left',
-            verticalAlign: 'bottom',
-            y: 130,
-            x: 0,
-            itemStyle:{
-              lineHeight:'14px',
-              fontSize:'12px',
-              letterSpacing:0,
-              color:'#666666',
-              fontWeight:'lighter'
-            }
-          },
-          plotOptions: {
-            series: {
-              label: {
-                connectorAllowed: false
-              },
-              pointStart: 2010
-            }
-          },
-          series: [],
-          responsive: {
-            rules: [{
-              condition: {
-                maxWidth: 1000
-              },
-              chartOptions: {
-                legend: {
-                  layout: 'horizontal',
-                  align: 'left',
-                  verticalAlign: 'horizontal'
-                }
-              }
-            }]
-          },
         },
-      }
-    },
-    props:{
-      dataList:{
-        type: Array
-      }
-    },
-    methods:{
-      fresh:function(){
-        this.$nextTick(function(){
-          let lg= this.dataList.length;
-          for (let i=0;i<lg;i++){
-            this.dataList[i].option={};
-            this.dataList[i].option=this.option;
-            this.dataList[i].option.series=this.dataList[i].data;
-            HighCharts.chart(this.dataList[i].id,this.dataList[i].option)
+      },
+      chartSettings: {
+        type: Object,
+        default:  ()=>{
+          return {
+            dimension : ['日期']
           }
-        })
+        }
+      },
+      loading: {
+        type: Boolean,
+        default: false,
+      },
+      color: {
+        type: Array,
+        default: () => {
+          return ['#333333','#5BA9FF', '#f96cb3', '#030ddd', '#ff7b7b','#ff7070', '#9bccfd','#fc9487','#59d5d0']
+        }
+      },
+      title: {
+        type: String,
+        default: '标题'
       }
     },
-    computed:{
+    data(){
 
-    },
-    watch:{
+      this.chartExtend = {
+        // color: ['#333333','#5BA9FF', '#f96cb3', '#030ddd', '#ff7b7b','#ff7070', '#9bccfd','#fc9487','#59d5d0'],
+        legend: {
+          left: 30,
+          bottom: 20,
+          icon: 'circle'
+        },
+        color: this.color,
+        grid: {
+          top: 20,
+          left: 10,
+          right: 20,
 
+          //height: 175
+        },
+        tooltip: {
+          backgroundColor: 'rgba(255,255,255,0.7)',
+          borderColor: '#333',
+          textStyle: {
+            color: '#333',
+          },
+          padding: 10,
+          extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);border-radius: 0;'
+        },
+        yAxis: {
+          splitLine: {
+            show: false
+          },
+          nameGap: 0,
+          splitNumber: 3,
+        },
+        xAxis: {
+          axisPointer: {
+            type: 'line',
+            lineStyle: {
+              type: 'dotted'
+            }
+          },
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: '#e9e9e9'
+            }
+          },
+          axisLabel: {
+            color: '#8f8f8f'
+          },
+          boundaryGap: false,
+        },
+        series: {
+          type: 'line',
+          smooth: false,
+          symbol: 'circle',
+          symbolSize: 2,
+          showSymbol: false,
+          lineStyle: {
+            width: 1.5
+          },
+          markPoint: {
+            symbol: 'circle'
+          }
+        }
+      }
+
+      return {
+
+      }
     },
-    mounted() {
-      this.fresh()
-    }
   }
 </script>
-
-<style scoped>
-  @import "my-chart.less";
-  .x-chart{
-
-  }
-  .highcharts-container{
-    width: 100%;
-  }
+<style lang="less" scoped>
   .ngChart{
-    padding: 10px;
+    //padding: 10px;
     margin-top: 20px;
     width: 50%;
-    height: 232px;
+    //height: 240px;
     display: block;
     float: left;
-    background: #f8f8f8;
+    background: #fff;
+    box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.15);
   }
   .ngChart-item{
     position: relative;
     width: 100%;
-    height: 100%;
+    //height: 100%;
     text-align: left;
     line-height: normal;
     z-index: 0;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     display: inline-block;
+    background: #fff;
   }
   div.nc-tip{
+    background: #ffffff;
     width: 100%;
-    height: 30px;
-    border-bottom: 1px solid #ccc;
+    height: 50px;
+    padding: 5px 10px;
   }
   div.nc-tip p{
-    line-height: 30px;
-    font-size: 14px;
-    padding-bottom: 7px;
+    border-bottom: 1px solid #ccc;
+    line-height: 40px;
+    font-size: 12px;
+    color: #333;
+    font-weight: bold;
   }
 </style>

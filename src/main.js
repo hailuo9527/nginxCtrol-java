@@ -20,9 +20,11 @@ import config from '@/config'
 import * as vueExpand from '@/libs/vue-expand'
 import directives from "./plugins/directives.js"
 import components from "./plugins/components.js"
+import vCharts from "./plugins/v-charts.js"
 
 Vue.use(directives);
 Vue.use(components);
+Vue.use(vCharts);
 Vue.use(ViewUI);
 Vue.config.productionTip = false
 
