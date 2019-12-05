@@ -10,17 +10,17 @@
                         </h4>
                         <div class="report-section-box__table">
                             <Form ref="netConfigForm" :model="netConfig" :rules="netConfigRules" :label-width="130" label-position="left">
-                                <FormItem label="IP地址：" prop="L4_service_vip">
-                                    <Input type="text" v-model.trim="netConfig.L4_service_vip" placeholder="请输入IP地址"></Input>
+                                <FormItem label="IP地址：" prop="l4_ipaddr">
+                                    <Input type="text" v-model.trim="netConfig.l4_ipaddr" placeholder="请输入IP地址"></Input>
                                 </FormItem>
-                                <FormItem label="网关：" prop="L4_gateway">
-                                    <Input type="text" v-model.trim="netConfig.L4_gateway" placeholder="请输入网关数据"></Input>
+                                <FormItem label="网关：" prop="l4_gateway">
+                                    <Input type="text" v-model.trim="netConfig.l4_gateway" placeholder="请输入网关数据"></Input>
                                 </FormItem>
-                                <FormItem label="IP子网：" prop="L4_subnet_mask">
-                                    <Input type="text" v-model.trim="netConfig.L4_subnet_mask" placeholder="请输入IP子网"></Input>
+                                <FormItem label="IP子网：" prop="l4_subnet_mask">
+                                    <Input type="text" v-model.trim="netConfig.l4_subnet_mask" placeholder="请输入IP子网"></Input>
                                 </FormItem>
-                                <FormItem label="DNS地址：" prop="L4_dns">
-                                    <Input type="text" v-model.trim="netConfig.L4_dns" placeholder="请输入DNS服务地址"></Input>
+                                <FormItem label="DNS地址：" prop="l4_dns">
+                                    <Input type="text" v-model.trim="netConfig.l4_dns" placeholder="请输入DNS服务地址"></Input>
                                 </FormItem>
                             </Form>
 
@@ -40,7 +40,12 @@
                         <div class="report-section-box__table">
                             <p class="tip" v-if="!serviceConfigList.length">暂无配置，请点击新建配置</p>
                             <div class="service_list" v-if="serviceConfigList.length">
-                                <Table   max-height="500" :show-header="true" :columns="tableConfig" :data="serviceConfigList">
+                                <Table :loading="loading3"
+                                       max-height="500"
+                                       :show-header="true"
+                                       :columns="tableConfig"
+                                       @on-selection-change="selectedConfigs"
+                                       :data="serviceConfigList">
                                     <template slot-scope="{ row, index }" slot="action">
 
                                         <Icon type="ios-create" class=" icon modify" @click="modifyConfig(row)" size="20"/>
@@ -76,11 +81,11 @@
                                         <Option :value="item" v-for="item in load_balance_list" :key="item">{{item}}</Option>
                                     </Select>
                                 </FormItem>
-                                <FormItem label="服务IP：" prop="L7_server_ip">
-                                    <Input type="text" v-model.trim="newConfig.L7_server_ip" placeholder="请输入交付服务器IP地址"></Input>
+                                <FormItem label="服务IP：" prop="l7_server_ip">
+                                    <Input type="text" v-model.trim="newConfig.l7_server_ip" placeholder="请输入交付服务器IP地址"></Input>
                                 </FormItem>
-                                <FormItem label="服务权重：" prop="L7_server_weight">
-                                    <Input type="text" v-model.trim="newConfig.L7_server_weight" placeholder="请输入交付服务器权重"></Input>
+                                <FormItem label="服务权重：" prop="l7_server_weight">
+                                    <Input type="text" v-model.trim="newConfig.l7_server_weight" placeholder="请输入交付服务器权重"></Input>
                                 </FormItem>
                                 <FormItem label="会话保持：" prop="session_maintenance">
                                     <i-switch v-model="newConfig.session_maintenance" >
@@ -88,8 +93,8 @@
                                         <span slot="close">Off</span>
                                     </i-switch>
                                 </FormItem>
-                                <FormItem label="备注：" prop="L7_remarks">
-                                    <Input type="text" v-model.trim="newConfig.L7_remarks" placeholder="请输入备注，用于设置名称"></Input>
+                                <FormItem label="备注：" prop="l7_remarks">
+                                    <Input type="text" v-model.trim="newConfig.l7_remarks" placeholder="请输入备注，用于设置名称"></Input>
                                 </FormItem>
 
                             </Form>
@@ -104,13 +109,13 @@
 
             </div>
             <div class="save-bar">
-                <Button type="primary" shape="circle" >保存</Button>
+                <Button type="primary" :loading="loading2" shape="circle" @click="saveChange">保存</Button>
             </div>
         </div>
     </div>
 </template>
 <script>
-    import { getDeviceConfig, serviceConfig, getServiceConfig, removeServiceConfig } from "../../../api/L4";
+    import { selServerConfig, serviceConfig, getDeviceConfig, modifyDeviceConfig, delServerConfig, uptServerConfigStatus } from "../../../api/L4";
     import { ipaddressRules, dnsserRules, ipsubnetRules, gatewayRules } from "../../../libs/util";
 
     export default {
@@ -118,17 +123,17 @@
             return {
                 netConfig: {},
                 netConfigRules: {
-                    L4_service_vip: [
-                        {validator: ipaddressRules, trigger: 'blur'}
+                    l4_ipaddr: [
+                       // {validator: ipaddressRules, trigger: 'blur'}
                     ],
-                    L4_dns: [
-                        {validator: dnsserRules, trigger: 'blur'}
+                    l4_dns: [
+                      //  {validator: dnsserRules, trigger: 'blur'}
                     ],
-                    L4_subnet_mask: [
-                        {validator: ipsubnetRules, trigger: 'blur'}
+                    l4_subnet_mask: [
+                      //  {validator: ipsubnetRules, trigger: 'blur'}
                     ],
-                    L4_gateway: [
-                        {validator: gatewayRules, trigger: 'blur'}
+                    l4_gateway: [
+                      //  {validator: gatewayRules, trigger: 'blur'}
                     ]
                 },
                 showPremium: false,
@@ -139,13 +144,13 @@
                     load_balance: [
                         { required: true, message: '请选择方案', trigger: 'change' }
                     ],
-                    L7_server_ip: [
-                        { required: true, validator: ipaddressRules, message: '交付服务器IP地址不能为空', trigger: 'blur' }
+                    l7_server_ip: [
+                        { required: true, validator: ipaddressRules,  trigger: 'blur' }
                     ],
-                    L7_server_weight: [
+                    l7_server_weight: [
                         { required: true, message: '交付服务器权重不能为空', trigger: 'blur' }
                     ],
-                    L7_remarks: [
+                    l7_remarks: [
                         { required: true, message: '请填写备注', trigger: 'blur' }
                     ],
 
@@ -161,7 +166,7 @@
                     },
                     {
                         title: '配置列表',
-                        key: 'L7_remarks'
+                        key: 'l7_remarks'
                     },
                     {
                         title: 'Action',
@@ -171,40 +176,58 @@
                     }
 
                 ],
+                loading2: false, // 保存
+                loading3: false, // 加载业务配置
+                selection: [], // 已选中的业务配置
             }
         },
         methods: {
             /* 获取基本配置 */
             async getBaseConfig() {
-                let res = await getDeviceConfig({L4_code: this.$route.params.id})
+                let res = await getDeviceConfig({l4_code: this.$route.params.id})
                 // console.log(res)
                 if (this.asyncOk(res)) {
-                    this.netConfig = res.data.data
+                    this.netConfig = res.data.result
+                }
+            },
+            /* 修改基础配置 */
+            async changeBaseConfig() {
+                let json = {
+                    ...this.netConfig,
+                    l4_code: this.$route.params.id
+                }
+                let res = await modifyDeviceConfig(json)
+                //console.log(res)
+                if (this.asyncOk(res)) {
+                    this.$Message.success('保存成功!')
+                } else {
+                    this.$Message.error(res.data.result)
                 }
             },
             /* 获取业务配置 */
             async getServiceConfig() {
-                let res = await getServiceConfig({L4_code: this.$route.params.id})
+                this.loading3 = true
+                let res = await selServerConfig({l4_code: this.$route.params.id})
                 console.log(res)
                 if (this.asyncOk(res)) {
-                    this.serviceConfigList = res.data.data.service_conf_list || []
-                    //console.log(this.serviceConfigList)
+                    this.loading3 = false
+                    this.serviceConfigList = res.data.result || []
+
                 }
             },
             /* 新建或修改配置 */
-
             serviceConfig () {
                 this.$refs['newConfigForm'].validate((valid) => {
                     if (valid) {
                         let json = {
                             ...this.newConfig,
-                            L4_code: this.$route.params.id,
+                            l4_code: this.$route.params.id,
                         }
                         json.session_maintenance = this.newConfig.session_maintenance ? 'on' : 'off'
                         this.addNewConfigLoading = true
                         //console.log(json)
-                        let method = this.configMode ? 'put': 'post'
-                        serviceConfig(method, json).then(res => {
+                        let url = this.configMode ? '/uptServerConfig': '/insServerConfig'
+                        serviceConfig(url, json).then(res => {
                             // console.log(res)
                             if (this.asyncOk(res)) {
                                 this.$Message.success('操作成功！')
@@ -223,21 +246,55 @@
             },
             /* 删除配置 */
             async removeConfig(row, index) {
-                let res = await  removeServiceConfig({L4_service_id: row.L4_service_id}).then(res => {
+                this.loading3 = true
+                let res = await  delServerConfig({l4_service_id: row.l4_service_id}).then(res => {
                     // console.log(res)
                     if (this.asyncOk(res)) {
+                        this.loading3 = false
                         this.$Message.success('操作成功！')
                         this.modal = false
                         this.serviceConfigList.splice(index, 1);
                     }
                 })
             },
-            /* 修改配置 */
+            /* 修改业务配置 */
             modifyConfig(row) {
                 this.newConfig = row
                 this.newConfig.session_maintenance = row.session_maintenance === 'on'
                 this.modal = true
                 this.configMode = true
+            },
+            /* 选中的配置 */
+            selectedConfigs(selection) {
+                let arr = []
+                selection.map((item) => {
+                    arr.push(item.l4_service_id)
+                })
+                return arr
+            },
+            /* 保存业务配置状态 */
+            async uptServerConfigStatus() {
+                let res = await uptServerConfigStatus(this.selectedConfigs())
+            },
+            /* 保存修改 */
+            saveChange() {
+                this.$refs['netConfigForm'].validate((valid) => {
+                    if (valid) {
+                        this.loading2 = true
+                       // this.changeBaseConfig()
+                       // this.uptServerConfigStatus()
+                        let json = {
+                            ...this.netConfig,
+                            l4_code: this.$route.params.id
+                        }
+                        let p1 = modifyDeviceConfig(json)
+                        let p2 = uptServerConfigStatus(this.selectedConfigs())
+                        Promise.all([p1,p2]).then(res => {
+                            console.log(res)
+                        })
+
+                    }
+                })
             }
         },
         mounted() {

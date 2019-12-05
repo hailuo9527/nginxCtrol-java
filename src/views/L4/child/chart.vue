@@ -32,9 +32,9 @@
     },
     methods:{
       /* 获取cpu负载数据 */
-       getData(L4_code) {
+       getData(l4_code) {
          this.loading =true
-        let p1 = getCpuUsage({L4_code: L4_code, type: 1})
+        let p1 = getCpuUsage({l4_code: l4_code, type: 1})
          Promise.all([p1]).then(res => {
            console.log(res)
            this.loading = false
@@ -48,11 +48,11 @@
     },
     watch:{
       '$route'(val,oldVal) {
-        this.getData(this.$route.params.id)
+        //this.getData(this.$route.params.id)
       }
     },
     mounted() {
-      this.getData(this.$route.params.id)
+      //this.getData(this.$route.params.id)
       //this.getCpuUsage()
     }
   }

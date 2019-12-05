@@ -96,5 +96,5 @@ export function getLocationPathQuery () {
 
 /* 请求成功判断 */
 export function asyncOk(res) {
-    return res.data.message === 'ok'
+    return res.data.code === 'success'
 }

@@ -22,9 +22,10 @@ export default {
             return new Promise((resolve, reject) => {
                 commit('changeLoadingStatus', true)
                 getDeviceManage().then(res => {
-                    if (res.data.message === 'ok'){
-                        commit('setAsideList',res.data.data.L4_equip_list || [])
-                        commit('setActiveAside',res.data.data.L4_equip_list[0])
+                    //console.log(res)
+                    if (res.data.code === 'success'){
+                        commit('setAsideList',res.data.result || [])
+                        commit('setActiveAside',res.data.result[0])
                         commit('changeLoadingStatus', false)
                     }
                     resolve(res)

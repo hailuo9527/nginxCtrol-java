@@ -1,84 +1,93 @@
 import axios from '@/libs/api.request'
+
+
 /*
-*  L4设备 查询 管理
+*   添加L4设备
+*
 * */
+export const addDevice = ({ l4_code, l4_name, l4_remarks }) => {
+    return axios.request({
+        url: '/insConfiguration',
+        method: 'post',
+        data: {
+            l4_code, l4_name, l4_remarks
+        }
+    })
+}
+/*
+*   删除L4设备
+*
+* */
+export const removeDevice = ({ l4_code }) => {
+    return axios.request({
+        url: '/delConfiguration',
+        method: 'post',
+        params: {
+            l4_code
+        }
+    })
+}
+/* 查询设备 */
 export const getDeviceManage = () => {
     return axios.request({
-        url: `/equip_manage/v1_0/equip_manage/l4_equip_manage_view/`,
-        method: 'get'
+        url: '/selL4Info',
+        method: 'post',
     })
 }
-/*
-*  L4设备  管理  设备
-* */
-export const deviceManage = (method, data) => {
+/* 设备基础配置查询 */
+export const getDeviceConfig = ({ l4_code }) => {
     return axios.request({
-        url: `/equip_manage/v1_0/equip_manage/l4_equip_manage_view/`,
-        method: method,
+        url: '/selConfiguration',
+        method: 'post',
+        params: {
+            l4_code
+        }
+    })
+}
+/* 设备基础配置修改 */
+export const modifyDeviceConfig = (data) => {
+    return axios.request({
+        url: '/uptConfiguration',
+        method: 'post',
         data: data
     })
 }
-/*
-*  L4设备 基本配置查询
-* */
-export const getDeviceConfig = ({ L4_code }) => {
+/* 设备基础配置删除 */
+export const delServerConfig = ({ l4_service_id }) => {
     return axios.request({
-        url: `/equip_config/v1_0/equip_config/l4_equip_config_view/`,
-        method: 'get',
+        url: '/delServerConfig',
+        method: 'post',
         params: {
-            L4_code
+            l4_service_id
         }
     })
 }
-/*
-*  L4设备 配置 修改
-* */
-export const modifyDeviceConfig = ({ L4_code }) => {
+/* 查询业务配置 */
+export const selServerConfig = ({ l4_code }) => {
     return axios.request({
-        url: `/equip_config/v1_0/equip_config/l4_equip_config_view/`,
-        method: 'put',
-        data: {
-            L4_code
+        url: '/selServerConfig',
+        method: 'post',
+        params: {
+           l4_code
         }
     })
 }
 
-/*
-*  业务配置 查询
-*
-* */
-export const getServiceConfig = ({ L4_code }) => {
-    return axios.request({
-        url: `/service_conf/v1_0/service_conf/l4_service_conf_view/`,
-        method: 'get',
-        params: {
-            L4_code
-        }
-    })
-}
+/* 添加/修改 业务配置 */
 
-/*
-*  业务配置
-*
-* */
-export const serviceConfig = (method, data) => {
+export const serviceConfig = ( url, data ) => {
     return axios.request({
-        url: `/service_conf/v1_0/service_conf/l4_service_conf_view/`,
-        method: method,
+        url: url,
+        method: 'post',
         data: data
     })
 }
+/* 修改 业务配置状态 */
 
-/*
-*  业务配置 删除
-*
-* */
-export const removeServiceConfig = ({ L4_service_id }) => {
+export const uptServerConfigStatus = ( data ) => {
     return axios.request({
-        url: `/service_conf/v1_0/service_conf/l4_service_conf_view/`,
-        method: 'delete',
-        params: {
-            L4_service_id
-        }
+        url: '/uptServerConfigStatus',
+        method: 'post',
+        data: data
     })
 }

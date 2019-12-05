@@ -149,4 +149,15 @@
     color: #333;
     font-weight: bold;
   }
+  /deep/.v-charts-component-loading {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: hsla(0,0%,100%,.9);
+  }
 </style>

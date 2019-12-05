@@ -5,7 +5,7 @@
             <div class="content_right_scroll">
                 <div class="content_header">
                     <div class="header_title">
-                        <span>{{activeAside.L4_name}} <Icon class="icon" @click="openDrawer = true" type="md-settings" /></span>
+                        <span>{{activeAside.l4_name}} <Icon class="icon" @click="openDrawer = true" type="md-settings" /></span>
                         <Drawer title="Basic Drawer" placement="left" :closable="false" v-model="openDrawer">
                             <p>{{test}}</p>
                             <p>Some contents...</p>
@@ -16,7 +16,7 @@
                         <div class="tab">
                             <!--<router-link :to="`/L4/${$route.params.id}/nginx`" class="tab_item">nginx</router-link>-->
                            <!-- <router-link :to="`/L4/${$route.params.id}`" class="tab_item">系统</router-link>-->
-                            <router-link :to="`/L4/${$route.params.id}`" class="tab_item">{{activeAside.L4_name}}</router-link>
+                            <router-link :to="`/L4/${$route.params.id}`" class="tab_item">{{activeAside.l4_name}}</router-link>
                             <router-link :to="`/L4/${$route.params.id}/config`" class="tab_item">配置</router-link>
                         </div>
                     </div>

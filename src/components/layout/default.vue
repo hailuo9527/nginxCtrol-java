@@ -57,7 +57,7 @@
                     }
                 });
                 this.getAsideList().then(res => {
-                    if(res.data.message === 'ok') {
+                    if(res.data.code === 'success') {
                         this.loading = true
                         this.$Spin.hide();
                     }

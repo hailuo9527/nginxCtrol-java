@@ -40,8 +40,8 @@
         },
         watch: {
             '$route'(to, from) {
-                // console.log(to)
-                this.path = `/L4/${this.activeAside.L4_code}`
+                 console.log(to)
+                this.path = `/L4/${this.activeAside.l4_code}`
             }
         },
 
@@ -52,7 +52,9 @@
             }),
         },
         created() {
-            this.path = `/L4/${this.asideList[0].L4_code}`
+            if (!this.$route.params.id){  // 初始化route-link路径
+                this.path = `/L4/${this.activeAside.l4_code}`
+            }
         }
     }
 </script>
