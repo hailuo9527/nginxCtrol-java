@@ -190,7 +190,7 @@
                     this.netConfig = res.data.result
                 }
             },
-            /* 修改基础配置 */
+           /* /!* 修改基础配置 *!/
             async changeBaseConfig() {
                 let json = {
                     ...this.netConfig,
@@ -203,16 +203,19 @@
                 } else {
                     this.$Message.error(res.data.result)
                 }
-            },
+            },*/
             /* 获取业务配置 */
             async getServiceConfig() {
                 this.loading3 = true
                 let res = await selServerConfig({l4_code: this.$route.params.id})
-                console.log(res)
+               // console.log(res)
                 if (this.asyncOk(res)) {
                     this.loading3 = false
                     this.serviceConfigList = res.data.result || []
-
+                    this.serviceConfigList.map(item => {
+                        item._checked = item.status
+                    })
+                   // console.log(this.serviceConfigList)
                 }
             },
             /* 新建或修改配置 */
@@ -266,16 +269,20 @@
             },
             /* 选中的配置 */
             selectedConfigs(selection) {
+                if(!selection) return
                 let arr = []
                 selection.map((item) => {
-                    arr.push(item.l4_service_id)
+                    arr.push({
+                        l4_service_id: item.l4_service_id,
+                    })
                 })
-                return arr
+                console.log(arr)
+                this.selection = arr
             },
-            /* 保存业务配置状态 */
+           /* /!* 保存业务配置状态 *!/
             async uptServerConfigStatus() {
                 let res = await uptServerConfigStatus(this.selectedConfigs())
-            },
+            },*/
             /* 保存修改 */
             saveChange() {
                 this.$refs['netConfigForm'].validate((valid) => {
@@ -287,10 +294,22 @@
                             ...this.netConfig,
                             l4_code: this.$route.params.id
                         }
+
                         let p1 = modifyDeviceConfig(json)
-                        let p2 = uptServerConfigStatus(this.selectedConfigs())
+                        let p2 = uptServerConfigStatus(this.selection, {l4_code: this.$route.params.id})
                         Promise.all([p1,p2]).then(res => {
-                            console.log(res)
+                            this.loading2 = false
+                            res.map(item => {
+                                if(item.data.code !== 'success') {
+                                    this.$Message.error('保存失败！')
+                                   // this.loading2 = false
+                                    return
+                                }
+                            })
+
+                            this.$Message.success('保存成功！')
+                        }).catch(err => {
+                             console.log(err)
                         })
 
                     }
@@ -300,7 +319,6 @@
         mounted() {
             this.getBaseConfig()
             this.getServiceConfig()
-
         }
     }
 </script>

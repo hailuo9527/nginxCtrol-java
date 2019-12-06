@@ -84,10 +84,11 @@ export const serviceConfig = ( url, data ) => {
 }
 /* 修改 业务配置状态 */
 
-export const uptServerConfigStatus = ( data ) => {
+export const uptServerConfigStatus = ( data, { l4_code } ) => {
     return axios.request({
         url: '/uptServerConfigStatus',
         method: 'post',
-        data: data
+        data: data,
+        params: { l4_code }
     })
 }

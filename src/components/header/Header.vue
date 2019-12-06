@@ -35,12 +35,12 @@
         },
         methods: {
             dropEvent (data) {
-                console.log(data)
+                //console.log(data)
             }
         },
         watch: {
             '$route'(to, from) {
-                 console.log(to)
+                 //console.log(to)
                 this.path = `/L4/${this.activeAside.l4_code}`
             }
         },
