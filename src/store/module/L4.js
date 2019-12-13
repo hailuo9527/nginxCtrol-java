@@ -5,6 +5,10 @@ export default {
         activeAside: {},
         asideList: [],
         listLoading: false,
+        chartFilter: {
+            key: 1,
+            value: 4
+        }
     },
     mutations: {
         setActiveAside (state, item) {
@@ -15,6 +19,9 @@ export default {
         },
         changeLoadingStatus(state, data) {
             state.listLoading = data
+        },
+        changeChartFilter(state, data) {
+            state.chartFilter = data
         }
     },
     actions: {

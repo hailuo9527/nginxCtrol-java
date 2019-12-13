@@ -1,5 +1,5 @@
 {
-  "name": "nginx",
+  "name": "controller",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -22,6 +22,7 @@
     "vuex-persistedstate": "^2.7.0"
   },
   "devDependencies": {
+    "@babel/plugin-syntax-dynamic-import": "^7.7.4",
     "@vue/cli-plugin-babel": "^4.0.0",
     "@vue/cli-plugin-pwa": "^4.0.0",
     "@vue/cli-service": "^4.0.0",

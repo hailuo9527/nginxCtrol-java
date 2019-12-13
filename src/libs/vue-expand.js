@@ -98,3 +98,51 @@ export function getLocationPathQuery () {
 export function asyncOk(res) {
     return res.data.code === 'success'
 }
+
+/**
+ * 日期格式化
+ * @param value
+ * @param type
+ * @returns {*}
+ */
+export function formatTime(value, type) {
+    if (value == null||value==='') {
+        return null;
+    }
+
+    let dataTime = '';
+    let data = new Date();
+    data.setTime(value);
+    let year = data.getFullYear();
+    let month = data.getMonth() + 1;
+    let day = data.getDate();
+    let hour = data.getHours();
+    let minute = data.getMinutes();
+    let second = data.getSeconds();
+
+    if (hour < 10) {
+        hour = '0' + hour;
+    }
+
+    if (minute < 10) {
+        minute = '0' + minute;
+    }
+
+    if (second < 10) {
+        second = '0' + second;
+    }
+
+    if (type === 'YMD') {
+        dataTime = year + '-' + month + '-' + day;
+    } else if (type === 'YMDHMS') {
+        dataTime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+    } else if (type === 'HMS') {
+        dataTime = hour + ':' + minute + ':' + second;
+    } else if (type === 'YM') {
+        dataTime = year + '-' + month;
+    }
+    else if (type === 'MD') {
+        dataTime = month + '.' + day;
+    }
+    return dataTime;
+}

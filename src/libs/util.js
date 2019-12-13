@@ -1,9 +1,10 @@
 import Cookies from 'js-cookie'
 export const Util = {
     title:  function (title) {
-        title = title ? title : 'NgController';
+        title = title ? `NgController | ${title}` : 'NgController';
         window.document.title = title;
     },
+
 };
 
 const TOKEN_KEY = 'token'

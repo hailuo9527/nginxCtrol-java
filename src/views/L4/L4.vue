@@ -19,6 +19,7 @@
                             <router-link :to="`/L4/${$route.params.id}`" class="tab_item">{{activeAside.l4_name}}</router-link>
                             <router-link :to="`/L4/${$route.params.id}/config`" class="tab_item">配置</router-link>
                         </div>
+                        <apply-filter />
                     </div>
                 </div>
                 <router-view class="content_main"></router-view>
@@ -28,6 +29,7 @@
 </template>
 <script>
     import Aside from '@/components/aside/L4-aside.vue'
+    import applyFilter from '@/components/common/filter.vue'
     import { deviceManage } from "../../api/L4";
     import { mapState, mapMutations } from 'vuex'
     export default {
@@ -39,7 +41,7 @@
             }
         },
         components: {
-            Aside
+            Aside, applyFilter
         },
         methods: {
             ...mapMutations([
@@ -59,6 +61,8 @@
                 activeAside: state => state.L4.activeAside
             })
         },
+
+
 
         beforeRouteLeave (to, from, next) {
             // 导航离开该组件的对应路由时调用

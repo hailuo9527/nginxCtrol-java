@@ -1,23 +1,23 @@
+
 <template>
   <div class="ngChart" >
     <div class="nc-tip">
       <p class="title">{{title}}</p>
     </div>
     <div class="ngChart-item" >
-      <ve-line :data="chartData" height="200px" :extend="chartExtend"  :data-empty="!chartData.rows.length" :settings="chartSettings" :loading="loading"></ve-line>
+      <!--:data-empty="!chartData.rows.length"-->
+      <ve-line :data="chartData" height="200px" :extend="chartExtend"  :data-empty="!chartData.rows.length"  :settings="chartSettings" :loading="loading"></ve-line>
     </div>
   </div>
 </template>
 <script>
-  import ChartOptions from './chartOptions'
+  import { formatTime } from '../../libs/vue-expand.js'
   export default {
     name: 'myChart',
     props: {
       chartData: {
         type: Object,
-        default:() => {
-
-        },
+        default:() => {},
       },
       chartSettings: {
         type: Object,
@@ -43,7 +43,13 @@
       }
     },
     data(){
-
+     /* this.chartSettings = {
+        metrics: ['temp'],
+        dimension: ['data'],
+        labelMap: {
+          'temp': '系统',
+        },
+      },*/
       this.chartExtend = {
         // color: ['#333333','#5BA9FF', '#f96cb3', '#030ddd', '#ff7b7b','#ff7070', '#9bccfd','#fc9487','#59d5d0'],
         legend: {
@@ -60,13 +66,29 @@
           //height: 175
         },
         tooltip: {
-          backgroundColor: 'rgba(255,255,255,0.7)',
+          backgroundColor: 'rgba(255,255,255,0.9)',
           borderColor: '#333',
           textStyle: {
             color: '#333',
           },
           padding: 10,
-          extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);border-radius: 0;'
+          extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);border-radius: 0;',
+
+          formatter:  (item) =>{
+            // console.log(item)
+            let str = []
+            let value = formatTime(item[0].axisValue,'YMDHMS')
+            str.push(value)
+            str.push('<br />')
+            item.map(data => {
+              str.push(data.marker)
+              str.push(data.seriesName)
+              str.push(data.value[1])
+              str.push('<br />')
+            })
+
+            return str.join(' ')
+          }
         },
         yAxis: {
           splitLine: {
@@ -89,9 +111,14 @@
             }
           },
           axisLabel: {
-            color: '#8f8f8f'
+            color: '#8f8f8f',
+            formatter: function (value, index) {
+              let str = formatTime(value, 'MD')
+              return str
+            }
           },
           boundaryGap: false,
+
         },
         series: {
           type: 'line',
@@ -112,18 +139,25 @@
 
       }
     },
+    methods: {
+
+    },
+    mounted() {
+
+    }
   }
 </script>
 <style lang="less" scoped>
   .ngChart{
     //padding: 10px;
     margin-top: 20px;
-    width: 50%;
+    flex-basis: calc(50% - 12px);
+    max-width: calc(50% - 12px);
     //height: 240px;
     display: block;
     float: left;
     background: #fff;
-    box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 7px -1px rgba(0, 0, 0, 0.15);
   }
   .ngChart-item{
     position: relative;
@@ -143,13 +177,13 @@
     padding: 5px 10px;
   }
   div.nc-tip p{
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #f2f2f2;
     line-height: 40px;
     font-size: 12px;
     color: #333;
     font-weight: bold;
   }
-  /deep/.v-charts-component-loading {
+  /deep/.v-charts-component-loading,/deep/.v-charts-data-empty{
     position: absolute;
     left: 0;
     right: 0;
@@ -158,6 +192,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: hsla(0,0%,100%,.9);
+  }
+  /deep/.v-charts-data-empty{
     background-color: hsla(0,0%,100%,.9);
   }
 </style>
