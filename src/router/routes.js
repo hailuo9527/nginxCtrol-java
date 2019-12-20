@@ -29,7 +29,7 @@ let defaultRoutes = [
                     title: '首页'
                 },
 
-                component: () => import('@/views/Home/Home.vue')
+                component: () => import(/* webpackChunkName: "home" */ '@/views/Home/Home.vue')
             },
             {
                 path: '/L4/:id',
@@ -37,7 +37,7 @@ let defaultRoutes = [
                 meta: {
                     title: 'L4'
                 },
-                component: () => import('@/views/L4/L4.vue'),
+                component: () => import(/* webpackChunkName: "L4" */'@/views/L4/L4.vue'),
                 children: [
                     {
                         path: '',

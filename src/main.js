@@ -13,18 +13,17 @@ Vue.use(vView,{
 });*/
 
 
-import './theme/index.less'
+import './theme/index.less'  // 主题样式
 import '@/assets/icons/iconfont.css'
-import './index.less'
+import './index.less' // 全局样式
 import config from '@/config'
 import * as vueExpand from '@/libs/vue-expand'
 import directives from "./plugins/directives.js"
 import components from "./plugins/components.js"
-import vCharts from "./plugins/v-charts.js"
+// import vCharts from "./plugins/v-charts.js"
 
 Vue.use(directives);
 Vue.use(components);
-Vue.use(vCharts);
 Vue.use(ViewUI);
 Vue.config.productionTip = false
 

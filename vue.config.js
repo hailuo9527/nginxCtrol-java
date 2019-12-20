@@ -8,6 +8,13 @@ module.exports = {
         patterns: [path.resolve(__dirname, './src/assets/varibles.less')]
       }
     },
+    chainWebpack: config => {
+       /* config
+            .plugin('webpack-bundle-analyzer')
+            .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
+            .delete('prefetch')*/
+    },
+    productionSourceMap: false,
     devServer: {
         open: true,
         proxy: {
@@ -34,4 +41,17 @@ module.exports = {
         }
     },
     parallel: require('os').cpus().length > 1, // 构建时开启多进程处理babel编译
+    configureWebpack: config => ({
+        output: {
+            filename: 'js/[name].js',
+            chunkFilename: 'js/[name].js'
+        },
+        optimization: {
+            splitChunks: {
+                chunks: "all",
+
+            }
+        }
+    }),
+
 };

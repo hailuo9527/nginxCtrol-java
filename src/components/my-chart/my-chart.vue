@@ -11,9 +11,13 @@
   </div>
 </template>
 <script>
+  import VeLine from 'v-charts/lib/line.common'
   import { formatTime } from '../../libs/vue-expand.js'
   export default {
     name: 'myChart',
+    components: {
+      VeLine
+    },
     props: {
       chartData: {
         type: Object,
