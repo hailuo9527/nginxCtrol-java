@@ -37,7 +37,7 @@ let defaultRoutes = [
                 meta: {
                     title: 'L4'
                 },
-                component: () => import(/* webpackChunkName: "L4" */'@/views/L4/L4.vue'),
+                component: () => import(/* webpackChunkName: "L4" */ /* webpackPrefetch: true */'@/views/L4/L4.vue'),
                 children: [
                     {
                         path: '',

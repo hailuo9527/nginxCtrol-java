@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import './registerServiceWorker'
 import ViewUI from 'view-design'
-import 'view-design/dist/styles/iview.css'
+import './theme/index.less'  // 主题样式
 
 /*import vView from 'vue-view-lazy'
 Vue.use(vView,{
@@ -12,15 +12,13 @@ Vue.use(vView,{
  // loading:'../../static/images/loading.gif',
 });*/
 
-
-import './theme/index.less'  // 主题样式
 import '@/assets/icons/iconfont.css'
 import './index.less' // 全局样式
 import config from '@/config'
 import * as vueExpand from '@/libs/vue-expand'
 import directives from "./plugins/directives.js"
 import components from "./plugins/components.js"
-// import vCharts from "./plugins/v-charts.js"
+
 
 Vue.use(directives);
 Vue.use(components);

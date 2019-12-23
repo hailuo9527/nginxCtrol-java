@@ -64,7 +64,10 @@
                 this.open = false;
             },
             tabChange ( index) {
-
+                if (index !== 5) {
+                    this.handleClear()
+                    this.value = ''
+                }
                 switch (index) {
                     case 0:
                         this.changeChartFilter({key: index, value: 1})

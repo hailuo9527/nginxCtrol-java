@@ -14,7 +14,7 @@
 <script>
   import MyChart from '@/components/my-chart/my-chart.vue'
   import { getChartData } from "../../../api/L4-chart";
-
+  import { mapState } from 'vuex'
   export default {
     name: "chart",
     components: {
@@ -33,12 +33,16 @@
     methods:{
       /* 获取cpu负载数据 */
        getData(l4_code) {
+         let params = {
+           l4_code: l4_code, // 'b9ce850e8874492dbd20a3a3b8e2d225'
+           time: this.chartFilter.value
+         }
          this.loading =true
          Promise.all([
-           this.getChartData('/selL4CpuLoad'),
-           this.getChartData('/selL4Netflow'),
-           this.getChartData('/selL4CurrentTotalConnect'),
-           this.getChartData('/selL4CurrentTotalConnects'),
+           this.getChartData('/selL4CpuLoad', params),
+           this.getChartData('/selL4Netflow', params),
+           this.getChartData('/selL4CurrentTotalConnect', params),
+           this.getChartData('/selL4CurrentTotalConnects', params),
          ]).then(res => {
            //console.log(res)
            res.map((item, index) => {
@@ -113,7 +117,6 @@
                  break
 
              }
-
            })
 
 
@@ -125,19 +128,24 @@
          })
       },
       /* cpu负载 */
-      async getChartData (url) {
-        return  getChartData( url ,{l4_code: 'b9ce850e8874492dbd20a3a3b8e2d225', time: 24*7})
+      async getChartData (url, data) {
+        return  getChartData( url , data)
       },
       /* 网络 */
 
     },
     computed:{
-
+      ...mapState({
+        chartFilter:  state => state.L4.chartFilter
+      })
     },
     watch:{
       '$route'(val,oldVal) {
-        //this.getData(this.$route.params.id)
+        this.getData(this.$route.params.id)
       },
+      chartFilter() {
+        this.getData(this.$route.params.id)
+      }
     },
     mounted() {
       this.getData(this.$route.params.id)

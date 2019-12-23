@@ -2,12 +2,13 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import routes from './routes'
 
-import ViewUI from 'view-design'
-import 'view-design/dist/styles/iview.css'
+import { LoadingBar } from 'view-design'
+
 import { Util, getToken } from '@/libs/util'
 
 Vue.use(VueRouter);
-Vue.use(ViewUI);
+
+Vue.component("LoadingBar", LoadingBar)
 
 const router = new VueRouter({
   mode: 'history',
@@ -16,14 +17,14 @@ const router = new VueRouter({
 });
 
 // 全局路由钩子
-ViewUI.LoadingBar.config({
+LoadingBar.config({
   color: '#01c864',
   failedColor: '#f0ad4e',
   height: 3
 });
 const login = getToken()
 router.beforeEach((to, from, next) => {
-  ViewUI.LoadingBar.start();
+  LoadingBar.start();
   /*if (process.env.NODE_ENV === 'development') {
     console.log('开发模式')
   } else {
@@ -44,7 +45,7 @@ router.beforeEach((to, from, next) => {
 });
 
 router.afterEach((to, from, next) => {
-  ViewUI.LoadingBar.finish();
+  LoadingBar.finish();
   Util.title(to.meta.title);
   window.scrollTo(0, 0);
 });

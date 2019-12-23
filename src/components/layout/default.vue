@@ -5,6 +5,7 @@
             <Header/>
             <router-view class="content"/>
         </div>
+
         <!--<div class="layout_content" v-if="!loading">
             <Header/>
             <router-view class="content"/>
