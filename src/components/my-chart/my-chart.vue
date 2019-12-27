@@ -1,25 +1,33 @@
 
 <template>
-  <div class="ngChart" >
+  <div class="ngChart"  v-view-lazy="(e)=>firstShow(e)">
     <div class="nc-tip">
-      <p class="title">{{title}}</p>
+      <p class="title">{{data.title}}</p>
     </div>
     <div class="ngChart-item" >
       <!--:data-empty="!chartData.rows.length"-->
-      <ve-line :data="chartData" height="200px" :extend="chartExtend"  :data-empty="!chartData.rows.length"  :settings="chartSettings" :loading="loading"></ve-line>
+
+      <ve-line :data="chartData" height="200px" :extend="chartExtend"  :data-empty="!chartData.rows.length"  :settings="data.chartSettings" :loading="loading"></ve-line>
     </div>
   </div>
 </template>
 <script>
   import VeLine from 'v-charts/lib/line.common'
+  import 'v-charts/lib/style.css'
   import { formatTime } from '../../libs/vue-expand.js'
+  import { getChartData } from "../../api/L4-chart";
+  import { mapState } from 'vuex'
   export default {
     name: 'myChart',
     components: {
       VeLine
     },
     props: {
-      chartData: {
+      data: {
+        type: Object,
+        default: () => {}
+      }
+     /* chartData: {
         type: Object,
         default:() => {},
       },
@@ -44,7 +52,7 @@
       title: {
         type: String,
         default: '标题'
-      }
+      }*/
     },
     data(){
      /* this.chartSettings = {
@@ -61,7 +69,7 @@
           bottom: 20,
           icon: 'circle'
         },
-        color: this.color,
+        color: this.data.color,
         grid: {
           top: 20,
           left: 10,
@@ -140,11 +148,39 @@
       }
 
       return {
-
+        chartData: {
+          rows: []
+        },
+        loading: false
       }
     },
+    computed:{
+      ...mapState({
+        chartFilter:  state => state.L4.chartFilter
+      })
+    },
     methods: {
-
+      firstShow(e){
+        // console.log(e)
+        this.getData()
+      },
+      async getData() {
+        let params = {
+          l4_code: this.$route.params.id, // 'b9ce850e8874492dbd20a3a3b8e2d225'
+          time: this.chartFilter.value
+        }
+        try {
+          this.loading = true
+          let res = await getChartData( this.data.url , {...params})
+          // console.log(res)
+          if (this.asyncOk(res)){
+            this.chartData.rows = res.data.result || []
+            this.loading = false
+          }
+        } catch (e) {
+          console.log(e)
+        }
+      },
     },
     mounted() {
 
@@ -200,5 +236,8 @@
   }
   /deep/.v-charts-data-empty{
     background-color: hsla(0,0%,100%,.9);
+  }
+  /deep/.v-charts-component-loading .path{
+    stroke: #000;
   }
 </style>

@@ -6,11 +6,11 @@ import './registerServiceWorker'
 import ViewUI from 'view-design'
 import './theme/index.less'  // 主题样式
 
-/*import vView from 'vue-view-lazy'
+import vView from 'vue-view-lazy'
 Vue.use(vView,{
   //error:'../../static/images/loading.png',
- // loading:'../../static/images/loading.gif',
-});*/
+  loading:'../../static/images/loading.gif',
+});
 
 import '@/assets/icons/iconfont.css'
 import './index.less' // 全局样式
@@ -18,7 +18,6 @@ import config from '@/config'
 import * as vueExpand from '@/libs/vue-expand'
 import directives from "./plugins/directives.js"
 import components from "./plugins/components.js"
-
 
 Vue.use(directives);
 Vue.use(components);

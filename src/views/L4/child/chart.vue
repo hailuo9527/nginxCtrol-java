@@ -1,19 +1,27 @@
 <template>
-  <div class="x-chart">
-    <MyChart
+  <div class="x-chart" v-if="reload">
+    <!--<MyChart
             v-for="(item, index) in list"
             :key ='index'
             :chartData = "item.chartData"
-            :loading="loading || item.loading"
+            :loading="item.loading"
             :title="item.title"
             :chartSettings="item.chartSettings"
-            :color="item.color"/>
+            v-view-lazy="(e)=>firstShow(e,index,item.url)"
+
+            :color="item.color"/>-->
+    <MyChart
+            v-for="(item, index) in list"
+            :key ='index'
+            :data ='item'
+            />
   </div>
 </template>
 
 <script>
   import MyChart from '@/components/my-chart/my-chart.vue'
   import { getChartData } from "../../../api/L4-chart";
+  import configList from './chartConfigList'
   import { mapState } from 'vuex'
   export default {
     name: "chart",
@@ -23,16 +31,36 @@
     data(){
 
       return {
-        list: [
-        ],
+        list: configList,
         loading: false,
-
-    }
+        reload: true
+      }
     },
 
     methods:{
+      /* 第一次出现在屏幕中 */
+      firstShow (e,index,url) {
+        this.getData(index,url)
+      },
       /* 获取cpu负载数据 */
-       getData(l4_code) {
+      async getData(index, url) {
+        let params = {
+          l4_code: this.$route.params.id, // 'b9ce850e8874492dbd20a3a3b8e2d225'
+          time: this.chartFilter.value
+        }
+        try {
+          this.list[index].loading = true
+          let res = await getChartData( url , {...params})
+         // console.log(res)
+          if (this.asyncOk(res)){
+            this.list[index].chartData.rows = res.data.result || []
+            this.list[index].loading = false
+          }
+        } catch (e) {
+          console.log(e)
+        }
+      },
+       /*getData(l4_code) {
          let params = {
            l4_code: l4_code, // 'b9ce850e8874492dbd20a3a3b8e2d225'
            time: this.chartFilter.value
@@ -126,13 +154,19 @@
          }).catch(err => {
            console.log(err)
          })
-      },
+      },*/
       /* cpu负载 */
       async getChartData (url, data) {
         return  getChartData( url , data)
       },
       /* 网络 */
-
+      /* 更新组件 */
+      updateComponent() {
+        this.reload = false
+        this.$nextTick(()=> {
+          this.reload = true
+        })
+      }
     },
     computed:{
       ...mapState({
@@ -141,15 +175,18 @@
     },
     watch:{
       '$route'(val,oldVal) {
-        this.getData(this.$route.params.id)
+        // this.getData(this.$route.params.id)
+       this.updateComponent()
       },
       chartFilter() {
-        this.getData(this.$route.params.id)
+        // this.getData(this.$route.params.id)
+        this.updateComponent()
       }
     },
     mounted() {
-      this.getData(this.$route.params.id)
+      //this.getData(this.$route.params.id)
       //this.getCpuUsage()
+
     }
   }
 </script>
