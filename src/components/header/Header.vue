@@ -7,6 +7,9 @@
             <div class="header_nav_item">
                 <router-link class="header_nav_item_label" :to="path">L4</router-link>
             </div>
+            <div class="header_nav_item">
+                <router-link class="header_nav_item_label" to="/L7/123">L7</router-link>
+            </div>
         </div>
 
         <div class="profile">
@@ -40,8 +43,14 @@
         },
         watch: {
             '$route'(to, from) {
-                 //console.log(to)
-                this.path = `/L4/${this.activeAside.l4_code}`
+                
+                if (to.path.search('/L4') !== -1) {
+                    this.path = `/L4/${this.activeAside.l4_code}`
+                } else if (to.path.search('/L7') !== -1) {
+                    console.log('l7')
+                }
+               
+            
             }
         },
 
@@ -52,7 +61,7 @@
             }),
         },
         created() {
-            if (!this.$route.params.id){  // 初始化route-link路径
+            if (!this.$route.params.L4){  // 初始化route-link路径
                 this.path = `/L4/${this.activeAside.l4_code}`
             }
         }

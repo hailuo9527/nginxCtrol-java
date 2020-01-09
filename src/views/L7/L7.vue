@@ -16,10 +16,11 @@
                         <div class="tab">
                             <!--<router-link :to="`/L4/${$route.params.id}/nginx`" class="tab_item">nginx</router-link>-->
                            <!-- <router-link :to="`/L4/${$route.params.id}`" class="tab_item">系统</router-link>-->
-                            <router-link :to="`/L4/${$route.params.id}`" class="tab_item">{{activeAside.l4_name}}</router-link>
-                            <router-link :to="`/L4/${$route.params.id}/config`" class="tab_item">配置</router-link>
+                            <router-link to="/L7/123" class="tab_item">L7-test</router-link>
+                            <router-link to="/L7/123/config" class="tab_item">Load Balancing</router-link>
+                            <router-link to="/L7/123/analysis" class="tab_item">Analys</router-link>
                         </div>
-                        <apply-filter v-if="$route.name === 'L4-chart'"/>
+                        <apply-filter v-if="$route.name === 'L7-chart'"/>
                     </div>
                 </div>
                 <router-view class="content_main"></router-view>
@@ -74,6 +75,6 @@
     }
 </script>
 <style lang="less" scoped>
-    @import "L4";
+    @import "../L4/L4";
 
 </style>

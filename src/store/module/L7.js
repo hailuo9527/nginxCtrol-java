@@ -1,4 +1,4 @@
-import { getDeviceManage } from "../../api/L4";
+
 
 export default {
     state: {
@@ -31,8 +31,8 @@ export default {
                 getDeviceManage().then(res => {
                     // console.log(res)
                     if (res.data.code === 'success'){
-                        commit('setAsideList',res.data.result || [])
-                        commit('setActiveAside',res.data.result[0])
+                        commit('setAsideList', res.data.result || [])
+                        commit('setActiveAside', res.data.result[0])
                         commit('changeLoadingStatus', false)
                     }
                     resolve(res)

@@ -1,0 +1,13 @@
+<template>
+    <div class="L7_config">
+        <L7Config></L7Config>    
+    </div>
+</template>
+<script>
+import L7Config from '@/components/common/L7-config.vue'
+export default {
+    components: {
+        L7Config
+    }
+}
+</script>

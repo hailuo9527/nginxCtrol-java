@@ -15,7 +15,7 @@
         <div class="aside-list">
             <div class="aside-list-wrap">
                 <div class="aside-item"
-                     :class="item.l4_code === $route.params.L4 ? 'active' : ''"
+                     :class="item.l4_code === $route.params.id ? 'active' : ''"
                      @click="changeAside(item)"
                      v-for="(item, index) in asideList" :key="item.l4_code">
                     <div class="title">
@@ -134,9 +134,9 @@
             },
         },
         created() {
-            if (this.$route.params.L4) {
+            if (this.$route.params.id) {
                 this.asideList.map((item) => {
-                    if(item.l4_code === this.$route.params.L4) {
+                    if(item.l4_code === this.$route.params.id) {
                         this.setActiveAside(item)
                     }
                 })

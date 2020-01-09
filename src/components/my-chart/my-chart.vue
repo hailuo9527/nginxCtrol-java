@@ -7,7 +7,7 @@
     <div class="ngChart-item" >
       <!--:data-empty="!chartData.rows.length"-->
 
-      <ve-line :data="chartData" height="200px" :extend="chartExtend"  :data-empty="!chartData.rows.length"  :settings="data.chartSettings" :loading="loading"></ve-line>
+      <ve-line :data="chartData" height="200px" :extend="chartExtend"   :data-empty="!chartData.rows[0]"  :settings="data.chartSettings" :loading="loading"></ve-line>
     </div>
   </div>
 </template>
@@ -26,42 +26,10 @@
       data: {
         type: Object,
         default: () => {}
-      }
-     /* chartData: {
-        type: Object,
-        default:() => {},
       },
-      chartSettings: {
-        type: Object,
-        default:  ()=>{
-          return {
-            dimension : ['日期']
-          }
-        }
-      },
-      loading: {
-        type: Boolean,
-        default: false,
-      },
-      color: {
-        type: Array,
-        default: () => {
-          return ['#333333','#5BA9FF', '#f96cb3', '#030ddd', '#ff7b7b','#ff7070', '#9bccfd','#fc9487','#59d5d0']
-        }
-      },
-      title: {
-        type: String,
-        default: '标题'
-      }*/
+      index: Number
     },
     data(){
-     /* this.chartSettings = {
-        metrics: ['temp'],
-        dimension: ['data'],
-        labelMap: {
-          'temp': '系统',
-        },
-      },*/
       this.chartExtend = {
         // color: ['#333333','#5BA9FF', '#f96cb3', '#030ddd', '#ff7b7b','#ff7070', '#9bccfd','#fc9487','#59d5d0'],
         legend: {
@@ -107,7 +75,7 @@
             show: false
           },
           nameGap: 0,
-          splitNumber: 3,
+          splitNumber: 3
         },
         xAxis: {
           axisPointer: {
@@ -154,33 +122,34 @@
         loading: false
       }
     },
-    computed:{
-      ...mapState({
-        chartFilter:  state => state.L4.chartFilter
-      })
-    },
+    // computed:{
+    //   ...mapState({
+    //     chartFilter:  state => state.L4.chartFilter
+    //   })
+    // },
     methods: {
       firstShow(e){
         // console.log(e)
-        this.getData()
+        this.$emit('firstShowHandle',{ index: this.index, url: this.data.url })
+        //this.getData()
       },
-      async getData() {
-        let params = {
-          l4_code: this.$route.params.id, // 'b9ce850e8874492dbd20a3a3b8e2d225'
-          time: this.chartFilter.value
-        }
-        try {
-          this.loading = true
-          let res = await getChartData( this.data.url , {...params})
-          // console.log(res)
-          if (this.asyncOk(res)){
-            this.chartData.rows = res.data.result || []
-            this.loading = false
-          }
-        } catch (e) {
-          console.log(e)
-        }
-      },
+      // async getData() {
+      //   let params = {
+      //     l4_code: this.$route.params.id, // 'b9ce850e8874492dbd20a3a3b8e2d225'
+      //     time: this.chartFilter.value
+      //   }
+      //   try {
+      //     this.loading = true
+      //     let res = await getChartData( this.data.url , {...params})
+      //      console.log(res)
+      //     if (this.asyncOk(res)){
+      //       this.chartData.rows = res.data.result || []
+      //       this.loading = false
+      //     }
+      //   } catch (e) {
+      //     console.log(e)
+      //   }
+      // },
     },
     mounted() {
 
