@@ -32,7 +32,7 @@ let defaultRoutes = [
                 component: () => import(/* webpackChunkName: "home" */ '@/views/Home/Home.vue')
             },
             {
-                path: '/L4/:id',
+                path: '/L4/:L4',
                 // name: 'L4',
                 meta: {
                     title: 'L4'
@@ -63,6 +63,33 @@ let defaultRoutes = [
                         },
                         component: () => import('@/views/L4/child/config.vue'),
                     },
+                ]
+            },
+            {
+                path: '/L7/:L7',
+                // name: 'L4',
+                meta: {
+                    title: 'L7'
+                },
+                component: () => import(/* webpackChunkName: "L4" */ /* webpackPrefetch: true */'@/views/L7/L7.vue'),
+                children: [
+                    {
+                        path: '',
+                        name: 'L7-chart',
+                        meta: {
+                            title: 'L7-chart'
+                        },
+                        component: () => import('@/views/L7/child/chart.vue')
+                    },
+                    {
+                        path: 'config',
+                        name: 'L7-config',
+                        meta: {
+                            title: 'L7-config'
+                        },
+                        component: () => import('@/views/L7/child/config.vue')
+                    },
+                   
                 ]
             }
         ]
