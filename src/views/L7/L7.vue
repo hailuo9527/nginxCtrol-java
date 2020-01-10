@@ -78,6 +78,8 @@
 <style lang="less" scoped>
     @import "../L4/L4";
     .content_main{
-        height: 100%;
+        height: calc(100%);
+        padding: 98px 10px 0 10px !important;
+        //box-sizing: border-box;
     }
 </style>
