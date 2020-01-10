@@ -21,6 +21,7 @@
                             <router-link to="/L7/123/analysis" class="tab_item">Analys</router-link>
                         </div>
                         <apply-filter v-if="$route.name === 'L7-chart'"/>
+                        <apply-filter />
                     </div>
                 </div>
                 <router-view class="content_main"></router-view>
