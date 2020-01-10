@@ -77,5 +77,7 @@
 </script>
 <style lang="less" scoped>
     @import "../L4/L4";
-
+    .content_main{
+        height: 100%;
+    }
 </style>

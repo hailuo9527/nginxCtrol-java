@@ -1,10 +1,8 @@
 <template>
-  <!--<Poptip word-wrap width="200" trigger="hover" :content="content">
-    <Icon style="font-weight: bold;" size="14" color="" type="ios-help-circle-outline" />
-  </Poptip>-->
+
   <Tooltip :content="content" :placement="placement" max-width="200" theme="light" >
-    <Icon class="handle" size="18"  type="md-information-circle" :color="color"/>
-    
+    <Icon class="handle" size="20"  type="md-information-circle" :color="color"/>
+
   </Tooltip>
 </template>
 <script>
@@ -21,7 +19,7 @@ export default {
     },
     color: {
       type: String,
-      default: '#d8d8d8'
+      default: '#333'
     }
   }
 }
@@ -30,9 +28,10 @@ export default {
   .handle{
     font-weight: bold;
     cursor: pointer;
-    transition: all .3s;
+    opacity: .2;
+    transition: all .1s;
     &:hover{
-      color: #333;
+      opacity: 1!important;
     }
   }
 </style>
