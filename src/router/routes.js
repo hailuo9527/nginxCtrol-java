@@ -102,7 +102,7 @@ let defaultRoutes = [
                                 meta: {
                                     title: 'reports'
                                 },
-                                component: () => import('@/views/L7/child/analysis/main.vue')
+                                component: () => import('@/views/L7/child/analysis/main/main.vue')
                             },
                             {
                                 path: 'overview',
