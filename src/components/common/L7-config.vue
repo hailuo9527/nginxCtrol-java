@@ -98,6 +98,475 @@
                 </div>
             </div>
         </div>
+        <div class="l7_config_column column_body column_body_upstream">
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div><div class="upstream-groups">
+            <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                <span>123</span>
+                <Icon type="md-create" class="ctrl-list-item__edit" />
+                <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+            </div>
+            <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                <span>123</span>
+                <Icon type="md-create" class="ctrl-list-item__edit" />
+                <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+            </div>
+        </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="upstream-groups">
+                <div class="ctrl-list-item ctrl-list-item_corners list-selected">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+                <div class="ctrl-list-item ctrl-list-item_corners">
+                    <span class="ctrl-list-item__corner-left">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                    <span>123</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <span class="ctrl-list-item__corner-right">
+                        <span class="ctrl-list-item__corner-inner"></span>
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 关系连线 canvas -->
+        <div class="ctrl-relations-canvas">
+            <canvas width="3000" height="4000" style="width: 2400px; height: 3200px;"></canvas>
+        </div>
     </div>
 </template>
 <script>
@@ -114,18 +583,17 @@ export default {
         display: flex;
         flex-wrap: wrap;
         height: 100%;
+
         .l7_config_column{
             color: #333;
             width: calc(25%);
-            padding-right: 30px;
+            padding: 0 20px;
             box-sizing: border-box;
             position: relative;
             height: calc(100% - 56px);
             overflow-y: overlay;
             overflow-x: hidden;
-            &:nth-child(4n){
-                padding-right: 0;
-            }
+
         }
         .column_header{
             line-height: 54px;
@@ -158,7 +626,8 @@ export default {
             }
         }
         .column_body{
-            margin-top: 20px;
+            //margin-top: 20px;
+            padding-top: 20px;
             .servers{
                 .server_item{
                     background: #ffffff;
@@ -296,7 +765,7 @@ export default {
                     top: -1px;
                     transform: rotateY(-45deg);
                     width: 19px;
-                    height: 35px;
+                    height: 34px;
                     overflow: hidden;
                     visibility: hidden;
                     z-index: 999;
@@ -340,6 +809,9 @@ export default {
                 .ctrl-list-item__corner-inner {
                     background: #2a79f8!important;
                 }
+                .ctrl-list-item__corner-left, .ctrl-list-item__corner-right{
+                    visibility: visible;
+                }
             }
         }
         .column_body_servers{
@@ -347,8 +819,16 @@ export default {
         }
         .column_body_upstream{
             padding-bottom: 70px;
-            overflow-x: visible;
-            overflow-y: inherit;
+        }
+        .ctrl-relations-canvas {
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            overflow: hidden;
+            z-index: 0;
         }
     }
 </style>

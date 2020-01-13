@@ -63,20 +63,20 @@ let defaultRoutes = [
                         },
                         component: () => import('@/views/L4/child/config.vue'),
                     },
-                    
+
                 ]
             },
             {
                 path: '/L7/:L7',
-                // name: 'L4',
+                //name: 'L7',
                 meta: {
                     title: 'L7'
                 },
-                component: () => import(/* webpackChunkName: "L4" */ /* webpackPrefetch: true */'@/views/L7/L7.vue'),
+                component: () => import(/* webpackChunkName: "L4" */ '@/views/L7/L7.vue'),
                 children: [
                     {
                         path: '',
-                        name: 'L7-chart',
+                        name: 'L7Chart',
                         meta: {
                             title: 'L7-chart'
                         },
@@ -84,7 +84,7 @@ let defaultRoutes = [
                     },
                     {
                         path: 'config',
-                        name: 'L7-config',
+                        name: 'L7Config',
                         meta: {
                             title: 'L7-config'
                         },
@@ -113,8 +113,8 @@ let defaultRoutes = [
                                 component: () => import('@/views/L7/child/analysis/overview.vue')
                             },
                         ]
-                            
-                        
+
+
                     },
                 ]
             },
@@ -142,7 +142,7 @@ let defaultRoutes = [
                         },
                         component: () => import('@/views/L7/child/config.vue')
                     },
-                   
+
                 ]
             }
         ]
