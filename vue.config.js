@@ -27,7 +27,8 @@ module.exports = {
                     '^/api':''
                 }
             }
-        }
+        },
+        hot: true,
     },
     filenameHashing: true,
     // css的处理

@@ -1,6 +1,6 @@
 <template>
 
-  <Tooltip :content="content" :placement="placement" max-width="200" theme="light" >
+  <Tooltip :content="content" :placement="placement" max-width="200" :transfer="true" theme="light" >
     <Icon class="handle" size="20"  type="md-information-circle" :color="color"/>
 
   </Tooltip>
