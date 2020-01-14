@@ -93,14 +93,7 @@ export function getLocationPathQuery () {
 
 /* 字符串去空格 */
 
-/* 遍历对象 */
-export function objToArray (obj) {
-    let arr = []
-    Object.keys(obj).forEach(key => {
-        arr[key] = obj[key]
-    })
-    return arr
-}
+
 /* 请求成功判断 */
 export function asyncOk(res) {
     return res.data.code === 'success'

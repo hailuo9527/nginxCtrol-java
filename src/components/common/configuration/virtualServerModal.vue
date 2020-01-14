@@ -93,17 +93,17 @@
             },
 
             handleSubmit () {
-                //console.log( this.objToArray(this.serverForm))
-                let arr = this.objToArray(this.serverForm)
-                arr.forEach((item) => {
-                    console.log(item)
-                    if (item.switch) {
+                // 验证是否有未确认的更改
+                Object.keys(this.serverForm).map((item) => {
+                    if (this.serverForm[item].switch){
                         this.errorTip = {
                             show: true,
-                            value: item.name
+                            value: item
                         }
+                        return
                     }
                 })
+                console.log(this.serverForm.domain.name)
 
             },
         }

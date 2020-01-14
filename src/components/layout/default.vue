@@ -19,7 +19,7 @@
         name: 'layout_default',
         data () {
           return {
-              loading: false
+              loading: true
           }
         },
         components: {
@@ -66,7 +66,7 @@
             }
         },
         mounted() {
-            this.handleSpinCustom()
+            //this.handleSpinCustom()
         }
     }
 </script>
