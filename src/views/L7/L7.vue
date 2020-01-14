@@ -16,7 +16,7 @@
                         <div class="tab">
                             <!--<router-link :to="`/L4/${$route.params.id}/nginx`" class="tab_item">nginx</router-link>-->
                            <!-- <router-link :to="`/L4/${$route.params.id}`" class="tab_item">系统</router-link>-->
-                            <router-link to="/L7/123" class="tab_item">L7-test</router-link>
+                            <router-link to="/L7/123/test" class="tab_item">L7-test</router-link>
                             <router-link to="/L7/123/config" class="tab_item">Load Balancing</router-link>
                             <router-link to="/L7/123/analysis" class="tab_item">Analys</router-link>
                         </div>

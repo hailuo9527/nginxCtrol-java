@@ -75,7 +75,7 @@ let defaultRoutes = [
                 component: () => import(/* webpackChunkName: "L4" */ '@/views/L7/L7.vue'),
                 children: [
                     {
-                        path: '',
+                        path: 'test',
                         name: 'L7Chart',
                         meta: {
                             title: 'L7-chart'
@@ -111,6 +111,22 @@ let defaultRoutes = [
                                     title: 'overview'
                                 },
                                 component: () => import('@/views/L7/child/analysis/overview.vue')
+                            },
+                            {
+                                path: 'configAnalysis',
+                                name: 'configAnalysis',
+                                meta: {
+                                    title: 'overview'
+                                },
+                                component: () => import('@/views/L7/child/analysis/configAnalysis.vue')
+                            },
+                            {
+                                path: 'servers',
+                                name: 'servers',
+                                meta: {
+                                    title: 'overview'
+                                },
+                                component: () => import('@/views/L7/child/analysis/servers.vue')
                             },
                         ]
 

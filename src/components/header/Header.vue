@@ -8,7 +8,7 @@
                 <router-link class="header_nav_item_label" :to="path">L4</router-link>
             </div>
             <div class="header_nav_item">
-                <router-link class="header_nav_item_label" to="/L7/123">L7</router-link>
+                <router-link class="header_nav_item_label" to="/L7/123/test">L7</router-link>
             </div>
         </div>
 

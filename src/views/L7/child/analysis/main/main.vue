@@ -1,34 +1,16 @@
 <template>
   <div class="father">
-    <div class="tabs">
-      <Tabs value="name1" type="line">
-        <TabPane label="nginx-plus-r20" name="name1"></TabPane>
-      </Tabs>
-      <div class="timezone-select">
-        UTC+08 •
-        <div class="clock">9:00</div>
-        <div class="timezone-select__dropdown-tick">
-          <Dropdown trigger="click">
-            <a href="javascript:void(0)">
-              <Icon type="ios-arrow-down"></Icon>
-            </a>
-            <DropdownMenu slot="list">
-              <DropdownItem>111</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </div>
-      </div>
-    </div>
     <div class="main-content">
       <div class="main-content-navigation">
-        <a class="section-box">
-          <h4 class="section-box-title">Build</h4>
+        <div class="icon-gear">
           <Icon
             type="md-settings"
             title="Nginx analyzer settings"
-            class="icon-gear"
             @click="analyzerSettingsModal = true"
           />
+          </div>
+        <router-link to="/L7/123/analysis/overview" class="section-box">
+          <h4 class="section-box-title">Build</h4>
           <div class="section-box-table">
             <div class="section-box-table-row">
               <div class="section-box-table-cell">Host</div>
@@ -44,8 +26,8 @@
             </div>
             <span class="section-box-details">Open</span>
           </div>
-        </a>
-        <a class="section-box">
+        </router-link>
+        <router-link to="/L7/123/analysis/configAnalysis" class="section-box">
           <h4 class="section-box-title">Static analysis</h4>
           <div class="section-box-table">
             <div class="section-box-table-row">
@@ -74,8 +56,8 @@
             </div>
             <span class="section-box-details">Open</span>
           </div>
-        </a>
-        <a class="section-box">
+        </router-link>
+        <router-link to="/L7/123/analysis/servers" class="section-box">
           <h4 class="section-box-title">Virtual servers</h4>
           <div class="section-box-table">
             <div class="section-box-table-row">
@@ -96,7 +78,7 @@
             </div>
             <span class="section-box-details">Open</span>
           </div>
-        </a>
+        </router-link>
         <div class="section-box">
           <h4 class="section-box-title">Security advisories</h4>
           <div class="section-box-table">
@@ -170,6 +152,7 @@
 </template>
 <script>
 export default {
+  // name: "main",
   data() {
     return {
       analyzerSettingsModal: false,
@@ -180,43 +163,18 @@ export default {
 </script>
 <style lang="less" scoped>
 // @import "../L7/child/analysis/main/main.less";
-.father {
-  background-color: #f8f8f8;
-}
+// .father {
+//   background: #f8f8f8;
+//   left: 20px;
+// }
 a {
   color: inherit;
   text-decoration: none;
 }
-.tabs {
-  width: 1061px;
-  margin-top: -8px;
-  position: fixed;
-  z-index: 10;
-  background-color: #f8f8f8;
-}
-.tabs .ivu-tabs {
-  bottom: -12px;
-}
-.tabs .timezone-select {
-  position: absolute;
-  top: 20px;
-  right: 0;
-}
-.timezone-select .clock {
-  display: inline-block;
-  margin-left: 2px;
-}
-.timezone-select__dropdown-tick {
-  display: inline-block;
-  width: 12px;
-  height: 9px;
-  position: relative;
-  cursor: pointer;
-  margin-left: 5px;
-}
 .main-content {
   position: relative;
   margin-top: 60px;
+  left: 20px;
 }
 .main-content-navigation {
   display: -webkit-box;
@@ -226,8 +184,9 @@ a {
   flex-wrap: wrap;
   position: relative;
   min-width: 924px;
+  left: 10px;
 }
-a.section-box {
+.section-box {
   cursor: pointer;
 }
 .section-box {
@@ -253,9 +212,12 @@ a.section-box {
 }
 .icon-gear {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  height: 22px;
+  top: 4px;
+  left: 298px;
   font-size: 22px;
+  z-index: 11;
+  cursor: pointer;
   opacity: 0.5;
   -webkit-transition: opacity 0.1s linear;
   transition: opacity 0.1s linear;
