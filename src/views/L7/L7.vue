@@ -78,7 +78,7 @@
     @import "../L4/L4";
     .content_main{
         height: calc(100%);
-        padding: 98px 10px 0 10px !important;
+        padding: 98px 10px 0 10px;
         //box-sizing: border-box;
     }
 </style>

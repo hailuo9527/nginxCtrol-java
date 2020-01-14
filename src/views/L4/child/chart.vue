@@ -37,7 +37,7 @@
           this.reload = true
         })
       },
-      
+
        async getData(data) {
         let params = {
           l4_code: this.$route.params.L4, // 'b9ce850e8874492dbd20a3a3b8e2d225'
@@ -69,7 +69,7 @@
         this.updateComponent()
       }
     },
-  
+
   }
 </script>
 
@@ -78,6 +78,7 @@
 .x-chart{
     display: flex;
     justify-content: space-between;
+    padding: 107px 30px 30px 30px;
 }
 
 </style>

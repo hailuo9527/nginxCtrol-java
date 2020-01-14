@@ -48,7 +48,7 @@
         this.updateComponent()
       }
     },
-  
+
   }
 </script>
 
@@ -56,6 +56,7 @@
  .x-chart{
     display: flex;
     justify-content: space-between;
+    padding: 107px 30px 30px 30px;
 }
 
 </style>

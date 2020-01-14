@@ -255,17 +255,7 @@
     z-index: 0;
   }
 }
-/deep/ .ivu-modal-close{
-  .ivu-icon-ios-close{
-    color: #333;
-    font-size: 50px;
-    transition: all .2s;
-    &:hover{
-      transform: rotate(180deg);
-    }
-  }
 
-}
 /deep/ .vertical-center-modal{
   display: flex;
   align-items: center;
@@ -343,7 +333,6 @@
 .ctrl-wizard__tab:last-child {
   padding-right: 60px;
 }
-
 .ctrl-wizard__title {
   margin: 25px 0 5px;
   font: 28px/32px 'RobotoBold', Arial, sans-serif;
@@ -406,4 +395,8 @@
   &:focus{
     box-shadow: none;
   }
+}
+/deep/ .ivu-input-group-prepend,  /deep/.ivu-input-group-prepend{
+  border: none;
+  background: transparent;
 }
