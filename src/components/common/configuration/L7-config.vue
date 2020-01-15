@@ -221,17 +221,24 @@ export default {
 
         },
 
-
+        drawLine () {
+            console.log('rereer')
+            drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end1)
+            drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end2)
+            drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end3)
+            drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end4)
+            drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end5)
+        }
 
     },
     mounted() {
+        this.drawLine()
+        window.addEventListener('resize' ,this.drawLine)
 
-        drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end1)
-        drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end2)
-        drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end3)
-        drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end4)
-        drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end5)
 
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.drawLine)
     }
 }
 </script>

@@ -80,5 +80,10 @@ function drawLine (canvas, start, end) {
     ctx.strokeStyle="#e5e5e5";
     ctx.lineWidth=3;
     ctx.stroke();
+
+    window.addEventListener('resize' ,(e) => {
+        console.log(123131)
+      
+    })
 }
 export default drawLine

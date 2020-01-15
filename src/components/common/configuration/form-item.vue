@@ -54,18 +54,24 @@
             editHandler () {
                 this.showEdit = !this.showEdit
             },
-            expandChange () {
-                console.log()
+            expandChange (data) {
+               // console.log(data)
+                if (!data) {
+                    this.showEdit = false
+                    this.$emit('closeConfig')
+                }
             },
             ok () {
                 console.log( 'ok')
-                // this.showEdit = true
+                this.showEdit = false
+                this.$emit('saveConfig')
             },
         },
 
         mounted() {
-            this.showEdit = !this.isEmptyObject(this.obj)
-            console.log(this.isEmptyObject(this.obj))
+            this.showEdit = this.isEmptyObject(this.obj)
+            this.expand = !this.isEmptyObject(this.obj)
+
         }
     }
 </script>
@@ -97,30 +103,7 @@
         &.form-item-edit{
             background: #fff;
         }
-        /deep/.form-item-wrap{
-            flex: 1;
-            width: 100%;
-            display: flex;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 5px;
-            .input{
-                flex: 1;
-            }
-            .name-list{
-                .tag{
-                    margin-right: 10px;
-                }
-            }
-            /deep/.ivu-input{
 
-            //
-                border-radius: 0;
-                &:focus{
-                //  border-bottom: 1px solid #666;
-                }
-            }
-
-        }
     }
     .ctrl-edit-item {
         position: relative;

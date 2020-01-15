@@ -48,15 +48,11 @@
                     <FormItem label="备注" >
                         <Input v-model.trim="add_l4_form.l4_remarks" placeholder="请输入备注"></Input>
                     </FormItem>
-
-                </Form>
-                <Form ref="virtualForm" :model="virtualForm" >
                     <FormItem label="备注" >
-                        <Input v-model.trim="virtualForm.domainName" placeholder="请输入备注"></Input>
+                        <Input v-model.trim="add_l4_form.domainName" placeholder="请输入备注"></Input>
                     </FormItem>
-
-
                 </Form>
+
             </div>
             <div slot="footer">
                 <Button type="primary" size="large" long :loading="modal_loading" @click="addL4('formValidate')">确认添加</Button>
@@ -82,22 +78,7 @@
                         { required: true, message: '自定义名称不能为空', trigger: 'blur' }
                     ]
                 },
-                modal_loading: false,
-                virtualForm: {
-                    /*domain: {
-                        nameList: ['123','rew'],
-                        input: ''
-                    },*/
-                    domain: {},
-                    listen: {
-
-                    },
-                    domainName: ''
-
-                },
-                serverFormRules: {
-
-                },
+                modal_loading: false
 
             }
         },

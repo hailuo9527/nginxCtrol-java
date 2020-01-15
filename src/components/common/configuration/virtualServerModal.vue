@@ -50,25 +50,36 @@
                 </FormItem>
 
             </Form>-->
-            <Form ref="serverForm" :model="serverForm" :rules="serverFormRules" :label-width="0">
-
+            <Form ref="serverForm" :model="serverForm" :rules="serverFormRules" :label-width="0" @submit.native.prevent>
+                <my-form-item :obj="serverForm.domain" title="DOMAIN NAMES"
+                              @closeConfig = "closeConfig('domain')"
+                              @saveConfig = "saveConfig('domain')"
+                              info="Domain names that are served by this virtual server. This corresponds with the server_name directive in NGINX configuration.">
+                    <div slot="edit" >
+                        <div class="form-item-wrap" >
+                            <div class="name-list">
+                                <Button  icon="md-close" class="tag"
+                                         :key="index"
+                                         v-for="(item, index) in serverForm.domain.nameList">{{item}}</Button>
+                            </div>
+                            <div class="input">
+                                <FormItem>
+                                    <Input v-model.trim="serverForm.domain.input" @on-enter="addDomainName" placeholder="2134"></Input>
+                                </FormItem>
+                            </div>
+                        </div>
+                        <div class="ctrl-edit-item__note">Prefix the name with ~ to use a regular expression</div>
+                    </div>
+                    <div slot="show">
+                        <div class="name-list">
+                            <span  class="tag" :key="index"
+                                   v-for="(item, index) in serverForm.domain.nameList">{{item}}</span>
+                        </div>
+                    </div>
+                </my-form-item>
 
             </Form>
-            <my-form-item :obj="serverForm.domain" title="DOMAIN NAMES"
-                          info="Domain names that are served by this virtual server. This corresponds with the server_name directive in NGINX configuration.">
-                <div slot="edit" >
-                    <div class="form-item-wrap" >
 
-                    </div>
-
-                    <div class="ctrl-edit-item__note">Prefix the name with ~ to use a regular expression</div>
-
-
-                </div>
-                <div slot="show">
-                    123
-                </div>
-            </my-form-item>
 
         </div>
         <div slot="footer">
@@ -98,6 +109,15 @@
                 modal_loading: false,
                 model: true,
                 serverForm: {
+                    domain: {
+                        nameList: ['123','rew'],
+                        input: ''
+                    },
+                    listen: {
+
+                    },
+                },
+                virtualForm: {
                     /*domain: {
                         nameList: ['123','rew'],
                         input: ''
@@ -106,7 +126,14 @@
                     listen: {
 
                     },
-                    name: ''
+                    domainName: ''
+
+                },
+                add_l4_form: {},
+                ruleValidate: {
+                    l4_code: [
+                        { required: true, message: '序列号不能为空', trigger: 'blur' }
+                    ],
 
                 },
                 serverFormRules: {
@@ -198,7 +225,8 @@
             handleSubmit () {
                 // 验证是否有未确认的更改
                 Object.keys(this.serverForm).map((item) => {
-                    if (this.serverForm[item].switch){
+                    console.log(this.serverForm[item])
+                    if (this.isEmptyObject(this.serverForm[item])){
                         this.errorTip = {
                             show: true,
                             value: item
@@ -206,16 +234,22 @@
                         return
                     }
                 })
-                console.log(this.serverForm.domain.name)
-
             },
-            addDomainName (e) {
-                console.log(e)
-
-                //this.serverForm.domain.nameList.push(this.serverForm.domain.input)
+            addDomainName () {
+                this.serverForm.domain.nameList.push(this.serverForm.domain.input)
+                this.serverForm.domain.input = ''
+            },
+            /* 保存配置项 */
+            saveConfig(configName) {
+                console.log(configName)
+            },
+            /* 关闭配置项 */
+            closeConfig (configName) {
+                console.log(configName)
             }
         },
         mounted() {
+
            /* setTimeout(() => {
                 this.serverForm.domain = {
                     nameList : [ '123']
@@ -275,5 +309,30 @@
    }
     /deep/.ivu-modal-header {
         border-bottom: none;
+    }
+    .form-item-wrap{
+        flex: 1;
+        width: 100%;
+        display: flex;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 5px;
+        .input{
+            flex: 1;
+        }
+
+        /deep/.ivu-input{
+
+            //
+            border-radius: 0;
+            &:focus{
+                //  border-bottom: 1px solid #666;
+            }
+        }
+
+    }
+    .name-list{
+        .tag{
+            margin-right: 10px;
+        }
     }
 </style>
