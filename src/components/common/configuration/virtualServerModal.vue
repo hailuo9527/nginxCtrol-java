@@ -12,36 +12,64 @@
                 您需要确认每个部分的更改: {{errorTip.value}}
                 <Icon type="md-close"  class="close" slot="close"/>
             </Alert>
-            <Form ref="serverForm" :model="serverForm" :label-width="0">
+           <!-- <Form ref="serverForm" :model="serverForm" :label-width="0">
 
                 <FormItem>
                     <div class="form-item" :class="serverForm.domain.switch ? 'form-item-edit': ''">
                         <div class="form-item-header" >
-                            <i-switch v-model="serverForm.domain.switch" ></i-switch>
+                            <i-switch :value="!isEmptyObject(serverForm.domain)" ></i-switch>
                             <span class="title">DOMAIN NAMES</span>
                             <PopTip content="123"  placement="right"></PopTip>
-                            <div class="actions">
-                                <Button shape="circle" icon="md-close"></Button>
-                                <Button  shape="circle" ghost type="primary" icon="md-checkmark"></Button>
+                            <div class="actions" >
+                                <Button shape="circle" icon="md-close" v-if="isEmptyObject(serverForm.domain)"></Button>
+                                <Button  shape="circle" ghost type="primary" v-if="isEmptyObject(serverForm.domain)" icon="md-checkmark"></Button>
+                                <Button shape="circle" icon="md-create" v-if="!isEmptyObject(serverForm.domain)"></Button>
                             </div>
                         </div>
-                        <div class="ctrl-edit-item ctrl-edit-item_edit" v-show="serverForm.domain.switch">
-                            <Form ref="formValidate">
-                                <FormItem>
-                                    <div class="form-item-wrap" >
-                                        <Input type="text" v-model="serverForm.domain.name" placeholder="example.com *.example.com">
+                        <div class="ctrl-edit-item ctrl-edit-item_edit" v-show="!isEmptyObject(serverForm.domain)">
+
+                                <div class="form-item-wrap" >
+                                    <div class="name-list">
+                                        <Button  icon="md-close" class="tag" v-for="(item,index) in serverForm.domain.nameList">{{item}}</Button>
+
+                                    </div>
+                                    <div class="input">
+                                        <Input type="text"
+                                               v-model="serverForm.domain.input"
+
+                                               placeholder="example.com *.example.com">
                                         </Input>
                                     </div>
 
-                                </FormItem>
-                            </Form>
+                                </div>
+
                             <div class="ctrl-edit-item__note">Prefix the name with ~ to use a regular expression</div>
                         </div>
                     </div>
 
                 </FormItem>
 
+            </Form>-->
+            <Form ref="serverForm" :model="serverForm" :rules="serverFormRules" :label-width="0">
+
+
             </Form>
+            <my-form-item :obj="serverForm.domain" title="DOMAIN NAMES"
+                          info="Domain names that are served by this virtual server. This corresponds with the server_name directive in NGINX configuration.">
+                <div slot="edit" >
+                    <div class="form-item-wrap" >
+
+                    </div>
+
+                    <div class="ctrl-edit-item__note">Prefix the name with ~ to use a regular expression</div>
+
+
+                </div>
+                <div slot="show">
+                    123
+                </div>
+            </my-form-item>
+
         </div>
         <div slot="footer">
             <Button @click="model = false">取消</Button>
@@ -52,12 +80,13 @@
 </template>
 <script>
     import PopTip from '@/components/common/pop-tip'
+    import myFormItem from './form-item'
     export default {
         props: {
             show: false,
         },
         components: {
-          PopTip
+          PopTip, myFormItem
         },
         watch: {
             show (newVal, oldVal) {
@@ -69,11 +98,16 @@
                 modal_loading: false,
                 model: true,
                 serverForm: {
+                    /*domain: {
+                        nameList: ['123','rew'],
+                        input: ''
+                    },*/
+                    domain: {},
+                    listen: {
 
-                    domain: {
-                        switch: false,
-                        name: ''
-                    }
+                    },
+                    name: ''
+
                 },
                 serverFormRules: {
 
@@ -81,6 +115,75 @@
                 errorTip: {
                     show: false,
                     value: ''
+                },
+                server: {
+                    domain: {
+                        name: 123
+                    },
+                    listen: {
+                        port: 123,
+                        default_server: false,
+                        ssl: false,
+                        http2: false,
+                        proxy: false,
+                        advancedSettings: [
+                            {
+                                fib: 'number',
+                                tcp: 'number',
+                                backlog: 'number',
+                                receiveBufferSize: 'bytes',
+                                sendBufferSize: 'bytes',
+                                acceptFilter: 'string',
+                                deferred: false,
+                                bind: false,
+                                ip6: false,
+                                reuseport: false,
+                                keepAlive: false
+                            },
+                            {
+                                fib: 'number',
+                                tcp: 'number',
+                                backlog: 'number',
+                                receiveBufferSize: 'bytes',
+                                sendBufferSize: 'bytes',
+                                acceptFilter: 'string',
+                                deferred: false,
+                                bind: false,
+                                ip6: false,
+                                reuseport: false,
+                                keepAlive: false
+                            }
+                        ]
+                    },
+                    ssl: {
+                        file: 'string',
+                        key: 'string'
+                    },
+                    allowOrDeny: [
+                        {
+                            type: 'allow/deny',
+                            rule: 'String'
+                        }
+                    ],
+                    errorPages: [
+                        {
+                            httpCode: 'String',
+                            redirectTo: 'String',
+                            responseCode: 'String'
+                        }
+                    ],
+                    errorLog: {
+                        path: 'String',
+                        level: 'String'
+                    },
+                    accessLog: {
+                        useDefaultFormat: false,
+                        name: 'String',
+                        format: 'String'
+                    }
+
+
+
                 }
             }
         },
@@ -89,7 +192,7 @@
         },
         methods: {
             change(data) {
-                this.$emit('change', {data: data, name: 'serverModal'})
+                this.$emit('modalVisibleChange', {data: data, name: 'serverModal'})
             },
 
             handleSubmit () {
@@ -106,6 +209,18 @@
                 console.log(this.serverForm.domain.name)
 
             },
+            addDomainName (e) {
+                console.log(e)
+
+                //this.serverForm.domain.nameList.push(this.serverForm.domain.input)
+            }
+        },
+        mounted() {
+           /* setTimeout(() => {
+                this.serverForm.domain = {
+                    nameList : [ '123']
+                }
+            },100)*/
         }
     }
 </script>
@@ -139,63 +254,8 @@
         padding-bottom: 0 !important;
        // margin: 0px -40px !important;
     }
-    .form-item{
-        width: 100%;
-        position: relative;
-        padding: 10px 40px 10px;
-        border-bottom: 1px solid #e2e2e2;
-        background-color: #f3f3f3;
-        .form-item-header{
-            display: flex;
-            align-items: center;
-            transition: border-color 0.1s linear, background-color 0.1s linear;
-        }
-        .title{
-            margin: 0 10px;
-        }
-        .actions{
-            flex: 1;
-            text-align: right;
-            .ivu-btn-circle.ivu-btn-icon-only, .ivu-btn-circle-outline.ivu-btn-icon-only{
-                width: 40px;
-                height: 30px;
-                border-radius: 15px;
-                margin-left: 10px;
-            }
-        }
-        &.form-item-edit{
-            background: #fff;
-        }
-        .form-item-wrap{
-            flex: 1;
-            /deep/.ivu-input{
 
-                border-bottom: 1px solid #ccc;
-                border-radius: 0;
-                &:focus{
-                    border-bottom: 1px solid #666;
-                }
-            }
 
-        }
-    }
-    .ctrl-edit-item {
-        position: relative;
-        margin: 10px 40px;
-
-        padding: 5px 28px 5px 28px;
-        border-left: 2px solid #d8d8d8;
-        transition: border-color 0.1s linear;
-    }
-    .ctrl-edit-item_edit {
-        border-left-color: @green;
-    }
-    .ctrl-edit-item__note {
-        padding: 10px 0px;
-        font: 12px 'RobotoItalic', Arial, sans-serif;
-        font-weight: normal;
-        color: #888888;
-    }
    .err-tip{
        margin-bottom: 0!important;
        background: #ff5559;

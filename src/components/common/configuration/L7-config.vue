@@ -14,8 +14,8 @@
 
            </div>
 
-           <LoadBalancerModal :show="domainModel" @change="modalChange" @complete="domainModel = false"/>
-           <VirtualServerModal :show="serverModal" @change="modalChange"/>
+           <LoadBalancerModal :show="domainModel" @change="modalVisibleChange" @complete="domainModel = false"/>
+           <VirtualServerModal :show="serverModal" @change="modalVisibleChange"/>
        </div>
         <div class="l7_config_column column_header">
             <div class="header_item">
@@ -171,6 +171,8 @@
         <div class="ctrl-relations-canvas" ref="canvas" >
             <canvas width="2000" height="2000" id = "canvas" style="width: 2000px; height: 2000px;"></canvas>
         </div>
+
+
     </div>
 </template>
 <script>
@@ -207,7 +209,7 @@ export default {
 
             }
         },
-        modalChange(data){
+        modalVisibleChange(data){
             switch (data.name) {
                 case 'domainModal':
                     this.domainModel = data.data

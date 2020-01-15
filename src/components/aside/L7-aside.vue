@@ -38,18 +38,8 @@
                 <span>添加机器</span>
             </p>
             <div style="text-align:center">
-                <Form ref="formValidate" :model="add_l4_form" :rules="ruleValidate" label-position="left">
-                    <FormItem label="机器序列号" prop="l4_code">
-                        <Input v-model.trim="add_l4_form.l4_code" placeholder="请输入机器序列号"></Input>
-                    </FormItem>
-                    <FormItem label="自定义名称" prop="l4_name">
-                        <Input v-model.trim="add_l4_form.l4_name" placeholder="请输入自定义名称"></Input>
-                    </FormItem>
-                    <FormItem label="备注" >
-                        <Input v-model.trim="add_l4_form.l4_remarks" placeholder="请输入备注"></Input>
-                    </FormItem>
 
-                </Form>
+
             </div>
             <div slot="footer">
                 <Button type="primary" size="large" long :loading="modal_loading" @click="addL4('formValidate')">确认添加</Button>
@@ -75,7 +65,8 @@
                         { required: true, message: '自定义名称不能为空', trigger: 'blur' }
                     ]
                 },
-                modal_loading: false
+                modal_loading: false,
+
 
             }
         },
