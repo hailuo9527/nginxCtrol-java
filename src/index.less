@@ -62,3 +62,24 @@
 .ivu-poptip-inner{
   border-radius: 0;
 }
+
+
+/* 黑色背景下拉菜单 */
+.black-dropdown{
+
+  .ivu-select-dropdown{
+    background: #000;
+    border-radius: 0;
+    margin: 0;
+    .ivu-dropdown-item{
+      color: #fff;
+      opacity: .8;
+      transition: all .2s;
+      &:hover{
+        opacity: 1;
+        color: @green;
+        background: #000;
+      }
+    }
+  }
+}

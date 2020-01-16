@@ -10,10 +10,22 @@
             <div class="header_nav_item">
                 <router-link class="header_nav_item_label" to="/L7/123/test">L7</router-link>
             </div>
+            <div class="header_nav_item">
+                <Dropdown trigger="click"  class="black-dropdown" @on-click="toConfigs">
+                    <a class="header_nav_item_label" href="javascript:void(0)">
+                        配置
+                        <Icon type="ios-arrow-down"></Icon>
+                    </a>
+                    <DropdownMenu slot="list">
+                        <DropdownItem >四层配置</DropdownItem>
+                        <DropdownItem name="nginxConfig">七层配置</DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
+            </div>
         </div>
 
         <div class="profile">
-            <Dropdown style="margin-left: 20px" placement="bottom-end" trigger="click"  @on-click="dropEvent">
+            <Dropdown style="margin-left: 20px" placement="bottom-end" class="black-dropdown" trigger="click"  @on-click="dropEvent">
                 <a href="javascript:void(0)"  class="trigger">
                    tao
                     <Icon type="ios-arrow-down"></Icon>
@@ -39,18 +51,25 @@
         methods: {
             dropEvent (data) {
                 //console.log(data)
+            },
+            toConfigs(name) {
+                switch (name) {
+                    case 'nginxConfig':
+                        this.$router.push('/nginxConfigs')
+
+                }
             }
         },
         watch: {
             '$route'(to, from) {
-                
+
                 if (to.path.search('/L4') !== -1) {
                     this.path = `/L4/${this.activeAside.l4_code}`
                 } else if (to.path.search('/L7') !== -1) {
                     console.log('l7')
                 }
-               
-            
+
+
             }
         },
 
@@ -145,5 +164,7 @@
             }
         }
     }
+
 }
+
 </style>

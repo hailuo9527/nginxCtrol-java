@@ -67,7 +67,7 @@ let defaultRoutes = [
                 ]
             },
             {
-                path: '/L7/:L7',
+                path: 'L7/:L7',
                 //name: 'L7',
                 meta: {
                     title: 'L7'
@@ -135,12 +135,30 @@ let defaultRoutes = [
                 ]
             },
             {
+                path: '/nginxConfigs',
+                name: 'nginxConfigs',
+                meta: {
+                    title: 'nginxConfigs'
+                },
+
+                component: () => import(/* webpackChunkName: "nginxConfigs" */ '@/views/configs/L7/configs.vue')
+            },
+            {
+                path: 'nginxConfigs/:id',
+                name: 'nginxConfig',
+                meta: {
+                    title: 'nginxConfig'
+                },
+
+                component: () => import(/* webpackChunkName: "nginxConfigs" */ '@/views/configs/L7/config.vue')
+            }
+           /* {
                 path: '/L7/:L7',
                 // name: 'L4',
                 meta: {
                     title: 'L7'
                 },
-                component: () => import(/* webpackChunkName: "L4" */ /* webpackPrefetch: true */'@/views/L7/L7.vue'),
+                component: () => import(/!* webpackChunkName: "L4" *!/ /!* webpackPrefetch: true *!/'@/views/L7/L7.vue'),
                 children: [
                     {
                         path: '',
@@ -160,7 +178,7 @@ let defaultRoutes = [
                     },
 
                 ]
-            }
+            }*/
         ]
     },
     {
