@@ -1,7 +1,7 @@
 <template>
-    <div class="form-item" :class="expand ? 'form-item-edit': ''">
+    <div class="form-item" :class="classStatus">
         <div class="form-item-header" >
-            <i-switch v-model="expand"  @on-change="expandChange" ></i-switch>
+            <i-switch v-model="expand" v-if="!important" @on-change="expandChange" ></i-switch>
             <span class="title">{{title}}</span>
             <PopTip :content="info"  placement="right"></PopTip>
             <div class="actions" v-if="expand">
@@ -13,12 +13,22 @@
                 {{childTitle}}
             </div>
         </div>
-        <div class="ctrl-edit-item ctrl-edit-item_edit" v-if="expand && showEdit">
+
+       <!-- <div class="ctrl-edit-item ctrl-edit-item_edit" v-if="expand && showEdit">
             <slot name="edit"></slot>
         </div>
         <div class="ctrl-edit-item" v-if="expand && !showEdit">
             <slot name="show"></slot>
+        </div>-->
+
+        <!--<div class="ctrl-edit-item ctrl-edit-item_edit" >
+
         </div>
+        <div class="ctrl-edit-item" >
+
+        </div>-->
+        <slot name="edit" v-if="expand && showEdit"></slot>
+        <slot name="show" v-if="expand && !showEdit"></slot>
     </div>
 </template>
 
@@ -26,13 +36,11 @@
     import PopTip from '@/components/common/pop-tip'
     export default {
         props: {
-            obj: {
-                type: Object,
-                default: () => {}
-            },
+            obj:[Array, Object],
             title: '',
             info: '',
             childTitle: '',
+            important: false
 
         },
         data () {
@@ -47,7 +55,21 @@
         watch: {
           obj(newVal, oldVal){
               console.log(...arguments)
-              this.expand = !this.isEmptyObject(newVal)
+            //  this.expand = !this.isEmptyObject(newVal)
+          }
+        },
+        computed: {
+          classStatus: function () {
+              let className
+
+              if (this.important) {
+                  className = 'form-item-edit important'
+              } else if (this.expand){
+                  className = 'form-item-edit'
+              } else {
+                  className = ''
+              }
+              return className
           }
         },
         methods: {
@@ -66,11 +88,39 @@
                 this.showEdit = false
                 this.$emit('saveConfig')
             },
+            initStatus (obj) {
+                this.showEdit = this.isEmptyObject(obj)
+                this.expand = !this.isEmptyObject(obj)
+                if ( this.important ) {
+                    if (this.isEmptyObject(obj)) {
+                        this.expand = true
+                        this.showEdit = true
+                    }
+                }
+            }
         },
 
         mounted() {
-            this.showEdit = this.isEmptyObject(this.obj)
-            this.expand = !this.isEmptyObject(this.obj)
+            //console.log(typeof this.obj)
+            if (this.obj instanceof Array){
+                if (this.isEmptyObject(this.obj)){
+                    this.initStatus(this.obj)
+                } else {
+                   this.initStatus(this.obj[0])
+                }
+
+            } else {
+                this.initStatus(this.obj)
+                /*this.showEdit = this.isEmptyObject(this.obj)
+                this.expand = !this.isEmptyObject(this.obj)
+                if ( this.important ) {
+                    if (this.isEmptyObject(this.obj)) {
+                        this.expand = true
+                        this.showEdit = true
+                    }
+                }*/
+            }
+
 
         }
     }
@@ -89,6 +139,8 @@
         }
         .title{
             margin: 0 10px;
+            font-size: 14px;
+            color: #333;
         }
         .actions{
             flex: 1;
@@ -103,23 +155,11 @@
         &.form-item-edit{
             background: #fff;
         }
+        &.important {
+            border-bottom: 3px solid #000;
+        }
 
     }
-    .ctrl-edit-item {
-        position: relative;
-        margin: 10px 40px;
 
-        padding: 5px 28px 5px 28px;
-        border-left: 2px solid #d8d8d8;
-        transition: border-color 0.1s linear;
-    }
-    .ctrl-edit-item_edit {
-        border-left-color: @green;
-    }
-    .ctrl-edit-item__note {
-        padding: 10px 0px;
-        font: 12px 'RobotoItalic', Arial, sans-serif;
-        font-weight: normal;
-        color: #888888;
-    }
+
 </style>

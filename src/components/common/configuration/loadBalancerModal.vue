@@ -4,6 +4,7 @@
             v-model="domainModel"
             :transfer="true"
             @on-visible-change="change"
+            :mask-closable="false"
             class-name="vertical-center-modal "
     >
         <div class="ctrl-wizard">
@@ -90,25 +91,25 @@
 
             </div>
             <Form ref="balanceForm" :model="balanceForm" :rules="balanceFormRules">
-                <FormItem prop="user" v-show="step === 0">
+                <FormItem prop="user" class="border-bottom" v-show="step === 0">
                     <Button  icon="md-close" class="tag">Default</Button>
                     <Input type="text" v-model="balanceForm.domain" placeholder="example.com *.example.com">
                     </Input>
                 </FormItem>
-                <FormItem prop="user" v-show="step === 1">
+                <FormItem class="border-bottom" prop="user" v-show="step === 1">
                     <Input type="text" v-model="balanceForm.domain" placeholder="192.168.101.1:80">
                     </Input>
                 </FormItem>
-                <FormItem prop="user" v-show="step === 2">
+                <FormItem  class="border-bottom" prop="user" v-show="step === 2">
                     <Button  icon="md-close" class="tag">Default</Button>
                     <Input type="text" v-model="balanceForm.domain" placeholder="IP address or FQDN">
                     </Input>
                 </FormItem>
-                <FormItem prop="user" v-show="step === 3">
+                <FormItem class="border-bottom" prop="user" v-show="step === 3">
                     <Input type="text" v-model="balanceForm.domain" placeholder="name">
                     </Input>
                 </FormItem>
-                <FormItem prop="user" v-show="step === 4">
+                <FormItem class="border-bottom" prop="user" v-show="step === 4">
                     <Input v-model="balanceForm.route" placeholder="/">
                         <Select v-model="balanceForm.match" slot="prepend" style="width: 80px">
                             <Option value="prefix">prefix</Option>
@@ -207,5 +208,28 @@
             }
         }
 
+    }
+    /deep/.ivu-form-item-content{
+        display: flex;
+        flex-wrap: wrap;
+        position: relative;
+        margin-top: 20px;
+        padding-bottom: 10px;
+        transition: border-color .1s linear;
+        // border-bottom: 1px solid #ababab;
+        .ivu-input-wrapper{
+            flex: 1 1 0px;
+        }
+    }
+    /deep/ .ivu-form-item{
+        margin-bottom: 0;
+
+    }
+    .border-bottom /deep/.ivu-form-item-content{
+
+
+        padding-bottom: 6px;
+        border-bottom: 1px solid #ccc;
+        display: flex;
     }
 </style>

@@ -222,7 +222,11 @@ export default {
         },
 
         drawLine () {
-            console.log('rereer')
+
+            let canvas = document.getElementById("canvas");
+            const context = canvas.getContext('2d');
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
             drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end1)
             drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end2)
             drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end3)
