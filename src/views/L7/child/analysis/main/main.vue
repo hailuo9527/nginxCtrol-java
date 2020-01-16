@@ -9,7 +9,7 @@
             @click="analyzerSettingsModal = true"
           />
           </div>
-        <router-link to="/L7/123/analysis/overview" class="section-box">
+        <router-link to="/L7/123/analysis/overview" class="router-link-active">
           <h4 class="section-box-title">Build</h4>
           <div class="section-box-table">
             <div class="section-box-table-row">
@@ -27,7 +27,7 @@
             <span class="section-box-details">Open</span>
           </div>
         </router-link>
-        <router-link to="/L7/123/analysis/configAnalysis" class="section-box">
+        <router-link to="/L7/123/analysis/configAnalysis" class="router-link-active">
           <h4 class="section-box-title">Static analysis</h4>
           <div class="section-box-table">
             <div class="section-box-table-row">
@@ -57,7 +57,7 @@
             <span class="section-box-details">Open</span>
           </div>
         </router-link>
-        <router-link to="/L7/123/analysis/servers" class="section-box">
+        <router-link to="/L7/123/analysis/servers" class="router-link-active">
           <h4 class="section-box-title">Virtual servers</h4>
           <div class="section-box-table">
             <div class="section-box-table-row">
@@ -162,124 +162,134 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-// @import "../L7/child/analysis/main/main.less";
-// .father {
-//   background: #f8f8f8;
+@import "main";
+// a {
+//   color: inherit;
+//   text-decoration: none;
+// }
+// .main-content {
+//   position: relative;
+//   margin-top: 60px;
 //   left: 20px;
 // }
-a {
-  color: inherit;
-  text-decoration: none;
-}
-.main-content {
-  position: relative;
-  margin-top: 60px;
-  left: 20px;
-}
-.main-content-navigation {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  position: relative;
-  min-width: 924px;
-  left: 10px;
-}
-.section-box {
-  cursor: pointer;
-}
-.section-box {
-  display: block;
-  background: #ffffff;
-  -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
-  padding: 13px 20px;
-  position: relative;
-  height: 270px;
-  margin: 0 20px 20px 0;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  -ms-flex-preferred-size: 30%;
-  // flex-basis: 30%;
-  min-width: 30%;
-  width: 330px;
-}
-.section-box-title {
-  font-size: 16px;
-  // font-weight: normal;
-  margin: 0 0 23px;
-}
-.icon-gear {
-  position: absolute;
-  height: 22px;
-  top: 4px;
-  left: 298px;
-  font-size: 22px;
-  z-index: 11;
-  cursor: pointer;
-  opacity: 0.5;
-  -webkit-transition: opacity 0.1s linear;
-  transition: opacity 0.1s linear;
-}
-.section-box-table-row {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  margin-top: 11px;
-}
-.section-box-table-row:first-child {
-  margin-top: 0px;
-}
-.section-box-table-cell:first-child {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -ms-flex: 1 0 auto;
-  flex: 1 0 auto;
-}
-.section-box-table-cell:nth-child(2) {
-  -webkit-box-flex: 0;
-  -ms-flex: 0 1 auto;
-  flex: 0 1 auto;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.section-box-table-cell:first-child:after {
-  content: "";
-  display: block;
-  -webkit-box-flex: 1;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-  min-width: 10px;
-  height: 16px;
-  margin: 0px 4px;
-  border-bottom: 1px solid #d8d8d8;
-}
-.section-box-details {
-  font: 14px "RobotoMedium", Arial, sans-serif;
-  font-weight: normal;
-  position: absolute;
-  bottom: 12px;
-  text-align: center;
-  display: block;
-  color: #ababab;
-  width: 100%;
-  left: 0;
-}
-.section-box:hover .section-box-details {
-  color: #0061ce;
-}
-a.section-box:hover {
-  -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
-  box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.16);
-}
-.check-box {
-  margin-top: 20px;
-}
-.check-box-item {
-  margin-top: 12px;
-}
+// .main-content-navigation {
+//   display: -webkit-box;
+//   display: -ms-flexbox;
+//   display: flex;
+//   -ms-flex-wrap: wrap;
+//   flex-wrap: wrap;
+//   position: relative;
+//   min-width: 924px;
+//   left: 10px;
+// }
+// .router-link-active{
+//   display: block;
+//   background: #ffffff;
+//   -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+//   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+//   padding: 13px 20px;
+//   position: relative;
+//   height: 270px;
+//   margin: 0 20px 20px 0;
+//   -webkit-box-sizing: border-box;
+//   box-sizing: border-box;
+//   -ms-flex-preferred-size: 30%;
+//   // flex-basis: 30%;
+//   min-width: 30%;
+//   width: 330px;
+//   cursor: pointer;
+// }
+// .section-box {
+//   display: block;
+//   background: #ffffff;
+//   -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+//   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+//   padding: 13px 20px;
+//   position: relative;
+//   height: 270px;
+//   margin: 0 20px 20px 0;
+//   -webkit-box-sizing: border-box;
+//   box-sizing: border-box;
+//   -ms-flex-preferred-size: 30%;
+//   // flex-basis: 30%;
+//   min-width: 30%;
+//   width: 330px;
+// }
+// .section-box-title {
+//   font-size: 16px;
+//   // font-weight: normal;
+//   margin: 0 0 23px;
+// }
+// .icon-gear {
+//   position: absolute;
+//   height: 22px;
+//   top: 4px;
+//   left: 298px;
+//   font-size: 22px;
+//   z-index: 11;
+//   cursor: pointer;
+//   opacity: 0.5;
+//   -webkit-transition: opacity 0.1s linear;
+//   transition: opacity 0.1s linear;
+// }
+// .section-box-table-row {
+//   display: -webkit-box;
+//   display: -ms-flexbox;
+//   display: flex;
+//   margin-top: 11px;
+// }
+// .section-box-table-row:first-child {
+//   margin-top: 0px;
+// }
+// .section-box-table-cell:first-child {
+//   display: -webkit-box;
+//   display: -ms-flexbox;
+//   display: flex;
+//   -webkit-box-flex: 1;
+//   -ms-flex: 1 0 auto;
+//   flex: 1 0 auto;
+// }
+// .section-box-table-cell:nth-child(2) {
+//   -webkit-box-flex: 0;
+//   -ms-flex: 0 1 auto;
+//   flex: 0 1 auto;
+//   white-space: nowrap;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+// }
+// .section-box-table-cell:first-child:after {
+//   content: "";
+//   display: block;
+//   -webkit-box-flex: 1;
+//   -ms-flex: 1 1 auto;
+//   flex: 1 1 auto;
+//   min-width: 10px;
+//   height: 16px;
+//   margin: 0px 4px;
+//   border-bottom: 1px solid #d8d8d8;
+// }
+// .section-box-details {
+//   font: 14px "RobotoMedium", Arial, sans-serif;
+//   font-weight: normal;
+//   position: absolute;
+//   bottom: 12px;
+//   text-align: center;
+//   display: block;
+//   color: #ababab;
+//   width: 100%;
+//   left: 0;
+// }
+// .section-box:hover .section-box-details {
+//   color: #0061ce;
+// }
+// a.section-box:hover {
+//   -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+//   box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.16);
+// }
+// .check-box {
+//   margin-top: 20px;
+// }
+// .check-box-item {
+//   margin-top: 12px;
+// }
 </style>

@@ -19,7 +19,7 @@ export default {};
 .inner {
   width: 939px;
   left: 30px;
-  top: 56px;
+  top: 60px;
   background: #ffffff;
   -webkit-box-shadow: 0 10px 24px 0 rgba(0, 0, 0, 0.2);
   box-shadow: 0 10px 24px 0 rgba(0, 0, 0, 0.2);
