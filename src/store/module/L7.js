@@ -1,39 +1,33 @@
-
+import { selL7ServerInfoAll } from "../../api/L7";
 
 export default {
     state: {
         activeAside: {},
         asideList: [],
         listLoading: false,
-        chartFilter: {
-            key: 1,
-            value: 4
-        }
     },
     mutations: {
-        setActiveAside (state, item) {
+        L7setActiveAside (state, item) {
             state.activeAside = item
         },
-        setAsideList (state, list) {
+        L7setAsideList (state, list) {
             state.asideList = list
         },
-        changeLoadingStatus(state, data) {
+        L7changeLoadingStatus(state, data) {
             state.listLoading = data
         },
-        changeChartFilter(state, data) {
-            state.chartFilter = data
-        }
+
     },
     actions: {
-        getAsideList({ commit }) {
+        getL7AsideList({ commit }) {
             return new Promise((resolve, reject) => {
-                commit('changeLoadingStatus', true)
-                getDeviceManage().then(res => {
-                    // console.log(res)
+                commit('L7changeLoadingStatus', true)
+                selL7ServerInfoAll().then(res => {
                     if (res.data.code === 'success'){
-                        commit('setAsideList', res.data.result || [])
-                        commit('setActiveAside', res.data.result[0])
-                        commit('changeLoadingStatus', false)
+                       // console.log(res)
+                        commit('L7setAsideList', res.data.result || [])
+                        commit('L7setActiveAside', res.data.result[0])
+                        commit('L7changeLoadingStatus', false)
                     }
                     resolve(res)
                 })

@@ -16,8 +16,8 @@
                         <div class="tab">
                             <!--<router-link :to="`/L4/${$route.params.id}/nginx`" class="tab_item">nginx</router-link>-->
                            <!-- <router-link :to="`/L4/${$route.params.id}`" class="tab_item">系统</router-link>-->
-                            <router-link :to="`/L4/${$route.params.id}`" class="tab_item">{{activeAside.l4_name}}</router-link>
-                            <router-link :to="`/L4/${$route.params.id}/config`" class="tab_item">配置</router-link>
+                            <router-link :to="`/L4/${$route.params.L4}/`" class="tab_item">{{activeAside.l4_name}}</router-link>
+                            <router-link :to="`/L4/${$route.params.L4}/config`" class="tab_item">配置</router-link>
                         </div>
                         <apply-filter v-if="$route.name === 'L4-chart'"/>
                     </div>

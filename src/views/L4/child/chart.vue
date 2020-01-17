@@ -58,7 +58,7 @@
     },
     computed:{
       ...mapState({
-        chartFilter:  state => state.L4.chartFilter
+        chartFilter:  state => state.common.chartFilter
       })
     },
     watch:{

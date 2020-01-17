@@ -8,7 +8,7 @@
                 <router-link class="header_nav_item_label" :to="path">L4</router-link>
             </div>
             <div class="header_nav_item">
-                <router-link class="header_nav_item_label" to="/L7/123/test">L7</router-link>
+                <router-link class="header_nav_item_label" :to="path7">L7</router-link>
             </div>
             <div class="header_nav_item">
                 <Dropdown trigger="click"  class="black-dropdown" @on-click="toConfigs">
@@ -18,7 +18,10 @@
                     </a>
                     <DropdownMenu slot="list">
                         <DropdownItem >四层配置</DropdownItem>
-                        <DropdownItem name="nginxConfig">七层配置</DropdownItem>
+                        <DropdownItem name="nginxConfig">
+
+                            <router-link to="/nginxConfigs">七层配置</router-link>
+                        </DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
             </div>
@@ -45,7 +48,8 @@
         name: 'Header',
         data () {
           return {
-              path: ''
+              path: '',
+              path7: ''
           }
         },
         methods: {
@@ -55,7 +59,7 @@
             toConfigs(name) {
                 switch (name) {
                     case 'nginxConfig':
-                        this.$router.push('/nginxConfigs')
+                       // this.$router.push('/nginxConfigs')
 
                 }
             }
@@ -64,25 +68,29 @@
             '$route'(to, from) {
 
                 if (to.path.search('/L4') !== -1) {
-                    this.path = `/L4/${this.activeAside.l4_code}`
+                    this.path = `/L4/${this.activeL4.l4_code}`
                 } else if (to.path.search('/L7') !== -1) {
-                    console.log('l7')
+                    this.path7 = `/L7/${this.activeL7.l7ServerId}`
+                }
+            },
+            activeL4 (newVal, oldVal) {
+                if (!this.$route.params.L4){  // 初始化route-link路径
+                    this.path = `/L4/${newVal.l4_code}`
                 }
 
-
+            },
+            activeL7 (newVal, oldVal){
+                if (!this.$route.params.L7){  // 初始化route-link路径
+                    this.path7 = `/L7/${newVal.l7ServerId}`
+                }
             }
         },
 
         computed: {
             ...mapState({
-                activeAside: state => state.L4.activeAside,
-                asideList: state => state.L4.asideList
+                activeL4: state => state.L4.activeAside,
+                activeL7: state => state.L7.activeAside
             }),
-        },
-        created() {
-            if (!this.$route.params.L4){  // 初始化route-link路径
-                this.path = `/L4/${this.activeAside.l4_code}`
-            }
         }
     }
 </script>
@@ -126,9 +134,9 @@
                 opacity: 0.8;
                 cursor: pointer;
                 transition: opacity 0.1s linear;
-                &.router-link-active{
-                    color: @green;
-                }
+               &:hover{
+                   opacity: 1;
+               }
             }
         }
     }

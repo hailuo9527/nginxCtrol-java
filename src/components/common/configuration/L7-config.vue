@@ -14,7 +14,7 @@
 
            </div>
 
-           <LoadBalancerModal :show="domainModel" @change="modalVisibleChange" @complete="domainModel = false"/>
+           <LoadBalancerModal :show="domainModal"  @change="modalVisibleChange" @complete="domainModal = false"/>
            <VirtualServerModal :show="serverModal" @change="modalVisibleChange"/>
        </div>
         <div class="l7_config_column column_header">
@@ -40,7 +40,24 @@
         </div>
         <div  class="l7_config_column column_body column_body_servers">
             <div class="servers">
-                <div class="server_item selected">
+                <div class="server_item selected" v-for="(item, index) in config.virtual_servers">
+                    <Icon type="md-create" class="ctrl-list-item__edit" @click="editVirtualServer(index)"/>
+                    <h4 class="ctrl-server__server-name">
+                        <span>{{ item.domain_names_m[0] || '*'}}</span>
+                    </h4>
+                    <div class="ctrl-server__protocols" >
+                        http
+                        <span v-for="(http, index) in item.listening_m.listening" v-if="http.http2">
+                           http2
+                        </span>
+                    </div>
+                    <div>
+                        <span class="ctrl-server__port" v-for="(port, index) in item.listening_m.listening">
+                            :{{port.listening_address_port}}
+                        </span>
+                    </div>
+                </div>
+                <!--<div class="server_item">
                     <div class="ctrl-server__edit icon icon_settings"></div>
                     <h4 class="ctrl-server__server-name">
                         <span>*</span>
@@ -49,17 +66,8 @@
                     <div>
                         <span class="ctrl-server__port">:80</span>
                     </div>
-                </div>
-                <div class="server_item">
-                    <div class="ctrl-server__edit icon icon_settings"></div>
-                    <h4 class="ctrl-server__server-name">
-                        <span>*</span>
-                    </h4>
-                    <div class="ctrl-server__protocols">http</div>
-                    <div>
-                        <span class="ctrl-server__port">:80</span>
-                    </div>
-                </div>
+                </div>-->
+
             </div>
         </div>
         <div  class="l7_config_column column_body">
@@ -172,7 +180,7 @@
             <canvas width="2000" height="2000" id = "canvas" style="width: 2000px; height: 2000px;"></canvas>
         </div>
 
-
+        <VirtualServerModal :show="editServerModal"  :data="virtual_server"  @change="modalVisibleChange"/>
     </div>
 </template>
 <script>
@@ -180,15 +188,18 @@ import PopTip from '@/components/common/pop-tip'
 import LoadBalancerModal from './loadBalancerModal'
 import VirtualServerModal from './virtualServerModal'
 import drawLine from '../../../libs/drawLine'
+import { getConfigInfoByConfigName } from "../../../api/L7";
 export default {
     data () {
         return {
             dropdown: true,
-            domainModel: false,
+            domainModal: false,
+            editServerModal: false,
             serverModal: false, //
             domainName: '',
             step: 0,
-
+            config: {},
+            virtual_server: {}
         }
 
     },
@@ -197,10 +208,11 @@ export default {
         PopTip, LoadBalancerModal, VirtualServerModal
     },
     methods: {
+        /* 获取配置 */
         dropdownHandler (name) {
             switch (name) {
                 case '1':
-                    this.domainModel = true
+                    this.domainModal = true
                     //this.serverModal = false
                     break
                 case '2':
@@ -212,7 +224,7 @@ export default {
         modalVisibleChange(data){
             switch (data.name) {
                 case 'domainModal':
-                    this.domainModel = data.data
+                    this.domainModal = data.data
                     break
                 case 'serverModal':
                     this.serverModal = data.data
@@ -221,6 +233,7 @@ export default {
 
         },
 
+/* 绘制关系图*/
         drawLine () {
 
             let canvas = document.getElementById("canvas");
@@ -232,10 +245,26 @@ export default {
             drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end3)
             drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end4)
             drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end5)
-        }
+        },
+        /* 获取配置 */
+        async getConfig () {
+            let res = await getConfigInfoByConfigName()
+            console.log(res)
+            if (this.asyncOk(res)) {
+                this.config = res.data.result || {}
+            }
+        },
+        /* 编辑server配置*/
+        editVirtualServer(index) {
+            console.log(index)
+            this.serverModal = true
+            this.virtual_server = this.config.virtual_servers[index]
+            console.log(this.virtual_server)
 
+        }
     },
     mounted() {
+        this.getConfig()
         this.drawLine()
         window.addEventListener('resize' ,this.drawLine)
 

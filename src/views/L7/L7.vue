@@ -5,7 +5,7 @@
             <div class="content_right_scroll">
                 <div class="content_header">
                     <div class="header_title">
-                        <span>{{activeAside.l4_name}} <Icon class="icon" @click="openDrawer = true" type="md-settings" /></span>
+                        <span>{{activeAside.l7ServerName}} <Icon class="icon" @click="openDrawer = true" type="md-settings" /></span>
                         <Drawer title="Basic Drawer" placement="left" :closable="false" v-model="openDrawer">
                             <p>{{test}}</p>
                             <p>Some contents...</p>
@@ -16,9 +16,9 @@
                         <div class="tab">
                             <!--<router-link :to="`/L4/${$route.params.id}/nginx`" class="tab_item">nginx</router-link>-->
                            <!-- <router-link :to="`/L4/${$route.params.id}`" class="tab_item">系统</router-link>-->
-                            <router-link to="/L7/123/test" class="tab_item">L7-test</router-link>
-                            <router-link to="/L7/123/config" class="tab_item">Load Balancing</router-link>
-                            <router-link to="/L7/123/analysis" class="tab_item">Analys</router-link>
+                            <router-link :to="`/L7/${$route.params.L7}/`" class="tab_item">L7-test</router-link>
+                            <router-link :to="`/L7/${$route.params.L7}/config`" class="tab_item">Load Balancing</router-link>
+                            <router-link :to="`/L7/${$route.params.L7}/analysis`" class="tab_item">Analys</router-link>
                         </div>
                         <apply-filter v-if="$route.name === 'L7-chart'"/>
                     </div>
@@ -29,7 +29,7 @@
     </div>
 </template>
 <script>
-    import Aside from '@/components/aside/L4-aside.vue'
+    import Aside from '@/components/aside/L7-aside.vue'
     import applyFilter from '@/components/common/filter.vue'
     import { deviceManage } from "../../api/L4";
     import { mapState, mapMutations } from 'vuex'
@@ -46,7 +46,7 @@
         },
         methods: {
             ...mapMutations([
-                'setActiveAside'
+                'L7setActiveAside'
             ]),
         },
         watch: {
@@ -58,8 +58,8 @@
         },
         computed: {
             ...mapState({
-                asideList: state => state.L4.asideList,
-                activeAside: state => state.L4.activeAside
+                asideList: state => state.L7.asideList,
+                activeAside: state => state.L7.activeAside
             })
         },
 
@@ -68,7 +68,7 @@
         beforeRouteLeave (to, from, next) {
             // 导航离开该组件的对应路由时调用
             // 可以访问组件实例 `this`
-            this.setActiveAside(this.asideList[0])
+            this.L7setActiveAside(this.asideList[0])
             next()
         },
 

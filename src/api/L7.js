@@ -1,7 +1,7 @@
 import axios from '@/libs/api.request'
 
 
-/* 获取默认配置 */
+/* 查询所有L7服务器配置信息 */
 export const selL7ServerInfoAll = (  ) => {
     return axios.request({
         url: '/L7/selL7ServerInfoAll',
@@ -9,7 +9,7 @@ export const selL7ServerInfoAll = (  ) => {
     })
 }
 
-/* 获取默认配置 */
+/* 添加L7服务器配置信息 */
 export const addL7ServerInfo = ({l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort}) => {
     return axios.request({
         url: '/L7/addL7ServerInfo',
@@ -39,5 +39,40 @@ export const updL7ServerInfo = ({ l7ServerName, l7ServerSSHIp, l7ServerSSHName, 
         params: {
             l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort
         }
+    })
+}
+
+/* 配置列表 */
+export const getAllConfigInfo = () => {
+    return axios.request({
+        url: '/getAllConfigInfo',
+        method: 'post'
+    })
+}
+
+/* 获取单个配置信息 */
+export const getConfigInfoByConfigName = () => {
+    return axios.request({
+        url: '/getConfigInfoByConfigName',
+        method: 'post'
+    })
+}
+
+
+/* 插入server配置 */
+export const insConfigVirtualServer = (data) => {
+    return axios.request({
+        url: '/insConfigVirtualServer',
+        method: 'post',
+        data: data
+    })
+}
+
+/* 修改server配置 */
+export const uptConfigVirtualServer = (data) => {
+    return axios.request({
+        url: '/uptConfigVirtualServer',
+        method: 'post',
+        data: data
     })
 }

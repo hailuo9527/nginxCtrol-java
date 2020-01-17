@@ -75,7 +75,7 @@ let defaultRoutes = [
                 component: () => import(/* webpackChunkName: "L4" */ '@/views/L7/L7.vue'),
                 children: [
                     {
-                        path: 'test',
+                        path: '',
                         name: 'L7Chart',
                         meta: {
                             title: 'L7-chart'
@@ -144,14 +144,23 @@ let defaultRoutes = [
                 component: () => import(/* webpackChunkName: "nginxConfigs" */ '@/views/configs/L7/configs.vue')
             },
             {
-                path: 'nginxConfigs/:id',
+                path: '/nginxConfig/:id',
                 name: 'nginxConfig',
                 meta: {
                     title: 'nginxConfig'
                 },
 
                 component: () => import(/* webpackChunkName: "nginxConfigs" */ '@/views/configs/L7/config.vue')
-            }
+            },
+            {
+                path: '/newNginxConfig',
+                name: 'newNginxConfig',
+                meta: {
+                    title: 'newNginxConfig'
+                },
+
+                component: () => import(/* webpackChunkName: "nginxConfigs" */ '@/views/configs/L7/config.vue')
+            },
            /* {
                 path: '/L7/:L7',
                 // name: 'L4',

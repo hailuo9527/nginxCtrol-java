@@ -6,6 +6,7 @@
             :mask-closable="false"
             @on-visible-change="change"
             title="新建虚拟服务器"
+            v-show="!isEmptyObject(serverForm)"
     >
         <div class="virtual_server_form" >
 
@@ -13,46 +14,9 @@
                 您需要确认每个部分的更改: {{errorTip.value}}
                 <Icon type="md-close"  class="close" slot="close"/>
             </Alert>
-           <!-- <Form ref="serverForm" :model="serverForm" :label-width="0">
 
-                <FormItem>
-                    <div class="form-item" :class="serverForm.domain.switch ? 'form-item-edit': ''">
-                        <div class="form-item-header" >
-                            <i-switch :value="!isEmptyObject(serverForm.domain)" ></i-switch>
-                            <span class="title">DOMAIN NAMES</span>
-                            <PopTip content="123"  placement="right"></PopTip>
-                            <div class="actions" >
-                                <Button shape="circle" icon="md-close" v-if="isEmptyObject(serverForm.domain)"></Button>
-                                <Button  shape="circle" ghost type="primary" v-if="isEmptyObject(serverForm.domain)" icon="md-checkmark"></Button>
-                                <Button shape="circle" icon="md-create" v-if="!isEmptyObject(serverForm.domain)"></Button>
-                            </div>
-                        </div>
-                        <div class="ctrl-edit-item ctrl-edit-item_edit" v-show="!isEmptyObject(serverForm.domain)">
-
-                                <div class="form-item-wrap" >
-                                    <div class="name-list">
-                                        <Button  icon="md-close" class="tag" v-for="(item,index) in serverForm.domain.nameList">{{item}}</Button>
-
-                                    </div>
-                                    <div class="input">
-                                        <Input type="text"
-                                               v-model="serverForm.domain.input"
-
-                                               placeholder="example.com *.example.com">
-                                        </Input>
-                                    </div>
-
-                                </div>
-
-                            <div class="ctrl-edit-item__note">Prefix the name with ~ to use a regular expression</div>
-                        </div>
-                    </div>
-
-                </FormItem>
-
-            </Form>-->
             <Form ref="serverForm" :model="serverForm" :rules="serverFormRules"   @submit.native.prevent>
-                <my-form-item :obj="serverForm.domain" title="DOMAIN NAMES"
+                <my-form-item :obj="serverForm.domain_names_m" title="DOMAIN NAMES"
                               @closeConfig = "closeConfig('domain')"
                               @saveConfig = "saveConfig('domain')"
                               info="Domain names that are served by this virtual server. This corresponds with the server_name directive in NGINX configuration.">
@@ -60,8 +24,8 @@
                             <FormItem class="border-bottom">
                                 <Button  icon="md-close" class="tag"
                                          :key="index"
-                                         v-for="(item, index) in serverForm.domain.nameList">{{item}}</Button>
-                                <Input v-model.trim="serverForm.domain.input" @on-enter="addDomainName" placeholder="2134"></Input>
+                                         v-for="(item, index) in serverForm.domain_names_m.domain_names">{{item}}</Button>
+                                <Input v-model.trim="serverForm.domain_names_m.input" @on-enter="addDomainName" placeholder="2134"></Input>
                             </FormItem>
                             <div class="ctrl-edit-item__note">Prefix the name with ~ to use a regular expression</div>
                     </div>
@@ -69,83 +33,83 @@
                     <div slot="show" class="ctrl-edit-item">
                         <div class="name-list">
                         <span  class="tag" :key="index"
-                               v-for="(item, index) in serverForm.domain.nameList">{{item}}</span>
+                               v-for="(item, index) in serverForm.domain_names_m.domain_names">{{item}}</span>
                         </div>
                     </div>
                 </my-form-item>
-                <my-form-item :obj="serverForm.ngListenConfList" title="LISTENING ADDRESS AND PORT"
-                              @closeConfig = "closeConfig('serverForm.ngListenConfList')"
-                              @saveConfig = "saveConfig('serverForm.ngListenConfList')"
+                <my-form-item :obj="serverForm.listening_m.listening" title="LISTENING ADDRESS AND PORT"
+                              @closeConfig = "closeConfig('serverForm.listening_m.listening')"
+                              @saveConfig = "saveConfig('serverForm.listening_m.listening')"
                               :important="true"
                               info="Address and port (IPv4 or IPv6) or UNIX domain socket path on which the server will accept requests.">
 
                    <div slot="edit">
-                       <div  v-if="serverForm.ngListenConfList.length===1" class="ctrl-edit-item ctrl-edit-item_edit">
+                       <div  v-if="serverForm.listening_m.listening.length===1" class="ctrl-edit-item ctrl-edit-item_edit">
                            <FormItem class="input line-form-item">
-                               <Input v-model.trim="serverForm.ngListenConfList[0].port" @on-enter="addDomainName" placeholder="2134"></Input>
+                               <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="2134"></Input>
                            </FormItem>
                            <FormItem label="DEFAULT SERVER" class="aline-center">
-                               <i-switch v-model="serverForm.ngListenConfList[0].default_server" >
+                               <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                </i-switch>
                            </FormItem>
                            <FormItem label="SSL" class="aline-center">
-                               <i-switch v-model="serverForm.ngListenConfList[0].default_server" >
+                               <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                </i-switch>
                            </FormItem>
                            <FormItem label="HTTP/2" class="aline-center">
-                               <i-switch v-model="serverForm.ngListenConfList[0].default_server" >
+                               <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                </i-switch>
                            </FormItem>
                            <FormItem label="PROXY PROTOCOL" class="aline-center">
-                               <i-switch v-model="serverForm.ngListenConfList[0].default_server" >
+                               <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                </i-switch>
                            </FormItem>
                            <expandPanel>
                                <FormItem label="FIB" class="inline-form-item">
-                                   <Input v-model.trim="serverForm.ngListenConfList[0].port" @on-enter="addDomainName" placeholder="number"></Input>
+                                   <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="number"></Input>
                                </FormItem>
                                <FormItem label="TCP FAST OPEN" class="inline-form-item">
-                                   <Input v-model.trim="serverForm.ngListenConfList[0].port" @on-enter="addDomainName" placeholder="number"></Input>
+                                   <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="number"></Input>
                                </FormItem>
                                <FormItem label="BACKLOG" class="inline-form-item">
-                                   <Input v-model.trim="serverForm.ngListenConfList[0].port" @on-enter="addDomainName" placeholder="number"></Input>
+                                   <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="number"></Input>
                                </FormItem>
                                <FormItem label="RECEIVE BUFFER SIZE" class="inline-form-item">
-                                   <Input v-model.trim="serverForm.ngListenConfList[0].port" @on-enter="addDomainName" placeholder="bytes"></Input>
+                                   <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="bytes"></Input>
                                </FormItem>
                                <FormItem label="SEND BUFFER SIZE" class="inline-form-item">
-                                   <Input v-model.trim="serverForm.ngListenConfList[0].port" @on-enter="addDomainName" placeholder="bytes"></Input>
+                                   <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="bytes"></Input>
                                </FormItem>
                                <FormItem label="ACCEPT FILTER" class="inline-form-item">
-                                   <Select v-model="serverForm.ngListenConfList[0].select">
+                                   <Select v-model="serverForm.listening_m.listening[0].select">
                                        <Option value="dataready">dataready</Option>
                                        <Option value="httpready">httpready</Option>
                                        <Option value="none">none</Option>
                                    </Select>
                                </FormItem>
                                <FormItem label="DEFERRED" class="aline-center">
-                                   <i-switch v-model="serverForm.ngListenConfList[0].default_server" >
+                                   <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                    </i-switch>
                                </FormItem>
                                <FormItem label="BIND" class="aline-center">
-                                   <i-switch v-model="serverForm.ngListenConfList[0].default_server" >
+                                   <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                    </i-switch>
                                </FormItem>
                                <FormItem label="ACCEPT IPV6 ONLY" class="aline-center">
-                                   <i-switch v-model="serverForm.ngListenConfList[0].default_server" >
+                                   <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                    </i-switch>
                                </FormItem>
                                <FormItem label="REUSEPORT" class="aline-center">
-                                   <i-switch v-model="serverForm.ngListenConfList[0].default_server" >
+                                   <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                    </i-switch>
                                </FormItem>
                                <FormItem label="TCP KEEPALIVE" class="aline-center">
-                                   <i-switch v-model="serverForm.ngListenConfList[0].default_server" >
+                                   <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                    </i-switch>
                                </FormItem>
                            </expandPanel>
                        </div>
-                       <div :key="index" v-if="serverForm.ngListenConfList.length>1" v-for="(item, index) in serverForm.ngListenConfList" class="ctrl-edit-item ctrl-edit-item_edit mulity">
+                       <div :key="index" v-if="serverForm.listening_m.listening.length>1" v-for="(item, index) in serverForm.listening_m.listening" class="ctrl-edit-item ctrl-edit-item_edit mulity">
 
                            <div class="item-body">
                                <FormItem class="input line-form-item">
@@ -213,7 +177,7 @@
                                </expandPanel>
                            </div>
                            <div class="item-body-remove">
-                               <Icon type="ios-trash" class="remove-icon" @click="removeList(serverForm.ngListenConfList,index)" size="20"/>
+                               <Icon type="ios-trash" class="remove-icon" @click="removeList(serverForm.listening_m.listening,index)" size="20"/>
                            </div>
                        </div>
                        <div class="add-listen" @click="addListen">
@@ -247,6 +211,10 @@
     export default {
         props: {
             show: false,
+            data: {
+                type: Object,
+                default: () => {}
+            }
         },
         components: {
           PopTip, myFormItem, expandPanel
@@ -254,23 +222,32 @@
         watch: {
             show (newVal, oldVal) {
                 this.model = newVal
+            },
+            data (newVal, oldVal) {
+                // console.log(...arguments)
+                if (!this.isEmptyObject(newVal)){
+                    this.serverForm = newVal
+                    //this.model = true
+                }
             }
         },
         data () {
             return {
                 modal_loading: false,
-                model: true,
+                model: false,
                 serverForm: {
-                    domain: {
-                        nameList: ['123','rew'],
+                    domain_names_m: {
+                        domain_names: ['123','rew'],
                         input: ''
                     },
-                    ngListenConfList: [
-                        {port: ''},
-                        {rwr: 432}
-                    ],
+                    listening_m:{
+                        listening: [
+                            {port: ''},
+                            {rwr: 432}
+                        ],
+                    }
                 },
-
+                config: {},
                 serverFormRules: {
 
                 },
@@ -303,8 +280,8 @@
                 })
             },
             addDomainName () {
-                this.serverForm.domain.nameList.push(this.serverForm.domain.input)
-                this.serverForm.domain.input = ''
+                this.serverForm.domain_names_m.domain_names.push(this.serverForm.domain_names_m.input)
+                this.serverForm.domain_names_m.input = ''
             },
             /* 保存配置项 */
             saveConfig(configName) {
@@ -315,19 +292,18 @@
                 console.log(configName)
             },
             addListen() {
-                console.log(this.serverForm.ngListenConfList)
-                this.serverForm.ngListenConfList.push({name: 123})
-                console.log(this.serverForm.ngListenConfList)
+                console.log(this.serverForm.listening_m.listening)
+                this.serverForm.listening_m.listening.push({name: 123})
+                console.log(this.serverForm.listening_m.listening)
 
             },
             removeList(obj, index) {
                 obj.splice(index, 1)
-            }
+            },
+
         },
         mounted() {
-            console.log(this.serverForm.ngListenConfList)
-            console.log(this.serverForm.domain.nameList)
-
+            console.log(this.data)
         }
     }
 </script>
@@ -420,29 +396,28 @@
         /deep/.ivu-form-item-content{
             height: 100%;
             border-bottom: 1px solid #ccc;
-            /deep/.ivu-input, /deep/ .ivu-select {
-                border-radius: 0;
-                width: 230px;
-                height: 100%;
-                display: inline-block;
-                &:focus{
-                    box-shadow: 0 2px 0 0 #666;
-                }
+        }
+        /deep/.ivu-input, /deep/ .ivu-select {
+            border-radius: 0;
+            width: 230px;
+            height: 100%;
+            display: inline-block;
+            &:focus{
+                box-shadow: 0 2px 0 0 #666;
             }
-            /deep/ .ivu-select-selection{
-                border-radius: 0;
-                border: none;
-                .ivu-select-selected-value{
-                    font-size: 18px;
-                    color: #333;
-                }
+        }
+        /deep/ .ivu-select-selection{
+            border-radius: 0;
+            border: none;
+            .ivu-select-selected-value{
+                font-size: 18px;
+                color: #333;
             }
-            /deep/ .ivu-select-visible .ivu-select-selection {
+        }
+        /deep/ .ivu-select-visible .ivu-select-selection {
 
-               outline: 0;
-               box-shadow: 0 2px 0 0 #666;
-            }
-
+            outline: 0;
+            box-shadow: 0 2px 0 0 #666;
         }
 
     }
