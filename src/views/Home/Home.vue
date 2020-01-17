@@ -15,222 +15,118 @@
       </div>
       <div class="overview-container__content">
         <div class="overview-score-box overview-score-box_semi-healthy">
-          <Icon type="md-settings" class="overview-score-box__settings" @click="config=true" />
-          <h2 class="overview-score-box__score">74.5%</h2>
-          <div class="overview-score-box__title">Application Health Score</div>
-          <table class="overview-score-box__stats">
-            <tr>
-              <td>Successful requests</td>
-              <td>7k</td>
-            </tr>
-            <tr>
-              <td>Request time (P95)</td>
-              <td>0 s</td>
-            </tr>
-            <tr>
-              <td>Agent availability</td>
-              <td>75 %</td>
-            </tr>
-          </table>
+          <div :class="active ? 'transition-before' : 'transition-after' ">
+            <Icon type="md-settings" class="overview-score-box__settings" @click="config=true" />
+            <h2 class="overview-score-box__score">74.5%</h2>
+            <div class="overview-score-box__title">Application Health Score</div>
+            <table class="overview-score-box__stats">
+              <tr>
+                <td>Successful requests</td>
+                <td>7k</td>
+              </tr>
+              <tr>
+                <td>Request time (P95)</td>
+                <td>0 s</td>
+              </tr>
+              <tr>
+                <td>Agent availability</td>
+                <td>75 %</td>
+              </tr>
+            </table>
+          </div>
         </div>
         <div class="overview-box">
-          <h3 class="overview-box__title">Total requests</h3>
-          <div class="overview-box__l">
-            <h4 class="overview-box__value-title">Past {{items[number]}}</h4>
-            <span class="overview-box__l__content">
-              <span class="overview-box__l__val">7K</span>
-              <span class="overview-box__l__delta">+1 %</span>
-              <span class="overview-box__l__unit"></span>
-            </span>
+          <div :class="active ? 'transition-before' : 'transition-after' ">
+            <h3 class="overview-box__title">Total requests</h3>
+            <div class="overview-box__l">
+              <h4 class="overview-box__value-title">Past {{items[number]}}</h4>
+              <span class="overview-box__l__content">
+                <span class="overview-box__l__val">7K</span>
+                <span class="overview-box__l__delta">+1 %</span>
+                <span class="overview-box__l__unit"></span>
+              </span>
+            </div>
+            <div class="overview-box__r">
+              <h4 class="overview-box__value-title">Previous</h4>
+              <span class="overview-box__r__val">7K</span>
+            </div>
+            <canvas id="canvas" class="overview-box__chart" width="320" height="100"></canvas>
           </div>
-          <div class="overview-box__r">
-            <h4 class="overview-box__value-title">Previous</h4>
-            <span class="overview-box__r__val">7K</span>
-          </div>
-          <canvas id="canvas" class="overview-box__chart" width="320" height="100"></canvas>
         </div>
         <div class="overview-box">
-          <h3 class="overview-box__title">HTTP 5xx errors</h3>
-          <div class="overview-box__l">
-            <h4 class="overview-box__value-title">Past {{items[number]}}</h4>
-            <span class="overview-box__l__content">
-              <span class="overview-box__l__val">0</span>
-              <span class="overview-box__l__unit"></span>
-            </span>
+          <div :class="active ? 'transition-before' : 'transition-after' ">
+            <h3 class="overview-box__title">HTTP 5xx errors</h3>
+            <div class="overview-box__l">
+              <h4 class="overview-box__value-title">Past {{items[number]}}</h4>
+              <span class="overview-box__l__content">
+                <span class="overview-box__l__val">0</span>
+                <span class="overview-box__l__unit"></span>
+              </span>
+            </div>
+            <div class="overview-box__r">
+              <h4 class="overview-box__value-title">Previous</h4>
+              <span class="overview-box__r__val">0</span>
+            </div>
+            <canvas id class="overview-box__chart" width="320" height="100"></canvas>
           </div>
-          <div class="overview-box__r">
-            <h4 class="overview-box__value-title">Previous</h4>
-            <span class="overview-box__r__val">0</span>
-          </div>
-          <canvas id class="overview-box__chart" width="320" height="100"></canvas>
         </div>
         <div class="overview-box">
-          <h3 class="overview-box__title">Request time (P95)</h3>
-          <div class="overview-box__l">
-            <h4 class="overview-box__value-title">Past {{items[number]}}</h4>
-            <span class="overview-box__l__content">
-              <span class="overview-box__l__val">0.000</span>
-              <span class="overview-box__l__unit">s</span>
-            </span>
+          <div :class="active ? 'transition-before' : 'transition-after' ">
+            <h3 class="overview-box__title">Request time (P95)</h3>
+            <div class="overview-box__l">
+              <h4 class="overview-box__value-title">Past {{items[number]}}</h4>
+              <span class="overview-box__l__content">
+                <span class="overview-box__l__val">0.000</span>
+                <span class="overview-box__l__unit">s</span>
+              </span>
+            </div>
+            <div class="overview-box__r">
+              <h4 class="overview-box__value-title">Previous</h4>
+              <span class="overview-box__r__val">0.000</span>
+            </div>
+            <canvas id class="overview-box__chart" width="320" height="100"></canvas>
           </div>
-          <div class="overview-box__r">
-            <h4 class="overview-box__value-title">Previous</h4>
-            <span class="overview-box__r__val">0.000</span>
-          </div>
-          <canvas id class="overview-box__chart" width="320" height="100"></canvas>
         </div>
         <div class="overview-box">
-          <h3 class="overview-box__title">Traffic</h3>
-          <div class="overview-box__l">
-            <h4 class="overview-box__value-title">Past {{items[number]}}</h4>
-            <span class="overview-box__l__content">
-              <span class="overview-box__l__val">0</span>
-              <span class="overview-box__l__delta">+2 %</span>
-              <span class="overview-box__l__unit">bps</span>
-            </span>
+          <div :class="active ? 'transition-before' : 'transition-after' ">
+            <h3 class="overview-box__title">Traffic</h3>
+            <div class="overview-box__l">
+              <h4 class="overview-box__value-title">Past {{items[number]}}</h4>
+              <span class="overview-box__l__content">
+                <span class="overview-box__l__val">0</span>
+                <span class="overview-box__l__delta">+2 %</span>
+                <span class="overview-box__l__unit">bps</span>
+              </span>
+            </div>
+            <div class="overview-box__r">
+              <h4 class="overview-box__value-title">Previous</h4>
+              <span class="overview-box__r__val">0</span>
+            </div>
+            <canvas id="canvas2" class="overview-box__chart" width="320" height="100"></canvas>
           </div>
-          <div class="overview-box__r">
-            <h4 class="overview-box__value-title">Previous</h4>
-            <span class="overview-box__r__val">0</span>
-          </div>
-          <canvas id="canvas2" class="overview-box__chart" width="320" height="100"></canvas>
         </div>
         <div class="overview-box">
-          <h3 class="overview-box__title">Request time (P95)</h3>
-          <div class="overview-box__l">
-            <h4 class="overview-box__value-title">Past {{items[number]}}</h4>
-            <span class="overview-box__l__content">
-              <span class="overview-box__l__val">0.000</span>
-              <span class="overview-box__l__unit">%</span>
-            </span>
+          <div :class="active ? 'transition-before' : 'transition-after' ">
+            <h3 class="overview-box__title">Request time (P95)</h3>
+            <div class="overview-box__l">
+              <h4 class="overview-box__value-title">Past {{items[number]}}</h4>
+              <span class="overview-box__l__content">
+                <span class="overview-box__l__val">0.000</span>
+                <span class="overview-box__l__unit">%</span>
+              </span>
+            </div>
+            <div class="overview-box__r">
+              <h4 class="overview-box__value-title">Previous</h4>
+              <span class="overview-box__r__val">0.000</span>
+            </div>
+            <canvas id="canvas3" class="overview-box__chart" width="320" height="100"></canvas>
           </div>
-          <div class="overview-box__r">
-            <h4 class="overview-box__value-title">Previous</h4>
-            <span class="overview-box__r__val">0.000</span>
-          </div>
-          <canvas id="canvas3" class="overview-box__chart" width="320" height="100"></canvas>
         </div>
       </div>
       <div class="footer">
         <div class="footer__inner">Copyright © 2018-2020 WingsBro</div>
       </div>
     </div>
-    <!-- <div class="father">
-      <div class="head">
-        <div class="left">
-          <h2>概览</h2>
-        </div>
-        <div class="right">
-          <ul>
-            <li
-              :class="number == index ? 'active' : 'disactive'"
-              v-for="(item,index) in items"
-              @click="change(index)"
-            >{{item}}</li>
-          </ul>
-        </div>
-      </div>
-      <div class="content">
-        <div class="config common">
-          <div :class="active?'transition':''">
-            <span>
-              <Icon type="ios-settings" size="20" color="#ccc" @click="config=true" />
-            </span>
-            <h2>75%</h2>
-            <div class="configDes">Application Health Score</div>
-            <table width="290" border="0">
-              <tr>
-                <td>Succesful requests</td>
-                <td class="fromright">2</td>
-              </tr>
-              <tr>
-                <td>Request time (P95)</td>
-                <td class="fromright">2</td>
-              </tr>
-              <tr>
-                <td>Agent availability</td>
-                <td class="fromright">2</td>
-              </tr>
-            </table>
-          </div>
-        </div>
-        <div class="totalRequests common commonFive">
-          <div :class="active?'transition':''">
-            <h3>Total requests</h3>
-            <div class="commonUpLeft">
-              <h4>PAST {{items[number]}}</h4>
-              <span>5k</span>
-            </div>
-            <div class="commonUpRight">
-              <h4>PREVIOUS</h4>
-              <span>5k</span>
-            </div>
-            <div class="canvas">
-              <canvas id="canvas"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="http common commonFive">
-          <div :class="active?'transition':''">
-            <h3>HTTP 5xx errors</h3>
-            <div class="commonUpLeft">
-              <h4>PAST {{items[number]}}</h4>
-              <span>0</span>
-            </div>
-            <div class="commonUpRight">
-              <h4>PREVIOUS</h4>
-              <span>0</span>
-            </div>
-          </div>
-        </div>
-        <div class="requestTime common commonFive">
-          <div :class="active?'transition':''">
-            <h3>Request time (P95)</h3>
-            <div class="commonDownLeft">
-              <h4>PAST {{items[number]}}</h4>
-              <span>0.000</span>
-            </div>
-            <div class="commonDownRight">
-              <h4>PREVIOUS</h4>
-              <span>0.000</span>
-            </div>
-          </div>
-        </div>
-        <div class="traffic common commonFive">
-          <div :class="active?'transition':''">
-            <h3>Traffic</h3>
-            <div class="commonDownLeft">
-              <h4>PATH {{items[number]}}</h4>
-              <span>1111</span>
-            </div>
-            <div class="commonDownRight">
-              <h4>PREVIOUS</h4>
-              <span>1111</span>
-            </div>
-            <div class="canvas2">
-              <canvas id="canvas2"></canvas>
-            </div>
-          </div>
-        </div>
-        <div class="cpu common commonFive">
-          <div :class="active?'transition':''">
-            <h3>CPU usage</h3>
-            <div class="commonDownLeft">
-              <h4>PATH {{items[number]}}</h4>
-              <span>0</span>
-            </div>
-            <div class="commonDownRight">
-              <h4>PREVIOUS</h4>
-              <span>0</span>
-            </div>
-            <div class="canvas3">
-              <canvas id="canvas3"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>-->
-
     <Modal v-model="config" title="Common Modal dialog box title">
       <p>Content of dialog</p>
       <p>Content of dialog</p>
@@ -255,7 +151,7 @@ export default {
       this.number = index;
       this.active = true;
       var active = this.active;
-      setTimeout(this.changeAfter, 1000);
+      setTimeout(this.changeAfter, 2000);
     },
     changeAfter() {
       if (this.active) {
