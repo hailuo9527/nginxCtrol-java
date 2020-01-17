@@ -14,19 +14,7 @@
             </div>
         </div>
 
-       <!-- <div class="ctrl-edit-item ctrl-edit-item_edit" v-if="expand && showEdit">
-            <slot name="edit"></slot>
-        </div>
-        <div class="ctrl-edit-item" v-if="expand && !showEdit">
-            <slot name="show"></slot>
-        </div>-->
 
-        <!--<div class="ctrl-edit-item ctrl-edit-item_edit" >
-
-        </div>
-        <div class="ctrl-edit-item" >
-
-        </div>-->
         <slot name="edit" v-if="expand && showEdit"></slot>
         <slot name="show" v-if="expand && !showEdit"></slot>
     </div>

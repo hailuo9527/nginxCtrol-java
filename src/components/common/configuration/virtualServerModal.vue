@@ -6,9 +6,9 @@
             :mask-closable="false"
             @on-visible-change="change"
             title="新建虚拟服务器"
-            v-show="!isEmptyObject(serverForm)"
+
     >
-        <div class="virtual_server_form" >
+        <div class="virtual_server_form" v-if="!isEmptyObject(serverForm)">
 
             <Alert type="error" class="err-tip" v-if="errorTip.show" closable >
                 您需要确认每个部分的更改: {{errorTip.value}}
@@ -221,13 +221,12 @@
         },
         watch: {
             show (newVal, oldVal) {
+                //console.log(...arguments)
                 this.model = newVal
             },
             data (newVal, oldVal) {
-                // console.log(...arguments)
                 if (!this.isEmptyObject(newVal)){
                     this.serverForm = newVal
-                    //this.model = true
                 }
             }
         },
@@ -237,17 +236,16 @@
                 model: false,
                 serverForm: {
                     domain_names_m: {
-                        domain_names: ['123','rew'],
+                        domain_names: [],
                         input: ''
                     },
                     listening_m:{
                         listening: [
-                            {port: ''},
-                            {rwr: 432}
+
                         ],
                     }
                 },
-                config: {},
+
                 serverFormRules: {
 
                 },
@@ -263,7 +261,8 @@
         },
         methods: {
             change(data) {
-                this.$emit('modalVisibleChange', {data: data, name: 'serverModal'})
+                this.model = data
+                this.$emit('change', {data: data, name: 'serverModal'})
             },
 
             handleSubmit () {

@@ -14,8 +14,7 @@
 
            </div>
 
-           <LoadBalancerModal :show="domainModal"  @change="modalVisibleChange" @complete="domainModal = false"/>
-           <VirtualServerModal :show="serverModal" @change="modalVisibleChange"/>
+
        </div>
         <div class="l7_config_column column_header">
             <div class="header_item">
@@ -180,7 +179,9 @@
             <canvas width="2000" height="2000" id = "canvas" style="width: 2000px; height: 2000px;"></canvas>
         </div>
 
-        <VirtualServerModal :show="editServerModal"  :data="virtual_server"  @change="modalVisibleChange"/>
+
+        <LoadBalancerModal :show="domainModal"  @change="modalVisibleChange" @complete="domainModal = false"/>
+        <VirtualServerModal :show="serverModal" :data="virtual_server" @change="modalVisibleChange"/>
     </div>
 </template>
 <script>
@@ -203,13 +204,18 @@ export default {
         }
 
     },
-
+    watch:{
+        config(newVal, old){
+            console.log(...arguments)
+        }
+    },
     components: {
         PopTip, LoadBalancerModal, VirtualServerModal
     },
     methods: {
         /* 获取配置 */
         dropdownHandler (name) {
+
             switch (name) {
                 case '1':
                     this.domainModal = true
@@ -264,10 +270,15 @@ export default {
         }
     },
     mounted() {
-        this.getConfig()
+       // this.getConfig()
         this.drawLine()
         window.addEventListener('resize' ,this.drawLine)
+        setTimeout(()=>{
+            this.virtual_server = {
+                name: 123
+            }
 
+        },3000)
 
     },
     beforeDestroy() {
