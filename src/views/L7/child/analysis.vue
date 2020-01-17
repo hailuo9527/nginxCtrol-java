@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="tabs">
+    <!-- <div class="tabs">
       <Tabs value="name1" type="line">
         <TabPane label="nginx-plus-r20" name="name1"></TabPane>
       </Tabs>
@@ -18,7 +18,7 @@
           </Dropdown>
         </div>
       </div>
-    </div>
+    </div> -->
     <router-view></router-view>
   </div>
 </template>
@@ -37,7 +37,7 @@ export default {};
 .tabs .ivu-tabs {
   bottom: -16px;
 }
-.tabs .timezone-select {
+.timezone-select {
   position: absolute;
   top: 24px;
   right: 0;
