@@ -72,7 +72,7 @@
         },
         mounted() {
            //
-           //  this.handleSpinCustom()
+             this.handleSpinCustom()
         }
     }
 </script>
