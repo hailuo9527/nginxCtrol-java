@@ -193,6 +193,68 @@
                         </div>
                     </div>
                 </my-form-item>
+                <my-form-item :obj="serverForm.listening_m.listening" title="SSL CERTIFICATE"
+                              @closeConfig = "closeConfig('serverForm.listening_m.listening')"
+                              @saveConfig = "saveConfig('serverForm.listening_m.listening')"
+                              info="Specify the path to the file containing server certificate. The secret key can be placed in the certificate file or defined separately. Both the certificate and the key should be in the PEM format.">
+
+                    <div slot="edit">
+                        <div  class="ctrl-edit-item ctrl-edit-item_edit">
+                           <div class="ctrl-edit-item__note">
+                               Please enable SSL in "Listening Address and Port" and make sure you have manually uploaded both the certificate and the key to the server.
+                           </div>
+                            <FormItem label="FILE" class="line-form-item">
+                                <Input placeholder="certs/myserver.crt"></Input>
+                            </FormItem>
+                            <FormItem label="KEY" class="line-form-item">
+                                <Input placeholder="certs/myserver.key"></Input>
+                            </FormItem>
+                        </div>
+                    </div>
+                    <div slot="show" >
+                        <div class="ctrl-edit-item">
+                            <div class="ctrl-edit-item__note">
+                                Please enable SSL in "Listening Address and Port" and make sure you have manually uploaded both the certificate and the key to the server.
+                            </div>
+                            <div class="ctrl-edit-properties__row">
+                                <span class="label">FILE</span>
+                                <span class="value">123</span>
+                            </div>
+                            <div class="ctrl-edit-properties__row">
+                                <span class="label">KEY</span>
+                                <span class="value">123</span>
+                            </div>
+                        </div>
+                    </div>
+                </my-form-item>
+                <my-form-item :obj="serverForm.listening_m.listening" title="ALLOW / DENY"
+                              @closeConfig = "closeConfig('serverForm.listening_m.listening')"
+                              @saveConfig = "saveConfig('serverForm.listening_m.listening')"
+                              info="Allow or deny access for specific IP or network.">
+
+                    <div slot="edit">
+                        <draggable v-model="dragList" handle=".drag-handle" @start="drag = true"
+                                   @end="drag = false">
+                            <transition-group type="transition" :name="!drag ? 'flip-list' : null"   >
+                                <div v-for="element in dragList" :key="element.id">
+                                    <div  class="ctrl-edit-item ctrl-edit-item_edit drag-edit-item">
+                                        <span class="drag-handle">
+
+                                        </span>
+                                        {{element.name}}
+                                    </div>
+
+                                </div>
+                            </transition-group>
+                        </draggable>
+
+                    </div>
+                    <div slot="show" >
+                        <div class="ctrl-edit-item">
+
+                        </div>
+                    </div>
+                </my-form-item>
             </Form>
 
 
@@ -208,6 +270,7 @@
     import PopTip from '@/components/common/pop-tip'
     import myFormItem from './form-item'
     import expandPanel from '../expandPanel'
+    import draggable from 'vuedraggable'
     export default {
         props: {
             show: false,
@@ -217,7 +280,7 @@
             }
         },
         components: {
-          PopTip, myFormItem, expandPanel
+          PopTip, myFormItem, expandPanel,  draggable,
         },
         watch: {
             show (newVal, oldVal) {
@@ -253,7 +316,12 @@
                     show: false,
                     value: ''
                 },
-
+                dragList: [
+                    { name: "John", text: "", id: 0 },
+                    { name: "Joao", text: "", id: 1 },
+                    { name: "Jean", text: "", id: 2 }
+                ],
+                drag: false,
             }
         },
         computed: {
@@ -426,6 +494,7 @@
         /deep/.ivu-form-item-content{
             flex: 1;
             border-bottom: 1px solid #ccc;
+            box-sizing: border-box;
             /deep/.ivu-input{
                 border-radius: 0;
 
@@ -437,6 +506,12 @@
 
 
     }
+    /deep/.ivu-form-item-content{
+        &:hover{
+            border-bottom: 1px solid #999;
+        }
+    }
+
     .add-listen {
 
         margin: 20px 40px 10px;
@@ -450,5 +525,49 @@
             margin-right: 10px;
         }
     }
-
+    .ctrl-edit-item__note {
+        padding: 10px 0px;
+        font-size: 14px;
+        font-weight: normal;
+        color: #888888;
+    }
+    /deep/.ivu-input{
+        height: 36px;
+        line-height: 36px;
+    }
+    .ctrl-edit-properties__row{
+        display: flex;
+        align-items: center;
+        margin-top: 5px;
+        .label{
+            flex-basis: 20%;
+            letter-spacing: 1.6px;
+            color: #888888;
+        }
+        .value{
+            max-width: 80%;
+            flex: 1;
+            font-size: 18px;
+            line-height: 21px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+    .drag-edit-item{
+        position: relative;
+    }
+    .drag-handle{
+        width: 20px;
+        height: 30px;
+        position: absolute;
+        top: 50%;
+        left: -12px;
+        margin-top: -16px;
+        border: 1px solid #d8d8d8;
+        border-radius: 10px;
+        background: #fff url(../../../../src/assets/images/ctrl-edit-sortable__control.svg) 50% 50% no-repeat;
+        cursor: grab;
+        opacity: 0.9;
+    }
 </style>

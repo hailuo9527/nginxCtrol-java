@@ -270,15 +270,17 @@ export default {
         }
     },
     mounted() {
-       // this.getConfig()
+        if (this.$route.params.configId) {
+            this.getConfig()
+        }
         this.drawLine()
         window.addEventListener('resize' ,this.drawLine)
-        setTimeout(()=>{
+       /* setTimeout(()=>{
             this.virtual_server = {
                 name: 123
             }
 
-        },3000)
+        },3000)*/
 
     },
     beforeDestroy() {

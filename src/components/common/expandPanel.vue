@@ -1,7 +1,7 @@
 <template>
     <div class="expand-panel">
-        <div class="expand-panel-title">
-            <Icon type="ios-arrow-down" class="arrow" :class="expand? 'expand': ''" size="22" @click="expand = !expand"/>
+        <div class="expand-panel-title" @click="expand = !expand">
+            <Icon type="ios-arrow-down" class="arrow" :class="expand? 'expand': ''" size="22" />
             <span>Advanced settings</span>
         </div>
         <slot v-if="expand"></slot>
@@ -25,6 +25,7 @@
             color: #666;
             border-bottom: 1px solid #d8d8d8;
             padding-bottom: 10px;
+            cursor: pointer;
             .arrow{
                 margin-right: 10px;
                 transition: all .2s;

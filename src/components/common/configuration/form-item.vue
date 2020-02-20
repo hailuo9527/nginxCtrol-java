@@ -89,7 +89,7 @@
         },
 
         mounted() {
-            //console.log(typeof this.obj)
+            console.log(this.obj)
             if (this.obj instanceof Array){
                 if (this.isEmptyObject(this.obj)){
                     this.initStatus(this.obj)

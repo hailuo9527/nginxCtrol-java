@@ -144,7 +144,7 @@ let defaultRoutes = [
                 component: () => import(/* webpackChunkName: "nginxConfigs" */ '@/views/configs/L7/configs.vue')
             },
             {
-                path: '/nginxConfig/:id',
+                path: '/nginxConfig/:configId',
                 name: 'nginxConfig',
                 meta: {
                     title: 'nginxConfig'
