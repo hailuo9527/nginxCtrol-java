@@ -1,7 +1,7 @@
 <template>
 
-  <Tooltip :content="content" :placement="placement" max-width="200" :transfer="true" theme="light" >
-    <Icon class="handle" size="20"  type="md-information-circle" :color="color"/>
+  <Tooltip :content="content" :placement="placement" max-width="400" :transfer="true" theme="light" >
+    <Icon class="handle" :size="size"  type="md-information-circle" :color="color"/>
 
   </Tooltip>
 </template>
@@ -20,6 +20,10 @@ export default {
     color: {
       type: String,
       default: '#333'
+    },
+    size: {
+      type: Number,
+      default: 20
     }
   }
 }

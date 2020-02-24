@@ -1,10 +1,10 @@
 <template>
     <div class="form-item" :class="classStatus">
         <div class="form-item-header" >
-            <i-switch v-model="expand" v-if="!important" @on-change="expandChange" ></i-switch>
+            <i-switch v-model="expand" v-if="!important && !noSwitch" @on-change="expandChange" ></i-switch>
             <span class="title">{{title}}</span>
             <PopTip :content="info"  placement="right"></PopTip>
-            <div class="actions" v-if="expand">
+            <div class="actions" v-if="expand && !onlyShow">
                 <Button shape="circle" icon="md-close" @click="showEdit = !showEdit" v-if="showEdit"></Button>
                 <Button  shape="circle" ghost type="primary" @click="ok" v-if="showEdit" icon="md-checkmark"></Button>
                 <Button shape="circle" icon="md-create" @click="editHandler" v-if="!showEdit"></Button>
@@ -28,8 +28,10 @@
             title: '',
             info: '',
             childTitle: '',
-            important: false
-
+            important: false,
+            onlyShow: false,
+            noSwitch: false,
+            defaultIsShow: false,
         },
         data () {
           return {
@@ -41,10 +43,11 @@
             PopTip
         },
         watch: {
-          obj(newVal, oldVal){
-              console.log(...arguments)
-            //  this.expand = !this.isEmptyObject(newVal)
-          }
+            obj(newVal, oldVal){
+              //console.log(...arguments)
+             //  this.expand = !this.isEmptyObject(newVal)
+            },
+
         },
         computed: {
           classStatus: function () {
@@ -126,8 +129,10 @@
         }
         .title{
             margin: 0 10px;
-            font-size: 14px;
+            font-size: 12px;
+            letter-spacing: 1.2px;
             color: #333;
+            font-weight: bold;
         }
         .actions{
             flex: 1;
