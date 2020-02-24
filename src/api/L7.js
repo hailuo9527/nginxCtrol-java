@@ -10,12 +10,12 @@ export const selL7ServerInfoAll = (  ) => {
 }
 
 /* 添加L7服务器配置信息 */
-export const addL7ServerInfo = ({l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort}) => {
+export const addL7ServerInfo = ({l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort, remark}) => {
     return axios.request({
         url: '/L7/addL7ServerInfo',
         method: 'post',
         params: {
-            l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort
+            l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort, remark
         }
     })
 }
@@ -32,12 +32,12 @@ export const delL7ServerInfo = ({l7ServerId}) => {
 }
 
 /* 修改L7服务器信息接口 */
-export const updL7ServerInfo = ({ l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort }) => {
+export const updL7ServerInfo = ({l7ServerId, l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort }) => {
     return axios.request({
         url: '/L7/updL7ServerInfo',
         method: 'post',
         params: {
-            l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort
+            l7ServerId, l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort
         }
     })
 }

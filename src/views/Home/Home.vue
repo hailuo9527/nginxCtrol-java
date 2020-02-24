@@ -151,7 +151,7 @@ export default {
       this.number = index;
       this.active = true;
       var active = this.active;
-      setTimeout(this.changeAfter, 2000);
+      setTimeout(this.changeAfter, 1000);
     },
     changeAfter() {
       if (this.active) {

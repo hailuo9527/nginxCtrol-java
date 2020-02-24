@@ -26,6 +26,7 @@
             border-bottom: 1px solid #d8d8d8;
             padding-bottom: 10px;
             .arrow{
+                cursor: pointer;
                 margin-right: 10px;
                 transition: all .2s;
             }

@@ -24,8 +24,8 @@
                             <FormItem class="border-bottom">
                                 <Button  icon="md-close" class="tag"
                                          :key="index"
-                                         v-for="(item, index) in serverForm.domain_names_m.domain_names">{{item}}</Button>
-                                <Input v-model.trim="serverForm.domain_names_m.input" @on-enter="addDomainName" placeholder="2134"></Input>
+                                         v-for="(item, index) in domain_names">{{item}}</Button>
+                                <Input v-model.trim="input" @on-enter="addDomainName" placeholder="2134"></Input>
                             </FormItem>
                             <div class="ctrl-edit-item__note">Prefix the name with ~ to use a regular expression</div>
                     </div>
@@ -33,83 +33,83 @@
                     <div slot="show" class="ctrl-edit-item">
                         <div class="name-list">
                         <span  class="tag" :key="index"
-                               v-for="(item, index) in serverForm.domain_names_m.domain_names">{{item}}</span>
+                               v-for="(item, index) in domain_names">{{item}}</span>
                         </div>
                     </div>
                 </my-form-item>
-                <my-form-item :obj="serverForm.listening_m.listening" title="LISTENING ADDRESS AND PORT"
-                              @closeConfig = "closeConfig('serverForm.listening_m.listening')"
-                              @saveConfig = "saveConfig('serverForm.listening_m.listening')"
+                <my-form-item :obj="serverForm.listening_m" title="LISTENING ADDRESS AND PORT"
+                              @closeConfig = "closeConfig('listening')"
+                              @saveConfig = "saveConfig('listening')"
                               :important="true"
                               info="Address and port (IPv4 or IPv6) or UNIX domain socket path on which the server will accept requests.">
 
                    <div slot="edit">
-                       <div  v-if="serverForm.listening_m.listening.length===1" class="ctrl-edit-item ctrl-edit-item_edit">
+                       <div  v-if="listening.length===1" class="ctrl-edit-item ctrl-edit-item_edit">
                            <FormItem class="input line-form-item">
-                               <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="2134"></Input>
+                               <Input v-model.trim="listening[0].port" @on-enter="addDomainName" placeholder="2134"></Input>
                            </FormItem>
                            <FormItem label="DEFAULT SERVER" class="aline-center">
-                               <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
+                               <i-switch v-model="listening[0].default_server" >
                                </i-switch>
                            </FormItem>
                            <FormItem label="SSL" class="aline-center">
-                               <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
+                               <i-switch v-model="listening[0].default_server" >
                                </i-switch>
                            </FormItem>
                            <FormItem label="HTTP/2" class="aline-center">
-                               <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
+                               <i-switch v-model="listening[0].default_server" >
                                </i-switch>
                            </FormItem>
                            <FormItem label="PROXY PROTOCOL" class="aline-center">
-                               <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
+                               <i-switch v-model="listening[0].default_server" >
                                </i-switch>
                            </FormItem>
                            <expandPanel>
                                <FormItem label="FIB" class="inline-form-item">
-                                   <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="number"></Input>
+                                   <Input v-model.trim="listening[0].port" @on-enter="addDomainName" placeholder="number"></Input>
                                </FormItem>
                                <FormItem label="TCP FAST OPEN" class="inline-form-item">
-                                   <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="number"></Input>
+                                   <Input v-model.trim="listening[0].port" @on-enter="addDomainName" placeholder="number"></Input>
                                </FormItem>
                                <FormItem label="BACKLOG" class="inline-form-item">
-                                   <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="number"></Input>
+                                   <Input v-model.trim="listening[0].port" @on-enter="addDomainName" placeholder="number"></Input>
                                </FormItem>
                                <FormItem label="RECEIVE BUFFER SIZE" class="inline-form-item">
-                                   <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="bytes"></Input>
+                                   <Input v-model.trim="listening[0].port" @on-enter="addDomainName" placeholder="bytes"></Input>
                                </FormItem>
                                <FormItem label="SEND BUFFER SIZE" class="inline-form-item">
-                                   <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="bytes"></Input>
+                                   <Input v-model.trim="listening[0].port" @on-enter="addDomainName" placeholder="bytes"></Input>
                                </FormItem>
                                <FormItem label="ACCEPT FILTER" class="inline-form-item">
-                                   <Select v-model="serverForm.listening_m.listening[0].select">
+                                   <Select v-model="listening[0].select">
                                        <Option value="dataready">dataready</Option>
                                        <Option value="httpready">httpready</Option>
                                        <Option value="none">none</Option>
                                    </Select>
                                </FormItem>
                                <FormItem label="DEFERRED" class="aline-center">
-                                   <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
+                                   <i-switch v-model="listening[0].default_server" >
                                    </i-switch>
                                </FormItem>
                                <FormItem label="BIND" class="aline-center">
-                                   <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
+                                   <i-switch v-model="listening[0].default_server" >
                                    </i-switch>
                                </FormItem>
                                <FormItem label="ACCEPT IPV6 ONLY" class="aline-center">
-                                   <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
+                                   <i-switch v-model="listening[0].default_server" >
                                    </i-switch>
                                </FormItem>
                                <FormItem label="REUSEPORT" class="aline-center">
-                                   <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
+                                   <i-switch v-model="listening[0].default_server" >
                                    </i-switch>
                                </FormItem>
                                <FormItem label="TCP KEEPALIVE" class="aline-center">
-                                   <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
+                                   <i-switch v-model="listening[0].default_server" >
                                    </i-switch>
                                </FormItem>
                            </expandPanel>
                        </div>
-                       <div :key="index" v-if="serverForm.listening_m.listening.length>1" v-for="(item, index) in serverForm.listening_m.listening" class="ctrl-edit-item ctrl-edit-item_edit mulity">
+                       <div :key="index" v-if="listening.length>1" v-for="(item, index) in listening" class="ctrl-edit-item ctrl-edit-item_edit mulity">
 
                            <div class="item-body">
                                <FormItem class="input line-form-item">
@@ -177,7 +177,7 @@
                                </expandPanel>
                            </div>
                            <div class="item-body-remove">
-                               <Icon type="ios-trash" class="remove-icon" @click="removeList(serverForm.listening_m.listening,index)" size="20"/>
+                               <Icon type="ios-trash" class="remove-icon" @click="removeList(listening,index)" size="20"/>
                            </div>
                        </div>
                        <div class="add-listen" @click="addListen">
@@ -197,6 +197,10 @@
 
 
         </div>
+
+        
+
+
         <div slot="footer">
             <Button @click="model = false">取消</Button>
             <Button type="primary"  :loading="modal_loading" @click="handleSubmit">保存</Button>
@@ -217,7 +221,31 @@
             }
         },
         components: {
-          PopTip, myFormItem, expandPanel
+          PopTip, myFormItem, expandPanel, VirtualServerModalBottom
+        },
+        data () {
+            return {
+                modal_loading: false,
+                model: false,
+                serverForm: {
+                    domain_names_m: {
+                        domain_names: this.domain_names,
+                        input: this.input
+                    },
+                    listening_m:{
+                        listening: this.listening
+                    }
+                },
+                domain_names: [],
+                input: '',
+                listening: [],
+                serverFormRules: {},
+                errorTip: {
+                    show: false,
+                    value: ''
+                },
+
+            }
         },
         watch: {
             show (newVal, oldVal) {
@@ -228,32 +256,6 @@
                 if (!this.isEmptyObject(newVal)){
                     this.serverForm = newVal
                 }
-            }
-        },
-        data () {
-            return {
-                modal_loading: false,
-                model: false,
-                serverForm: {
-                    domain_names_m: {
-                        domain_names: [],
-                        input: ''
-                    },
-                    listening_m:{
-                        listening: [
-
-                        ],
-                    }
-                },
-
-                serverFormRules: {
-
-                },
-                errorTip: {
-                    show: false,
-                    value: ''
-                },
-
             }
         },
         computed: {
@@ -279,8 +281,8 @@
                 })
             },
             addDomainName () {
-                this.serverForm.domain_names_m.domain_names.push(this.serverForm.domain_names_m.input)
-                this.serverForm.domain_names_m.input = ''
+                this.domain_names.push(this.input)
+                this.input = ''
             },
             /* 保存配置项 */
             saveConfig(configName) {
@@ -291,9 +293,9 @@
                 console.log(configName)
             },
             addListen() {
-                console.log(this.serverForm.listening_m.listening)
-                this.serverForm.listening_m.listening.push({name: 123})
-                console.log(this.serverForm.listening_m.listening)
+                console.log(this.listening)
+                this.listening.push({name: 123})
+                console.log(this.listening)
 
             },
             removeList(obj, index) {
@@ -303,6 +305,7 @@
         },
         mounted() {
             console.log(this.data)
+            console.log(this.listening.length)
         }
     }
 </script>

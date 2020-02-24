@@ -4,8 +4,13 @@ a {
 }
 .main-content {
   position: relative;
-  margin-top: 60px;
-  left: 20px;
+  margin-top: 28px;
+  left: 17px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.main-content::-webkit-scrollbar {
+  display: none;
 }
 .main-content-navigation {
   display: -webkit-box;
@@ -16,6 +21,11 @@ a {
   position: relative;
   min-width: 924px;
   left: 10px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.main-content-navigation::-webkit-scrollbar {
+  display: none;
 }
 .section-box {
   display: block;

@@ -65,7 +65,6 @@
                 this.showEdit = !this.showEdit
             },
             expandChange (data) {
-               // console.log(data)
                 if (!data) {
                     this.showEdit = false
                     this.$emit('closeConfig')
