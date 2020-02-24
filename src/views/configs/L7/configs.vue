@@ -49,12 +49,12 @@
         },
         methods: {
             goConfigDetail(row, index){
-                console.log(row)
-                this.$router.push({ name: 'nginxConfig', params:{ id: row.config_name}} )
+               // console.log(row)
+                this.$router.push({ name: 'nginxConfig', params:{ configId: row.config_name}} )
             },
             async getAllConfigInfo () {
                 let res = await getAllConfigInfo()
-                console.log(res)
+                //console.log(res)
                 if (this.asyncOk(res)) {
                     this.tableData = res.data.result || []
                 }

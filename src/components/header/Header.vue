@@ -134,6 +134,9 @@
                 opacity: 0.8;
                 cursor: pointer;
                 transition: opacity 0.1s linear;
+                &.router-link-active{
+                    color: @green;
+                }
                &:hover{
                    opacity: 1;
                }

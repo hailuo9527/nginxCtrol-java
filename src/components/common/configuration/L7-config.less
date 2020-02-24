@@ -193,7 +193,7 @@
         position: absolute;
         top: -1px;
         transform: rotateY(-45deg);
-        width: 19px;
+        width: 20px;
         height: 34px;
         overflow: hidden;
         visibility: hidden;
@@ -403,12 +403,17 @@
   justify-content: space-between;
   &.mulity{
     display: flex;
+    &:hover{
+      .item-body-remove{
+        background-color: #fbfbfb;
+      }
+    }
     .item-body{
       flex: 1;
     }
     .item-body-remove{
-      width: 30px;
-      text-align: right;
+      width: 46px;
+      text-align: center;
       .remove-icon{
         opacity: .8;
         transition: all .2s;
