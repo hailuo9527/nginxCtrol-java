@@ -42,13 +42,6 @@ export const updL7ServerInfo = ({l7ServerId, l7ServerName, l7ServerSSHIp, l7Serv
     })
 }
 
-/* 配置列表 */
-export const getAllConfigInfo = () => {
-    return axios.request({
-        url: '/getAllConfigInfo',
-        method: 'post'
-    })
-}
 
 /* 获取单个配置信息 */
 export const getConfigInfoByConfigName = () => {
@@ -59,20 +52,64 @@ export const getConfigInfoByConfigName = () => {
 }
 
 
-/* 插入server配置 */
-export const insConfigVirtualServer = (data) => {
+
+/* 查询所有L7服务器配置信息 */
+export const getNginxConfALL = (  ) => {
     return axios.request({
-        url: '/insConfigVirtualServer',
+        url: '/getNginxConfALL',
         method: 'post',
-        data: data
     })
 }
 
-/* 修改server配置 */
-export const uptConfigVirtualServer = (data) => {
+/* 查询指定Nginx的配置文件 */
+export const getNginxConf = ({ nginx_conf_id, version_no }) => {
     return axios.request({
-        url: '/uptConfigVirtualServer',
+        url: '/getNginxConf',
         method: 'post',
-        data: data
+        params: {
+            nginx_conf_id, version_no
+        }
+    })
+}
+
+/* 查询nginx历史版本信息 */
+export const selNgcVersionByConfId = ({ nginx_conf_id }) => {
+    return axios.request({
+        url: '/selNgcVersionByConfId',
+        method: 'post',
+        params: {
+            nginx_conf_id
+        }
+    })
+}
+
+/* 编辑历史版本信息别名 */
+export const updNgcVersionNameByConfId = ({ id, version_name }) => {
+    return axios.request({
+        url: '/updNgcVersionNameByConfId',
+        method: 'post',
+        params: {
+            id, version_name
+        }
+    })
+}
+
+/* 编辑Nginx配置文件（添加/修改） */
+export const editNginxConf = ( nginxConf ) => {
+    return axios.request({
+        url: '/editNginxConf',
+        method: 'post',
+        data: nginxConf
+    })
+}
+
+/* 删除Nginx的配置 */
+export const delNginxConf = ({ nginx_conf_id }) => {
+    return axios.request({
+        url: '/delNginxConf',
+        method: 'post',
+        params: {
+            nginx_conf_id
+        }
     })
 }

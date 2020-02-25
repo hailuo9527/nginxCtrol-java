@@ -29,10 +29,11 @@
             info: '',
             childTitle: '',
             important: false,
-            onlyShow: false,
+            onlyShow: false, // 只展示无编辑
             noSwitch: false,
             defaultIsShow: false,
         },
+        inject:['modify'],
         data () {
           return {
               showEdit: false,
@@ -91,8 +92,9 @@
         },
 
         mounted() {
-            console.log(this.obj)
-            if (this.obj instanceof Array){
+            console.log(this.modify)
+            this.showEdit = this.modify
+            /*if (this.obj instanceof Array){
                 if (this.isEmptyObject(this.obj)){
                     this.initStatus(this.obj)
                 } else {
@@ -101,15 +103,15 @@
 
             } else {
                 this.initStatus(this.obj)
-                /*this.showEdit = this.isEmptyObject(this.obj)
+                /!*this.showEdit = this.isEmptyObject(this.obj)
                 this.expand = !this.isEmptyObject(this.obj)
                 if ( this.important ) {
                     if (this.isEmptyObject(this.obj)) {
                         this.expand = true
                         this.showEdit = true
                     }
-                }*/
-            }
+                }*!/
+            }*/
 
 
         }
@@ -122,6 +124,7 @@
         padding: 15px 40px;
         border-bottom: 1px solid #e2e2e2;
         background-color: #f3f3f3;
+        transition: all .2s;
         .form-item-header{
             display: flex;
             align-items: center;
@@ -146,6 +149,7 @@
         }
         &.form-item-edit{
             background: #fff;
+            transition: all .2s;
         }
         &.important {
             border-bottom: 3px solid #000;

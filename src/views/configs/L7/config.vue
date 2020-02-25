@@ -47,8 +47,7 @@
             L7Config
         },
         mounted() {
-
-            this.configName = this.$route.params.id || ''
+            this.configName = this.$route.params.configName || ''
         }
     }
 </script>

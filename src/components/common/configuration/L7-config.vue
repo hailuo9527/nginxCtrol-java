@@ -34,38 +34,29 @@
             <div class="header_item">
                 Upstream Servers
                 <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
-                <Icon type="md-add" size="26" color="#333" class="add_handler"/>
+                <!--<Icon type="md-add" size="26" color="#333" class="add_handler"/>-->
             </div>
         </div>
         <div  class="l7_config_column column_body column_body_servers">
             <div class="servers">
-                <div class="server_item selected" v-for="(item, index) in config.virtual_servers">
-                    <Icon type="md-create" class="ctrl-list-item__edit" @click="editVirtualServer(index)"/>
-                    <h4 class="ctrl-server__server-name">
-                        <span>{{ item.domain_names_m[0] || '*'}}</span>
-                    </h4>
-                    <div class="ctrl-server__protocols" >
-                        http
-                        <span v-for="(http, index) in item.listening_m.listening" v-if="http.http2">
-                           http2
-                        </span>
+                    <div class="server_item selected" v-for="(item, index) in config.ngcVirtualServers">
+                        <Icon type="md-create" class="ctrl-list-item__edit" @click="editVirtualServer(index,true)"/>
+                        <h4 class="ctrl-server__server-name">
+                            <span>{{ item.domain_name.split(',')[0] || '*'}}</span>
+                        </h4>
+                        <div class="ctrl-server__protocols" >
+                            http
+                            <span v-for="(http, index) in item.ngcListenings" v-if="http.http2_state === 'on'">
+                               http2
+                            </span>
+                        </div>
+                        <div>
+                            <span class="ctrl-server__port" v-for="(port, index) in item.ngcListenings">
+                                :{{port.listening_address_port || '80'}}
+                            </span>
+                        </div>
                     </div>
-                    <div>
-                        <span class="ctrl-server__port" v-for="(port, index) in item.listening_m.listening">
-                            :{{port.listening_address_port}}
-                        </span>
-                    </div>
-                </div>
-                <!--<div class="server_item">
-                    <div class="ctrl-server__edit icon icon_settings"></div>
-                    <h4 class="ctrl-server__server-name">
-                        <span>*</span>
-                    </h4>
-                    <div class="ctrl-server__protocols">http</div>
-                    <div>
-                        <span class="ctrl-server__port">:80</span>
-                    </div>
-                </div>-->
+
 
             </div>
         </div>
@@ -178,13 +169,24 @@
         <div class="ctrl-relations-canvas" ref="canvas" >
             <canvas width="2000" height="2000" id = "canvas" style="width: 2000px; height: 2000px;"></canvas>
         </div>
-
-
+        <!-- 页脚按钮 -->
+        <button type="button" class="ctrl-layout__new-load-balancer ae-button__white ae-button__button"><span class="ae-button__label">Load Balancer Wizard</span></button>
+        <div class="config-page__bottom-buttons">
+            <div class="config-page__bottom-buttons_container">
+                <button type="button" class="config-page__add-new ae-button__black ae-button__button" title="Save as a new configuration">
+                    <span class="ae-button__label">Copy and Save As...</span>
+                </button>
+                <button type="button" class="config-page__add-new ae-button__green ae-button__button" title="Save configuration">
+                    <span class="ae-button__label">Save</span>
+                </button>
+            </div>
+        </div>
+        <!-- 页脚按钮end -->
+        <!-- 功能弹窗 -->
         <LoadBalancerModal :show="domainModal"  @change="modalVisibleChange" @complete="domainModal = false"/>
-        <VirtualServerModal :show="serverModal" :data="virtual_server" @change="modalVisibleChange"/>
-        <LocationModal :show="locationModal" :data="virtual_server" @change="modalVisibleChange"/>
-        <LocationModal :show="locationModal" :data="virtual_server" @change="modalVisibleChange"/>
-        <UpstreamModal :show="upstreamModal" :data="virtual_server" @change="modalVisibleChange"/>
+        <VirtualServerModal :show="serverModal" :modify="modify" :data="ngcVirtualServers" @change="modalVisibleChange"/>
+        <LocationModal  :show="locationModal" :data="ngcVirtualServers" @change="modalVisibleChange"/>
+        <UpstreamModal  :show="upstreamModal" :data="ngcVirtualServers" @change="modalVisibleChange"/>
     </div>
 </template>
 <script>
@@ -194,7 +196,8 @@ import VirtualServerModal from './virtualServerModal'
 import LocationModal from './locationModal'
 import UpstreamModal from './upstreamModal'
 import drawLine from '../../../libs/drawLine'
-import { getConfigInfoByConfigName } from "../../../api/L7";
+import { getNginxConf } from "../../../api/L7";
+import defaultConfig from './defaultConfig'
 export default {
     data () {
         return {
@@ -206,30 +209,35 @@ export default {
             upstreamModal: false,
             domainName: '',
             step: 0,
-            config: {},
-            virtual_server: {}
+            config: defaultConfig,
+            ngcVirtualServers: defaultConfig.ngcVirtualServers[0],
+            modify: false, // 新增/修改配置， 默认新增
         }
 
     },
+    provide(){
+        return{
+            modify:this.modify
+        }
+    },
     watch:{
         config(newVal, old){
-            console.log(...arguments)
+           // console.log(...arguments)
         }
     },
     components: {
         PopTip, LoadBalancerModal, VirtualServerModal, LocationModal, UpstreamModal
     },
     methods: {
-        /* 获取配置 */
+        /* 打开新建弹窗 */
         dropdownHandler (name) {
 
             switch (name) {
                 case '1':
                     this.domainModal = true
-                    //this.serverModal = false
                     break
                 case '2':
-                    this.serverModal = true
+                    this.editVirtualServer(0, false)
                     break
 
             }
@@ -241,6 +249,7 @@ export default {
                     break
                 case 'serverModal':
                     this.serverModal = data.data
+
                     break
                 case 'locationModal':
                     this.locationModal = data.data
@@ -267,34 +276,32 @@ export default {
         },
         /* 获取配置 */
         async getConfig () {
-            let res = await getConfigInfoByConfigName()
-            console.log(res)
-            if (this.asyncOk(res)) {
-                this.config = res.data.result || {}
+            let json = {
+                nginx_conf_id: this.$route.query.nginx_conf_id ,
+                version_no: this.$route.query.version_no
+            }
+            let res = await getNginxConf(json)
+            if (this.asyncOk(res) && res.data.result) {
+                this.config = res.data.result
             }
         },
         /* 编辑server配置*/
-        editVirtualServer(index) {
-            console.log(index)
+        editVirtualServer(index, modify) {
+            this.modify = modify
             this.serverModal = true
-            this.virtual_server = this.config.virtual_servers[index]
-            console.log(this.virtual_server)
+            if (modify){
+                this.ngcVirtualServers = this.config.ngcVirtualServers[index]
+            }
+
 
         }
     },
     mounted() {
-        if (this.$route.params.configId) {
+        if (this.$route.params.configName) {
             this.getConfig()
         }
         this.drawLine()
         window.addEventListener('resize' ,this.drawLine)
-       /* setTimeout(()=>{
-            this.virtual_server = {
-                name: 123
-            }
-
-        },3000)*/
-
     },
     beforeDestroy() {
         window.removeEventListener('resize', this.drawLine)

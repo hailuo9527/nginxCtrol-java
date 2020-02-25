@@ -43,7 +43,9 @@
                               @saveConfig = "saveConfig('domain')"
                               :only-show="true"
                               info="Enable read-only REST API provided by the NGINX API module. Make sure to limit the access to the API using allow/deny. For more details, please refer to the NGINX documentation.">
+                    <div slot="edit" class="ctrl-edit-item ctrl-edit-item_edit">
 
+                    </div>
                     <div slot="show" class="ctrl-edit-item">
                         <FormItem label="READ-ONLY" class="aline-center">
                             <i-switch >
@@ -331,7 +333,7 @@
         },
         watch: {
             show (newVal, oldVal) {
-                //console.log(...arguments)
+                console.log(...arguments)
                 this.model = newVal
             },
             data (newVal, oldVal) {
