@@ -21,11 +21,11 @@
                               @saveConfig = "saveConfig('domain')"
                               info="Domain names that are served by this virtual server. This corresponds with the server_name directive in NGINX configuration.">
                     <div slot="edit" class="ctrl-edit-item ctrl-edit-item_edit">
-                            <FormItem class="border-bottom">
+                            <FormItem class="input line-form-item with-button">
                                 <Button  icon="md-close" class="tag"
                                          :key="index"
-                                         v-for="(item, index) in domain_names">{{item}}</Button>
-                                <Input v-model.trim="input" @on-enter="addDomainName" placeholder="2134"></Input>
+                                         v-for="(item, index) in serverForm.domain_names_m.domain_names">{{item}}</Button>
+                                <Input v-model.trim="serverForm.domain_names_m.input" @on-enter="addDomainName" placeholder="2134"></Input>
                             </FormItem>
                             <div class="ctrl-edit-item__note">Prefix the name with ~ to use a regular expression</div>
                     </div>
@@ -33,86 +33,86 @@
                     <div slot="show" class="ctrl-edit-item">
                         <div class="name-list">
                         <span  class="tag" :key="index"
-                               v-for="(item, index) in domain_names">{{item}}</span>
+                               v-for="(item, index) in serverForm.domain_names_m.domain_names">{{item}}</span>
                         </div>
                     </div>
                 </my-form-item>
-                <my-form-item :obj="serverForm.listening_m" title="LISTENING ADDRESS AND PORT"
-                              @closeConfig = "closeConfig('listening')"
-                              @saveConfig = "saveConfig('listening')"
+                <my-form-item :obj="serverForm.listening_m.listening" title="LISTENING ADDRESS AND PORT"
+                              @closeConfig = "closeConfig('serverForm.listening_m.listening')"
+                              @saveConfig = "saveConfig('serverForm.listening_m.listening')"
                               :important="true"
                               info="Address and port (IPv4 or IPv6) or UNIX domain socket path on which the server will accept requests.">
 
                    <div slot="edit">
-                       <div  v-if="listening.length===1" class="ctrl-edit-item ctrl-edit-item_edit">
-                           <FormItem class="input line-form-item">
-                               <Input v-model.trim="listening[0].port" @on-enter="addDomainName" placeholder="2134"></Input>
+                      <!-- <div  v-if="serverForm.listening_m.listening.length===1" class="ctrl-edit-item ctrl-edit-item_edit">
+                           <FormItem class=" line-form-item">
+                               <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="2134"></Input>
                            </FormItem>
                            <FormItem label="DEFAULT SERVER" class="aline-center">
-                               <i-switch v-model="listening[0].default_server" >
+                               <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                </i-switch>
                            </FormItem>
                            <FormItem label="SSL" class="aline-center">
-                               <i-switch v-model="listening[0].default_server" >
+                               <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                </i-switch>
                            </FormItem>
                            <FormItem label="HTTP/2" class="aline-center">
-                               <i-switch v-model="listening[0].default_server" >
+                               <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                </i-switch>
                            </FormItem>
                            <FormItem label="PROXY PROTOCOL" class="aline-center">
-                               <i-switch v-model="listening[0].default_server" >
+                               <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                </i-switch>
                            </FormItem>
                            <expandPanel>
                                <FormItem label="FIB" class="inline-form-item">
-                                   <Input v-model.trim="listening[0].port" @on-enter="addDomainName" placeholder="number"></Input>
+                                   <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="number"></Input>
                                </FormItem>
                                <FormItem label="TCP FAST OPEN" class="inline-form-item">
-                                   <Input v-model.trim="listening[0].port" @on-enter="addDomainName" placeholder="number"></Input>
+                                   <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="number"></Input>
                                </FormItem>
                                <FormItem label="BACKLOG" class="inline-form-item">
-                                   <Input v-model.trim="listening[0].port" @on-enter="addDomainName" placeholder="number"></Input>
+                                   <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="number"></Input>
                                </FormItem>
                                <FormItem label="RECEIVE BUFFER SIZE" class="inline-form-item">
-                                   <Input v-model.trim="listening[0].port" @on-enter="addDomainName" placeholder="bytes"></Input>
+                                   <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="bytes"></Input>
                                </FormItem>
                                <FormItem label="SEND BUFFER SIZE" class="inline-form-item">
-                                   <Input v-model.trim="listening[0].port" @on-enter="addDomainName" placeholder="bytes"></Input>
+                                   <Input v-model.trim="serverForm.listening_m.listening[0].port" @on-enter="addDomainName" placeholder="bytes"></Input>
                                </FormItem>
                                <FormItem label="ACCEPT FILTER" class="inline-form-item">
-                                   <Select v-model="listening[0].select">
+                                   <Select v-model="serverForm.listening_m.listening[0].select">
                                        <Option value="dataready">dataready</Option>
                                        <Option value="httpready">httpready</Option>
                                        <Option value="none">none</Option>
                                    </Select>
                                </FormItem>
                                <FormItem label="DEFERRED" class="aline-center">
-                                   <i-switch v-model="listening[0].default_server" >
+                                   <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                    </i-switch>
                                </FormItem>
                                <FormItem label="BIND" class="aline-center">
-                                   <i-switch v-model="listening[0].default_server" >
+                                   <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                    </i-switch>
                                </FormItem>
                                <FormItem label="ACCEPT IPV6 ONLY" class="aline-center">
-                                   <i-switch v-model="listening[0].default_server" >
+                                   <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                    </i-switch>
                                </FormItem>
                                <FormItem label="REUSEPORT" class="aline-center">
-                                   <i-switch v-model="listening[0].default_server" >
+                                   <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                    </i-switch>
                                </FormItem>
                                <FormItem label="TCP KEEPALIVE" class="aline-center">
-                                   <i-switch v-model="listening[0].default_server" >
+                                   <i-switch v-model="serverForm.listening_m.listening[0].default_server" >
                                    </i-switch>
                                </FormItem>
                            </expandPanel>
-                       </div>
-                       <div :key="index" v-if="listening.length>1" v-for="(item, index) in listening" class="ctrl-edit-item ctrl-edit-item_edit mulity">
+                       </div>-->
+                       <div :key="index" v-for="(item, index) in serverForm.listening_m.listening" class="ctrl-edit-item ctrl-edit-item_edit mulity">
 
                            <div class="item-body">
-                               <FormItem class="input line-form-item">
+                               <FormItem class="line-form-item">
                                    <Input v-model.trim="item.port" @on-enter="addDomainName" placeholder="2134"></Input>
                                </FormItem>
                                <FormItem label="DEFAULT SERVER" class="aline-center">
@@ -176,8 +176,8 @@
                                    </FormItem>
                                </expandPanel>
                            </div>
-                           <div class="item-body-remove">
-                               <Icon type="ios-trash" class="remove-icon" @click="removeList(listening,index)" size="20"/>
+                           <div class="item-body-remove" v-if="index>1">
+                               <Icon type="ios-trash" class="remove-icon" @click="removeList(serverForm.listening_m.listening,index)" size="20"/>
                            </div>
                        </div>
                        <div class="add-listen" @click="addListen">
@@ -234,14 +234,44 @@
 
                     <div slot="edit">
                         <draggable v-model="dragList" handle=".drag-handle" @start="drag = true"
+                                   ghost-class="drag-item-ghost"
                                    @end="drag = false">
-                            <transition-group type="transition" :name="!drag ? 'flip-list' : null"   >
+                            <transition-group >
                                 <div v-for="element in dragList" :key="element.id">
-                                    <div  class="ctrl-edit-item ctrl-edit-item_edit drag-edit-item">
-                                        <span class="drag-handle">
+                                    <div  class="ctrl-edit-item ctrl-edit-item_edit drag-edit-item mulity">
+                                        <span class="drag-handle" v-if="dragList.length>1"></span>
 
-                                        </span>
-                                        {{element.name}}
+                                        <FormItem label="" class="inline-form-item options">
+                                            <Select >
+                                                <Option value="dataready">ALLOW</Option>
+                                                <Option value="httpready">DENY</Option>
+                                            </Select>
+                                            <Input placeholder="certs/myserver.crt"></Input>
+                                        </FormItem>
+                                        <div class="item-body-remove">
+                                            <Icon type="ios-trash" class="remove-icon" @click="" size="20"/>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </transition-group>
+                        </draggable>
+                        <div class="add-listen" @click="addRule">
+
+                            <Icon class="icon" size="22" type="ios-add-circle-outline" />
+                            <span class="tip">Add rule</span>
+                        </div>
+                    </div>
+                    <div slot="show" >
+                        <draggable v-model="dragList" handle=".drag-handle" @start="drag = true"
+                                   ghost-class="drag-item-ghost"
+                                   @end="drag = false">
+                            <transition-group >
+                                <div v-for="element in dragList" :key="element.id">
+                                    <div class="ctrl-edit-item drag-edit-item">
+                                        <span class="drag-handle" v-if="dragList.length>1"></span>
+                                        <span class="allow_deny">allow</span>
+                                        <span class="allow_deny_value">192.168.0.1</span>
                                     </div>
 
                                 </div>
@@ -249,20 +279,103 @@
                         </draggable>
 
                     </div>
+                </my-form-item>
+                <my-form-item :obj="serverForm.listening_m.listening" title="ERROR PAGES"
+                              @closeConfig = "closeConfig('serverForm.listening_m.listening')"
+                              @saveConfig = "saveConfig('serverForm.listening_m.listening')"
+                              info="Define the response that will be shown for specific errors.">
+
+                    <div slot="edit">
+                        <div  class="ctrl-edit-item ctrl-edit-item_edit mulity">
+
+                            <div class="item-body">
+                                <FormItem label="HTTP CODES" class="inline-form-item full-input">
+                                    <Input  placeholder="code"></Input>
+                                </FormItem>
+                                <FormItem label="REDIRECT TO" class="inline-form-item full-input">
+                                    <Input placeholder="URL | URI | variable"></Input>
+                                </FormItem>
+                                <FormItem label="RESPONSE CODE" class="inline-form-item full-input">
+                                    <Input placeholder="=code"></Input>
+                                </FormItem>
+                            </div>
+                            <div class="item-body-remove" >
+                                <Icon type="ios-trash" class="remove-icon" @click="removeList(serverForm.listening_m.listening,index)" size="20"/>
+                            </div>
+                        </div>
+                        <div class="add-listen" @click="addErrorPage">
+                            <Icon class="icon" size="22" type="ios-add-circle-outline" />
+                            <span class="tip">Add error page</span>
+                        </div>
+                    </div>
                     <div slot="show" >
-                        <div class="ctrl-edit-item">
+                        <div  class="ctrl-edit-item error-pages">
+                            <span class="error-pages-codes">404</span> will show <span class="error-pages-redirect">111</span> with response <span class="error-pages-response">404</span>
+                        </div>
+
+                    </div>
+                </my-form-item>
+                <my-form-item :obj="serverForm.listening_m.listening" title="ERROR LOG"
+                              :onlyShow="true"
+                              @closeConfig = "closeConfig('serverForm.listening_m.listening')"
+                              @saveConfig = "saveConfig('serverForm.listening_m.listening')"
+                              info="Define the response that will be shown for specific errors.">
+                    <div slot="show" >
+                        <div  class="ctrl-edit-item ">
+                            <div class="ctrl-edit-properties__row">
+                                <span class="label">PATH</span>
+                                <span class="value">/var/log/nginx/error.log</span>
+                            </div>
+                            <div class="ctrl-edit-properties__row">
+                                <span class="label">LEVEL</span>
+                                <span class="value">ERROR</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </my-form-item>
+                <my-form-item :obj="serverForm.listening_m.listening" title="ACCESS LOG"
+                              @closeConfig = "closeConfig('serverForm.listening_m.listening')"
+                              @saveConfig = "saveConfig('serverForm.listening_m.listening')"
+                              info="Enables access log for this virtual server. Log can be found at /var/log/nginx/access.log">
+
+                    <div slot="edit">
+                        <div  class="ctrl-edit-item ctrl-edit-item_edit">
+
+                            <div class="item-body">
+                                <FormItem label="USE DEFAULT FORMAT" class="aline-center">
+                                    <i-switch >
+                                    </i-switch>
+                                </FormItem>
+                                <FormItem class="line-form-item">
+
+                                    <Input placeholder="name"></Input>
+                                </FormItem>
+                                <FormItem class="line-form-item">
+                                    <Input placeholder="format"></Input>
+                                </FormItem>
+                            </div>
 
                         </div>
+                    </div>
+                    <div slot="show" >
+                        <div  class="ctrl-edit-item ">
+                            <div class="ctrl-edit-properties__row">
+                                <span class="label">PATH</span>
+                                <span class="value">/var/log/nginx/access.log</span>
+                            </div>
+                            <div class="ctrl-edit-properties__row">
+                                <span class="label">LEVEL</span>
+                                <span class="">324</span>
+                            </div>
+                        </div>
+
                     </div>
                 </my-form-item>
             </Form>
 
 
         </div>
-
-        
-
-
         <div slot="footer">
             <Button @click="model = false">取消</Button>
             <Button type="primary"  :loading="modal_loading" @click="handleSubmit">保存</Button>
@@ -303,17 +416,19 @@
                 model: false,
                 serverForm: {
                     domain_names_m: {
-                        domain_names: this.domain_names,
-                        input: this.input
+                        domain_names: [],
+                        input: ''
                     },
                     listening_m:{
-                        listening: this.listening
+                        listening: [
+
+                        ],
                     }
                 },
-                domain_names: [],
-                input: '',
-                listening: [],
-                serverFormRules: {},
+
+                serverFormRules: {
+
+                },
                 errorTip: {
                     show: false,
                     value: ''
@@ -324,17 +439,6 @@
                     { name: "Jean", text: "", id: 2 }
                 ],
                 drag: false,
-            }
-        },
-        watch: {
-            show (newVal, oldVal) {
-                //console.log(...arguments)
-                this.model = newVal
-            },
-            data (newVal, oldVal) {
-                if (!this.isEmptyObject(newVal)){
-                    this.serverForm = newVal
-                }
             }
         },
         computed: {
@@ -360,8 +464,8 @@
                 })
             },
             addDomainName () {
-                this.domain_names.push(this.input)
-                this.input = ''
+                this.serverForm.domain_names_m.domain_names.push(this.serverForm.domain_names_m.input)
+                this.serverForm.domain_names_m.input = ''
             },
             /* 保存配置项 */
             saveConfig(configName) {
@@ -372,9 +476,15 @@
                 console.log(configName)
             },
             addListen() {
-                console.log(this.listening)
-                this.listening.push({name: 123})
-                console.log(this.listening)
+               // console.log(this.serverForm.listening_m.listening)
+                this.serverForm.listening_m.listening.push({name: 123})
+               // console.log(this.serverForm.listening_m.listening)
+
+            },
+            addRule() {
+                this.dragList.push(this.dragList[0])
+            },
+            addErrorPage() {
 
             },
             removeList(obj, index) {
@@ -384,204 +494,9 @@
         },
         mounted() {
             console.log(this.data)
-            console.log(this.listening.length)
         }
     }
 </script>
 <style lang="less" scoped>
-    /deep/ .ivu-modal-close{
-        .ivu-icon-ios-close{
-            color: #fff;
-            opacity: .6;
-            font-size: 38px;
-            transition: all .2s;
-            &:hover{
-                opacity: 1;
-                transform: rotate(180deg);
-            }
-        }
-    }
-    /deep/.ivu-modal-body{
-        //padding: 0 40px 20px;
-        padding: 0;
-    }
-    .border-bottom /deep/.ivu-form-item-content{
-
-        margin-top: 0!important;
-        padding-bottom: 6px;
-        border-bottom: 1px solid #ccc;
-        display: flex;
-    }
-
-
-   .err-tip{
-       margin-bottom: 0!important;
-       background: #ff5559;
-       opacity: .95;
-       border: none;
-       border-radius: 0;
-       font-size: 14px;
-       color: #fff;
-       padding: 10px 40px;
-       position: sticky;
-       top: 0;
-       .close{
-           font-size: 18px;
-           color: #fff;
-           margin-right: 10px;
-       }
-   }
-    /deep/.ivu-modal-header {
-        border-bottom: none;
-    }
-    .name-list{
-        .tag{
-            border-radius: 3px;
-        }
-    }
-    .tag{
-        margin-right: 10px;
-        display: inline-block;
-        padding: 5px 10px;
-        background: #f3f3f3;
-        color: #333;
-
-    }
-    .aline-center{
-        display: flex;
-        align-items: center;
-        &.ivu-form-item{
-            margin-top: 15px;
-        }
-        /deep/ .ivu-form-item-content{
-            margin-top: 0;
-            padding-bottom: 0;
-        }
-    }
-    /deep/.ivu-form .ivu-form-item-label{
-        font-size: 12px;
-        font-weight: bold;
-        letter-spacing: .15em;
-        color: #888;
-        width: 160px;
-        word-wrap:break-word;
-        line-height: 16px;
-        text-align: left;
-
-    }
-    .inline-form-item{
-        display: flex;
-        margin-bottom: 15px!important;
-        margin-top: 15px;
-        align-items: center;
-        /deep/.ivu-form-item-content{
-            height: 100%;
-            border-bottom: 1px solid #ccc;
-        }
-        /deep/.ivu-input, /deep/ .ivu-select {
-            border-radius: 0;
-            width: 230px;
-            height: 100%;
-            display: inline-block;
-            &:focus{
-                box-shadow: 0 2px 0 0 #666;
-            }
-        }
-        /deep/ .ivu-select-selection{
-            border-radius: 0;
-            border: none;
-            .ivu-select-selected-value{
-                font-size: 18px;
-                color: #333;
-            }
-        }
-        /deep/ .ivu-select-visible .ivu-select-selection {
-
-            outline: 0;
-            box-shadow: 0 2px 0 0 #666;
-        }
-
-    }
-    .line-form-item{
-        display: flex;
-
-        /deep/.ivu-form-item-content{
-            flex: 1;
-            border-bottom: 1px solid #ccc;
-            box-sizing: border-box;
-            /deep/.ivu-input{
-                border-radius: 0;
-
-                &:focus{
-                    box-shadow: 0 2px 0 0 #666;
-                }
-            }
-        }
-
-
-    }
-    /deep/.ivu-form-item-content{
-        &:hover{
-            border-bottom: 1px solid #999;
-        }
-    }
-
-    .add-listen {
-
-        margin: 20px 40px 10px;
-        font-size: 18px;
-        line-height: 23px;
-        vertical-align: middle;
-        cursor: pointer;
-        opacity: 0.6;
-        transition: opacity 0.1s linear;
-        .icon{
-            margin-right: 10px;
-        }
-    }
-    .ctrl-edit-item__note {
-        padding: 10px 0px;
-        font-size: 14px;
-        font-weight: normal;
-        color: #888888;
-    }
-    /deep/.ivu-input{
-        height: 36px;
-        line-height: 36px;
-    }
-    .ctrl-edit-properties__row{
-        display: flex;
-        align-items: center;
-        margin-top: 5px;
-        .label{
-            flex-basis: 20%;
-            letter-spacing: 1.6px;
-            color: #888888;
-        }
-        .value{
-            max-width: 80%;
-            flex: 1;
-            font-size: 18px;
-            line-height: 21px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-    }
-    .drag-edit-item{
-        position: relative;
-    }
-    .drag-handle{
-        width: 20px;
-        height: 30px;
-        position: absolute;
-        top: 50%;
-        left: -12px;
-        margin-top: -16px;
-        border: 1px solid #d8d8d8;
-        border-radius: 10px;
-        background: #fff url(../../../../src/assets/images/ctrl-edit-sortable__control.svg) 50% 50% no-repeat;
-        cursor: grab;
-        opacity: 0.9;
-    }
+   @import "modal-form";
 </style>

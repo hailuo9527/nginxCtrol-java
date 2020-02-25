@@ -20,14 +20,14 @@
             <div class="header_item">
                 Locations
                 <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
-                <Icon type="md-add" size="26" color="#333" class="add_handler"/>
+                <Icon type="md-add" size="26" color="#333" class="add_handler" @click="locationModal = true"/>
             </div>
         </div>
         <div  class="l7_config_column column_header">
             <div class="header_item">
                 Upstream Groups
                 <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
-                <Icon type="md-add" size="26" color="#333" class="add_handler"/>
+                <Icon type="md-add" size="26" color="#333" class="add_handler" @click="upstreamModal = true"/>
             </div>
         </div>
         <div class="l7_config_column column_header">
@@ -182,12 +182,17 @@
 
         <LoadBalancerModal :show="domainModal"  @change="modalVisibleChange" @complete="domainModal = false"/>
         <VirtualServerModal :show="serverModal" :data="virtual_server" @change="modalVisibleChange"/>
+        <LocationModal :show="locationModal" :data="virtual_server" @change="modalVisibleChange"/>
+        <LocationModal :show="locationModal" :data="virtual_server" @change="modalVisibleChange"/>
+        <UpstreamModal :show="upstreamModal" :data="virtual_server" @change="modalVisibleChange"/>
     </div>
 </template>
 <script>
 import PopTip from '@/components/common/pop-tip'
 import LoadBalancerModal from './loadBalancerModal'
 import VirtualServerModal from './virtualServerModal'
+import LocationModal from './locationModal'
+import UpstreamModal from './upstreamModal'
 import drawLine from '../../../libs/drawLine'
 import { getConfigInfoByConfigName } from "../../../api/L7";
 export default {
@@ -197,6 +202,8 @@ export default {
             domainModal: false,
             editServerModal: false,
             serverModal: false, //
+            locationModal: false,
+            upstreamModal: false,
             domainName: '',
             step: 0,
             config: {},
@@ -210,7 +217,7 @@ export default {
         }
     },
     components: {
-        PopTip, LoadBalancerModal, VirtualServerModal
+        PopTip, LoadBalancerModal, VirtualServerModal, LocationModal, UpstreamModal
     },
     methods: {
         /* 获取配置 */
@@ -234,6 +241,12 @@ export default {
                     break
                 case 'serverModal':
                     this.serverModal = data.data
+                    break
+                case 'locationModal':
+                    this.locationModal = data.data
+                    break
+                case 'upstreamModal':
+                    this.upstreamModal = data.data
                     break
             }
 
