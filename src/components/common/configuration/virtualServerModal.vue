@@ -16,81 +16,83 @@
                 </Alert>
 
                   <Form ref="serverForm" :model="serverForm" :rules="serverFormRules"   @submit.native.prevent>
-                      <my-form-item :obj="serverForm.domain_name" title="DOMAIN NAMES"
+                      <my-form-item  title="DOMAIN NAMES"
                                     @closeConfig = "closeConfig('domain')"
                                     @saveConfig = "saveConfig('domain')"
+                                     :modify="modify"
                                     info="Domain names that are served by this virtual server. This corresponds with the server_name directive in NGINX configuration.">
                           <div slot="edit" class="ctrl-edit-item ctrl-edit-item_edit">
                                   <FormItem class="input line-form-item with-button">
                                       <Button  icon="md-close" class="tag"
                                                :key="index"
-                                               v-for="(item, index) in serverForm.domain_names_m.domain_names">{{item}}</Button>
-                                      <Input v-model.trim="serverForm.domain_names_m.input" @on-enter="addDomainName" placeholder="2134"></Input>
+                                               v-if="index"
+                                               v-for="(item, index) in serverForm.domain_name.split(',')">{{item}}</Button>
+                                      <Input  v-model.trim="serverForm.domainName" @on-enter="addDomainName" placeholder="name"></Input>
                                   </FormItem>
                                   <div class="ctrl-edit-item__note">Prefix the name with ~ to use a regular expression</div>
                           </div>
 
                           <div slot="show" class="ctrl-edit-item">
                               <div class="name-list">
-                              <span  class="tag" :key="index"
-                                     v-for="(item, index) in serverForm.domain_names_m.domain_names">{{item}}</span>
+                              <span  class="tag" :key="index" v-if="index"
+                                     v-for="(item, index) in serverForm.domain_name.split(',')">{{item}}</span>
                               </div>
                           </div>
                       </my-form-item>
-                      <my-form-item :obj="serverForm.listening_m.listening" title="LISTENING ADDRESS AND PORT"
+                      <my-form-item  title="LISTENING ADDRESS AND PORT"
                                     @closeConfig = "closeConfig('serverForm.listening_m.listening')"
                                     @saveConfig = "saveConfig('serverForm.listening_m.listening')"
                                     :important="true"
                                     info="Address and port (IPv4 or IPv6) or UNIX domain socket path on which the server will accept requests.">
 
                          <div slot="edit">
-                             <div :key="index" v-for="(item, index) in serverForm.listening_m.listening" class="ctrl-edit-item ctrl-edit-item_edit mulity">
+                             <div :key="index" v-for="(item, index) in serverForm.ngcListenings" class="ctrl-edit-item ctrl-edit-item_edit mulity">
 
                                  <div class="item-body">
                                      <FormItem class="line-form-item">
                                          <Input v-model.trim="item.port" @on-enter="addDomainName" placeholder="2134"></Input>
                                      </FormItem>
                                      <FormItem label="DEFAULT SERVER" class="aline-center">
-                                         <i-switch v-model="item.default_server" >
+                                         <i-switch  >
                                          </i-switch>
                                      </FormItem>
                                      <FormItem label="SSL" class="aline-center">
-                                         <i-switch v-model="item.default_server" >
+                                         <i-switch  >
                                          </i-switch>
                                      </FormItem>
                                      <FormItem label="HTTP/2" class="aline-center">
-                                         <i-switch v-model="item.default_server" >
+                                         <i-switch >
                                          </i-switch>
                                      </FormItem>
                                      <FormItem label="PROXY PROTOCOL" class="aline-center">
-                                         <i-switch v-model="item.default_server" >
+                                         <i-switch  >
                                          </i-switch>
                                      </FormItem>
                                      <expandPanel>
                                          <FormItem label="FIB" class="inline-form-item">
-                                             <Input v-model.trim="item.port" @on-enter="addDomainName" placeholder="number"></Input>
+                                             <Input  placeholder="number"></Input>
                                          </FormItem>
                                          <FormItem label="TCP FAST OPEN" class="inline-form-item">
-                                             <Input v-model.trim="item.port" @on-enter="addDomainName" placeholder="number"></Input>
+                                             <Input  placeholder="number"></Input>
                                          </FormItem>
                                          <FormItem label="BACKLOG" class="inline-form-item">
-                                             <Input v-model.trim="item.port" @on-enter="addDomainName" placeholder="number"></Input>
+                                             <Input  placeholder="number"></Input>
                                          </FormItem>
                                          <FormItem label="RECEIVE BUFFER SIZE" class="inline-form-item">
-                                             <Input v-model.trim="item.port" @on-enter="addDomainName" placeholder="bytes"></Input>
+                                             <Input  placeholder="bytes"></Input>
                                          </FormItem>
                                          <FormItem label="SEND BUFFER SIZE" class="inline-form-item">
-                                             <Input v-model.trim="item.port" @on-enter="addDomainName" placeholder="bytes"></Input>
+                                             <Input placeholder="bytes"></Input>
                                          </FormItem>
                                          <FormItem label="ACCEPT FILTER" class="inline-form-item">
-                                             <Select v-model="item.select">
+                                             <Select >
                                                  <Option value="dataready">dataready</Option>
                                                  <Option value="httpready">httpready</Option>
                                                  <Option value="none">none</Option>
                                              </Select>
                                          </FormItem>
                                          <FormItem label="DEFERRED" class="aline-center">
-                                             <i-switch v-model="item.default_server" >
+                                             <i-switch  >
                                              </i-switch>
                                          </FormItem>
                                          <FormItem label="BIND" class="aline-center">
@@ -98,21 +100,21 @@
                                              </i-switch>
                                          </FormItem>
                                          <FormItem label="ACCEPT IPV6 ONLY" class="aline-center">
-                                             <i-switch v-model="item.default_server" >
+                                             <i-switch >
                                              </i-switch>
                                          </FormItem>
                                          <FormItem label="REUSEPORT" class="aline-center">
-                                             <i-switch v-model="item.default_server" >
+                                             <i-switch  >
                                              </i-switch>
                                          </FormItem>
                                          <FormItem label="TCP KEEPALIVE" class="aline-center">
-                                             <i-switch v-model="item.default_server" >
+                                             <i-switch  >
                                              </i-switch>
                                          </FormItem>
                                      </expandPanel>
                                  </div>
                                  <div class="item-body-remove" v-if="index>1">
-                                     <Icon type="ios-trash" class="remove-icon" @click="removeList(serverForm.listening_m.listening,index)" size="20"/>
+                                     <Icon type="ios-trash" class="remove-icon" @click="removeList(serverForm.ngcListenings,index)" size="20"/>
                                  </div>
                              </div>
                              <div class="add-listen" @click="addListen">
@@ -128,7 +130,7 @@
                               </div>
                           </div>
                       </my-form-item>
-                      <my-form-item :obj="serverForm.listening_m.listening" title="SSL CERTIFICATE"
+                      <my-form-item  title="SSL CERTIFICATE"
                                     @closeConfig = "closeConfig('serverForm.listening_m.listening')"
                                     @saveConfig = "saveConfig('serverForm.listening_m.listening')"
                                     info="Specify the path to the file containing server certificate. The secret key can be placed in the certificate file or defined separately. Both the certificate and the key should be in the PEM format.">
@@ -162,7 +164,7 @@
                               </div>
                           </div>
                       </my-form-item>
-                      <my-form-item :obj="serverForm.listening_m.listening" title="ALLOW / DENY"
+                      <my-form-item  title="ALLOW / DENY"
                                     @closeConfig = "closeConfig('serverForm.listening_m.listening')"
                                     @saveConfig = "saveConfig('serverForm.listening_m.listening')"
                                     info="Allow or deny access for specific IP or network.">
@@ -215,7 +217,7 @@
 
                           </div>
                       </my-form-item>
-                      <my-form-item :obj="serverForm.listening_m.listening" title="ERROR PAGES"
+                      <my-form-item  title="ERROR PAGES"
                                     @closeConfig = "closeConfig('serverForm.listening_m.listening')"
                                     @saveConfig = "saveConfig('serverForm.listening_m.listening')"
                                     info="Define the response that will be shown for specific errors.">
@@ -250,7 +252,7 @@
 
                           </div>
                       </my-form-item>
-                      <my-form-item :obj="serverForm.listening_m.listening" title="ERROR LOG"
+                      <my-form-item  title="ERROR LOG"
                                     :onlyShow="true"
                                     @closeConfig = "closeConfig('serverForm.listening_m.listening')"
                                     @saveConfig = "saveConfig('serverForm.listening_m.listening')"
@@ -269,7 +271,7 @@
 
                           </div>
                       </my-form-item>
-                      <my-form-item :obj="serverForm.listening_m.listening" title="ACCESS LOG"
+                      <my-form-item  title="ACCESS LOG"
                                     @closeConfig = "closeConfig('serverForm.listening_m.listening')"
                                     @saveConfig = "saveConfig('serverForm.listening_m.listening')"
                                     info="Enables access log for this virtual server. Log can be found at /var/log/nginx/access.log">
@@ -324,6 +326,7 @@
     import myFormItem from './form-item'
     import expandPanel from '../expandPanel'
     import draggable from 'vuedraggable'
+    import defaultConfig from './defaultConfig'
     export default {
         props: {
             show: false,
@@ -345,8 +348,8 @@
                     this.change(newVal)
                 }
             },
-            modify(newVal, oldVal){
-                console.log(...arguments)
+            modify(nv) {
+                console.log(nv)
             },
             data (newVal, oldVal) {
                 if (!this.isEmptyObject(newVal)){
@@ -361,7 +364,6 @@
                 serverForm: {
 
                 },
-
                 serverFormRules: {
 
                 },
@@ -400,8 +402,11 @@
                 })
             },
             addDomainName () {
-                this.serverForm.domain_names_m.domain_names.push(this.serverForm.domain_names_m.input)
-                this.serverForm.domain_names_m.input = ''
+                if(this.serverForm.domainName === '') return
+                let arr = this.serverForm.domain_name.split(',')
+                arr.push(this.serverForm.domainName)
+                this.serverForm.domain_name = arr.join(',')
+                this.serverForm.domainName = ''
             },
             /* 保存配置项 */
             saveConfig(configName) {
@@ -413,7 +418,9 @@
             },
             addListen() {
                // console.log(this.serverForm.listening_m.listening)
-                this.serverForm.listening_m.listening.push({name: 123})
+                this.serverForm.ngcListenings.push(
+                    defaultConfig.ngcVirtualServers.ngcListenings[0]
+                )
                // console.log(this.serverForm.listening_m.listening)
 
             },
@@ -435,7 +442,7 @@
         },
         beforeDestroy() {
             console.log('yichu')
-            this.change(false)
+            //this.change(false)
         }
     }
 </script>

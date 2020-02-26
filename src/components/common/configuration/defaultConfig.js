@@ -11,7 +11,7 @@ const  defaultConfig = {
             virtual_id: '',
             nginx_conf_id: '',
             domain_names_state: 'off',
-            domain_name: 'localhost,1231',
+            domain_name: '',
             ssl_certificate_state: 'off',
             ssl_file: 'off',
             ssl_key: 'off',

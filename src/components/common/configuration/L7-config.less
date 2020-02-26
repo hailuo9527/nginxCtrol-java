@@ -375,69 +375,14 @@
   }
 }
 
-/deep/ .ivu-input {
-  border-color: transparent;
-  transition: color 0.1s linear;
-  background: transparent;
-  outline: none;
-  font-size: 18px;
-  color: #333;
-  &:focus{
-    box-shadow: none;
-  }
-}
+
 /deep/ .ivu-input-group-prepend,  /deep/.ivu-input-group-prepend{
   border: none;
   background: transparent;
 }
 
 
-/deep/.ctrl-edit-item {
-  position: relative;
-  margin: 10px 40px;
 
-  padding: 0px 28px 0px 28px;
-  border-left: 2px solid #d8d8d8;
-  transition: border-color 0.1s linear;
-
-  justify-content: space-between;
-  &.mulity{
-    display: flex;
-    &:hover{
-      .item-body-remove{
-        background-color: #fbfbfb;
-      }
-    }
-    .item-body{
-      flex: 1;
-    }
-    .item-body-remove{
-      width: 46px;
-      text-align: center;
-      .remove-icon{
-        opacity: .8;
-        transition: all .2s;
-        color: #333;
-        margin-top: 10px;
-        cursor: pointer;
-        &:hover{
-          opacity: 1;
-        }
-      }
-    }
-  }
-
-}
-/deep/ .ctrl-edit-item_edit {
-  border-left-color: @green;
-
-}
-/deep/.ctrl-edit-item__note {
-  padding: 10px 0px;
-  font: 12px 'RobotoItalic', Arial, sans-serif;
-  font-weight: normal;
-  color: #888888;
-}
 .ctrl-layout__new-load-balancer {
   position: absolute;
   bottom: 20px;

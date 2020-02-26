@@ -183,10 +183,10 @@
         </div>
         <!-- 页脚按钮end -->
         <!-- 功能弹窗 -->
-        <LoadBalancerModal :show="domainModal"  @change="modalVisibleChange" @complete="domainModal = false"/>
+        <LoadBalancerModal :show="domainModal"   @change="modalVisibleChange" @complete="domainModal = false"/>
         <VirtualServerModal :show="serverModal" :modify="modify" :data="ngcVirtualServers" @change="modalVisibleChange"/>
-        <LocationModal  :show="locationModal" :data="ngcVirtualServers" @change="modalVisibleChange"/>
-        <UpstreamModal  :show="upstreamModal" :data="ngcVirtualServers" @change="modalVisibleChange"/>
+       <!-- <LocationModal  :show="locationModal" :data="ngcVirtualServers" @change="modalVisibleChange"/>
+        <UpstreamModal  :show="upstreamModal" :data="ngcVirtualServers" @change="modalVisibleChange"/>-->
     </div>
 </template>
 <script>
@@ -215,11 +215,7 @@ export default {
         }
 
     },
-    provide(){
-        return{
-            modify:this.modify
-        }
-    },
+
     watch:{
         config(newVal, old){
            // console.log(...arguments)
@@ -288,6 +284,7 @@ export default {
         /* 编辑server配置*/
         editVirtualServer(index, modify) {
             this.modify = modify
+            console.log(this.modify)
             this.serverModal = true
             if (modify){
                 this.ngcVirtualServers = this.config.ngcVirtualServers[index]
