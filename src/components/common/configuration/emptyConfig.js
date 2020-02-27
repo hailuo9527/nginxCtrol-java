@@ -1,5 +1,5 @@
 /* 默认配置模板 */
-const  defaultConfig = {
+const  emptyConfig = {
     nginx_conf_id: '',
     config_name: '',
     version_no: '',
@@ -10,8 +10,8 @@ const  defaultConfig = {
         {
             virtual_id: '',
             nginx_conf_id: '',
-            domain_names_state: true,
-            domain_name: 'localhost',
+            domain_names_state: false,
+            domain_name: '',
             ssl_certificate_state: false,
             ssl_file: '',
             ssl_key: '',
@@ -109,8 +109,8 @@ const  defaultConfig = {
                 {
                     listening_id: '',
                     virtual_id: '',
-                    listening_address_port: '80',
-                    default_server_state: true,
+                    listening_address_port: '',
+                    default_server_state: false,
                     ssl_state: false,
                     http2_state: false,
                     proxy_protocol_state: false,
@@ -122,7 +122,7 @@ const  defaultConfig = {
                     accept_filter: '',
                     deferred_state: false,
                     bind_state: false,
-                    accept_ipv6_only_state: true,
+                    accept_ipv6_only_state: false,
                     reuseport_state: false,
                     tcp_keepalive_state: false,
                     tcp_keepalive_value: '',
@@ -192,4 +192,4 @@ const  defaultConfig = {
         }
     ]
 }
-export default defaultConfig
+export default emptyConfig

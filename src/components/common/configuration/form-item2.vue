@@ -39,10 +39,10 @@
             },
         },
         data () {
-          return {
-              showEdit: false,
-              expand: false,
-          }
+            return {
+                showEdit: false,
+                expand: false,
+            }
         },
         components: {
             PopTip
@@ -60,18 +60,18 @@
             }
         },
         computed: {
-          classStatus: function () {
-              let className
+            classStatus: function () {
+                let className
 
-              if (this.important) {
-                  className = 'form-item-edit important'
-              } else if (this.expand){
-                  className = 'form-item-edit'
-              } else {
-                  className = ''
-              }
-              return className
-          }
+                if (this.important) {
+                    className = 'form-item-edit important'
+                } else if (this.expand){
+                    className = 'form-item-edit'
+                } else {
+                    className = ''
+                }
+                return className
+            }
         },
         methods: {
             editHandler () {
