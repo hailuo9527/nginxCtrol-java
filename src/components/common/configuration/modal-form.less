@@ -201,11 +201,63 @@
     margin-right: 10px;
   }
 }
+.ctrl-edit-item {
+  position: relative;
+  margin: 10px 40px;
+
+  padding: 0px 28px 0px 28px;
+  border-left: 2px solid #d8d8d8;
+  transition: border-color 0.1s linear;
+
+  justify-content: space-between;
+  &.mulity{
+    display: flex;
+    &:hover{
+      .item-body-remove{
+        background-color: #fbfbfb;
+      }
+    }
+    .item-body{
+      flex: 1;
+    }
+    .item-body-remove{
+      width: 46px;
+      text-align: center;
+      .remove-icon{
+        opacity: .8;
+        transition: all .2s;
+        color: #333;
+        margin-top: 10px;
+        cursor: pointer;
+        &:hover{
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+}
+ .ctrl-edit-item_edit {
+  border-left-color: @green;
+
+}
+
 .ctrl-edit-item__note {
   padding: 10px 0px;
   font-size: 14px;
   font-weight: normal;
   color: #888888;
+}
+/deep/ .ivu-input {
+  border-color: transparent;
+  transition: color 0.1s linear;
+  background: transparent;
+  outline: none;
+  font-size: 18px;
+  color: #333;
+  &:focus{
+    box-shadow: none;
+  }
 }
 /deep/.ivu-input{
   height: 36px;

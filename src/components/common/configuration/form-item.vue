@@ -13,8 +13,6 @@
                 {{childTitle}}
             </div>
         </div>
-
-
         <slot name="edit" v-if="expand && showEdit"></slot>
         <slot name="show" v-if="expand && !showEdit"></slot>
     </div>
@@ -24,14 +22,14 @@
     import PopTip from '@/components/common/pop-tip'
     export default {
         props: {
-            obj:[Array, Object],
             title: '',
             info: '',
             childTitle: '',
             important: false,
-            onlyShow: false,
+            onlyShow: false, // 只展示无编辑
             noSwitch: false,
             defaultIsShow: false,
+            modify: false
         },
         data () {
           return {
@@ -43,10 +41,6 @@
             PopTip
         },
         watch: {
-            obj(newVal, oldVal){
-              //console.log(...arguments)
-             //  this.expand = !this.isEmptyObject(newVal)
-            },
 
         },
         computed: {
@@ -71,45 +65,22 @@
                 if (!data) {
                     this.showEdit = false
                     this.$emit('closeConfig')
+                } else if(this.onlyShow)  {
+                    this.showEdit = false
                 }
             },
             ok () {
                 console.log( 'ok')
+                console.log(this.expand)
                 this.showEdit = false
                 this.$emit('saveConfig')
             },
-            initStatus (obj) {
-                this.showEdit = this.isEmptyObject(obj)
-                this.expand = !this.isEmptyObject(obj)
-                if ( this.important ) {
-                    if (this.isEmptyObject(obj)) {
-                        this.expand = true
-                        this.showEdit = true
-                    }
-                }
-            }
+
         },
 
         mounted() {
-            console.log(this.obj)
-            if (this.obj instanceof Array){
-                if (this.isEmptyObject(this.obj)){
-                    this.initStatus(this.obj)
-                } else {
-                   this.initStatus(this.obj[0])
-                }
-
-            } else {
-                this.initStatus(this.obj)
-                /*this.showEdit = this.isEmptyObject(this.obj)
-                this.expand = !this.isEmptyObject(this.obj)
-                if ( this.important ) {
-                    if (this.isEmptyObject(this.obj)) {
-                        this.expand = true
-                        this.showEdit = true
-                    }
-                }*/
-            }
+           // console.log(this.modify)
+            this.showEdit = !this.modify
 
 
         }
@@ -122,6 +93,7 @@
         padding: 15px 40px;
         border-bottom: 1px solid #e2e2e2;
         background-color: #f3f3f3;
+        transition: all .2s;
         .form-item-header{
             display: flex;
             align-items: center;
@@ -137,6 +109,7 @@
         .actions{
             flex: 1;
             text-align: right;
+            height: 30px;
             .ivu-btn-circle.ivu-btn-icon-only, .ivu-btn-circle-outline.ivu-btn-icon-only{
                 width: 40px;
                 height: 30px;
@@ -146,6 +119,7 @@
         }
         &.form-item-edit{
             background: #fff;
+            transition: all .2s;
         }
         &.important {
             border-bottom: 3px solid #000;

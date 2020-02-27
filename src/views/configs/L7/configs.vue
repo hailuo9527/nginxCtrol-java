@@ -12,36 +12,36 @@
     </div>
 </template>
 <script>
-    import { getAllConfigInfo } from "../../../api/L7";
+    import { getNginxConfALL } from "../../../api/L7";
 
     export default {
         data () {
             return {
                 tableConfig: [
-                    {
+                    /*{
                         type: 'index',
                         width: 60,
                         align: 'center'
-                    },
+                    },*/
                     {
                         title: '配置名',
                         key: 'config_name'
                     },
                     {
                         title: 'INSTANCES',
-                        key: 'config_name'
+                        key: 'instance_count'
                     },
                     {
                         title: '历史版本',
-                        key: 'config_name'
+                        key: 'version_no'
                     },
                     {
                         title: '最近修改时间',
-                        key: 'config_name'
+                        key: 'upd_time'
                     },
                     {
                         title: '最近修改人',
-                        key: 'address'
+                        key: 'upd_name'
                     },
                 ],
                 tableData: []
@@ -50,11 +50,19 @@
         methods: {
             goConfigDetail(row, index){
                // console.log(row)
-                this.$router.push({ name: 'nginxConfig', params:{ configId: row.config_name}} )
+                this.$router.push({ name: 'nginxConfig',
+                    params:{
+                        configName: row.config_name,
+
+                    },
+                    query: {
+                        nginx_conf_id: row.nginx_conf_id,
+                        version_no: row.version_no
+                    }
+                } )
             },
             async getAllConfigInfo () {
-                let res = await getAllConfigInfo()
-                //console.log(res)
+                let res = await getNginxConfALL()
                 if (this.asyncOk(res)) {
                     this.tableData = res.data.result || []
                 }

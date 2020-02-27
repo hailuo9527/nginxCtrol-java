@@ -375,66 +375,62 @@
   }
 }
 
-/deep/ .ivu-input {
-  border-color: transparent;
-  transition: color 0.1s linear;
-  background: transparent;
-  outline: none;
-  font-size: 18px;
-  color: #333;
-  &:focus{
-    box-shadow: none;
-  }
-}
+
 /deep/ .ivu-input-group-prepend,  /deep/.ivu-input-group-prepend{
   border: none;
   background: transparent;
 }
 
 
-/deep/.ctrl-edit-item {
-  position: relative;
-  margin: 10px 40px;
 
-  padding: 0px 28px 0px 28px;
-  border-left: 2px solid #d8d8d8;
-  transition: border-color 0.1s linear;
-
-  justify-content: space-between;
-  &.mulity{
-    display: flex;
-    &:hover{
-      .item-body-remove{
-        background-color: #fbfbfb;
-      }
-    }
-    .item-body{
-      flex: 1;
-    }
-    .item-body-remove{
-      width: 46px;
-      text-align: center;
-      .remove-icon{
-        opacity: .8;
-        transition: all .2s;
-        color: #333;
-        margin-top: 10px;
-        cursor: pointer;
-        &:hover{
-          opacity: 1;
-        }
-      }
-    }
-  }
-
+.ctrl-layout__new-load-balancer {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  width: calc(25% - 40px);
 }
-/deep/ .ctrl-edit-item_edit {
-  border-left-color: @green;
-
+.ae-button__button {
+  -webkit-appearance: none;
+  height: 40px;
+  line-height: 38px;
+  white-space: nowrap;
+  cursor: pointer;
+  padding: 0px 20px;
+  border-radius: 3px;
+  font-size: 14px;
+  outline: none;
+  border: 0px;
+  box-sizing: border-box;
 }
-/deep/.ctrl-edit-item__note {
-  padding: 10px 0px;
-  font: 12px 'RobotoItalic', Arial, sans-serif;
-  font-weight: normal;
-  color: #888888;
+.ae-button__white {
+  color: #666666;
+  background: transparent;
+  border: 1px solid #cccccc;
+}
+.ae-button__white:hover {
+  border-color: #ababab;
+  color: #333333;
+}
+.ae-button__black {
+  background: #333333;
+  color: #ffffff;
+}
+.ae-button__black:enabled:hover {
+  background: #444;
+}
+.ae-button__green {
+  background: #01c864;
+  color: #fff;
+}
+.ae-button__green:enabled:hover {
+  background: #00df6f;
+}
+.config-page__bottom-buttons {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2;
+}
+.config-page__bottom-buttons button:first-of-type {
+  margin-right: 20px;
 }
