@@ -37,6 +37,7 @@
                 type: Boolean,
                 default: false
             },
+            valid: false,
         },
         data () {
           return {
@@ -57,6 +58,17 @@
 
                 },
                 immediate: true
+            },
+            showEdit: {
+                handler(nv,ov) { // 通知父组件编辑模式打开， 未保存
+                    this.$emit('edit', nv)
+                },
+                immediate: true
+            },
+            valid(nv, ov) {
+                if (nv) {
+                    this.showEdit = false
+                }
             }
         },
         computed: {
@@ -95,9 +107,16 @@
             },
 
             ok () {
-                console.log( 'ok')
-                this.showEdit = false
                 this.$emit('saveConfig')
+                console.log(this.valid)
+                /*console.log(this.valid)
+                if(this.valid){
+                    this.showEdit = false
+                }*/
+                if(this.valid){
+                    this.showEdit = false
+                }
+
             },
 
         },

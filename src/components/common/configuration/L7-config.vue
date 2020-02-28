@@ -278,7 +278,7 @@ export default {
                 version_no: this.$route.query.version_no
             }
             let res = await getNginxConf(json)
-           // console.log(res)
+            console.log(res)
             if (this.asyncOk(res) && res.data.result) {
                 this.config = res.data.result
             }

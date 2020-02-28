@@ -16,8 +16,14 @@
                 </Alert>
                 <domain :modify="modify"
                         :data = "domain"
+                        @edit = "checkEditStatus"
+                        @readyOk = 'prepareConfig'
                 ></domain>
-                 <!-- <Form ref="serverForm" :model="serverForm" :rules="serverFormRules"    @submit.native.prevent>
+                <listen :modify="modify"
+                        :data = "listen"
+                        @edit = "checkEditStatus"
+                        @readyOk = 'prepareConfig'></listen>
+                  <!--<Form ref="serverForm" :model="serverForm" :rules="serverFormRules"    @submit.native.prevent>
                       <my-form-item  title="DOMAIN NAMES"
                                     @closeConfig = "cancel('domain')"
                                     @saveConfig = "saveConfig('domain')"
@@ -335,6 +341,7 @@
     import defaultConfig from './defaultConfig'
     import emptyConfig from './emptyConfig'
     import domain from './virtualServerModal/domain'
+    import listen from './virtualServerModal/listen'
     export default {
         props: {
             show: false,
@@ -345,7 +352,7 @@
             modify: false,
         },
         components: {
-          PopTip, myFormItem, expandPanel,  draggable, domain
+          PopTip, myFormItem, expandPanel,  draggable, domain, listen
         },
         watch: {
             show (newVal, oldVal) {
@@ -367,28 +374,23 @@
                         domain_names_state: this.serverForm.domain_names_state,
                         domain_name: this.serverForm.domain_name,
                     }
+                    this.listen = {
+                        ngcListenings: this.serverForm.ngcListenings
+                    }
+
                 },
                 immediate: true
             }
         },
         data () {
-            const domain = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('至少需要一个域名！'));
-                }
-                callback();
-            };
+
             return {
                 modal_loading: false,
                 model: false,
                 serverForm: {
 
                 },
-                serverFormRules: {
-                    domain_name: [
-                        { validator: domain, trigger: 'blur' }
-                    ],
-                },
+                errorInfo: {},
                 errorTip: {
                     show: false,
                     value: ''
@@ -399,7 +401,9 @@
                     { name: "Jean", text: "", id: 2 }
                 ],
                 drag: false,
-                domain: {}
+                domain: {},
+                listen: {}
+
             }
         },
         computed: {
@@ -413,9 +417,9 @@
 
             handleSubmit () {
                 // 验证是否有未确认的更改
-                Object.keys(this.serverForm).map((item) => {
-                    console.log(this.serverForm[item])
-                    if (this.isEmptyObject(this.serverForm[item])){
+                Object.keys(this.errorInfo).map((item) => {
+                    console.log(this.errorInfo[item])
+                    if (this.errorInfo[item]){
                         this.errorTip = {
                             show: true,
                             value: item
@@ -424,62 +428,16 @@
                     }
                 })
             },
-            addDomainName () {
-                if(this.serverForm.domainName === "") return
-                let arr = this.serverForm.domain_name.split(',')
-                arr.push(this.serverForm.domainName)
-                arr.map((item, index)=> {
-                    if (!item) arr.splice(index,1)
-                })
-                console.log(arr)
-                this.serverForm.domain_name = arr.join(',')
-                this.serverForm.domainName = ''
-            },
-            removeTag(str) {
-                let arr = this.serverForm.domain_name.split(',')
-                let index = arr.indexOf(str)
-                arr.splice(index, 1)
-                this.serverForm.domain_name = arr.join(',')
-            },
 
-            /* 保存配置项 */
-            saveConfig(configName) {
-                // console.log(configName)
-                switch (configName) {
-                    case 'domain' :
-                        this.$refs['serverForm'].validateField('domain_name', (errorMsg)=>{
-                            console.log(errorMsg)
-
-                        })
-                }
+            checkEditStatus(data){
+                this.errorInfo[data.name] = data.value
             },
-            /* 还原配置 */
-            backConfig(obj,target){
-                Object.keys(obj).map(item => {
-                    this.serverForm[item] = target[item]
+            prepareConfig(data) {
+                Object.keys(data).map(item => {
+                    this.serverForm[item] = data[item]
                 })
             },
-            /* 取消配置修改 */
-            cancel(configName,target) {
-                target = target || this.data
-                switch (configName) {
-                    case 'domain':
-                        let obj = {
-                            domain_names_state: false,
-                            domain_name: ''
-                        }
-                        this.backConfig(obj,target)
-                        break
-                }
-            },
-            addListen() {
-               // console.log(this.serverForm.listening_m.listening)
-                this.serverForm.ngcListenings.push(
-                    defaultConfig.ngcVirtualServers.ngcListenings[0]
-                )
-               // console.log(this.serverForm.listening_m.listening)
 
-            },
             addRule() {
                 this.dragList.push(this.dragList[0])
             },

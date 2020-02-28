@@ -3,8 +3,10 @@
                    @closeConfig = "cancel('domain')"
                    @saveConfig = "saveConfig('domain')"
                    @cancel = "cancel('domain')"
+                   @edit="edit"
                    :modify="modify"
                    :open = "form.domain_names_state"
+                   :valid="valid"
                    info="Domain names that are served by this virtual server. This corresponds with the server_name directive in NGINX configuration.">
         <div slot="edit" class="ctrl-edit-item ctrl-edit-item_edit">
             <Form ref="form" :model="form" :rules="formRules"    @submit.native.prevent>
@@ -58,6 +60,7 @@
                         { validator: domain, trigger: 'blur' }
                     ],
                 },
+                valid: false,
             }
         },
         watch: {
@@ -67,6 +70,12 @@
                     this.form = this.copyJson(nv)
                 },
                 immediate: true
+            },
+            form: {
+                handler() {
+                    this.valid = false  //  表单变化时重新验证
+                },
+                deep: true
             }
         },
         computed: {
@@ -80,7 +89,6 @@
                 arr.map((item, index)=> {
                     if (!item) arr.splice(index,1)
                 })
-                console.log(arr)
                 this.form.domain_name = arr.join(',')
                 this.form.domainName = ''
             },
@@ -93,14 +101,15 @@
 
             /* 保存配置项 */
             saveConfig(configName) {
-                // console.log(configName)
-                switch (configName) {
-                    case 'domain' :
-                        this.$refs['form'].validateField('domain_name', (errorMsg)=>{
-                            console.log(errorMsg)
-
-                        })
-                }
+                this.$refs['form'].validate((valid) => {
+                    if (valid) {
+                        this.valid = true
+                        this.$emit('readyOk', this.form)
+                    } else {
+                        this.valid = false
+                        this.$Message.error('Fail!');
+                    }
+                })
             },
             /* 还原配置 */
             backConfig(obj,target){
@@ -111,17 +120,16 @@
             /* 取消配置修改 */
             cancel(configName,target) {
                 target = target || this.data
-                switch (configName) {
-                    case 'domain':
-                        let obj = {
-                            domain_names_state: false,
-                            domain_name: ''
-                        }
-                        this.backConfig(obj,target)
-                        break
-                }
+                this.backConfig(this.data,target)
             },
-
+            /* 检查是否有未保存选项 */
+            edit(data){
+                let json = {
+                    name: 'domain',
+                    value: data
+                }
+                this.$emit('edit', json) // 通知父组件未保存当前配置
+            }
         },
 
         mounted() {
