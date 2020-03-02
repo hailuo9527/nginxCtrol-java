@@ -22,8 +22,34 @@
                 <listen :modify="modify"
                         :data = "listen"
                         @edit = "checkEditStatus"
-                        @readyOk = 'prepareConfig'></listen>
-                  <!--<Form ref="serverForm" :model="serverForm" :rules="serverFormRules"    @submit.native.prevent>
+                        @readyOk = 'prepareConfig'
+                ></listen>
+                <ssl :modify="modify"
+                     :data = "listen"
+                     @edit = "checkEditStatus"
+                     @readyOk = 'prepareConfig'
+                ></ssl>
+                <allowDeny :modify="modify"
+                           :data = "listen"
+                           @edit = "checkEditStatus"
+                           @readyOk = 'prepareConfig'
+                ></allowDeny>
+                <errorPages :modify="modify"
+                            :data = "listen"
+                            @edit = "checkEditStatus"
+                            @readyOk = 'prepareConfig'
+                ></errorPages>
+                <errorLog :modify="modify"
+                          :data = "listen"
+                          @edit = "checkEditStatus"
+                          @readyOk = 'prepareConfig'
+                ></errorLog>
+                <accessLog :modify="modify"
+                           :data = "listen"
+                           @edit = "checkEditStatus"
+                           @readyOk = 'prepareConfig'
+                ></accessLog>
+                <!--  <Form ref="serverForm" :model="serverForm" :rules="serverFormRules"    @submit.native.prevent>
                       <my-form-item  title="DOMAIN NAMES"
                                     @closeConfig = "cancel('domain')"
                                     @saveConfig = "saveConfig('domain')"
@@ -337,11 +363,16 @@
     import PopTip from '@/components/common/pop-tip'
     import myFormItem from './form-item'
     import expandPanel from '../expandPanel'
-    import draggable from 'vuedraggable'
+
     import defaultConfig from './defaultConfig'
     import emptyConfig from './emptyConfig'
     import domain from './virtualServerModal/domain'
     import listen from './virtualServerModal/listen'
+    import ssl from './virtualServerModal/ssl'
+    import allowDeny from './virtualServerModal/allow_deny'
+    import errorPages from './virtualServerModal/errorPages'
+    import errorLog from './virtualServerModal/errorLog'
+    import accessLog from './virtualServerModal/accessLog'
     export default {
         props: {
             show: false,
@@ -352,7 +383,7 @@
             modify: false,
         },
         components: {
-          PopTip, myFormItem, expandPanel,  draggable, domain, listen
+          PopTip, myFormItem, expandPanel, domain, listen, ssl, allowDeny, errorPages, errorLog, accessLog
         },
         watch: {
             show (newVal, oldVal) {
@@ -377,6 +408,28 @@
                     this.listen = {
                         ngcListenings: this.serverForm.ngcListenings
                     }
+                    this.ssl = {
+                        ssl_certificate_state: this.serverForm.ssl_certificate_state,
+                        ssl_file: this.serverForm.ssl_file,
+                        ssl_key: this.serverForm.ssl_key,
+                    }
+                    this.allow_deny = {
+                        allow_deny_state: this.serverForm.allow_deny_state,
+                    }
+                    this.errorPages = {
+                        error_pages_state: this.serverForm.error_pages_state,
+                        ngcAllowDenies: this.serverForm.ngcAllowDenies
+                    }
+                    this.errorLog = {
+                        error_log_state: this.serverForm.error_log_state,
+                        error_log_path: this.serverForm.error_log_path,
+                        error_log_level: this.serverForm.error_log_level,
+                    }
+                    this.accessLog = {
+                        access_log_name: this.serverForm.access_log_name,
+                        access_log_path: this.serverForm.access_log_path,
+                        access_log_format: this.serverForm.access_log_format,
+                    }
 
                 },
                 immediate: true
@@ -387,22 +440,20 @@
             return {
                 modal_loading: false,
                 model: false,
-                serverForm: {
-
-                },
+                serverForm: {},
                 errorInfo: {},
                 errorTip: {
                     show: false,
                     value: ''
                 },
-                dragList: [
-                    { name: "John", text: "", id: 0 },
-                    { name: "Joao", text: "", id: 1 },
-                    { name: "Jean", text: "", id: 2 }
-                ],
-                drag: false,
+
                 domain: {},
-                listen: {}
+                listen: {},
+                ssl: {},
+                allow_deny: {},
+                errorPages: {},
+                errorLog: {},
+                accessLog: {}
 
             }
         },
@@ -428,13 +479,13 @@
                     }
                 })
             },
-
+            /* 检查是否有未保存的配置项 */
             checkEditStatus(data){
                 this.errorInfo[data.name] = data.value
             },
             prepareConfig(data) {
                 Object.keys(data).map(item => {
-                    this.serverForm[item] = data[item]
+                    this.serverForm[item] = data[item] // 拿到修改过后的配置对象
                 })
             },
 

@@ -1,8 +1,8 @@
 <template>
     <my-form-item  title="DOMAIN NAMES"
-                   @closeConfig = "cancel('domain')"
-                   @saveConfig = "saveConfig('domain')"
-                   @cancel = "cancel('domain')"
+                   @closeConfig = "cancel"
+                   @saveConfig = "saveConfig"
+                   @cancel = "cancel"
                    @edit="edit"
                    :modify="modify"
                    :open = "form.domain_names_state"
@@ -34,18 +34,10 @@
 </template>
 
 <script>
-    import myFormItem from '../form-item'
+    import mixin from '../mixins'
     export default {
-        props: {
-            data: {
-                type: Object,
-                default: () => {}
-            },
-            modify: false,
-        },
-        components: {
-            myFormItem
-        },
+        mixins: [mixin],
+        name: 'domain',
         data () {
             const domain = (rule, value, callback) => {
                 if (value === '') {
@@ -54,28 +46,11 @@
                 callback();
             };
             return {
-                form: {},
                 formRules: {
                     domain_name: [
                         { validator: domain, trigger: 'blur' }
                     ],
                 },
-                valid: false,
-            }
-        },
-        watch: {
-            data : {
-                handler(nv, ov){
-                    /* 拷贝对象 */
-                    this.form = this.copyJson(nv)
-                },
-                immediate: true
-            },
-            form: {
-                handler() {
-                    this.valid = false  //  表单变化时重新验证
-                },
-                deep: true
             }
         },
         computed: {
@@ -97,38 +72,6 @@
                 let index = arr.indexOf(str)
                 arr.splice(index, 1)
                 this.form.domain_name = arr.join(',')
-            },
-
-            /* 保存配置项 */
-            saveConfig(configName) {
-                this.$refs['form'].validate((valid) => {
-                    if (valid) {
-                        this.valid = true
-                        this.$emit('readyOk', this.form)
-                    } else {
-                        this.valid = false
-                        this.$Message.error('Fail!');
-                    }
-                })
-            },
-            /* 还原配置 */
-            backConfig(obj,target){
-                Object.keys(obj).map(item => {
-                    this.form[item] = target[item]
-                })
-            },
-            /* 取消配置修改 */
-            cancel(configName,target) {
-                target = target || this.data
-                this.backConfig(this.data,target)
-            },
-            /* 检查是否有未保存选项 */
-            edit(data){
-                let json = {
-                    name: 'domain',
-                    value: data
-                }
-                this.$emit('edit', json) // 通知父组件未保存当前配置
             }
         },
 
