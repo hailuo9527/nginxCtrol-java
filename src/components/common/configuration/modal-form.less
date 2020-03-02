@@ -237,7 +237,7 @@
   }
 
 }
- .ctrl-edit-item_edit {
+.ctrl-edit-item_edit {
   border-left-color: @green;
 
 }
@@ -255,14 +255,28 @@
   outline: none;
   font-size: 18px;
   color: #333;
-  &:focus{
-    box-shadow: none;
-  }
-}
-/deep/.ivu-input{
   height: 36px;
   line-height: 36px;
 }
+/deep/.ivu-form-item-error{
+  .ivu-input-wrapper{
+    border-bottom: 1px solid #ed4014;
+  }
+  .ivu-input{
+    &:focus{
+      border: none;
+      box-shadow: 0 2px 0 0 #ed4014!important;
+    }
+    &:hover{
+      border: none;
+    }
+  }
+
+}
+/deep/ .ivu-form-item-error-tip{
+
+}
+
 .ctrl-edit-properties__row{
   display: flex;
   align-items: center;
@@ -294,6 +308,30 @@
   text-overflow: ellipsis;
   &:first-child{
     margin-right: 10px;
+  }
+}
+.ctrl-edit-item__tags{
+
+  display: flex;
+  flex-wrap: wrap;
+  .tags{
+    max-width: 100%;
+    vertical-align: top;
+    margin: 5px 5px 0 0 ;
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 2px;
+    border-color: #f3f3f3;
+    background: #f3f3f3;
+    padding: 2px 5px;
+    font-size: 12px;
+
+    &.black{
+      border-color: #666666;
+      background: #666666;
+      color: #fff;
+    }
   }
 }
 .drag-edit-item{

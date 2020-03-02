@@ -198,6 +198,7 @@ import UpstreamModal from './upstreamModal'
 import drawLine from '../../../libs/drawLine'
 import { getNginxConf } from "../../../api/L7";
 import defaultConfig from './defaultConfig'
+import emptyConfig from './emptyConfig'
 export default {
     data () {
         return {
@@ -277,26 +278,31 @@ export default {
                 version_no: this.$route.query.version_no
             }
             let res = await getNginxConf(json)
+            console.log(res)
             if (this.asyncOk(res) && res.data.result) {
                 this.config = res.data.result
             }
         },
         /* 编辑server配置*/
         editVirtualServer(index, modify) {
+            console.log(modify? '编辑': '新建')
+            this.ngcVirtualServers = modify ? this.config.ngcVirtualServers[index] : emptyConfig.ngcVirtualServers[index]
+            console.log(this.ngcVirtualServers)
             this.modify = modify
-            console.log(this.modify)
             this.serverModal = true
-            if (modify){
-                this.ngcVirtualServers = this.config.ngcVirtualServers[index]
+        },
+        /* 初始化配置 */
+        initConfig() {
+            if (this.$route.params.configName) {
+                this.getConfig()
             }
-
-
         }
     },
     mounted() {
-        if (this.$route.params.configName) {
-            this.getConfig()
-        }
+        /* 初始化配置 */
+        this.initConfig()
+
+        /* 绘制配置关系图 */
         this.drawLine()
         window.addEventListener('resize' ,this.drawLine)
     },

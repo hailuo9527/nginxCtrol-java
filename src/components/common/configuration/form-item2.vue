@@ -37,13 +37,12 @@
                 type: Boolean,
                 default: false
             },
-            valid: false,
         },
         data () {
-          return {
-              showEdit: false,
-              expand: false,
-          }
+            return {
+                showEdit: false,
+                expand: false,
+            }
         },
         components: {
             PopTip
@@ -58,32 +57,21 @@
 
                 },
                 immediate: true
-            },
-            showEdit: {
-                handler(nv,ov) { // 通知父组件编辑模式打开， 未保存
-                    this.$emit('edit', nv)
-                },
-                immediate: true
-            },
-            valid(nv, ov) {
-                if (nv) {
-                    this.showEdit = false
-                }
             }
         },
         computed: {
-          classStatus: function () {
-              let className
+            classStatus: function () {
+                let className
 
-              if (this.important) {
-                  className = 'form-item-edit important'
-              } else if (this.expand){
-                  className = 'form-item-edit'
-              } else {
-                  className = ''
-              }
-              return className
-          }
+                if (this.important) {
+                    className = 'form-item-edit important'
+                } else if (this.expand){
+                    className = 'form-item-edit'
+                } else {
+                    className = ''
+                }
+                return className
+            }
         },
         methods: {
             editHandler () {
@@ -107,16 +95,9 @@
             },
 
             ok () {
+                console.log( 'ok')
+                this.showEdit = false
                 this.$emit('saveConfig')
-                console.log(this.valid)
-                /*console.log(this.valid)
-                if(this.valid){
-                    this.showEdit = false
-                }*/
-                if(this.valid){
-                    this.showEdit = false
-                }
-
             },
 
         },

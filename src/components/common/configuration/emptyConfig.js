@@ -1,5 +1,5 @@
 /* 默认配置模板 */
-const  defaultConfig = {
+const  emptyConfig = {
     nginx_conf_id: '',
     config_name: '',
     version_no: '',
@@ -10,8 +10,8 @@ const  defaultConfig = {
         {
             virtual_id: '',
             nginx_conf_id: '',
-            domain_names_state: true,
-            domain_name: 'localhost',
+            domain_names_state: false,
+            domain_name: '',
             ssl_certificate_state: false,
             ssl_file: '',
             ssl_key: '',
@@ -33,7 +33,7 @@ const  defaultConfig = {
                     locations_id: '',
                     allow_deny_value: '',
                     allow_deny_ip: '',
-                    allow_deny_sort: 0,
+                    allow_deny_sort: '',
                     version_no: ''
                 }
             ],
@@ -88,7 +88,7 @@ const  defaultConfig = {
                             locations_id: '',
                             allow_deny_value: '',
                             allow_deny_ip: '',
-                            allow_deny_sort: 0,
+                            allow_deny_sort: '',
                             version_no: ''
                         }
                     ],
@@ -109,8 +109,8 @@ const  defaultConfig = {
                 {
                     listening_id: '',
                     virtual_id: '',
-                    listening_address_port: '80',
-                    default_server_state: true,
+                    listening_address_port: '',
+                    default_server_state: false,
                     ssl_state: false,
                     http2_state: false,
                     proxy_protocol_state: false,
@@ -119,13 +119,13 @@ const  defaultConfig = {
                     backlog: '',
                     receive_buffer_size: '',
                     send_buffer_size: '',
-                    accept_filter: 'none',
+                    accept_filter: '',
                     deferred_state: false,
                     bind_state: false,
-                    accept_ipv6_only_state: true,
+                    accept_ipv6_only_state: false,
                     reuseport_state: false,
                     tcp_keepalive_state: false,
-                    tcp_keepalive_value: 'on',
+                    tcp_keepalive_value: '',
                     socket_option_value: '',
                     version_no: ''
                 }
@@ -153,7 +153,7 @@ const  defaultConfig = {
             leam_create: '',
             leam_lookup: '',
             leam_shared_memory_zone: '',
-            leam_session_remove_timeout: 0,
+            leam_session_remove_timeout: '',
             leam_chrarrh: '',
             upstream_zone_state: false,
             upstream_zone_name: '',
@@ -164,8 +164,8 @@ const  defaultConfig = {
             keepalive_connection_pool_state: false,
             keepalive_connection_pool_value: '',
             queueing_state: false,
-            queueing_number: 0,
-            queueing_time: 0,
+            queueing_number: '',
+            queueing_time: '',
             ntlm_authentication_state: false,
             persistent_state: false,
             persistent_file: '',
@@ -175,15 +175,15 @@ const  defaultConfig = {
                     upstream_server_id: '',
                     group_id: '',
                     upstream_servers_name: '',
-                    weight: 0,
-                    max_active_connections: 0,
-                    max_failed_connections: 0,
-                    fail_timeout: 0,
+                    weight: '',
+                    max_active_connections: '',
+                    max_failed_connections: '',
+                    fail_timeout: '',
                     backup_server_state: false,
                     resolve_state: false,
                     service_name: '',
                     route_name: '',
-                    weight_recovering_time: 0,
+                    weight_recovering_time: '',
                     server_bound_requests_only: '',
                     mark_as_down: '',
                     version_no: ''
@@ -192,4 +192,4 @@ const  defaultConfig = {
         }
     ]
 }
-export default defaultConfig
+export default emptyConfig

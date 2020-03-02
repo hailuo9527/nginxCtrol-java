@@ -8,35 +8,47 @@
                 @on-visible-change="change"
                 :title="modify?  '修改虚拟服务器' : '新建虚拟服务器'"
         >
-            <div class="virtual_server_form" v-if="!isEmptyObject(serverForm)">
+            <div class="virtual_server_form" >
 
                 <Alert type="error" class="err-tip" v-if="errorTip.show" closable >
                     您需要确认每个部分的更改: {{errorTip.value}}
                     <Icon type="md-close"  class="close" slot="close"/>
                 </Alert>
-
-                  <Form ref="serverForm" :model="serverForm" :rules="serverFormRules"   @submit.native.prevent>
+                <domain :modify="modify"
+                        :data = "domain"
+                        @edit = "checkEditStatus"
+                        @readyOk = 'prepareConfig'
+                ></domain>
+                <listen :modify="modify"
+                        :data = "listen"
+                        @edit = "checkEditStatus"
+                        @readyOk = 'prepareConfig'></listen>
+                  <!--<Form ref="serverForm" :model="serverForm" :rules="serverFormRules"    @submit.native.prevent>
                       <my-form-item  title="DOMAIN NAMES"
-                                    @closeConfig = "closeConfig('domain')"
+                                    @closeConfig = "cancel('domain')"
                                     @saveConfig = "saveConfig('domain')"
+                                     @cancel = "cancel('domain')"
                                      :modify="modify"
+                                     :open = "serverForm.domain_names_state"
                                     info="Domain names that are served by this virtual server. This corresponds with the server_name directive in NGINX configuration.">
                           <div slot="edit" class="ctrl-edit-item ctrl-edit-item_edit">
-                                  <FormItem class="input line-form-item with-button">
+                                  <FormItem class="input line-form-item with-button" prop="domain_name">
                                       <Button  icon="md-close" class="tag"
                                                :key="index"
-                                               v-if="index"
+                                               v-if="item"
+                                               @click="removeTag(item)"
                                                v-for="(item, index) in serverForm.domain_name.split(',')">{{item}}</Button>
-                                      <Input  v-model.trim="serverForm.domainName" @on-enter="addDomainName" placeholder="name"></Input>
+                                      <Input  v-model.trim="serverForm.domainName" @on-blur="addDomainName" @on-enter="addDomainName" placeholder="name"></Input>
                                   </FormItem>
                                   <div class="ctrl-edit-item__note">Prefix the name with ~ to use a regular expression</div>
                           </div>
 
                           <div slot="show" class="ctrl-edit-item">
                               <div class="name-list">
-                              <span  class="tag" :key="index" v-if="index"
+                              <span  class="tag" :key="index"
                                      v-for="(item, index) in serverForm.domain_name.split(',')">{{item}}</span>
                               </div>
+
                           </div>
                       </my-form-item>
                       <my-form-item  title="LISTENING ADDRESS AND PORT"
@@ -309,7 +321,7 @@
 
                           </div>
                       </my-form-item>
-                  </Form>
+                  </Form>-->
 
             </div>
             <div slot="footer">
@@ -327,6 +339,9 @@
     import expandPanel from '../expandPanel'
     import draggable from 'vuedraggable'
     import defaultConfig from './defaultConfig'
+    import emptyConfig from './emptyConfig'
+    import domain from './virtualServerModal/domain'
+    import listen from './virtualServerModal/listen'
     export default {
         props: {
             show: false,
@@ -337,7 +352,7 @@
             modify: false,
         },
         components: {
-          PopTip, myFormItem, expandPanel,  draggable,
+          PopTip, myFormItem, expandPanel,  draggable, domain, listen
         },
         watch: {
             show (newVal, oldVal) {
@@ -351,22 +366,31 @@
             modify(nv) {
                 console.log(nv)
             },
-            data (newVal, oldVal) {
-                if (!this.isEmptyObject(newVal)){
-                    this.serverForm = newVal
-                }
+            data : {
+                handler(nv, ov){
+                    /* 拷贝对象 */
+                    this.serverForm = this.copyJson(nv)
+                    this.domain = {
+                        domain_names_state: this.serverForm.domain_names_state,
+                        domain_name: this.serverForm.domain_name,
+                    }
+                    this.listen = {
+                        ngcListenings: this.serverForm.ngcListenings
+                    }
+
+                },
+                immediate: true
             }
         },
         data () {
+
             return {
                 modal_loading: false,
                 model: false,
                 serverForm: {
 
                 },
-                serverFormRules: {
-
-                },
+                errorInfo: {},
                 errorTip: {
                     show: false,
                     value: ''
@@ -377,6 +401,9 @@
                     { name: "Jean", text: "", id: 2 }
                 ],
                 drag: false,
+                domain: {},
+                listen: {}
+
             }
         },
         computed: {
@@ -390,9 +417,9 @@
 
             handleSubmit () {
                 // 验证是否有未确认的更改
-                Object.keys(this.serverForm).map((item) => {
-                    console.log(this.serverForm[item])
-                    if (this.isEmptyObject(this.serverForm[item])){
+                Object.keys(this.errorInfo).map((item) => {
+                    console.log(this.errorInfo[item])
+                    if (this.errorInfo[item]){
                         this.errorTip = {
                             show: true,
                             value: item
@@ -401,29 +428,16 @@
                     }
                 })
             },
-            addDomainName () {
-                if(this.serverForm.domainName === '') return
-                let arr = this.serverForm.domain_name.split(',')
-                arr.push(this.serverForm.domainName)
-                this.serverForm.domain_name = arr.join(',')
-                this.serverForm.domainName = ''
-            },
-            /* 保存配置项 */
-            saveConfig(configName) {
-                console.log(configName)
-            },
-            /* 关闭配置项 */
-            closeConfig (configName) {
-                console.log(configName)
-            },
-            addListen() {
-               // console.log(this.serverForm.listening_m.listening)
-                this.serverForm.ngcListenings.push(
-                    defaultConfig.ngcVirtualServers.ngcListenings[0]
-                )
-               // console.log(this.serverForm.listening_m.listening)
 
+            checkEditStatus(data){
+                this.errorInfo[data.name] = data.value
             },
+            prepareConfig(data) {
+                Object.keys(data).map(item => {
+                    this.serverForm[item] = data[item]
+                })
+            },
+
             addRule() {
                 this.dragList.push(this.dragList[0])
             },
@@ -434,11 +448,6 @@
                 obj.splice(index, 1)
             },
 
-        },
-        mounted() {
-            /* 拷贝对象 */
-            this.serverForm = this.copyJson(this.data)
-            console.log(this.serverForm)
         },
         beforeDestroy() {
             console.log('yichu')
