@@ -108,11 +108,6 @@
 
             ok () {
                 this.$emit('saveConfig')
-                console.log(this.valid)
-                /*console.log(this.valid)
-                if(this.valid){
-                    this.showEdit = false
-                }*/
                 if(this.valid){
                     this.showEdit = false
                 }

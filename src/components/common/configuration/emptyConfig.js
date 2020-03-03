@@ -31,9 +31,9 @@ const  emptyConfig = {
                     allow_deny_id: '',
                     virtual_id: '',
                     locations_id: '',
-                    allow_deny_value: '',
+                    allow_deny_value: 'allow',
                     allow_deny_ip: '',
-                    allow_deny_sort: '',
+                    allow_deny_sort: 0,
                     version_no: ''
                 }
             ],
@@ -86,9 +86,9 @@ const  emptyConfig = {
                             allow_deny_id: '',
                             virtual_id: '',
                             locations_id: '',
-                            allow_deny_value: '',
+                            allow_deny_value: 'allow',
                             allow_deny_ip: '',
-                            allow_deny_sort: '',
+                            allow_deny_sort: 0,
                             version_no: ''
                         }
                     ],
@@ -119,7 +119,7 @@ const  emptyConfig = {
                     backlog: '',
                     receive_buffer_size: '',
                     send_buffer_size: '',
-                    accept_filter: '',
+                    accept_filter: 'none',
                     deferred_state: false,
                     bind_state: false,
                     accept_ipv6_only_state: false,

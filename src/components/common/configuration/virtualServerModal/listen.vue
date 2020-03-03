@@ -14,7 +14,7 @@
             <div :key="index" v-for="(item, index) in form.ngcListenings" class="ctrl-edit-item ctrl-edit-item_edit mulity">
 
                 <div class="item-body">
-                    <Form ref="listen" :model="form.ngcListenings[index]" :rules="formRules"    @submit.native.prevent>
+                    <Form ref="form" :model="form.ngcListenings[index]" :rules="formRules"    @submit.native.prevent>
                         <FormItem class="line-form-item" prop="listening_address_port">
                             <Input v-model.trim="item.listening_address_port" placeholder="number"></Input>
                         </FormItem>
@@ -35,22 +35,22 @@
                             </i-switch>
                         </FormItem>
                         <expandPanel>
-                            <FormItem label="FIB" class="inline-form-item">
+                            <FormItem label="FIB" class="inline-form-item" prop="fib">
                                 <Input  placeholder="number" v-model.trim="item.fib"></Input>
                             </FormItem>
-                            <FormItem label="TCP FAST OPEN" class="inline-form-item">
+                            <FormItem label="TCP FAST OPEN" class="inline-form-item" prop="tcp_fast_open">
                                 <Input  placeholder="number" v-model.trim="item.tcp_fast_open"></Input>
                             </FormItem>
-                            <FormItem label="BACKLOG" class="inline-form-item">
+                            <FormItem label="BACKLOG" class="inline-form-item" prop="backlog">
                                 <Input  placeholder="number" v-model.trim="item.backlog"></Input>
                             </FormItem>
-                            <FormItem label="RECEIVE BUFFER SIZE" class="inline-form-item">
+                            <FormItem label="RECEIVE BUFFER SIZE" class="inline-form-item" prop="receive_buffer_size">
                                 <Input  placeholder="bytes" v-model.trim="item.receive_buffer_size"></Input>
                             </FormItem>
-                            <FormItem label="SEND BUFFER SIZE" class="inline-form-item">
+                            <FormItem label="SEND BUFFER SIZE" class="inline-form-item" prop="send_buffer_size">
                                 <Input placeholder="bytes" v-model.trim="item.send_buffer_size"></Input>
                             </FormItem>
-                            <FormItem label="ACCEPT FILTER" class="inline-form-item" >
+                            <FormItem label="ACCEPT FILTER" class="inline-form-item" prop="accept_filter">
                                 <Select v-model="item.accept_filter">
                                     <Option value="dataready">dataready</Option>
                                     <Option value="httpready">httpready</Option>
@@ -95,7 +95,7 @@
                     </Form>
 
                 </div>
-                <div class="item-body-remove" v-if="index>1">
+                <div class="item-body-remove" v-if="form.ngcListenings.length>1">
                     <Icon type="ios-trash" class="remove-icon" @click="removeList(form.ngcListenings,index)" size="20"/>
                 </div>
             </div>
@@ -143,17 +143,66 @@
              expandPanel
         },
         data () {
+            const number = { type: 'number', message: '请输入数字', trigger: 'blur',
+                transform(value) {
+                    return Number(value);
+                }
+            }
             return {
                 formRules: {
                     listening_address_port: [
-                        { required: true, message: 'The name cannot be empty', trigger: 'blur' }
+                        { required: true, message: '不能为空' },
+                        number
+
+                    ],
+                    fib: [
+                        number
+                    ],
+                    tcp_fast_open: [
+                        number
+                    ],
+                    backlog: [
+                        number
+                    ],
+                    receive_buffer_size: [
+                        number
+                    ],
+                    send_buffer_size: [
+                        number
                     ]
+
                 },
             }
         },
         methods: {
             addListen() {
-                this.form.ngcListenings.push(emptyConfig.ngcVirtualServers[0].ngcListenings[0])
+                let json = this.copyJson(emptyConfig.ngcVirtualServers[0].ngcListenings[0])
+                this.form.ngcListenings.push(json)
+            },
+            removeList(arr, index) {
+                arr.splice(index, 1)
+            },
+
+            /* 保存配置项 */
+            saveConfig() {
+                //console.log(this.$refs['form'])
+                let flag = true
+                for(let item of this.$refs['form']){
+                    item.validate(valid => {
+                        console.log(valid)
+                        if (!valid) {
+                            flag = false
+                        }
+                    })
+                }
+                this.valid = flag
+                if (flag){
+                    this.$emit('readyOk', this.form)
+                } else {
+                    this.$Message.error('验证失败')
+                }
+
+
             },
         }
     }

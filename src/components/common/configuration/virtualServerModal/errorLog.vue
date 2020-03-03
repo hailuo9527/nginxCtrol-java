@@ -1,5 +1,5 @@
 <template>
-    <my-form-item  title="ERROR LOG"
+    <my-form-item  :title="title"
                    @closeConfig = "cancel"
                    @saveConfig = "saveConfig"
                    @cancel = "cancel"
@@ -30,10 +30,10 @@
 
     export default {
         mixins: [mixin],
-        name: 'error log',
         data () {
 
             return {
+                title: 'ERROR LOG',
                 formRules: {
 
                 },

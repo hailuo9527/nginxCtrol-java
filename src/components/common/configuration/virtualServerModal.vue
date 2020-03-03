@@ -25,27 +25,27 @@
                         @readyOk = 'prepareConfig'
                 ></listen>
                 <ssl :modify="modify"
-                     :data = "listen"
+                     :data = "ssl"
                      @edit = "checkEditStatus"
                      @readyOk = 'prepareConfig'
                 ></ssl>
                 <allowDeny :modify="modify"
-                           :data = "listen"
+                           :data = "allow_deny"
                            @edit = "checkEditStatus"
                            @readyOk = 'prepareConfig'
                 ></allowDeny>
                 <errorPages :modify="modify"
-                            :data = "listen"
+                            :data = "errorPages"
                             @edit = "checkEditStatus"
                             @readyOk = 'prepareConfig'
                 ></errorPages>
                 <errorLog :modify="modify"
-                          :data = "listen"
+                          :data = "errorLog"
                           @edit = "checkEditStatus"
                           @readyOk = 'prepareConfig'
                 ></errorLog>
                 <accessLog :modify="modify"
-                           :data = "listen"
+                           :data = "accessLog"
                            @edit = "checkEditStatus"
                            @readyOk = 'prepareConfig'
                 ></accessLog>
@@ -415,10 +415,11 @@
                     }
                     this.allow_deny = {
                         allow_deny_state: this.serverForm.allow_deny_state,
+                        ngcAllowDenies: this.serverForm.ngcAllowDenies
                     }
                     this.errorPages = {
                         error_pages_state: this.serverForm.error_pages_state,
-                        ngcAllowDenies: this.serverForm.ngcAllowDenies
+                        ngcErrorPages: this.serverForm.ngcErrorPages
                     }
                     this.errorLog = {
                         error_log_state: this.serverForm.error_log_state,
@@ -489,15 +490,6 @@
                 })
             },
 
-            addRule() {
-                this.dragList.push(this.dragList[0])
-            },
-            addErrorPage() {
-
-            },
-            removeList(obj, index) {
-                obj.splice(index, 1)
-            },
 
         },
         beforeDestroy() {

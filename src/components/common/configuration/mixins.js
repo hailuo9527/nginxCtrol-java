@@ -64,7 +64,7 @@
             /* 检查是否有未保存选项 */
             edit(data){
                 let json = {
-                    name: this.$options.name,
+                    name: this.title,
                     value: data
                 }
                 this.$emit('edit', json) // 通知父组件未保存当前配置

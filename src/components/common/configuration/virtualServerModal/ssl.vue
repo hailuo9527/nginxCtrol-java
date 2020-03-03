@@ -13,11 +13,11 @@
             <div class="ctrl-edit-item__note">
                 Please enable SSL in "Listening Address and Port" and make sure you have manually uploaded both the certificate and the key to the server.
             </div>
-            <Form ref="form" :model="form" :rules="formRules"    @submit.native.prevent>
-                <FormItem label="FILE" class="line-form-item">
+            <Form ref="form" :model="form" :rules="formRules" :hide-required-mark="true"   @submit.native.prevent>
+                <FormItem label="FILE" class="line-form-item" prop="ssl_file">
                     <Input v-model.trim="form.ssl_file" placeholder="certs/myserver.crt"></Input>
                 </FormItem>
-                <FormItem label="KEY" class="line-form-item">
+                <FormItem label="KEY" class="line-form-item" prop="ssl_key">
                     <Input v-model.trim="form.ssl_key" placeholder="certs/myserver.key"></Input>
                 </FormItem>
             </Form>
@@ -49,7 +49,12 @@
             return {
 
                 formRules: {
-
+                    ssl_key: [
+                        { required: true, message: '不能为空', trigger: 'blur' }
+                    ],
+                    ssl_file: [
+                        { required: true, message: '不能为空', trigger: 'blur' }
+                    ]
                 }
             }
         },

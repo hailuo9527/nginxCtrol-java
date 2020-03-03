@@ -1,5 +1,5 @@
 <template>
-    <my-form-item  title="ACCESS LOG"
+    <my-form-item  :title="title"
                    @closeConfig = "cancel"
                    @saveConfig = "saveConfig"
                    @cancel = "cancel"
@@ -52,10 +52,10 @@
     import draggable from 'vuedraggable'
     export default {
         mixins: [mixin],
-        name: 'access log',
         data () {
 
             return {
+                title: 'ACCESS LOG',
                 formRules: {
 
                 },

@@ -1,5 +1,5 @@
 <template>
-    <my-form-item  title="ERROR PAGES"
+    <my-form-item  :title="title"
                    @closeConfig = "cancel"
                    @saveConfig = "saveConfig"
                    @cancel = "cancel"
@@ -9,18 +9,23 @@
                    :valid="valid"
                    info="Define the response that will be shown for specific errors.">
         <div slot="edit">
-            <div  class="ctrl-edit-item ctrl-edit-item_edit mulity">
+            <div :key="index" v-for="(item, index) in form.ngcErrorPages"  class="ctrl-edit-item ctrl-edit-item_edit mulity">
 
                 <div class="item-body">
-                    <Form ref="form" :model="form" :rules="formRules"    @submit.native.prevent>
-                        <FormItem label="HTTP CODES" class="inline-form-item full-input">
-                            <Input  placeholder="code"></Input>
+                    <Form ref="form" :model="item" :rules="formRules" :hide-required-mark="true"  @submit.native.prevent>
+                        <FormItem label="HTTP CODES" class="inline-form-item full-input" prop="httpCodes">
+                            <Button  icon="md-close" class="tag"
+                                     :key="codeIndex"
+                                     v-if="code"
+                                     @click="removeTag(item, codeIndex)"
+                                     v-for="(code, codeIndex) in item.http_codes.split(',')">{{code}}</Button>
+                            <Input  v-model.trim="item.httpCodes"  @on-enter="addHttpCode(index)" placeholder="code"></Input>
                         </FormItem>
-                        <FormItem label="REDIRECT TO" class="inline-form-item full-input">
-                            <Input placeholder="URL | URI | variable"></Input>
+                        <FormItem label="REDIRECT TO" class="inline-form-item full-input" prop="redirect_to">
+                            <Input placeholder="URL | URI | variable" v-model.trim="item.redirect_to"></Input>
                         </FormItem>
-                        <FormItem label="RESPONSE CODE" class="inline-form-item full-input">
-                            <Input placeholder="=code"></Input>
+                        <FormItem label="RESPONSE CODE" class="inline-form-item full-input"  prop="response_code">
+                            <Input placeholder="=code" v-model="item.response_code"></Input>
                         </FormItem>
                     </Form>
 
@@ -50,15 +55,45 @@
 
 <script>
     import mixin from '../mixins'
-
+    import emptyConfig from '../emptyConfig'
     export default {
         mixins: [mixin],
-        name: 'error pages',
         data () {
+            const httpCodesRule = (rule, value, callback) => {
+                console.log(value)
+                if (!value) callback()
+                let reg = /(^1[0-1]{2}$)|(^2[0-6]{2}$)|(^3[0-7]{2}$)|(^4[0-17]{2}$)|(^5[0-5]{2}$)/
+                console.log()
+                if (!reg.test(value)){
+                    callback(new Error('请输入正确的状态码'))
+                }else {
+                    callback()
+                }
 
+                callback()
+            }
+            const resCodesRule = (rule, value, callback) => {
+                if (!value) {
+                    callback(new Error('不能为空'));
+                } else {
+
+                }
+                callback()
+            }
             return {
-                formRules: {
+                title: 'ERROR PAGES',
 
+                formRules: {
+                    httpCodes: [
+
+                        { validator: httpCodesRule }
+                    ],
+                    redirect_to: [
+                        { required: 'true', message:'不能为空' }
+                    ],
+                    response_code: [
+                        { validator: resCodesRule, trigger: 'blur' }
+                    ]
                 },
             }
         },
@@ -66,7 +101,32 @@
 
         },
         methods: {
+            addErrorPage() {
+                //console.log(this.form.ngcErrorPages)
+                let json = this.copyJson(emptyConfig.ngcVirtualServers[0].ngcErrorPages[0])
+                this.form.ngcErrorPages.push(json)
+            },
+            addHttpCode (index) {
+                if(this.form.ngcErrorPages[index].httpCodes === "") return
+                this.$refs['form'][index].validateField('httpCodes',(valid) => {
+                    if (!valid) {
+                        let arr = this.form.ngcErrorPages[index].http_codes.split(',')
+                        arr.push(this.form.ngcErrorPages[index].httpCodes)
+                        arr.map((item, key)=> {
+                            if (!item) arr.splice(key,1)
+                        })
+                        this.form.ngcErrorPages[index].http_codes = arr.join(',')
+                        this.form.ngcErrorPages[index].httpCodes = ''
+                    }
+                });
 
+            },
+            removeTag(str,index) {
+                let arr = this.form.ngcErrorPages[index].http_codes.split(',')
+                let i = arr.indexOf(str)
+                arr.splice(i, 1)
+                this.form.ngcErrorPages[index].http_codes = arr.join(',')
+            }
         },
 
         mounted() {

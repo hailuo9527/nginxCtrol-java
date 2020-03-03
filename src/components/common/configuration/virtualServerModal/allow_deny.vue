@@ -1,5 +1,5 @@
 <template>
-    <my-form-item  title="ALLOW / DENY"
+    <my-form-item  :title="title"
                    @closeConfig = "cancel"
                    @saveConfig = "saveConfig"
                    @cancel = "cancel"
@@ -9,21 +9,26 @@
                    :valid="valid"
                    info="Allow or deny access for specific IP or network.">
         <div slot="edit">
-            <draggable v-model="dragList" handle=".drag-handle" @start="drag = true"
+            <draggable v-model="form.ngcAllowDenies" handle=".drag-handle" @start="drag = true"
                        ghost-class="drag-item-ghost"
+                       @update="dragEnd"
                        @end="drag = false">
                 <transition-group >
-                    <div v-for="element in dragList" :key="element.id">
+                    <div v-for="(item, index) in form.ngcAllowDenies" :key="index">
                         <div  class="ctrl-edit-item ctrl-edit-item_edit drag-edit-item mulity">
-                            <span class="drag-handle" v-if="dragList.length>1"></span>
-                            <Form ref="form" :model="form" :rules="formRules"    @submit.native.prevent>
+                            <span class="drag-handle" v-if="form.ngcAllowDenies.length>1"></span>
+                            <Form ref="form" :model="form.ngcAllowDenies[index]" :rules="formRules" class="inlineForm"    @submit.native.prevent>
                                 <FormItem label="" class="inline-form-item options">
-                                    <Select >
-                                        <Option value="dataready">ALLOW</Option>
-                                        <Option value="httpready">DENY</Option>
+                                    <Select v-model="item.allow_deny_value">
+                                        <Option value="allow">ALLOW</Option>
+                                        <Option value="deny">DENY</Option>
                                     </Select>
-                                    <Input placeholder="certs/myserver.crt"></Input>
+
                                 </FormItem>
+                                <FormItem label="" class="inline-form-item options" prop="allow_deny_ip">
+                                    <Input placeholder="certs/myserver.crt" v-model.trim="item.allow_deny_ip"></Input>
+                                </FormItem>
+
                             </Form>
 
                             <div class="item-body-remove">
@@ -45,15 +50,17 @@
         </div>
 
         <div slot="show">
-            <draggable v-model="dragList" handle=".drag-handle" @start="drag = true"
+            <draggable v-model="form.ngcAllowDenies" handle=".drag-handle"
+                       @update="dragEnd"
+                       @start="drag = true"
                        ghost-class="drag-item-ghost"
                        @end="drag = false">
                 <transition-group >
-                    <div v-for="element in dragList" :key="element.id">
+                    <div v-for="(item, key) in form.ngcAllowDenies" :key="key">
                         <div class="ctrl-edit-item drag-edit-item">
-                            <span class="drag-handle" v-if="dragList.length>1"></span>
-                            <span class="allow_deny">allow</span>
-                            <span class="allow_deny_value">192.168.0.1</span>
+                            <span class="drag-handle" v-if="form.ngcAllowDenies.length>1"></span>
+                            <span class="allow_deny">{{item.allow_deny_value}}</span>
+                            <span class="allow_deny_value">{{item.allow_deny_ip}}</span>
                         </div>
 
                     </div>
@@ -67,35 +74,78 @@
 <script>
     import mixin from '../mixins'
     import draggable from 'vuedraggable'
+    import emptyConfig from '../emptyConfig'
     export default {
         mixins: [mixin],
-        name: 'allow/deny',
+
         components: {
             draggable,
         },
         data () {
-
+            const ipAddressRules = (rule, value, callback) => {
+                let reg = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/
+                if (!reg.test(value)) {
+                    callback(new Error('请检查IP地址格式！'))
+                }
+                callback()
+            }
             return {
-                dragList: [
-                    { name: "John", text: "", id: 0 },
-                    { name: "Joao", text: "", id: 1 },
-                    { name: "Jean", text: "", id: 2 }
-                ],
+                title: 'ALLOW / DENY',
                 drag: false,
                 formRules: {
-
+                    allow_deny_ip: [
+                        { required: true, message: '不能为空'},
+                        { validator: ipAddressRules, trigger: 'blur' }
+                    ]
                 },
             }
         },
         computed: {
 
         },
+        watch: {
+
+        },
         methods: {
+            /* 拖拽结束后更改sort */
+            dragEnd(evt) {
+
+                this.form.ngcAllowDenies[evt.newIndex].allow_deny_sort = evt.newIndex
+                this.form.ngcAllowDenies[evt.oldIndex].allow_deny_sort = evt.oldIndex
+            },
+            addRule() {
+
+                let json = this.copyJson(emptyConfig.ngcVirtualServers[0].ngcAllowDenies[0])
+                json.allow_deny_sort = this.form.ngcAllowDenies.length
+
+                this.form.ngcAllowDenies.push(json)
+            },
+
+
+            /* 保存配置项 */
+            saveConfig() {
+                let flag = true
+                for(let item of this.$refs['form']){
+                    item.validate(valid => {
+                        if (!valid) {
+                            flag = false
+                        }
+                    })
+                }
+                this.valid = flag
+                console.log(this.form)
+                if (flag){
+                    this.$emit('readyOk', this.form)
+                } else {
+                    this.$Message.error('验证失败')
+                }
+
+
+            },
 
         },
 
         mounted() {
-
         }
     }
 </script>

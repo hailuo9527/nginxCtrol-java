@@ -31,7 +31,7 @@ const  defaultConfig = {
                     allow_deny_id: '',
                     virtual_id: '',
                     locations_id: '',
-                    allow_deny_value: '',
+                    allow_deny_value: 'allow',
                     allow_deny_ip: '',
                     allow_deny_sort: 0,
                     version_no: ''
