@@ -198,6 +198,7 @@
 </script>
 <style lang="less" scoped>
     @import "L7-config";
+
     /deep/ .ivu-modal-close{
         .ivu-icon-ios-close{
             color: #333;

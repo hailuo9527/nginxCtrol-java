@@ -16,6 +16,7 @@
 
 
        </div>
+        <!--header tab-->
         <div class="l7_config_column column_header">
             <div class="header_item">
                 Locations
@@ -37,9 +38,11 @@
                 <!--<Icon type="md-add" size="26" color="#333" class="add_handler"/>-->
             </div>
         </div>
+        <!--header tab end-->
+        <!--virtual servers-->
         <div  class="l7_config_column column_body column_body_servers">
             <div class="servers">
-                    <div class="server_item selected" v-for="(item, index) in config.ngcVirtualServers">
+                    <div class="server_item selected" @click="virtualServerIndex = index" :class="virtualServerIndex === index? 'selected': ''" v-for="(item, index) in config.ngcVirtualServers">
                         <Icon type="md-create" class="ctrl-list-item__edit" @click="editVirtualServer(index,true)"/>
                         <h4 class="ctrl-server__server-name">
                             <span>{{ item.domain_name.split(',')[0] || '*'}}</span>
@@ -60,28 +63,30 @@
 
             </div>
         </div>
+        <!--location-->
         <div  class="l7_config_column column_body">
             <div class="locations">
                 <div class="ctrl-list-item ">
-                    <span class="ctrl-location ctrl-location_default"><!-- react-text: 253 -->&nbsp;<!-- /react-text --><!-- react-text: 254 -->/<!-- /react-text -->
+                    <span class="ctrl-location ctrl-location_default">
                         <span class="ctrl-location__label">default route</span>
                     </span>
                     <Icon type="md-create" class="ctrl-list-item__edit" />
                 </div>
                 <div class="ctrl-list-item list-selected">
-                    <span class="ctrl-location "><!-- react-text: 253 -->&nbsp;<!-- /react-text --><!-- react-text: 254 -->/<!-- /react-text -->
+                    <span class="ctrl-location ">
                         <span class="ctrl-location__label">default route</span>
                     </span>
                     <Icon type="md-create" class="ctrl-list-item__edit" />
                 </div>
                 <div class="ctrl-list-item ">
-                    <span class="ctrl-location "><!-- react-text: 253 -->&nbsp;<!-- /react-text --><!-- react-text: 254 -->/<!-- /react-text -->
+                    <span class="ctrl-location ">
                         <span class="ctrl-location__label">default route</span>
                     </span>
                     <Icon type="md-create" class="ctrl-list-item__edit" />
                 </div>
             </div>
         </div>
+        <!--upstream groups-->
         <div  class="l7_config_column column_body column_body_upstream">
             <div class="upstream-groups">
                 <div ref="start1" class="ctrl-list-item ctrl-list-item_corners list-selected">
@@ -106,6 +111,7 @@
                 </div>
             </div>
         </div>
+        <!--upstream servers-->
         <div class="l7_config_column column_body column_body_upstream">
             <div  class="upstream-groups">
                 <div ref="end1" class="ctrl-list-item ctrl-list-item_corners list-selected">
@@ -212,7 +218,10 @@ export default {
             step: 0,
             config: defaultConfig,
             ngcVirtualServers: defaultConfig.ngcVirtualServers[0],
+            ngcLocations: defaultConfig.ngcVirtualServers[0].ngcLocations,
             modify: false, // 新增/修改配置， 默认新增
+            virtualServerIndex: 0, // 选中的virtualServer 序号
+            locationsIndex: 0, // locations 序号
         }
 
     },

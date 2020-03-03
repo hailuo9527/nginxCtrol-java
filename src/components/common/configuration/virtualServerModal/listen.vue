@@ -133,102 +133,28 @@
 </template>
 
 <script>
-    import myFormItem from '../form-item'
+    import mixin from '../mixins'
     import expandPanel from '../../expandPanel'
     import emptyConfig from '../emptyConfig'
     export default {
-        props: {
-            data: {
-                type: Object,
-                default: () => {}
-            },
-            modify: false,
-        },
+        mixins: [mixin],
+        name: 'listen',
         components: {
-            myFormItem, expandPanel
+             expandPanel
         },
         data () {
-            const domain = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('至少需要一个域名！'));
-                }
-                callback();
-            };
             return {
-                form: {},
                 formRules: {
                     listening_address_port: [
                         { required: true, message: 'The name cannot be empty', trigger: 'blur' }
                     ]
                 },
-                valid: false,
             }
-        },
-        watch: {
-            data : {
-                handler(nv, ov){
-                    /* 拷贝对象 */
-                    console.log(nv)
-                    this.form = this.copyJson(nv)
-                },
-                immediate: true
-            },
-            form: {
-                handler() {
-                    this.valid = false  //  表单变化时重新验证
-                },
-                deep: true
-            }
-        },
-        computed: {
-
         },
         methods: {
             addListen() {
                 this.form.ngcListenings.push(emptyConfig.ngcVirtualServers[0].ngcListenings[0])
             },
-
-            /* 保存配置项 */
-            saveConfig(configName) {
-                 console.log(this.$refs['listen'][0])
-
-                this.$refs['listen'].map((item, index) => {
-                    item.validate((valid) => {
-                        console.log(valid+ 'rewr')
-                        if (valid) {
-                            this.valid = true
-                            this.$emit('readyOk', this.form)
-                        } else {
-                            this.valid = false
-                            this.$Message.error('Fail!');
-                        }
-                    })
-                })
-            },
-            /* 还原配置 */
-            backConfig(obj,target){
-                Object.keys(obj).map(item => {
-                    this.form[item] = target[item]
-                })
-            },
-            /* 取消配置修改 */
-            cancel(configName,target) {
-                target = target || this.data
-                this.backConfig(this.data,target)
-
-            },
-            /* 检查是否有未保存选项 */
-            edit(data){
-                let json = {
-                    name: 'listen',
-                    value: data
-                }
-                this.$emit('edit', json) // 通知父组件未保存当前配置
-            }
-        },
-
-        mounted() {
-
         }
     }
 </script>
