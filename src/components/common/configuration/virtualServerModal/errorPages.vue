@@ -160,6 +160,15 @@
 
 
             },
+            /* 开关变化时 */
+            closeConfig(data){
+                if (!data){
+                    this.resetConfig(emptyConfig.ngcVirtualServers[0])
+                } else{
+                    this.form.error_pages_state = data
+                }
+
+            },
         },
 
         mounted() {

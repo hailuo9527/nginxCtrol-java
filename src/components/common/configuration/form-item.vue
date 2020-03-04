@@ -52,30 +52,34 @@
             open: {
                 handler(nv,ov){
                     this.expand = nv
-                    this.showEdit = !this.modify;
+                    if(this.onlyShow) {
+                        this.showEdit = false
+                    } else {
+                        if(!nv){
+                            this.showEdit = !nv // 修改模式展示预览面板， 新建模式展示编辑面板
+                        } else if(!this.modify){
+                            this.showEdit = true
+                        }
 
-                    //console.log(nv)
-                    this.$emit('edit', nv)
-
+                       // this.$emit('edit', nv)
+                    }
                 },
                 immediate: true
             },
             showEdit: {
                 handler(nv,ov) { // 通知父组件编辑模式打开， 未保存
-                    if (!nv) {
+                    if (!this.onlyShow) {
                         this.$emit('edit', nv)
+                        //console.log('showEdit变化')
                     }
                 },
-                //immediate: true
+
             },
             valid(nv, ov) {
                 if (nv) {
                     this.showEdit = false
                 }
             },
-            expand(nv, ov) {
-                this.$emit('edit', nv)
-            }
         },
         computed: {
           classStatus: function () {
@@ -96,14 +100,10 @@
                 this.showEdit = !this.showEdit
             },
             expandChange (data) {
-                /*if (!data) {
-                    //this.showEdit = false
-                    this.$emit('closeConfig')
-                } else if(this.onlyShow)  {
+                if(this.onlyShow) {  // onlyshow 为真则只显示预览
                     this.showEdit = false
-                }*/
-                if(this.onlyShow)  {
-                    this.showEdit = false
+                }else if(!data){
+                    this.$emit('edit', data)
                 }
                 this.$emit('closeConfig',data)
             },
@@ -123,10 +123,6 @@
             },
 
         },
-
-        mounted() {
-
-        }
     }
 </script>
 <style lang="less" scoped>

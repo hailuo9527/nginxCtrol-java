@@ -59,8 +59,17 @@
                     this.form[item] = target[item]
                 })
             },
+            /* 重置配置项 */
+            resetConfig(target){
+                let json = {}
+                Object.keys(this.form).map(item => {
+                    json[item] = target[item]
+                })
+                console.log(json)
+                this.$emit('readyOk', json)
+            },
             /* 取消配置修改 */
-            cancel(configName,target) {
+            cancel(target) {
                 target = target || this.data
                 this.backConfig(this.data,target)
             },
@@ -71,7 +80,7 @@
             },
             /* 检查是否有未保存选项 */
             edit(data){
-               // console.log(data)
+                console.log(data)
                 let json = {
                     name: this.title,
                     value: data

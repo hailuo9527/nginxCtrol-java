@@ -406,7 +406,7 @@
                 immediate: true
             },
             modify(nv) {
-                console.log(nv)
+               // console.log(nv)
             },
 
 
@@ -457,7 +457,7 @@
 
         },
         mounted() {
-            console.log(this.data)
+            //console.log(this.data)
         }
     }
 </script>

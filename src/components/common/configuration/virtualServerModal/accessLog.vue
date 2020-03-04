@@ -49,7 +49,7 @@
 
 <script>
     import mixin from '../mixins'
-    import draggable from 'vuedraggable'
+    import emptyConfig from '../emptyConfig'
     export default {
         mixins: [mixin],
         data () {
@@ -78,7 +78,17 @@
                     this.form.access_log_format = ''
                     this.form.access_log_name = ''
                 }
-            }
+            },
+            /* 开关变化时 */
+            closeConfig(data){
+
+                if (!data){
+                    this.resetConfig(emptyConfig.ngcVirtualServers[0])
+                } else{
+                    this.form.access_log_state = data
+                }
+
+            },
         },
 
         mounted() {

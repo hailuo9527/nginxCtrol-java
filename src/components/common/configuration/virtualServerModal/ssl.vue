@@ -41,6 +41,7 @@
 
 <script>
     import mixin from '../mixins'
+    import emptyConfig from '../emptyConfig'
     export default {
         mixins: [mixin],
         data () {
@@ -57,7 +58,15 @@
             }
         },
         methods: {
+            /* 开关变化时 */
+            closeConfig(data){
+                if (!data){
+                    this.resetConfig(emptyConfig.ngcVirtualServers[0])
+                } else{
+                    this.form.ssl_certificate_state = data
+                }
 
+            },
         },
 
         mounted() {

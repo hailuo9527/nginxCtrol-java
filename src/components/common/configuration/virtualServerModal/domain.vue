@@ -35,6 +35,7 @@
 
 <script>
     import mixin from '../mixins'
+    import emptyConfig from "../emptyConfig";
     export default {
         mixins: [mixin],
         name: 'domain',
@@ -76,8 +77,14 @@
             },
             /* 开关变化时 */
             closeConfig(data){
-                //console.log(data)
-                this.domain_names_state = data
+
+                if (!data){
+                    this.resetConfig(emptyConfig.ngcVirtualServers[0])
+                } else{
+                    this.form.domain_names_state = data
+                }
+
+
             },
         },
 

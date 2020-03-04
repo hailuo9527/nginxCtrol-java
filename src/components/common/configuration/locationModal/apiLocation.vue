@@ -42,13 +42,18 @@
 
         },
         methods: {
+            /* 开关变化时 */
             closeConfig(data){
-                 console.log(data)
-                //this.form.apilocation_state = data
+                this.form.apilocation_state = data
+                if (!data){
+                    this.$emit('readyOk',this.form)
+                }
+
             },
             stateChange(data) {
                 this.$emit('readyOk',this.form)
             }
+
         },
 
         mounted() {

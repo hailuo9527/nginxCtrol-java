@@ -331,7 +331,13 @@ export default {
         /* 保存virtualServer */
         addVirtualServer(data) {
             console.log(data)
-            this.config.ngcVirtualServers.push(data)
+            if(!this.modify){
+                this.config.ngcVirtualServers.push(data)
+            } else {
+                this.config.ngcVirtualServers[this.virtualServerIndex] = data
+            }
+
+
         },
         /* 选择virtualServer */
         selectVirtualServer(index) {

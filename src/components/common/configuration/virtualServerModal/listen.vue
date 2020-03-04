@@ -200,7 +200,8 @@
                     this.$Message.error('验证失败')
                 }
             },
-        }
+
+        },
     }
 </script>
 <style lang="less" scoped>

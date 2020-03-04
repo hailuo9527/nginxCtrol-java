@@ -107,6 +107,15 @@
 
         },
         methods: {
+            /* 开关变化时 */
+            closeConfig(data){
+                if (!data){
+                    this.resetConfig(emptyConfig.ngcVirtualServers[0])
+                } else{
+                    this.form.allow_deny_state = data
+                }
+
+            },
             /* 拖拽结束后更改sort */
             dragEnd(evt) {
 
