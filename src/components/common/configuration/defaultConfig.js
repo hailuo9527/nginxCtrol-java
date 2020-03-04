@@ -18,12 +18,12 @@ const  defaultConfig = {
             allow_deny_state: false,
             error_pages_state: false,
             error_log_state: false,
-            error_log_path: '',
-            error_log_level: '',
+            error_log_path: '/var/log/nginx/error.log',
+            error_log_level: 'ERROR',
             access_log_state: false,
             use_recommended_format_state: false,
             access_log_name: '',
-            access_log_path: '',
+            access_log_path: '/var/log/nginx/access.log',
             access_log_format: '',
             version_no: '',
             ngcAllowDenies: [
@@ -53,7 +53,62 @@ const  defaultConfig = {
                     locations_id: '',
                     virtual_id: '',
                     url_path_route_key: '',
-                    url_path_route_value: '',
+                    url_path_route_value: '/',
+                    apilocation_state: false,
+                    read_only_state: false,
+                    proxy_state: false,
+                    proxy_url: '',
+                    ngcLocationHeaders: [
+                        {
+                            headers_id: '',
+                            locations_id: '',
+                            headers_key: '',
+                            headers_value: '',
+                            version_no: ''
+                        }
+                    ],
+                    buffering_state: false,
+                    allow_to_buffer_on_disk_state: false,
+                    http_version: '',
+                    connect_timeout: '',
+                    intercept_errors_state: false,
+                    allow_deny_state: false,
+                    error_pages_state: false,
+                    index_files_state: true,
+                    index_files: 'index.html,index.htm',
+                    root_state: true,
+                    root_path: '/usr/share/nginx/html',
+                    alias_state: false,
+                    alias_path: '',
+                    version_no: '',
+                    ngcAllowDenies: [
+                        {
+                            allow_deny_id: '',
+                            virtual_id: '',
+                            locations_id: '',
+                            allow_deny_value: '',
+                            allow_deny_ip: '',
+                            allow_deny_sort: 0,
+                            version_no: ''
+                        }
+                    ],
+                    ngcErrorPages: [
+                        {
+                            error_pages_id: '',
+                            virtual_id: '',
+                            locations_id: '',
+                            http_codes: '',
+                            redirect_to: '',
+                            response_code: '',
+                            version_no: ''
+                        }
+                    ]
+                },
+                {
+                    locations_id: '',
+                    virtual_id: '',
+                    url_path_route_key: '=',
+                    url_path_route_value: '/50x.html',
                     apilocation_state: false,
                     read_only_state: false,
                     proxy_state: false,
@@ -76,8 +131,8 @@ const  defaultConfig = {
                     error_pages_state: false,
                     index_files_state: false,
                     index_files: '',
-                    root_state: false,
-                    root_path: '',
+                    root_state: true,
+                    root_path: '/usr/share/nginx/html',
                     alias_state: false,
                     alias_path: '',
                     version_no: '',
@@ -146,6 +201,7 @@ const  defaultConfig = {
             method: '',
             cookie: '',
             cookie_domain: '',
+            cookie_expires: 0,
             cookie_httponly_state: false,
             cookie_secure_state: false,
             cookie_path: '',

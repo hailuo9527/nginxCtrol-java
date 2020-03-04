@@ -52,23 +52,29 @@
             open: {
                 handler(nv,ov){
                     this.expand = nv
-                    if (!this.modify) {
-                        this.showEdit = true
-                    }
+                    this.showEdit = !this.modify;
+
+                    //console.log(nv)
+                    this.$emit('edit', nv)
 
                 },
                 immediate: true
             },
             showEdit: {
                 handler(nv,ov) { // 通知父组件编辑模式打开， 未保存
-                    this.$emit('edit', nv)
+                    if (!nv) {
+                        this.$emit('edit', nv)
+                    }
                 },
-                immediate: true
+                //immediate: true
             },
             valid(nv, ov) {
                 if (nv) {
                     this.showEdit = false
                 }
+            },
+            expand(nv, ov) {
+                this.$emit('edit', nv)
             }
         },
         computed: {
@@ -90,19 +96,21 @@
                 this.showEdit = !this.showEdit
             },
             expandChange (data) {
-                if (!data) {
+                /*if (!data) {
                     //this.showEdit = false
                     this.$emit('closeConfig')
                 } else if(this.onlyShow)  {
                     this.showEdit = false
+                }*/
+                if(this.onlyShow)  {
+                    this.showEdit = false
                 }
+                this.$emit('closeConfig',data)
             },
             cancel() {
                 if (!this.open){
                     this.expand = false
-                } else{
-                    this.showEdit = false
-                }
+                } else this.showEdit = this.important;
                 this.$emit('cancel')
             },
 
@@ -131,6 +139,7 @@
         transition: all .2s;
         .form-item-header{
             display: flex;
+            height: 30px;
             align-items: center;
             transition: border-color 0.1s linear, background-color 0.1s linear;
         }

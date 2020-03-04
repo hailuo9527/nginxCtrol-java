@@ -360,12 +360,10 @@
 
 </template>
 <script>
-    import PopTip from '@/components/common/pop-tip'
+   /* import PopTip from '@/components/common/pop-tip'
     import myFormItem from './form-item'
-    import expandPanel from '../expandPanel'
+    import expandPanel from '../expandPanel'*/
 
-    import defaultConfig from './defaultConfig'
-    import emptyConfig from './emptyConfig'
     import domain from './virtualServerModal/domain'
     import listen from './virtualServerModal/listen'
     import ssl from './virtualServerModal/ssl'
@@ -383,7 +381,7 @@
             modify: false,
         },
         components: {
-          PopTip, myFormItem, expandPanel, domain, listen, ssl, allowDeny, errorPages, errorLog, accessLog
+           domain, listen, ssl, allowDeny, errorPages, errorLog, accessLog
         },
         watch: {
             show (newVal, oldVal) {
@@ -427,6 +425,8 @@
                         error_log_level: this.serverForm.error_log_level,
                     }
                     this.accessLog = {
+                        access_log_state: false,
+                        use_recommended_format_state: false,
                         access_log_name: this.serverForm.access_log_name,
                         access_log_path: this.serverForm.access_log_path,
                         access_log_format: this.serverForm.access_log_format,
@@ -469,22 +469,30 @@
 
             handleSubmit () {
                 // 验证是否有未确认的更改
+               // console.log(this.errorInfo)
+                let flag = true
                 Object.keys(this.errorInfo).map((item) => {
-                    console.log(this.errorInfo[item])
+                    //console.log(this.errorInfo[item])
                     if (this.errorInfo[item]){
+                        flag = false
                         this.errorTip = {
                             show: true,
                             value: item
                         }
-                        return
                     }
                 })
+                if (flag) {
+                    this.$emit('submit', this.serverForm)
+                    this.change(false)
+                }
             },
             /* 检查是否有未保存的配置项 */
             checkEditStatus(data){
+                console.log(data)
                 this.errorInfo[data.name] = data.value
             },
             prepareConfig(data) {
+                console.log(data)
                 Object.keys(data).map(item => {
                     this.serverForm[item] = data[item] // 拿到修改过后的配置对象
                 })

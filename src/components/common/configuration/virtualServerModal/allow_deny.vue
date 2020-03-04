@@ -1,6 +1,6 @@
 <template>
     <my-form-item  :title="title"
-                   @closeConfig = "cancel"
+                   @closeConfig = "closeConfig"
                    @saveConfig = "saveConfig"
                    @cancel = "cancel"
                    @edit="edit"

@@ -5,20 +5,19 @@
                    @cancel = "cancel"
                    @edit="edit"
                    :modify="modify"
-                   :open = "form.access_log_state"
+                   :open = "form.apilocation_state"
                    :valid="valid"
+                   :onlyShow="true"
                    :info="info">
-        <div slot="edit">
 
+        <div slot="show" class="ctrl-edit-item">
             <Form ref="form" :model="form" :rules="formRules"    @submit.native.prevent>
-
+                <FormItem label="READ-ONLY" class="aline-center">
+                    <i-switch v-model="form.read_only_state" @on-change="stateChange">
+                    </i-switch>
+                </FormItem>
 
             </Form>
-
-        </div>
-
-        <div slot="show">
-
         </div>
     </my-form-item>
 </template>
@@ -31,8 +30,9 @@
         data () {
 
             return {
-                title: '',
-                info: '',
+                title: 'USE AS NGINX API LOCATION',
+                info: 'Enable read-only REST API provided by the NGINX API module. Make sure to limit the access to the API using allow/deny. For more details, please refer to the NGINX documentation.',
+
                 formRules: {
 
                 },
@@ -42,7 +42,13 @@
 
         },
         methods: {
-
+            closeConfig(data){
+                 console.log(data)
+                //this.form.apilocation_state = data
+            },
+            stateChange(data) {
+                this.$emit('readyOk',this.form)
+            }
         },
 
         mounted() {

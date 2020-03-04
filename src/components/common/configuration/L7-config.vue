@@ -21,7 +21,7 @@
             <div class="header_item">
                 Locations
                 <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
-                <Icon type="md-add" size="26" color="#333" class="add_handler" @click="locationModal = true"/>
+                <Icon type="md-add" size="26" color="#333" class="add_handler" @click="editLocation(0,false)"/>
             </div>
         </div>
         <div  class="l7_config_column column_header">
@@ -42,7 +42,9 @@
         <!--virtual servers-->
         <div  class="l7_config_column column_body column_body_servers">
             <div class="servers">
-                    <div class="server_item selected" @click="virtualServerIndex = index" :class="virtualServerIndex === index? 'selected': ''" v-for="(item, index) in config.ngcVirtualServers">
+                    <div class="server_item" @click="selectVirtualServer(index)"
+                         :class="virtualServerIndex === index? 'selected': ''"
+                         v-for="(item, index) in config.ngcVirtualServers">
                         <Icon type="md-create" class="ctrl-list-item__edit" @click="editVirtualServer(index,true)"/>
                         <h4 class="ctrl-server__server-name">
                             <span>{{ item.domain_name.split(',')[0] || '*'}}</span>
@@ -66,24 +68,27 @@
         <!--location-->
         <div  class="l7_config_column column_body">
             <div class="locations">
-                <div class="ctrl-list-item ">
-                    <span class="ctrl-location ctrl-location_default">
-                        <span class="ctrl-location__label">default route</span>
+                <div class="ctrl-list-item "
+                     v-for="(item, index) in config.ngcVirtualServers[virtualServerIndex].ngcLocations"
+                     :key="index"
+                     :class="locationsIndex === index ? 'list-selected' : ''"
+                >
+                    <span class="ctrl-location "
+                          :class="item.url_path_route_value === '/' ? 'ctrl-location_default' : ''"
+                          @click="locationsIndex=index">
+                        <span>{{item.url_path_route_value}}</span>
+                        <span class="ctrl-location__label">{{item.url_path_route_value === '/' ? 'default route': ''}}</span>
                     </span>
-                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <Icon type="md-create" class="ctrl-list-item__edit" @click="editLocation(index,true)"/>
                 </div>
-                <div class="ctrl-list-item list-selected">
+                <!--<div class="ctrl-list-item list-selected">
                     <span class="ctrl-location ">
+                        <span>=/50x.html</span>
                         <span class="ctrl-location__label">default route</span>
                     </span>
                     <Icon type="md-create" class="ctrl-list-item__edit" />
-                </div>
-                <div class="ctrl-list-item ">
-                    <span class="ctrl-location ">
-                        <span class="ctrl-location__label">default route</span>
-                    </span>
-                    <Icon type="md-create" class="ctrl-list-item__edit" />
-                </div>
+                </div>-->
+
             </div>
         </div>
         <!--upstream groups-->
@@ -190,9 +195,18 @@
         <!-- 页脚按钮end -->
         <!-- 功能弹窗 -->
         <LoadBalancerModal :show="domainModal"   @change="modalVisibleChange" @complete="domainModal = false"/>
-        <VirtualServerModal :show="serverModal" :modify="modify" :data="ngcVirtualServers" @change="modalVisibleChange"/>
-       <!-- <LocationModal  :show="locationModal" :data="ngcVirtualServers" @change="modalVisibleChange"/>
-        <UpstreamModal  :show="upstreamModal" :data="ngcVirtualServers" @change="modalVisibleChange"/>-->
+        <VirtualServerModal
+                :show="serverModal"
+                :modify="modify"
+                :data="ngcVirtualServers"
+                @submit="addVirtualServer"
+                @change="modalVisibleChange"/>
+        <LocationModal
+                :show="locationModal"
+                :modify="modify"
+                :data="ngcLocations"
+                @change="modalVisibleChange"/>
+        <!--<UpstreamModal  :show="upstreamModal" :data="ngcVirtualServers" @change="modalVisibleChange"/>-->
     </div>
 </template>
 <script>
@@ -218,17 +232,17 @@ export default {
             step: 0,
             config: defaultConfig,
             ngcVirtualServers: defaultConfig.ngcVirtualServers[0],
-            ngcLocations: defaultConfig.ngcVirtualServers[0].ngcLocations,
+            ngcLocations: defaultConfig.ngcVirtualServers[0].ngcLocations[0],
             modify: false, // 新增/修改配置， 默认新增
             virtualServerIndex: 0, // 选中的virtualServer 序号
-            locationsIndex: 0, // locations 序号
+            locationsIndex: null, // locations 序号
         }
 
     },
 
     watch:{
         config(newVal, old){
-           // console.log(...arguments)
+            console.log(...arguments)
         }
     },
     components: {
@@ -287,7 +301,7 @@ export default {
                 version_no: this.$route.query.version_no
             }
             let res = await getNginxConf(json)
-            console.log(res)
+           // console.log(res)
             if (this.asyncOk(res) && res.data.result) {
                 this.config = res.data.result
             }
@@ -295,17 +309,36 @@ export default {
         /* 编辑server配置*/
         editVirtualServer(index, modify) {
             console.log(modify? '编辑': '新建')
-            this.ngcVirtualServers = modify ? this.config.ngcVirtualServers[index] : emptyConfig.ngcVirtualServers[index]
-            console.log(this.ngcVirtualServers)
+            this.ngcVirtualServers = modify ? this.config.ngcVirtualServers[index] : emptyConfig.ngcVirtualServers[0]
+           // console.log(this.ngcVirtualServers)
             this.modify = modify
             this.serverModal = true
+        },
+        /* 编辑server配置*/
+        editLocation(index, modify) {
+            console.log(modify? '编辑': '新建')
+            this.ngcLocations = modify ? this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[this.locationsIndex] : emptyConfig.ngcVirtualServers[0].ngcLocations[0]
+            console.log(this.ngcLocations)
+            this.modify = modify
+            this.locationModal = true
         },
         /* 初始化配置 */
         initConfig() {
             if (this.$route.params.configName) {
                 this.getConfig()
             }
+        },
+        /* 保存virtualServer */
+        addVirtualServer(data) {
+            console.log(data)
+            this.config.ngcVirtualServers.push(data)
+        },
+        /* 选择virtualServer */
+        selectVirtualServer(index) {
+            this.virtualServerIndex = index
+            this.ngcVirtualServers = this.config.ngcVirtualServers[this.virtualServerIndex]
         }
+
     },
     mounted() {
         /* 初始化配置 */

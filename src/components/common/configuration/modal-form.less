@@ -34,6 +34,7 @@
   padding: 10px 40px;
   position: sticky;
   top: 0;
+  z-index: 9999;
   .close{
     font-size: 18px;
     color: #fff;
@@ -116,11 +117,11 @@
 
       }
     }
-    .options-label{
+    /*.options-label{
       color: #888;
       margin-right: 20px;
 
-    }
+    }*/
   }
   &.full-input{
     /deep/.ivu-form-item-content{
@@ -200,6 +201,9 @@
   transition: opacity 0.1s linear;
   .icon{
     margin-right: 10px;
+  }
+  &:hover{
+    opacity: 1;
   }
 }
 .ctrl-edit-item {
@@ -398,9 +402,18 @@
 .inlineForm{
   display: flex;
   width: 100%;
+  align-items: center;
   .inline-form-item{
     &:first-child{
       flex: 1;
     }
   }
+  .options-label{
+      color: #888;
+      margin-right: 20px;
+      display: inline-block;
+      height: 20px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
 }

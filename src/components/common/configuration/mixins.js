@@ -18,6 +18,7 @@
             return {
                 form: {},
                 valid: false,
+                switchStatus: false,
             }
         },
         watch: {
@@ -41,8 +42,10 @@
             /* 保存配置项 */
             saveConfig() {
                 this.$refs['form'].validate((valid) => {
+
                     if (valid) {
                         this.valid = true
+                        console.log(this.form)
                         this.$emit('readyOk', this.form)
                     } else {
                         this.valid = false
@@ -61,8 +64,14 @@
                 target = target || this.data
                 this.backConfig(this.data,target)
             },
+            /* 开关变化时 */
+            closeConfig(data){
+              //console.log(data)
+              this.switchStatus = data
+            },
             /* 检查是否有未保存选项 */
             edit(data){
+               // console.log(data)
                 let json = {
                     name: this.title,
                     value: data

@@ -1,6 +1,6 @@
 <template>
-    <my-form-item  title="DOMAIN NAMES"
-                   @closeConfig = "cancel"
+    <my-form-item  :title="title"
+                   @closeConfig = "closeConfig"
                    @saveConfig = "saveConfig"
                    @cancel = "cancel"
                    @edit="edit"
@@ -46,6 +46,7 @@
                 callback();
             };
             return {
+                title: 'DOMAIN NAMES',
                 formRules: {
                     domain_name: [
                         { validator: domain, trigger: 'blur' }
@@ -72,7 +73,12 @@
                 let index = arr.indexOf(str)
                 arr.splice(index, 1)
                 this.form.domain_name = arr.join(',')
-            }
+            },
+            /* 开关变化时 */
+            closeConfig(data){
+                //console.log(data)
+                this.domain_names_state = data
+            },
         },
 
         mounted() {

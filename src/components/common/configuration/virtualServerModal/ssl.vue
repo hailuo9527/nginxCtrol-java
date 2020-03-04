@@ -1,6 +1,6 @@
 <template>
-    <my-form-item  title="SSL CERTIFICATE"
-                   @closeConfig = "cancel"
+    <my-form-item  :title="title"
+                   @closeConfig = "closeConfig"
                    @saveConfig = "saveConfig"
                    @cancel = "cancel"
                    @edit="edit"
@@ -43,11 +43,9 @@
     import mixin from '../mixins'
     export default {
         mixins: [mixin],
-        name: 'ssl',
-
         data () {
             return {
-
+                title: 'SSL CERTIFICATE',
                 formRules: {
                     ssl_key: [
                         { required: true, message: '不能为空', trigger: 'blur' }

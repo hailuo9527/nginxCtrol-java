@@ -1,6 +1,6 @@
 <template>
-    <my-form-item  title="LISTENING ADDRESS AND PORT"
-                   @closeConfig = "cancel"
+    <my-form-item  :title="title"
+                   @closeConfig = "closeConfig"
                    @saveConfig = "saveConfig"
                    @cancel = "cancel"
                    @edit="edit"
@@ -16,7 +16,7 @@
                 <div class="item-body">
                     <Form ref="form" :model="form.ngcListenings[index]" :rules="formRules"    @submit.native.prevent>
                         <FormItem class="line-form-item" prop="listening_address_port">
-                            <Input v-model.trim="item.listening_address_port" placeholder="number"></Input>
+                            <Input v-model.trim="item.listening_address_port" placeholder="192.168.0.1:80"></Input>
                         </FormItem>
                         <FormItem label="DEFAULT SERVER" class="aline-center">
                             <i-switch  v-model="item.default_server_state">
@@ -138,7 +138,6 @@
     import emptyConfig from '../emptyConfig'
     export default {
         mixins: [mixin],
-        name: 'listen',
         components: {
              expandPanel
         },
@@ -149,6 +148,7 @@
                 }
             }
             return {
+                title: 'LISTENING ADDRESS AND PORT',
                 formRules: {
                     listening_address_port: [
                         { required: true, message: '不能为空' },
@@ -185,11 +185,9 @@
 
             /* 保存配置项 */
             saveConfig() {
-                //console.log(this.$refs['form'])
                 let flag = true
                 for(let item of this.$refs['form']){
                     item.validate(valid => {
-                        console.log(valid)
                         if (!valid) {
                             flag = false
                         }
@@ -201,8 +199,6 @@
                 } else {
                     this.$Message.error('验证失败')
                 }
-
-
             },
         }
     }

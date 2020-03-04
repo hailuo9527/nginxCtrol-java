@@ -1,23 +1,24 @@
 <template>
     <my-form-item  :title="title"
-                   @closeConfig = "cancel"
+                   @closeConfig = "closeConfig"
                    @saveConfig = "saveConfig"
                    @cancel = "cancel"
                    @edit="edit"
                    :modify="modify"
                    :open = "form.error_log_state"
                    :valid="valid"
+                   :onlyShow="true"
                    info="Define the response that will be shown for specific errors.">
 
         <div slot="show">
             <div  class="ctrl-edit-item ">
                 <div class="ctrl-edit-properties__row">
                     <span class="label">PATH</span>
-                    <span class="value">/var/log/nginx/error.log</span>
+                    <span class="value">{{form.error_log_path}}</span>
                 </div>
                 <div class="ctrl-edit-properties__row">
                     <span class="label">LEVEL</span>
-                    <span class="value">ERROR</span>
+                    <span class="value">{{form.error_log_level}}</span>
                 </div>
             </div>
 
