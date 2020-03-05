@@ -18,16 +18,10 @@
                 <L7Config></L7Config>
             </div>
            <div class="tab-content" v-if="tab === 1">
-               <div class="configuration-associations__empty">
-                   <div class="configuration-associations__empty__title">You don't have any instance associations yet.</div>
-                  Please add a few associations.<!-- /react-text -->
-               </div>
-               <div class="configuration-associations__add-new">
-                   <Button  type="primary" size="large" icon="md-add">添加设备</Button>
-               </div>
+               <Device></Device>
            </div>
            <div class="tab-content" v-if="tab === 2">
-               234
+               <historical-version></historical-version>
            </div>
        </div>
 
@@ -36,6 +30,8 @@
 
 <script>
     import L7Config from '@/components/common/configuration/L7-config.vue'
+    import Device from '@/components/common/configuration/Devices/Device.vue';
+    import HistoricalVersion from '@/components/common/configuration/Devices/HistoricalVersion.vue';
     export default {
         data () {
             return{
@@ -44,7 +40,9 @@
             }
         },
         components: {
-            L7Config
+            L7Config,
+            Device,
+            HistoricalVersion
         },
         mounted() {
             this.configName = this.$route.params.configName || ''
