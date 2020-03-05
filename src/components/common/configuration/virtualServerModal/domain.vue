@@ -1,6 +1,6 @@
 <template>
-    <my-form-item  title="DOMAIN NAMES"
-                   @closeConfig = "cancel"
+    <my-form-item  :title="title"
+                   @closeConfig = "closeConfig"
                    @saveConfig = "saveConfig"
                    @cancel = "cancel"
                    @edit="edit"
@@ -35,6 +35,7 @@
 
 <script>
     import mixin from '../mixins'
+    import emptyConfig from "../emptyConfig";
     export default {
         mixins: [mixin],
         name: 'domain',
@@ -46,6 +47,7 @@
                 callback();
             };
             return {
+                title: 'DOMAIN NAMES',
                 formRules: {
                     domain_name: [
                         { validator: domain, trigger: 'blur' }
@@ -72,7 +74,18 @@
                 let index = arr.indexOf(str)
                 arr.splice(index, 1)
                 this.form.domain_name = arr.join(',')
-            }
+            },
+            /* 开关变化时 */
+            closeConfig(data){
+
+                if (!data){
+                    this.resetConfig(emptyConfig.ngcVirtualServers[0])
+                } else{
+                    this.form.domain_names_state = data
+                }
+
+
+            },
         },
 
         mounted() {

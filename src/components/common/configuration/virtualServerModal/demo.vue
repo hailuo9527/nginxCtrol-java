@@ -1,6 +1,6 @@
 <template>
     <my-form-item  :title="title"
-                   @closeConfig = "cancel"
+                   @closeConfig = "closeConfig"
                    @saveConfig = "saveConfig"
                    @cancel = "cancel"
                    @edit="edit"
@@ -28,7 +28,6 @@
 
     export default {
         mixins: [mixin],
-        name: 'access log',
         data () {
 
             return {

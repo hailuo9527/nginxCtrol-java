@@ -52,24 +52,34 @@
             open: {
                 handler(nv,ov){
                     this.expand = nv
-                    if (!this.modify) {
-                        this.showEdit = true
-                    }
+                    if(this.onlyShow) {
+                        this.showEdit = false
+                    } else {
+                        if(!nv){
+                            this.showEdit = !nv // 修改模式展示预览面板， 新建模式展示编辑面板
+                        } else if(!this.modify){
+                            this.showEdit = true
+                        }
 
+                       // this.$emit('edit', nv)
+                    }
                 },
                 immediate: true
             },
             showEdit: {
                 handler(nv,ov) { // 通知父组件编辑模式打开， 未保存
-                    this.$emit('edit', nv)
+                    if (!this.onlyShow) {
+                        this.$emit('edit', nv)
+                        //console.log('showEdit变化')
+                    }
                 },
-                immediate: true
+
             },
             valid(nv, ov) {
                 if (nv) {
                     this.showEdit = false
                 }
-            }
+            },
         },
         computed: {
           classStatus: function () {
@@ -90,29 +100,22 @@
                 this.showEdit = !this.showEdit
             },
             expandChange (data) {
-                if (!data) {
-                    //this.showEdit = false
-                    this.$emit('closeConfig')
-                } else if(this.onlyShow)  {
+                if(this.onlyShow) {  // onlyshow 为真则只显示预览
                     this.showEdit = false
+                }else if(!data){
+                    this.$emit('edit', data)
                 }
+                this.$emit('closeConfig',data)
             },
             cancel() {
                 if (!this.open){
                     this.expand = false
-                } else{
-                    this.showEdit = false
-                }
+                } else this.showEdit = this.important;
                 this.$emit('cancel')
             },
 
             ok () {
                 this.$emit('saveConfig')
-                console.log(this.valid)
-                /*console.log(this.valid)
-                if(this.valid){
-                    this.showEdit = false
-                }*/
                 if(this.valid){
                     this.showEdit = false
                 }
@@ -120,10 +123,6 @@
             },
 
         },
-
-        mounted() {
-
-        }
     }
 </script>
 <style lang="less" scoped>
@@ -136,6 +135,7 @@
         transition: all .2s;
         .form-item-header{
             display: flex;
+            height: 30px;
             align-items: center;
             transition: border-color 0.1s linear, background-color 0.1s linear;
         }
