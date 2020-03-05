@@ -61,7 +61,9 @@
                     } else {
                         if(!nv){
                             this.showEdit = !nv // 修改模式展示预览面板， 新建模式展示编辑面板
+                            console.log(1)
                         } else if(!this.modify){
+                            console.log(2)
                             this.showEdit = true
                             this.$emit('edit', nv)
                         }

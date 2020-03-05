@@ -26,13 +26,13 @@
             }
         },
         watch: {
-            // data : {
-            //     handler(nv, ov){
-            //         /* 拷贝对象 */
-            //         this.form = this.copyJson(nv)
-            //     },
-            //     immediate: true
-            // },
+            data : {
+                handler(nv, ov){
+                    /* 拷贝对象 */
+                    this.form = this.copyJson(nv)
+                },
+                immediate: true
+            },
             form: {
                 handler() {
                     this.valid = false  //  表单变化时重新验证
@@ -85,6 +85,7 @@
             },
             /* 检查是否有未保存选项 */
             edit(data){
+                console.log(data)
                 let json = {
                     name: this.title,
                     value: data

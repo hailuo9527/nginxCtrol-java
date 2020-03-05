@@ -28,7 +28,7 @@
             <div class="header_item">
                 Upstream Groups
                 <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
-                <Icon type="md-add" size="26" color="#333" class="add_handler" @click="upstreamModal = true"/>
+                <Icon type="md-add" size="26" color="#333" class="add_handler" @click="editUpstream(0, false)"/>
             </div>
         </div>
         <div class="l7_config_column column_header">
@@ -208,7 +208,12 @@
                 :data="ngcLocations"
                 @submit="addLocationServer"
                 @change="modalVisibleChange"/>
-        <!--<UpstreamModal  :show="upstreamModal" :data="ngcVirtualServers" @change="modalVisibleChange"/>-->
+        <UpstreamModal
+                :show="upstreamModal"
+                :modify="modify"
+                :data="ngcUpstreamGroups"
+                @submit="addUpstream"
+                @change="modalVisibleChange"/>
     </div>
 </template>
 <script>
@@ -235,9 +240,12 @@ export default {
             config: defaultConfig,
             ngcVirtualServers: defaultConfig.ngcVirtualServers[0],
             ngcLocations: defaultConfig.ngcVirtualServers[0].ngcLocations[0],
+            ngcUpstreamGroups: defaultConfig.ngcUpstreamGroups[0],
             modify: false, // 新增/修改配置， 默认新增
             virtualServerIndex: 0, // 选中的virtualServer 序号
-            locationsIndex: null, // locations 序号
+            locationsIndex: 0, // locations 序号
+            activeLocationIndex: null,
+            upstreamIndex: 0, // upstream 序号
         }
 
     },
@@ -317,13 +325,23 @@ export default {
             this.modify = modify
             this.serverModal = true
         },
-        /* 编辑server配置*/
+        /* 编辑location配置*/
         editLocation(index, modify) {
             console.log(modify? '编辑': '新建')
+            this.locationsIndex = index
             this.ngcLocations = modify ? this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[index] : emptyConfig.ngcVirtualServers[0].ngcLocations[0]
             console.log(this.ngcLocations)
             this.modify = modify
             this.locationModal = true
+        },
+        /* 编辑upstream配置*/
+        editUpstream(index, modify) {
+            console.log(modify? '编辑': '新建')
+            this.upstreamIndex = index
+            this.ngcUpstreamGroups = modify ? this.config.ngcUpstreamGroups[index] : emptyConfig.ngcUpstreamGroups[0]
+            console.log(this.ngcUpstreamGroups)
+            this.modify = modify
+            this.upstreamModal = true
         },
         /* 初始化配置 */
         initConfig() {
@@ -343,6 +361,20 @@ export default {
         /* 保存location配置 */
         addLocationServer(data) {
             console.log(data)
+            if(!this.modify){
+                this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations.push(data)
+            } else {
+                this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[this.locationsIndex] = data
+            }
+        },
+        /* 保存upStream */
+        addUpstream(data) {
+            console.log(data)
+            if(!this.modify){
+                this.config.ngcUpstreamGroups.push(data)
+            } else {
+                this.config.ngcUpstreamGroups[this.upstreamIndex] = data
+            }
         },
         /* 选择virtualServer */
         selectVirtualServer(index) {
@@ -351,7 +383,7 @@ export default {
             this.locationsIndex = null
         },
         selectLocation(index) {
-            this.locationsIndex = index
+            this.activeLocationIndex = index
             //this.ngcLocations = this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[]
         }
 

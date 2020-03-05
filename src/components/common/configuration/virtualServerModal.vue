@@ -98,9 +98,6 @@
                     }
                 }
             },
-            modify(nv) {
-               // console.log(nv)
-            },
             data : {
                 handler(nv, ov){
                     /* 拷贝对象 */
@@ -196,6 +193,7 @@
             },
             /* 检查是否有未保存的配置项 */
             checkEditStatus(data){
+                 console.log(data)
                 this.errorInfo[data.name] = data.value
                 Object.keys(this.errorInfo).map((item) => {
                     if (!this.errorInfo[item]){
@@ -211,7 +209,6 @@
                 Object.keys(data).map(item => {
                     this.serverForm[item] = data[item] // 拿到修改过后的配置对象
                 })
-                this.checkEditStatus()
             },
 
 
