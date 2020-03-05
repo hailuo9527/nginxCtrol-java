@@ -53,12 +53,25 @@
     export default {
         mixins: [mixin],
         data () {
+            const rule = (rule, value, callback) => {
+                if (this.use_recommended_format_state){
+                    callback()
+                } else{
+                    if (!value){
+                        callback(new Error('不能为空'))
+                    }
+                }
 
+                callback()
+            }
             return {
                 title: 'ACCESS LOG',
                 formRules: {
+                    access_log_name: [
+                        { validator: rule }
+                    ],
                     access_log_format: [
-                        {}
+                        {validator: rule }
                     ]
                 },
             }

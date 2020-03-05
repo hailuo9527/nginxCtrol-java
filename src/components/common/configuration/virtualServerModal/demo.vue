@@ -5,6 +5,7 @@
                    @cancel = "cancel"
                    @edit="edit"
                    :modify="modify"
+                   :disabled="disabled"
                    :open = "form.access_log_state"
                    :valid="valid"
                    :info="info">

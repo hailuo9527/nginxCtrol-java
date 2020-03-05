@@ -69,6 +69,7 @@
         <div  class="l7_config_column column_body">
             <div class="locations">
                 <div class="ctrl-list-item "
+                     @click="selectLocation(index)"
                      v-for="(item, index) in config.ngcVirtualServers[virtualServerIndex].ngcLocations"
                      :key="index"
                      :class="locationsIndex === index ? 'list-selected' : ''"
@@ -205,6 +206,7 @@
                 :show="locationModal"
                 :modify="modify"
                 :data="ngcLocations"
+                @submit="addLocationServer"
                 @change="modalVisibleChange"/>
         <!--<UpstreamModal  :show="upstreamModal" :data="ngcVirtualServers" @change="modalVisibleChange"/>-->
     </div>
@@ -249,6 +251,7 @@ export default {
         PopTip, LoadBalancerModal, VirtualServerModal, LocationModal, UpstreamModal
     },
     methods: {
+
         /* 打开新建弹窗 */
         dropdownHandler (name) {
 
@@ -317,7 +320,7 @@ export default {
         /* 编辑server配置*/
         editLocation(index, modify) {
             console.log(modify? '编辑': '新建')
-            this.ngcLocations = modify ? this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[this.locationsIndex] : emptyConfig.ngcVirtualServers[0].ngcLocations[0]
+            this.ngcLocations = modify ? this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[index] : emptyConfig.ngcVirtualServers[0].ngcLocations[0]
             console.log(this.ngcLocations)
             this.modify = modify
             this.locationModal = true
@@ -336,13 +339,20 @@ export default {
             } else {
                 this.config.ngcVirtualServers[this.virtualServerIndex] = data
             }
-
-
+        },
+        /* 保存location配置 */
+        addLocationServer(data) {
+            console.log(data)
         },
         /* 选择virtualServer */
         selectVirtualServer(index) {
             this.virtualServerIndex = index
             this.ngcVirtualServers = this.config.ngcVirtualServers[this.virtualServerIndex]
+            this.locationsIndex = null
+        },
+        selectLocation(index) {
+            this.locationsIndex = index
+            //this.ngcLocations = this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[]
         }
 
     },

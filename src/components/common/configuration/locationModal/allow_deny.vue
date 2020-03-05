@@ -5,6 +5,7 @@
                    @cancel = "cancel"
                    @edit="edit"
                    :modify="modify"
+                   :disabled="disabled"
                    :open = "form.allow_deny_state"
                    :valid="valid"
                    info="Allow or deny access for specific IP or network.">
@@ -110,7 +111,7 @@
             /* 开关变化时 */
             closeConfig(data){
                 if (!data){
-                    this.resetConfig(emptyConfig.ngcVirtualServers[0])
+                    this.resetConfig(emptyConfig.ngcVirtualServers[0].ngcLocations[0])
                 } else{
                     this.form.allow_deny_state = data
                 }
@@ -155,8 +156,8 @@
             },
 
         },
-
         mounted() {
+            console.log(this.form)
         }
     }
 </script>

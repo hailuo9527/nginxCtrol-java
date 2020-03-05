@@ -45,9 +45,10 @@
             /* 开关变化时 */
             closeConfig(data){
                 this.form.apilocation_state = data
-                if (!data){
+                this.$emit('readyOk',this.form)
+                /*if (!data){
                     this.$emit('readyOk',this.form)
-                }
+                }*/
 
             },
             stateChange(data) {

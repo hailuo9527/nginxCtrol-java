@@ -9,6 +9,10 @@
                 default: () => {}
             },
             modify: false,
+            disabled: {
+                type: Boolean,
+                default: false
+            }
         },
         components: {
             myFormItem
@@ -81,7 +85,6 @@
             },
             /* 检查是否有未保存选项 */
             edit(data){
-                console.log(data)
                 let json = {
                     name: this.title,
                     value: data

@@ -5,6 +5,7 @@
                    @cancel = "cancel"
                    @edit="edit"
                    :modify="modify"
+                   :disabled="disabled"
                    :open = "form.error_pages_state"
                    :valid="valid"
                    info="Define the response that will be shown for specific errors.">
@@ -179,7 +180,7 @@
             /* 开关变化时 */
             closeConfig(data){
                 if (!data){
-                    this.resetConfig(emptyConfig.ngcVirtualServers[0])
+                    this.resetConfig(emptyConfig.ngcVirtualServers[0].ngcLocations[0])
                 } else{
                     this.form.error_pages_state = data
                 }
@@ -188,7 +189,7 @@
         },
 
         mounted() {
-
+            console.log(this.form)
         }
     }
 </script>

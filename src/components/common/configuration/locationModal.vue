@@ -27,6 +27,47 @@
                         @edit = "checkEditStatus"
                         @readyOk = 'prepareConfig'
                 ></apiLocation>
+                <proxy
+                        :disabled="disabled"
+                        :modify="modify"
+                        :data = "proxy"
+                        @edit = "checkEditStatus"
+                        @readyOk = 'prepareConfig'
+                ></proxy>
+                <allowDeny
+                        :disabled="disabled"
+                        :modify="modify"
+                        :data = "allow_deny"
+                        @edit = "checkEditStatus"
+                        @readyOk = 'prepareConfig'
+                ></allowDeny>
+                <errorPages :modify="modify"
+                            :disabled="disabled"
+                            :data = "errorPages"
+                            @edit = "checkEditStatus"
+                            @readyOk = 'prepareConfig'
+                ></errorPages>
+                <indexFile
+                        :modify="modify"
+                        :disabled="disabled"
+                        :data = "indexFiles"
+                        @edit = "checkEditStatus"
+                        @readyOk = 'prepareConfig'
+                ></indexFile>
+                <root
+                        :modify="modify"
+                        :disabled="disabled"
+                        :data = "root"
+                        @edit = "checkEditStatus"
+                        @readyOk = 'prepareConfig'
+                ></root>
+                <alias
+                        :modify="modify"
+                        :disabled="disabled"
+                        :data = "alias"
+                        @edit = "checkEditStatus"
+                        @readyOk = 'prepareConfig'
+                ></alias>
                 <!--<Form ref="locationForm" :model="locationForm" :rules="locationFormRules"   @submit.native.prevent>
                     <my-form-item title="URI-PATH/ROUTE"
                                   @closeConfig = "closeConfig('domain')"
@@ -337,6 +378,12 @@
 
     import uriPath from './locationModal/uriPath'
     import apiLocation from './locationModal/apiLocation'
+    import proxy from './locationModal/proxy'
+    import allowDeny from './locationModal/allow_deny'
+    import errorPages from './locationModal/errorPages'
+    import indexFile from './locationModal/indexFile'
+    import root from './locationModal/root'
+    import alias from './locationModal/alias'
     export default {
         props: {
             show: false,
@@ -347,7 +394,7 @@
             modify: false,
         },
         components: {
-            uriPath, apiLocation
+            uriPath, apiLocation, proxy, allowDeny, errorPages, indexFile, root, alias
         },
         watch: {
             show (newVal, oldVal) {
@@ -357,6 +404,10 @@
             model(newVal, oldVal){
                 if (!newVal) {
                     this.change(newVal)
+                    this.errorTip = {
+                        show: false,
+                        value: ''
+                    }
                 }
             },
             data : {
@@ -387,7 +438,7 @@
                     }
                     this.errorPages = {
                         error_pages_state: this.locationForm.error_pages_state,
-                        ngcErrorPages: this.ngcErrorPages
+                        ngcErrorPages: this.locationForm.ngcErrorPages
                     }
                     this.indexFiles = {
                         index_files_state: this.locationForm.index_files_state,
@@ -421,6 +472,7 @@
                     show: false,
                     value: ''
                 },
+                disabled: false,
                 uriPath: {},
                 apiLocation: {},
                 proxy: {},
@@ -442,23 +494,49 @@
 
             handleSubmit () {
                 console.log('保存')
+                // 验证是否有未确认的更改
+                // console.log(this.errorInfo)
+                let flag = true
+
+                Object.keys(this.errorInfo).map((item) => {
+                    //console.log(this.errorInfo[item])
+                    if (this.errorInfo[item]){
+                        flag = false
+                        this.errorTip = {
+                            show: true,
+                            value: item
+                        }
+                    }
+                })
+                if (flag) {
+                    this.$emit('submit', this.locationForm)
+                    this.change(false)
+                }
             },
             /* 检查是否有未保存的配置项 */
             checkEditStatus(data){
                 //console.log(data)
                 this.errorInfo[data.name] = data.value
+                Object.keys(this.errorInfo).map((item) => {
+                    if (!this.errorInfo[item]){
+                        this.errorTip = {
+                            show: false,
+                            value: ''
+                        }
+                    }
+                })
             },
             prepareConfig(data) {
                 console.log(data)
+
+                this.disabled = data.apilocation_state
                 Object.keys(data).map(item => {
                     this.locationForm[item] = data[item] // 拿到修改过后的配置对象
                 })
+
             },
 
         },
-        mounted() {
-            //console.log(this.data)
-        }
     }
 </script>
 <style lang="less" scoped>
