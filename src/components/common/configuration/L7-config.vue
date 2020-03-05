@@ -191,8 +191,8 @@
         <!-- 功能弹窗 -->
         <LoadBalancerModal :show="domainModal"   @change="modalVisibleChange" @complete="domainModal = false"/>
         <VirtualServerModal :show="serverModal" :modify="modify" :data="ngcVirtualServers" @change="modalVisibleChange"/>
-       <!-- <LocationModal  :show="locationModal" :data="ngcVirtualServers" @change="modalVisibleChange"/>
-        <UpstreamModal  :show="upstreamModal" :data="ngcVirtualServers" @change="modalVisibleChange"/>-->
+       <!-- <LocationModal  :show="locationModal" :data="ngcVirtualServers" @change="modalVisibleChange"/> -->
+        <UpstreamModal  :show="upstreamModal" :data="ngcVirtualServers" @change="modalVisibleChange"/>
     </div>
 </template>
 <script>

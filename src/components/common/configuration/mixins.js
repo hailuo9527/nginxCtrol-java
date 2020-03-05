@@ -21,13 +21,13 @@
             }
         },
         watch: {
-            data : {
-                handler(nv, ov){
-                    /* 拷贝对象 */
-                    this.form = this.copyJson(nv)
-                },
-                immediate: true
-            },
+            // data : {
+            //     handler(nv, ov){
+            //         /* 拷贝对象 */
+            //         this.form = this.copyJson(nv)
+            //     },
+            //     immediate: true
+            // },
             form: {
                 handler() {
                     this.valid = false  //  表单变化时重新验证
@@ -45,6 +45,7 @@
                         this.valid = true
                         this.$emit('readyOk', this.form)
                     } else {
+                        console.log(valid)
                         this.valid = false
                         this.$Message.error('Fail!');
                     }
