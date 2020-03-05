@@ -92,6 +92,10 @@
             model(newVal, oldVal){
                 if (!newVal) {
                     this.change(newVal)
+                    this.errorTip = {
+                        show: false,
+                        value: ''
+                    }
                 }
             },
             modify(nv) {
@@ -136,7 +140,8 @@
 
                 },
                 immediate: true
-            }
+            },
+
         },
         data () {
 
@@ -173,8 +178,7 @@
                 // 验证是否有未确认的更改
                // console.log(this.errorInfo)
                 let flag = true
-
-                    Object.keys(this.errorInfo).map((item) => {
+                Object.keys(this.errorInfo).map((item) => {
                         //console.log(this.errorInfo[item])
                         if (this.errorInfo[item]){
                             flag = false
@@ -184,8 +188,6 @@
                             }
                         }
                     })
-
-
                 if (flag) {
                     this.$emit('submit', this.serverForm)
                     this.change(false)
@@ -194,14 +196,22 @@
             },
             /* 检查是否有未保存的配置项 */
             checkEditStatus(data){
-                //console.log(data)
                 this.errorInfo[data.name] = data.value
+                Object.keys(this.errorInfo).map((item) => {
+                    if (!this.errorInfo[item]){
+                        this.errorTip = {
+                            show: false,
+                            value: ''
+                        }
+                    }
+                })
             },
             prepareConfig(data) {
                // console.log(data)
                 Object.keys(data).map(item => {
                     this.serverForm[item] = data[item] // 拿到修改过后的配置对象
                 })
+                this.checkEditStatus()
             },
 
 

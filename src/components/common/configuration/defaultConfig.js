@@ -62,14 +62,14 @@ const  defaultConfig = {
                         {
                             headers_id: '',
                             locations_id: '',
-                            headers_key: '',
-                            headers_value: '',
+                            headers_key: 'Host',
+                            headers_value: '$host',
                             version_no: ''
                         }
                     ],
                     buffering_state: false,
                     allow_to_buffer_on_disk_state: false,
-                    http_version: '',
+                    http_version: '1.1',
                     connect_timeout: '',
                     intercept_errors_state: false,
                     allow_deny_state: false,
@@ -86,7 +86,7 @@ const  defaultConfig = {
                             allow_deny_id: '',
                             virtual_id: '',
                             locations_id: '',
-                            allow_deny_value: '',
+                            allow_deny_value: 'ALLOW',
                             allow_deny_ip: '',
                             allow_deny_sort: 0,
                             version_no: ''

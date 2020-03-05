@@ -1,7 +1,7 @@
 <template>
     <div class="form-item" :class="classStatus">
         <div class="form-item-header" >
-            <i-switch v-model="expand" v-if="!important && !noSwitch" @on-change="expandChange" ></i-switch>
+            <i-switch v-model="expand" :disabled="disabled" v-if="!important && !noSwitch" @on-change="expandChange" ></i-switch>
             <span class="title">{{title}}</span>
             <PopTip :content="info"  placement="right"></PopTip>
             <div class="actions" v-if="expand && !onlyShow">
@@ -38,6 +38,10 @@
                 default: false
             },
             valid: false,
+            disabled: {
+                type: Boolean,
+                default: false
+            }
         },
         data () {
           return {
@@ -59,6 +63,7 @@
                             this.showEdit = !nv // 修改模式展示预览面板， 新建模式展示编辑面板
                         } else if(!this.modify){
                             this.showEdit = true
+                            this.$emit('edit', nv)
                         }
 
                        // this.$emit('edit', nv)
@@ -80,6 +85,9 @@
                     this.showEdit = false
                 }
             },
+            disabled(nv) {
+                console.log(nv+ 'disabled')
+            }
         },
         computed: {
           classStatus: function () {
