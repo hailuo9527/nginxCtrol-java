@@ -70,7 +70,6 @@
                 Object.keys(this.form).map(item => {
                     json[item] = target[item]
                 })
-                console.log(json)
                 this.$emit('readyOk', json)
             },
             /* 取消配置修改 */
@@ -85,7 +84,7 @@
             },
             /* 检查是否有未保存选项 */
             edit(data){
-                console.log(data)
+                //console.log(data)
                 let json = {
                     name: this.title,
                     value: data

@@ -160,7 +160,7 @@ const  emptyConfig = {
             upstream_zone_name: '',
             upstream_zone_size: '',
             active_healthcheck_state: false,
-            healthcheck_url: '',
+            healthcheck_url: '/',
             healthcheck_host: '',
             keepalive_connection_pool_state: false,
             keepalive_connection_pool_value: '',

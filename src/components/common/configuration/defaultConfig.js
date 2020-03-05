@@ -188,6 +188,81 @@ const  defaultConfig = {
         }
     ],
     ngcUpstreamGroups: [
+        /*{
+            group_id: '',
+            nginx_conf_id: '',
+            group_name: '',
+            load_balancing_method: '',
+            hash_key: '',
+            ketama_consisten_state: false,
+            time_to_receive: '',
+            serve_incomplete_requests_state: false,
+            session_persistence_state: false,
+            method: '',
+            cookie: '',
+            cookie_domain: '',
+            cookie_expires: 0,
+            cookie_httponly_state: false,
+            cookie_secure_state: false,
+            cookie_path: '',
+            route_variables: '',
+            leam_create: '',
+            leam_lookup: '',
+            leam_shared_memory_zone: '',
+            leam_session_remove_timeout: 0,
+            leam_chrarrh: '',
+            upstream_zone_state: false,
+            upstream_zone_name: '',
+            upstream_zone_size: '',
+            active_healthcheck_state: false,
+            healthcheck_url: '',
+            healthcheck_host: '',
+            keepalive_connection_pool_state: false,
+            keepalive_connection_pool_value: '',
+            queueing_state: false,
+            queueing_number: '',
+            queueing_time: '',
+            ntlm_authentication_state: false,
+            persistent_state: false,
+            persistent_file: '',
+            version_no: '',
+            ngcUpstreamServers: [
+                {
+                    upstream_server_id: '',
+                    group_id: '',
+                    upstream_servers_name: '',
+                    weight: 0,
+                    max_active_connections: 0,
+                    max_failed_connections: 0,
+                    fail_timeout: 0,
+                    backup_server_state: false,
+                    resolve_state: false,
+                    service_name: '',
+                    route_name: '',
+                    weight_recovering_time: 0,
+                    server_bound_requests_only: '',
+                    mark_as_down: '',
+                    version_no: ''
+                },
+                {
+                    upstream_server_id: '',
+                    group_id: '',
+                    upstream_servers_name: '',
+                    weight: 0,
+                    max_active_connections: 0,
+                    max_failed_connections: 0,
+                    fail_timeout: 0,
+                    backup_server_state: false,
+                    resolve_state: false,
+                    service_name: '',
+                    route_name: '',
+                    weight_recovering_time: 0,
+                    server_bound_requests_only: '',
+                    mark_as_down: '',
+                    version_no: ''
+                }
+            ]
+        },
         {
             group_id: '',
             nginx_conf_id: '',
@@ -243,9 +318,26 @@ const  defaultConfig = {
                     server_bound_requests_only: '',
                     mark_as_down: '',
                     version_no: ''
+                },
+                {
+                    upstream_server_id: '',
+                    group_id: '',
+                    upstream_servers_name: '',
+                    weight: 0,
+                    max_active_connections: 0,
+                    max_failed_connections: 0,
+                    fail_timeout: 0,
+                    backup_server_state: false,
+                    resolve_state: false,
+                    service_name: '',
+                    route_name: '',
+                    weight_recovering_time: 0,
+                    server_bound_requests_only: '',
+                    mark_as_down: '',
+                    version_no: ''
                 }
             ]
-        }
+        }*/
     ]
 }
 export default defaultConfig

@@ -53,7 +53,7 @@ export default {
   methods: {},
 
   mounted() {
-    console.log(this.form)
+
   }
 };
 </script>
