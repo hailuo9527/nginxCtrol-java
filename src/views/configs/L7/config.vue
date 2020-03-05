@@ -1,7 +1,7 @@
 <template>
    <div class="config-detail">
        <div class="config-detail-header">
-           <Button  size="large" icon="md-arrow-back" @click="$router.go(-1)">返回</Button>
+           <Button  size="large" icon="md-arrow-back" @click="$router.push('/nginxConfigs')">返回</Button>
            <div class="border-bottom-input">
                <Input type="text" v-model="configName" placeholder="配置名"></Input>
            </div>
