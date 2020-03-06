@@ -362,8 +362,7 @@
 
             </div>
             <div slot="footer">
-                <Button @click="change(false)">取消</Button>
-                <Button type="primary"  :loading="modal_loading" @click="handleSubmit">保存</Button>
+                <modelFooter name="location" :showRemoveButton="modify" @remove="remove" @cancel="change(false)" @save="handleSubmit"></modelFooter>
 
             </div>
         </Modal>
@@ -379,6 +378,7 @@
     import indexFile from './locationModal/indexFile'
     import root from './locationModal/root'
     import alias from './locationModal/alias'
+    import modelFooter from './modelFooter'
     export default {
         props: {
             show: false,
@@ -389,7 +389,7 @@
             modify: false,
         },
         components: {
-            uriPath, apiLocation, proxy, allowDeny, errorPages, indexFile, root, alias
+            uriPath, apiLocation, proxy, allowDeny, errorPages, indexFile, root, alias, modelFooter
         },
         watch: {
             show (newVal, oldVal) {
@@ -530,6 +530,21 @@
                 })
 
             },
+            remove(){
+                this.$Modal.confirm({
+                    title: '提示',
+                    content: '<p>是否要删除此配置？</p>',
+                    onOk: () => {
+                        this.change(false)
+                        this.$emit('removeConfig', 'location')
+                        //this.$Message.info('Clicked ok');
+                    },
+                    onCancel: () => {
+                        //this.$Message.info('Clicked cancel');
+                    }
+                })
+
+            }
 
         },
         mounted() {

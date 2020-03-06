@@ -13,12 +13,12 @@
   >
     <div slot="edit" class="ctrl-edit-item ctrl-edit-item_edit">
        <Form ref="form" :model="form" :rules="formRules" :hide-required-mark="true" @submit.native.prevent>
-      <FormItem label="HEALTHCHECK URI" class="line-form-item full-input" prop="healthcheck_url">
-        <Input placeholder="URI" v-model.trim="form.healthcheck_url"></Input>
-      </FormItem>
-      <FormItem label="HOST" class="line-form-item full-input" prop="healthcheck_host">
-        <Input placeholder="example.com" v-model.trim="form.healthcheck_host"></Input>
-      </FormItem>
+          <FormItem label="HEALTHCHECK URI" class="line-form-item full-input" prop="healthcheck_url">
+            <Input placeholder="URI" v-model.trim="form.healthcheck_url"></Input>
+          </FormItem>
+          <FormItem label="HOST" class="line-form-item full-input" prop="healthcheck_host">
+            <Input placeholder="example.com" v-model.trim="form.healthcheck_host"></Input>
+          </FormItem>
       </Form>
     </div>
 

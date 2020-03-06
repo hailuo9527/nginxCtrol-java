@@ -52,9 +52,9 @@
 
 
             </div>
+
             <div slot="footer">
-                <Button @click="change(false)">取消</Button>
-                <Button type="primary"  :loading="modal_loading" @click="handleSubmit">保存</Button>
+                <modelFooter name="虚拟服务" :showRemoveButton="modify" @remove="remove" @cancel="change(false)" @save="handleSubmit"></modelFooter>
 
             </div>
         </Modal>
@@ -65,7 +65,7 @@
    /* import PopTip from '@/components/common/pop-tip'
     import myFormItem from './form-item'
     import expandPanel from '../expandPanel'*/
-
+   import modelFooter from './modelFooter'
     import domain from './virtualServerModal/domain'
     import listen from './virtualServerModal/listen'
     import ssl from './virtualServerModal/ssl'
@@ -83,6 +83,7 @@
             modify: false,
         },
         components: {
+            modelFooter,
            domain, listen, ssl, allowDeny, errorPages, errorLog, accessLog
         },
         watch: {
@@ -186,6 +187,7 @@
                         }
                     })
                 if (flag) {
+                    this.serverForm.ngcLocations = []
                     this.$emit('submit', this.serverForm)
                     this.change(false)
                 }
@@ -205,17 +207,34 @@
                 })
             },
             prepareConfig(data) {
-               // console.log(data)
+               console.log(data)
                 Object.keys(data).map(item => {
                     this.serverForm[item] = data[item] // 拿到修改过后的配置对象
                 })
             },
+            remove(){
+                this.$Modal.confirm({
+                    title: '提示',
+                    content: '<p>是否要删除此配置？</p>',
+                    onOk: () => {
+                        this.change(false)
+                        this.$emit('removeConfig', 'serverModal')
+                        //this.$Message.info('Clicked ok');
+                    },
+                    onCancel: () => {
+                        //this.$Message.info('Clicked cancel');
+                    }
+                })
 
+            }
 
+        },
+        mounted() {
+            console.log(this.data)
         },
         beforeDestroy() {
             console.log('yichu')
-            //this.change(false)
+
         }
     }
 </script>

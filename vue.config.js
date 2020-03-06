@@ -1,7 +1,14 @@
 const path = require('path');
 // 配置文件
+
+const TEST_URL = process.env.NODE_ENV === 'production'
+    ? 'http://wingsbro.mynetgear.com:8081'
+    : '/'
+const BASE_URL = process.env.NODE_ENV === 'production'
+    ? '//nc.naccenter.cn:8081'
+    : '/'
 module.exports = {
-    publicPath: '/',
+    publicPath: TEST_URL,
     pluginOptions: {
       'style-resources-loader': {
         preProcessor: 'less',
@@ -43,17 +50,6 @@ module.exports = {
         }
     },
     parallel: require('os').cpus().length > 1, // 构建时开启多进程处理babel编译
-    configureWebpack: config => ({
-        output: {
-            filename: 'js/[name].js',
-            chunkFilename: 'js/[name].js'
-        },
-        optimization: {
-            splitChunks: {
-                chunks: "all",
 
-            }
-        }
-    }),
 
 };

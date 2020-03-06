@@ -26,7 +26,7 @@
           </div>
           <div class="info">{{item.l7ServerId}}</div>
           <Icon
-            type="ios-close-circle"
+            type="md-close"
             title="删除此项"
             class="delete"
             size="18"
@@ -47,7 +47,7 @@
 
     <Modal v-model="l7_model_add" width="360">
       <p slot="header" style="color:#333;text-align:center">
-        <span>添加NGINX服务器</span>
+        <span>{{edit? '修改服务器配置': '添加NGINX服务器'}}</span>
       </p>
       <div style="text-align:center">
         <Form ref="formValidate" :model="add_l7_form" :rules="ruleValidate">
@@ -169,7 +169,8 @@ export default {
           { required: true, validator: validatel7ServerSSHPort, trigger: 'blur'}
         ]
       },
-      modal_loading: false
+      modal_loading: false,
+      edit: false
     };
   },
   watch: {
@@ -199,6 +200,7 @@ export default {
     },
     //展示Model框，数据重置
     addModel() {
+      this.edit = false
      this.add_l7_form.l7ServerName = '',
      this.add_l7_form.l7ServerSSHIp = '',
      this.add_l7_form.l7ServerSSHName = '',
@@ -278,6 +280,7 @@ export default {
     //展示Model框，展示当前L7服务器的数据
     editModel(item) {
         console.log(item)
+        this.edit = true
         this.add_l7_form.l7ServerId = item.l7ServerId
         this.add_l7_form.l7ServerName = item.l7ServerName
         this.add_l7_form.l7ServerSSHIp = item.l7ServerSSHIp

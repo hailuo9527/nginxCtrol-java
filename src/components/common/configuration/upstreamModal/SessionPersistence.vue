@@ -42,7 +42,7 @@
            </FormItem>
          </div>
          <div v-if="form.method === 'route'">
-           <FormItem label="VARIABLES" class="line-form-item full-input with-button"  props="routeVariables">
+           <FormItem label="VARIABLES" class="line-form-item full-input with-button"  prop="routeVariables">
              <Button  icon="md-close" class="tag"
                       :key="index"
                       v-if="item"
@@ -74,8 +74,8 @@
 
     <div slot="show" class="ctrl-edit-item">
       <div class="ctrl-edit-item__tags">
-        <span class="tags black" v-if="form.method">{{form.cookie}}</span>
-        <span v-if="form.method === 'cookie'">
+        <span class="tags black" v-if="form.method">{{form.method}}</span>
+        <span class="ctrl-edit-item__tags" v-if="form.method === 'cookie'">
           <span class="tags" v-if="form.cookie">{{form.cookie}}</span>
           <span class="tags" v-if="form.cookie_expires">expire={{form.cookie_expires}}</span>
           <span class="tags" v-if="form.cookie_domain">domain={{form.cookie_domain}}</span>
@@ -83,10 +83,10 @@
           <span class="tags" v-if="form.cookie_secure_state">secure</span>
           <span class="tags" v-if="form.cookie_path">path={{form.cookie_path}}</span>
         </span>
-        <span v-if="form.method === 'route'">
+        <span class="ctrl-edit-item__tags" v-if="form.method === 'route'">
           <span class="tags" v-if="form.route_variables" v-for="item in form.route_variables.split(',')">{{item}}</span>
         </span>
-        <span v-if="form.method === 'learn'">
+        <span class="ctrl-edit-item__tags" v-if="form.method === 'learn'">
             <span class="tags" v-if="form.leam_create">create={{form.leam_create}}</span>
             <span class="tags" v-if="form.leam_lookup">lookup={{form.leam_lookup}}</span>
             <span class="tags" v-if="form.leam_shared_memory_zone">zone={{form.leam_shared_memory_zone}}</span>
@@ -188,20 +188,25 @@ export default {
           }
         ]
 
-      }
+      },
+
     };
   },
   computed: {},
   methods: {
     addRouteVariables () {
       if(this.form.routeVariables === "") return
-      let arr = this.form.route_variables.split(',')
-      arr.push(this.form.routeVariables)
-      arr.map((item, index)=> {
-        if (!item) arr.splice(index,1)
-      })
-      this.form.route_variables = arr.join(',')
-      this.form.routeVariables = ''
+      this.$refs['form'].validateField('routeVariables',(valid) => {
+        if (!valid) {
+          let arr = this.form.route_variables.split(',')
+          arr.push(this.form.routeVariables)
+          arr.map((item, key)=> {
+            if (!item) arr.splice(key,1)
+          })
+          this.form.route_variables = arr.join(',')
+          this.form.routeVariables = ''
+        }
+      });
     },
     removeTag(str) {
       let arr = this.form.route_variables.split(',')

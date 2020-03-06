@@ -157,6 +157,10 @@
         },
 
         mounted() {
+            //console.log(this.form)
+            /*if (!this.data.allow_deny_state){
+                this.backConfig(this.data,emptyConfig.ngcVirtualServers[0])
+            }*/
         }
     }
 </script>
