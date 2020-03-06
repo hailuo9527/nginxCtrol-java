@@ -12,7 +12,7 @@
       </div>
     </div>
     <div v-else>
-      <device-table :TableValue="resultValue"></device-table>
+      <device-table :TableValue="resultValue" v-on:show-change="showChange"></device-table>
     </div>
     <Modal
       v-model="DeviceModal"
@@ -55,14 +55,16 @@ export default {
       List: [],
       data: [],
       l7ServerIds: [],
-      resultValue: []
+      resultValue: [],
     };
   },
   methods: {
+    // 获取选择器选中的值
     GetSelectValue(l7ServerName) {
       this.data = l7ServerName;
       console.log(this.data);
     },
+    // 添加实例
     async addInstance() {
       this.DeviceModal = false;
       if (this.data !== []) {
@@ -79,23 +81,23 @@ export default {
           this.$route.query.nginx_conf_id,
           this.l7ServerIds
         );
+        if (this.asyncOk(res)) {
+          this.getNgcInstanceList()
+        }
         console.log(res);
       }
-
-      // this.show = false;
     },
+    // 查询实例列表
     async getNgcInstanceList() {
-      console.log(this.$route.query.nginx_conf_id);
-      let json = this.$route.query.nginx_conf_id;
       let res = await selNgcInstanceList(this.$route.query.nginx_conf_id);
       if (this.asyncOk(res)) {
         if (res.data.result.length > 0) {
           this.show = false;
           this.resultValue = res.data.result
         }
-        console.log(res);
       }
     },
+    // 查询所有L7服务器配置信息
     async getL7ServerInfoAll() {
       this.DeviceModal = true;
       let res = await selL7ServerInfoAll();
@@ -104,6 +106,10 @@ export default {
         this.List = res.data.result;
         console.log(this.List);
       }
+    },
+    showChange(data) {
+      console.log(data)
+      this.show = data
     }
   },
   mounted() {
