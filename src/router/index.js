@@ -9,10 +9,10 @@ import { Util, getToken } from '@/libs/util'
 Vue.use(VueRouter);
 
 Vue.component("LoadingBar", LoadingBar)
-
+console.log(process.env.BASE_URL)
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: '/ng/',
   routes
 });
 

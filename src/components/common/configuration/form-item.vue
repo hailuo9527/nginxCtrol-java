@@ -56,17 +56,34 @@
             open: {
                 handler(nv,ov){
                     this.expand = nv
-                    if(this.onlyShow) {
+
+                    if (this.onlyShow){ // 只展示无编辑功能
                         this.showEdit = false
                     } else {
-                        if(!nv){
-                            this.showEdit = !nv // 修改模式展示预览面板， 新建模式展示编辑面板
-                        } else if(!this.modify){
+                        if (nv) { // 初始值为true
+                            console.log(1)
+                            if (this.important){
+
+                                if (!this.modify){ // 新增模式下
+                                    this.showEdit = true
+                                    this.$emit('edit', nv)
+                                 }else { // 修改模式下
+                                    this.showEdit = false
+                                    this.$emit('edit', false)
+                                }
+                            }else {  //初始值为false 打开编辑模式
+
+                                if (!this.modify){ // 新增模式下
+                                    this.showEdit = true
+                                    this.$emit('edit', nv)
+                                }
+                            }
+
+
+                        }else{
                             this.showEdit = true
-                            this.$emit('edit', nv)
                         }
 
-                       // this.$emit('edit', nv)
                     }
                 },
                 immediate: true

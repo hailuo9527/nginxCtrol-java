@@ -29,6 +29,7 @@
             data : {
                 handler(nv, ov){
                     /* 拷贝对象 */
+                   // console.log(nv)
                     this.form = this.copyJson(nv)
                 },
                 immediate: true
@@ -64,6 +65,7 @@
                     this.form[item] = target[item]
                 })
             },
+
             /* 重置配置项 */
             resetConfig(target){
                 let json = {}

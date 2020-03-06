@@ -18,7 +18,7 @@
                                      :key="codeIndex"
                                      v-if="code"
                                      @click="removeTag(item, codeIndex)"
-                                     v-for="(code, codeIndex) in item.http_codes.split(',')">{{code}}</Button>
+                                     v-for="(code, codeIndex) in httpCodeList">{{code}}</Button>
                             <Input  v-model.trim="item.httpCodes" @on-blur="addHttpCode(index)"  @on-enter="addHttpCode(index)" placeholder="code"></Input>
                         </FormItem>
                         <FormItem label="REDIRECT TO" class="inline-form-item full-input" prop="redirect_to">
@@ -47,6 +47,7 @@
         <div slot="show">
             <div  class="ctrl-edit-item error-pages"
                   :key="index"
+                  v-if="item.http_codes!== null"
                   v-for="(item, index) in form.ngcErrorPages">
                 <span class="error-pages-codes" v-for="code in item.http_codes.split(',')">{{code}}</span>
                 will show
@@ -119,6 +120,7 @@
                         { validator: resCodesRule, trigger: 'blur' }
                     ]
                 },
+                httpCodeList: []
             }
         },
         computed: {
@@ -140,6 +142,7 @@
                         arr.map((item, key)=> {
                             if (!item) arr.splice(key,1)
                         })
+                        this.httpCodeList = arr
                         this.form.ngcErrorPages[index].http_codes = arr.join(',')
                         this.form.ngcErrorPages[index].httpCodes = ''
                     }
@@ -188,7 +191,11 @@
         },
 
         mounted() {
-
+            console.log(this.data)
+            if (!this.data.error_pages_state && this.modify){
+                this.backConfig(this.data,emptyConfig.ngcVirtualServers[0])
+                console.log(this.form)
+            }
         }
     }
 </script>

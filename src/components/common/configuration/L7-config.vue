@@ -44,7 +44,7 @@
             <div class="servers">
                     <div class="server_item" @click="selectVirtualServer(index)"
                          :class="virtualServerIndex === index? 'selected': ''"
-                         v-for="(item, index) in config.ngcVirtualServers">
+                         v-for="(item, index) in virtualServerGroup">
                         <Icon type="md-create" class="ctrl-list-item__edit" @click="editVirtualServer(index,true)"/>
                         <h4 class="ctrl-server__server-name">
                             <span>{{ item.domain_name.split(',')[0] || '*'}}</span>
@@ -70,14 +70,15 @@
             <div class="locations">
                 <div class="ctrl-list-item "
                      @click="selectLocation(index)"
-                     v-for="(item, index) in config.ngcVirtualServers[virtualServerIndex].ngcLocations"
+                     v-if=""
+                     v-for="(item, index) in ngcLocationsGroup"
                      :key="index"
                      :class="locationsIndex === index ? 'list-selected' : ''"
                 >
                     <span class="ctrl-location "
                           :class="item.url_path_route_value === '/' ? 'ctrl-location_default' : ''"
                           @click="locationsIndex=index">
-                        <span>{{item.url_path_route_value}}</span>
+                        <span>{{item.url_path_route_value|| '无'}}</span>
                         <span class="ctrl-location__label">{{item.url_path_route_value === '/' ? 'default route': ''}}</span>
                     </span>
                     <Icon type="md-create" class="ctrl-list-item__edit" @click="editLocation(index,true)"/>
@@ -108,10 +109,10 @@
         </div>
         <!--upstream servers-->
         <div class="l7_config_column column_body column_body_upstream">
-            <div  class="upstream-groups" v-if="config.ngcUpstreamGroups.length">
+            <div  class="upstream-groups" >
                 <div ref="end1"
 
-                     v-for="(item, end) in config.ngcUpstreamGroups[upstreamIndex].ngcUpstreamServers"
+                     v-for="(item, end) in ngcUpstreamServers"
                      :class="upstreamServerIndex === end? 'list-selected':'' "
                      @click="selectUpServer(end)"
                      class="ctrl-list-item ctrl-list-item_corners default ">
@@ -160,11 +161,13 @@
                 :show="serverModal"
                 :modify="modify"
                 :data="ngcVirtualServers"
+                @removeConfig="removeConfig"
                 @submit="addVirtualServer"
                 @change="modalVisibleChange"/>
         <LocationModal
                 :show="locationModal"
                 :modify="modify"
+                @removeConfig="removeConfig"
                 :data="ngcLocations"
                 @submit="addLocationServer"
                 @change="modalVisibleChange"/>
@@ -172,6 +175,7 @@
         <UpstreamModal
                 :show="upstreamModal"
                 :modify="modify"
+                @removeConfig="removeConfig"
                 :data="ngcUpstreamGroups"
                 @submit="addUpstream"
                 @change="modalVisibleChange"/>
@@ -204,10 +208,14 @@ export default {
             step: 0,
             config: defaultConfig,
             ngcVirtualServers: defaultConfig.ngcVirtualServers[0],
+            virtualServerGroup: [],
             ngcLocations: defaultConfig.ngcVirtualServers[0].ngcLocations[0],
+            ngcLocationsGroup: [],
             ngcUpstreamGroups: emptyConfig.ngcUpstreamGroups[0],
+            ngcUpstreamServers: [],
             modify: false, // 新增/修改配置， 默认新增
             virtualServerIndex: 0, // 选中的virtualServer 序号
+            editVirtualServerIndex: 0, // 编辑的virtualServer 序号
             locationsIndex: 0, // locations 序号
             activeLocationIndex: null,
             upstreamIndex: null, // upstream 序号
@@ -220,6 +228,9 @@ export default {
     watch:{
         config(newVal, old){
             console.log(...arguments)
+            if (newVal) {
+
+            }
         }
     },
     computed: {
@@ -273,14 +284,20 @@ export default {
             let canvas = document.getElementById("canvas");
             const context = canvas.getContext('2d');
             context.clearRect(0, 0, canvas.width, canvas.height);
-            console.log(this.$refs.end1)
-            if(this.upstreamServerIndex !== null){
-                drawLine(this.$refs.canvas, this.$refs.start1[this.upstreamIndex], this.$refs.end1[this.upstreamServerIndex])
-            }else {
-                this.$refs.end1.map((item,index)=> {
-                    drawLine(this.$refs.canvas, this.$refs.start1[this.upstreamIndex], this.$refs.end1[index])
-                })
-            }
+            this.$nextTick(() => {
+                //console.log(this.$refs.end1)
+                if (!this.$refs.end1) return
+                if(this.upstreamServerIndex !== null){
+                    drawLine(this.$refs.canvas, this.$refs.start1[this.upstreamIndex], this.$refs.end1[this.upstreamServerIndex])
+                }else {
+                    this.$refs.end1.map((item,index)=> {
+                        drawLine(this.$refs.canvas, this.$refs.start1[this.upstreamIndex], this.$refs.end1[index])
+                    })
+                }
+            })
+
+
+
 
 
         },
@@ -288,19 +305,24 @@ export default {
         async getConfig () {
             let json = {
                 nginx_conf_id: this.$route.query.nginx_conf_id ,
-                version_no: this.$route.query.version_no
+               // version_no: this.$route.query.version_no
             }
             let res = await getNginxConf(json)
-           // console.log(res)
+            console.log(res)
             if (this.asyncOk(res) && res.data.result) {
                 this.config = res.data.result
+                if (this.config.ngcVirtualServers[0]){
+                    this.virtualServerGroup = this.config.ngcVirtualServers
+                    this.ngcLocationsGroup = this.config.ngcVirtualServers[0].ngcLocations || []
+                }
+
             }
         },
         /* 编辑server配置*/
         editVirtualServer(index, modify) {
-            console.log(modify? '编辑': '新建')
+           // console.log(modify? '编辑': '新建')
             this.ngcVirtualServers = modify ? this.config.ngcVirtualServers[index] : emptyConfig.ngcVirtualServers[0]
-           // console.log(this.ngcVirtualServers)
+            this.editVirtualServerIndex = index
             this.modify = modify
             this.serverModal = true
         },
@@ -308,14 +330,15 @@ export default {
         editLocation(index, modify) {
             console.log(modify? '编辑': '新建')
             this.locationsIndex = index
+           // console.log(this.ngcLocations)
             this.ngcLocations = modify ? this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[index] : emptyConfig.ngcVirtualServers[0].ngcLocations[0]
-            console.log(this.ngcLocations)
+
             this.modify = modify
             this.locationModal = true
         },
         /* 编辑upstream配置*/
         editUpstream(index, modify) {
-            console.log(modify? '编辑': '新建')
+           // console.log(modify? '编辑': '新建')
             this.upstreamModal = true
             this.upstreamIndex = index
             this.ngcUpstreamGroups = modify ? this.config.ngcUpstreamGroups[index] : emptyConfig.ngcUpstreamGroups[0]
@@ -327,11 +350,14 @@ export default {
         initConfig() {
             if (this.$route.params.configName) {
                 this.getConfig()
+            }else {
+                this.virtualServerGroup = defaultConfig.ngcVirtualServers
+                this.ngcLocationsGroup = defaultConfig.ngcVirtualServers[0].ngcLocations
             }
         },
         /* 保存virtualServer */
         addVirtualServer(data) {
-            console.log(data)
+            //console.log(data)
             if(!this.modify){
                 this.config.ngcVirtualServers.push(data)
             } else {
@@ -340,7 +366,7 @@ export default {
         },
         /* 保存location配置 */
         addLocationServer(data) {
-            console.log(data)
+            //console.log(data)
             if(!this.modify){
                 this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations.push(data)
             } else {
@@ -361,6 +387,8 @@ export default {
         selectVirtualServer(index) {
             this.virtualServerIndex = index
             this.ngcVirtualServers = this.config.ngcVirtualServers[this.virtualServerIndex]
+           // console.log(this.ngcVirtualServers)
+            this.ngcLocationsGroup =  this.ngcVirtualServers.ngcLocations
             this.locationsIndex = null
         },
         selectLocation(index) {
@@ -372,6 +400,7 @@ export default {
             this.upstreamIndex = index
             this.upstreamServerIndex = null
             this.ngcUpstreamGroups = this.config.ngcUpstreamGroups[index]
+            this.ngcUpstreamServers = this.ngcUpstreamGroups.ngcUpstreamServers || []
             this.drawLine()
         },
         /* 切换upserver */
@@ -387,19 +416,50 @@ export default {
             console.log(res)
             if (this.asyncOk(res)){
                 this.submitLoading = false
-                this.selectUpstream(0)
+                //this.selectUpstream(0)
+                if (this.$route.params.configName){
+                    this.$Message.success({
+                        content: '配置已更新成功',
+                        duration: 3
+                    });
+                }else {
+                    this.$Message.success({
+                        content: '配置保存成功',
+                        duration: 3
+                    });
+                }
+
             } else {
                 this.submitLoading = false
-                this.$Message.error('保存失败')
+                this.$Message.error({
+                    content: '配置保存失败',
+                    duration: 3
+                });
+            }
+        },
+        /* 删除配置 */
+        removeConfig(data){
+            //console.log(data)
+            switch (data) {
+                case 'serverModal':
+                    this.config.ngcVirtualServers.splice(this.editVirtualServerIndex,1)
+                   // console.log(this.config.ngcVirtualServers)
+                    this.ngcLocationsGroup = this.config.ngcVirtualServers.ngcLocations || []
+                    break
+                case 'location':
+                    this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations.splice(this.locationsIndex,1)
+                    break
+                case 'upstream':
+                    this.config.ngcUpstreamGroups.splice(this.upstreamIndex,1)
+                    break
             }
         }
     },
     mounted() {
         /* 初始化配置 */
         this.initConfig()
-        console.log(this.config)
         /* 绘制配置关系图 */
-        this.selectUpstream(0)
+       // this.selectUpstream(0)
         window.addEventListener('resize' ,this.drawLine)
     },
     beforeDestroy() {

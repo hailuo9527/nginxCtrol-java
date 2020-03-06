@@ -77,8 +77,8 @@
 
       </div>
       <div slot="footer">
-        <Button @click="model = false">取消</Button>
-        <Button type="primary" :loading="modal_loading" @click="handleSubmit">保存</Button>
+        <modelFooter name="upstream" :showRemoveButton="modify" @remove="remove" @cancel="change(false)" @save="handleSubmit"></modelFooter>
+
       </div>
     </Modal>
   </div>
@@ -96,6 +96,7 @@ import Queueing from "./upstreamModal/Queueing";
 import PersistentState from "./upstreamModal/PersistentState";
 import LoadBalancingMethod from "./upstreamModal/LoadBalancingMethod";
 import NtlnAuthentication from "./upstreamModal/NtlnAuthentication";
+import modelFooter from './modelFooter'
 export default {
   props: {
     show: false,
@@ -115,7 +116,8 @@ export default {
     Queueing,
     PersistentState,
     LoadBalancingMethod,
-    NtlnAuthentication
+    NtlnAuthentication,
+    modelFooter
   },
   watch: {
     show (newVal, oldVal) {
@@ -227,11 +229,11 @@ export default {
 
       console.log('保存')
       // 验证是否有未确认的更改
-      // console.log(this.errorInfo)
+       console.log(this.errorInfo)
       let flag = true
 
       Object.keys(this.errorInfo).map((item) => {
-        //console.log(this.errorInfo[item])
+        console.log(this.errorInfo[item])
         if (this.errorInfo[item]){
           flag = false
           this.errorTip = {
@@ -268,7 +270,21 @@ export default {
      // this.checkEditStatus()
     },
 
+    remove(){
+      this.$Modal.confirm({
+        title: '提示',
+        content: '<p>是否要删除此配置？</p>',
+        onOk: () => {
+          this.change(false)
+          this.$emit('removeConfig', 'upstream')
+          //this.$Message.info('Clicked ok');
+        },
+        onCancel: () => {
+          //this.$Message.info('Clicked cancel');
+        }
+      })
 
+    }
   },
   mounted() {
     //console.log(this.data);

@@ -140,7 +140,7 @@ const  emptyConfig = {
             load_balancing_method: 'weighted round-robin',
             hash_key: '',
             ketama_consisten_state: false,
-            time_to_receive: '',
+            time_to_receive: 'response header',
             serve_incomplete_requests_state: false,
             session_persistence_state: false,
             method: 'cookie',
