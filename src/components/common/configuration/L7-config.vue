@@ -28,7 +28,7 @@
             <div class="header_item">
                 Upstream Groups
                 <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
-                <Icon type="md-add" size="26" color="#333" class="add_handler" @click="upstreamModal = true"/>
+                <Icon type="md-add" size="26" color="#333" class="add_handler" @click="editUpstream(0, false)"/>
             </div>
         </div>
         <div class="l7_config_column column_header">
@@ -82,94 +82,50 @@
                     </span>
                     <Icon type="md-create" class="ctrl-list-item__edit" @click="editLocation(index,true)"/>
                 </div>
-                <!--<div class="ctrl-list-item list-selected">
-                    <span class="ctrl-location ">
-                        <span>=/50x.html</span>
-                        <span class="ctrl-location__label">default route</span>
-                    </span>
-                    <Icon type="md-create" class="ctrl-list-item__edit" />
-                </div>-->
 
             </div>
         </div>
         <!--upstream groups-->
         <div  class="l7_config_column column_body column_body_upstream">
             <div class="upstream-groups">
-                <div ref="start1" class="ctrl-list-item ctrl-list-item_corners list-selected">
-                    <span class="ctrl-list-item__corner-left">
-                        <span class="ctrl-list-item__corner-inner"></span>
-                    </span>
-                    <span>123</span>
-                    <Icon type="md-create" class="ctrl-list-item__edit" />
-                    <span class="ctrl-list-item__corner-right">
-                        <span class="ctrl-list-item__corner-inner"></span>
-                    </span>
+                <div ref="start1"
+                     v-if="config.ngcUpstreamGroups.length"
+                     v-for="(item, key) in config.ngcUpstreamGroups"
+                     :class="upstreamIndex === key ? 'list-selected': ''"
+                     @click="selectUpstream(key)"
+                     class="ctrl-list-item ctrl-list-item_corners ">
+                        <span class="ctrl-list-item__corner-left">
+                            <span class="ctrl-list-item__corner-inner"></span>
+                        </span>
+                        <span>{{item.group_name}}</span>
+                        <Icon type="md-create" class="ctrl-list-item__edit" @click="editUpstream(key, true)"/>
+                        <span class="ctrl-list-item__corner-right">
+                            <span class="ctrl-list-item__corner-inner"></span>
+                        </span>
                 </div>
-                <div class="ctrl-list-item ctrl-list-item_corners">
-                    <span class="ctrl-list-item__corner-left">
-                        <span class="ctrl-list-item__corner-inner"></span>
-                    </span>
-                    <span>123</span>
-                    <Icon type="md-create" class="ctrl-list-item__edit" />
-                    <span class="ctrl-list-item__corner-right">
-                        <span class="ctrl-list-item__corner-inner"></span>
-                    </span>
-                </div>
+
             </div>
         </div>
         <!--upstream servers-->
         <div class="l7_config_column column_body column_body_upstream">
-            <div  class="upstream-groups">
-                <div ref="end1" class="ctrl-list-item ctrl-list-item_corners list-selected">
+            <div  class="upstream-groups" v-if="config.ngcUpstreamGroups.length">
+                <div ref="end1"
+
+                     v-for="(item, end) in config.ngcUpstreamGroups[upstreamIndex].ngcUpstreamServers"
+                     :class="upstreamServerIndex === end? 'list-selected':'' "
+                     @click="selectUpServer(end)"
+                     class="ctrl-list-item ctrl-list-item_corners default ">
                     <span class="ctrl-list-item__corner-left">
                         <span class="ctrl-list-item__corner-inner"></span>
                     </span>
-                    <span>123</span>
-                    <Icon type="md-create" class="ctrl-list-item__edit" />
+                    <!--<span>{{item.upstream_servers_name}}</span>-->
+                    <span>{{item.upstream_servers_name}}</span>
+                    <Icon type="md-create" class="ctrl-list-item__edit"  />
                     <span class="ctrl-list-item__corner-right">
                         <span class="ctrl-list-item__corner-inner"></span>
                     </span>
                 </div>
-                <div ref="end2" class="ctrl-list-item ctrl-list-item_corners default">
-                    <span class="ctrl-list-item__corner-left">
-                        <span class="ctrl-list-item__corner-inner"></span>
-                    </span>
-                    <span>123</span>
-                    <Icon type="md-create" class="ctrl-list-item__edit" />
-                    <span class="ctrl-list-item__corner-right">
-                        <span class="ctrl-list-item__corner-inner"></span>
-                    </span>
-                </div>
-                <div ref="end3" class="ctrl-list-item ctrl-list-item_corners default">
-                    <span class="ctrl-list-item__corner-left">
-                        <span class="ctrl-list-item__corner-inner"></span>
-                    </span>
-                    <span>123</span>
-                    <Icon type="md-create" class="ctrl-list-item__edit" />
-                    <span class="ctrl-list-item__corner-right">
-                        <span class="ctrl-list-item__corner-inner"></span>
-                    </span>
-                </div>
-                <div ref="end4" class="ctrl-list-item ctrl-list-item_corners default">
-                    <span class="ctrl-list-item__corner-left">
-                        <span class="ctrl-list-item__corner-inner"></span>
-                    </span>
-                    <span>123</span>
-                    <Icon type="md-create" class="ctrl-list-item__edit" />
-                    <span class="ctrl-list-item__corner-right">
-                        <span class="ctrl-list-item__corner-inner"></span>
-                    </span>
-                </div>
-                <div ref="end5" class="ctrl-list-item ctrl-list-item_corners default">
-                    <span class="ctrl-list-item__corner-left">
-                        <span class="ctrl-list-item__corner-inner"></span>
-                    </span>
-                    <span>123</span>
-                    <Icon type="md-create" class="ctrl-list-item__edit" />
-                    <span class="ctrl-list-item__corner-right">
-                        <span class="ctrl-list-item__corner-inner"></span>
-                    </span>
-                </div>
+
             </div>
 
 
@@ -185,11 +141,15 @@
         <button type="button" class="ctrl-layout__new-load-balancer ae-button__white ae-button__button"><span class="ae-button__label">Load Balancer Wizard</span></button>
         <div class="config-page__bottom-buttons">
             <div class="config-page__bottom-buttons_container">
-                <button type="button" class="config-page__add-new ae-button__black ae-button__button" title="Save as a new configuration">
+                <button :disabled="!canSaveAndCopyConfig" type="button" class="config-page__add-new ae-button__black ae-button__button" title="Save as a new configuration">
                     <span class="ae-button__label">Copy and Save As...</span>
                 </button>
-                <button type="button" class="config-page__add-new ae-button__green ae-button__button" title="Save configuration">
-                    <span class="ae-button__label">Save</span>
+                <button
+                        :disabled="!canSaveConfig"
+                        type="button"
+                        @click="submitConfig"
+                        class="config-page__add-new ae-button__green ae-button__button" title="Save configuration">
+                    <span class="ae-button__label">{{submitLoading? '正在保存': 'Save'}}</span>
                 </button>
             </div>
         </div>
@@ -208,7 +168,16 @@
                 :data="ngcLocations"
                 @submit="addLocationServer"
                 @change="modalVisibleChange"/>
-        <!--<UpstreamModal  :show="upstreamModal" :data="ngcVirtualServers" @change="modalVisibleChange"/>-->
+
+        <UpstreamModal
+                :show="upstreamModal"
+                :modify="modify"
+                :data="ngcUpstreamGroups"
+                @submit="addUpstream"
+                @change="modalVisibleChange"/>
+
+
+
     </div>
 </template>
 <script>
@@ -218,9 +187,10 @@ import VirtualServerModal from './virtualServerModal'
 import LocationModal from './locationModal'
 import UpstreamModal from './upstreamModal'
 import drawLine from '../../../libs/drawLine'
-import { getNginxConf } from "../../../api/L7";
+import { getNginxConf,editNginxConf } from "../../../api/L7";
 import defaultConfig from './defaultConfig'
 import emptyConfig from './emptyConfig'
+import { mapState } from 'vuex'
 export default {
     data () {
         return {
@@ -235,9 +205,14 @@ export default {
             config: defaultConfig,
             ngcVirtualServers: defaultConfig.ngcVirtualServers[0],
             ngcLocations: defaultConfig.ngcVirtualServers[0].ngcLocations[0],
+            ngcUpstreamGroups: emptyConfig.ngcUpstreamGroups[0],
             modify: false, // 新增/修改配置， 默认新增
             virtualServerIndex: 0, // 选中的virtualServer 序号
-            locationsIndex: null, // locations 序号
+            locationsIndex: 0, // locations 序号
+            activeLocationIndex: null,
+            upstreamIndex: null, // upstream 序号
+            upstreamServerIndex: null, // upstream 序号
+            submitLoading: false,
         }
 
     },
@@ -246,6 +221,14 @@ export default {
         config(newVal, old){
             console.log(...arguments)
         }
+    },
+    computed: {
+        ...mapState({
+            canSaveConfig: state => state.L7.canSaveConfig,
+            canSaveAndCopyConfig: state => state.L7.canSaveAndCopyConfig,
+            configName: state => state.L7.configName,
+
+        }),
     },
     components: {
         PopTip, LoadBalancerModal, VirtualServerModal, LocationModal, UpstreamModal
@@ -284,18 +267,22 @@ export default {
 
         },
 
-/* 绘制关系图*/
+        /* 绘制关系图*/
         drawLine () {
 
             let canvas = document.getElementById("canvas");
             const context = canvas.getContext('2d');
-
             context.clearRect(0, 0, canvas.width, canvas.height);
-            drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end1)
-            drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end2)
-            drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end3)
-            drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end4)
-            drawLine(this.$refs.canvas, this.$refs.start1, this.$refs.end5)
+            console.log(this.$refs.end1)
+            if(this.upstreamServerIndex !== null){
+                drawLine(this.$refs.canvas, this.$refs.start1[this.upstreamIndex], this.$refs.end1[this.upstreamServerIndex])
+            }else {
+                this.$refs.end1.map((item,index)=> {
+                    drawLine(this.$refs.canvas, this.$refs.start1[this.upstreamIndex], this.$refs.end1[index])
+                })
+            }
+
+
         },
         /* 获取配置 */
         async getConfig () {
@@ -317,13 +304,24 @@ export default {
             this.modify = modify
             this.serverModal = true
         },
-        /* 编辑server配置*/
+        /* 编辑location配置*/
         editLocation(index, modify) {
             console.log(modify? '编辑': '新建')
+            this.locationsIndex = index
             this.ngcLocations = modify ? this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[index] : emptyConfig.ngcVirtualServers[0].ngcLocations[0]
             console.log(this.ngcLocations)
             this.modify = modify
             this.locationModal = true
+        },
+        /* 编辑upstream配置*/
+        editUpstream(index, modify) {
+            console.log(modify? '编辑': '新建')
+            this.upstreamModal = true
+            this.upstreamIndex = index
+            this.ngcUpstreamGroups = modify ? this.config.ngcUpstreamGroups[index] : emptyConfig.ngcUpstreamGroups[0]
+            console.log(this.ngcUpstreamGroups)
+            this.modify = modify
+
         },
         /* 初始化配置 */
         initConfig() {
@@ -343,6 +341,21 @@ export default {
         /* 保存location配置 */
         addLocationServer(data) {
             console.log(data)
+            if(!this.modify){
+                this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations.push(data)
+            } else {
+                this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[this.locationsIndex] = data
+            }
+        },
+        /* 保存upStream */
+        addUpstream(data) {
+
+            if(!this.modify){
+                this.config.ngcUpstreamGroups.push(data)
+            } else {
+                this.config.ngcUpstreamGroups[this.upstreamIndex] = data
+            }
+            this.selectUpstream(0)
         },
         /* 选择virtualServer */
         selectVirtualServer(index) {
@@ -351,17 +364,42 @@ export default {
             this.locationsIndex = null
         },
         selectLocation(index) {
-            this.locationsIndex = index
+            this.activeLocationIndex = index
             //this.ngcLocations = this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[]
+        },
+        /* 切换upgroup */
+        selectUpstream(index){
+            this.upstreamIndex = index
+            this.upstreamServerIndex = null
+            this.ngcUpstreamGroups = this.config.ngcUpstreamGroups[index]
+            this.drawLine()
+        },
+        /* 切换upserver */
+        selectUpServer(index){
+            this.upstreamServerIndex = index
+            this.drawLine()
+        },
+        /* 提交配置 */
+        async submitConfig() {
+            this.submitLoading = true
+            this.config.config_name = this.configName
+            let res = await editNginxConf(this.config)
+            console.log(res)
+            if (this.asyncOk(res)){
+                this.submitLoading = false
+                this.selectUpstream(0)
+            } else {
+                this.submitLoading = false
+                this.$Message.error('保存失败')
+            }
         }
-
     },
     mounted() {
         /* 初始化配置 */
         this.initConfig()
-
+        console.log(this.config)
         /* 绘制配置关系图 */
-        this.drawLine()
+        this.selectUpstream(0)
         window.addEventListener('resize' ,this.drawLine)
     },
     beforeDestroy() {

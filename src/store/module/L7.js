@@ -5,6 +5,9 @@ export default {
         activeAside: {},
         asideList: [],
         listLoading: false,
+        canSaveConfig: false,
+        canSaveAndCopyConfig: false,
+        configName: ''
     },
     mutations: {
         L7setActiveAside (state, item) {
@@ -16,6 +19,16 @@ export default {
         L7changeLoadingStatus(state, data) {
             state.listLoading = data
         },
+        canSaveConfigStatus(state, data){
+            state.canSaveConfig = data
+        },
+        canSaveAndCopyConfigStatus(state, data){
+            state.canSaveConfig = data
+        },
+        changeConfigName (state, data)  {
+            state.configName = data
+        }
+
 
     },
     actions: {

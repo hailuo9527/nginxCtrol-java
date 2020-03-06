@@ -10,9 +10,9 @@
        <div class="header_tab">
            <div class="tab">
 
-              <span class="tab_item" :class="tab===0? 'active': ''" @click="tab=0">配置</span>
-              <span class="tab_item" :class="tab===1? 'active': ''" @click="tab=1">设备</span>
-              <span class="tab_item" :class="tab===2? 'active': ''" @click="tab=2">历史版本</span>
+              <button class="tab_item"  :class="tab===0? 'active': ''" @click="tabChange(0)">配置</button>
+              <button class="tab_item" :disabled="!canSaveAndCopyConfig"  :class="tab===1? 'active': ''" @click="tabChange(1)">设备</button>
+              <button class="tab_item" :disabled="!canSaveAndCopyConfig"  :class="tab===2? 'active': ''" @click="tabChange(2)">历史版本</button>
            </div>
             <div class="tab-content" v-if="tab === 0">
                 <L7Config></L7Config>
@@ -32,6 +32,7 @@
     import L7Config from '@/components/common/configuration/L7-config.vue'
     import Device from '@/components/common/configuration/Devices/Device.vue';
     import HistoricalVersion from '@/components/common/configuration/Devices/HistoricalVersion.vue';
+    import { mapMutations, mapState } from 'vuex'
     export default {
         data () {
             return{
@@ -39,13 +40,40 @@
                 configName: ''
             }
         },
+        computed: {
+            ...mapState({
+                canSaveAndCopyConfig: state => state.L7.canSaveAndCopyConfig,
+            }),
+        },
+        watch: {
+            configName(nv){
+                nv? this.canSaveConfigStatus(true): this.canSaveConfigStatus(false)
+                this.changeConfigName(nv)
+            }
+        },
         components: {
             L7Config,
             Device,
             HistoricalVersion
         },
+        methods: {
+            ...mapMutations([
+                'canSaveConfigStatus', 'canSaveAndCopyConfigStatus', 'changeConfigName'
+            ]),
+            tabChange(tab){
+                if (!this.canSaveAndCopyConfig){
+                    return
+                }
+
+                this.tab = tab
+            }
+        },
+
         mounted() {
             this.configName = this.$route.params.configName || ''
+            this.$route.params.configName ? this.canSaveAndCopyConfigStatus(true): this.canSaveAndCopyConfigStatus(false)
+
+
         }
     }
 </script>
@@ -76,6 +104,7 @@
             padding: 0 20px;
         }
         .tab_item{
+            border: none;
             display: inline-block;
             position: relative;
             margin-right: 25px;
@@ -83,6 +112,13 @@
             line-height: 43px;
             transition: color 0.1s linear;
             color: #333;
+            background: transparent;
+            outline: none;
+            &:disabled{
+                pointer-events: none;
+                cursor: not-allowed;
+                opacity: 0.5;
+            }
             &.active{
                 color: @green;
                 &:before{

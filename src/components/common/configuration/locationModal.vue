@@ -371,11 +371,6 @@
 
 </template>
 <script>
-    /*import PopTip from '@/components/common/pop-tip'
-    import myFormItem from './form-item'
-    import expandPanel from '../expandPanel'*/
-
-
     import uriPath from './locationModal/uriPath'
     import apiLocation from './locationModal/apiLocation'
     import proxy from './locationModal/proxy'
@@ -537,6 +532,9 @@
             },
 
         },
+        mounted() {
+            console.log(this.data)
+        }
     }
 </script>
 <style lang="less" scoped>

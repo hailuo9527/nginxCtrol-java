@@ -1,9 +1,16 @@
 <template>
   <my-form-item
-    title="UPSTREAM GROUP NAME"
-    @closeConfig= "cancel"
-    @saveConfig= "saveConfig"
-    info="Define the name for a group of servers to use with the proxy_pass."
+          :title="title"
+          @closeConfig = "closeConfig"
+          @saveConfig = "saveConfig"
+          @cancel = "cancel"
+          @edit="edit"
+          :modify="modify"
+          :disabled="disabled"
+          :open = "true"
+          :important="true"
+          :valid="valid"
+          :info="info"
   >
     <div slot="edit" class="ctrl-edit-item ctrl-edit-item_edit">
       <Form ref="form" :model="form" :rules="formRules" @submit.native.prevent>
@@ -14,7 +21,7 @@
     </div>
 
     <div slot="show" class="ctrl-edit-item">
-      <div class="ctrl-edit-item__string">path</div>
+      <div class="ctrl-edit-item__string">{{form.group_name}}</div>
     </div>
   </my-form-item>
 </template>
@@ -24,18 +31,17 @@ import mixin from "../mixins";
 
 export default {
   mixins: [mixin],
-  name: "UpstreamGroupName",
   data() {
     const validateName = (rule, value, callback) => {
       if (value === "") {
-        callback(new Error("值不能为空"));
+        callback(new Error("不能为空"));
       } else {
         callback();
       }
     };
     return {
-      title: "",
-      info: "",
+      title: "UPSTREAM GROUP NAME",
+      info: "Define the name for a group of servers to use with the proxy_pass.",
       formRules: {
         group_name: [
           { validator: validateName, trigger: 'blur'}
@@ -46,7 +52,9 @@ export default {
   computed: {},
   methods: {},
 
-  mounted() {}
+  mounted() {
+
+  }
 };
 </script>
 <style lang="less" scoped>
