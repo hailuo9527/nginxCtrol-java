@@ -5,29 +5,45 @@ const TEST_URL = process.env.NODE_ENV === 'production'
     ? 'http://wingsbro.mynetgear.com:8081'
     : '/'
 const BASE_URL = process.env.NODE_ENV === 'production'
-    ? '//nc.naccenter.cn:8081'
+    ? '//nc.naccenter.cn/ng/'
     : '/'
 module.exports = {
-    publicPath: TEST_URL,
+    //baseUrl: '/ng/',
+    publicPath: BASE_URL,
     pluginOptions: {
       'style-resources-loader': {
         preProcessor: 'less',
         patterns: [path.resolve(__dirname, './src/assets/varibles.less')]
       }
     },
-    chainWebpack: config => {
-       /* config
+    /*chainWebpack: config => {
+        if (process.env.NODE_ENV === 'production') {
+            config
+                .plugin('uglify')
+                .tap(([options]) =>{
+                    // 去除 console.log
+                    return [Object.assign(options, {
+                        uglifyOptions: { compress: {
+                                drop_console : true,
+                                pure_funcs: ['console.log']
+                            }}
+                    })]
+                })
+        }
+    },*/
+    /*chainWebpack: config => {
+       /!* config
             .plugin('webpack-bundle-analyzer')
             .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
-            .delete('prefetch')*/
-    },
+            .delete('prefetch')*!/
+    },*/
     productionSourceMap: false,
     devServer: {
         open: true,
         proxy: {
             '/api' : {
                 //  target: 'http://192.168.100.:8085',
-               target: 'http://nc.naccenter.cn:8085',
+               target: 'https://nc.naccenter.cn:8085',
                 //ws: true,        //如果要代理 websockets，配置这个参数
                 //secure: false,  // 如果是https接口，需要配置这个参数
                 changeOrigin: true,  //是否跨域

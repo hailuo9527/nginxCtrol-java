@@ -3,7 +3,7 @@ export default {
     homeName: 'home',
     baseUrl: {
         dev: `/api`,
-        pro: 'http://nc.naccenter.cn:8085'
+        pro: '//nc.naccenter.cn:8085'
     }
 }
 

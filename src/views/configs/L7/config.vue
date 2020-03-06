@@ -101,7 +101,7 @@
         .tab{
             display: flex;
             border-bottom: 1px solid #ccc;
-            padding: 0 20px;
+            //padding: 0 0px;
         }
         .tab_item{
             border: none;
