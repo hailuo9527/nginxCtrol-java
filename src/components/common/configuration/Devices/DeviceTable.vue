@@ -168,11 +168,13 @@ export default {
       let json = this.$route.query.nginx_conf_id;
       let res = await selNgcInstanceList(this.$route.query.nginx_conf_id);
       if (this.asyncOk(res)) {
-         if (res.data.result.length > 0) {
-          this.resultValue = res.data.result
-        } else {
-          this.$emit('show-change', true)
-        }
+        this.resultValue = res.data.result
+        //  if (res.data.result.length > 0) {
+        //    console.log(res.data.result)
+        //   this.resultValue = res.data.result
+        // } else {
+        //   this.$emit('show-change', true)
+        // }
       }
     }
   },
