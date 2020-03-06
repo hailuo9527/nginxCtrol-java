@@ -11,8 +11,8 @@
            <div class="tab">
 
               <button class="tab_item"  :class="tab===0? 'active': ''" @click="tabChange(0)">配置</button>
-              <button class="tab_item" :disabled="!canSaveAndCopyConfig"  :class="tab===1? 'active': ''" @click="tabChange(1)">设备</button>
-              <button class="tab_item" :disabled="!canSaveAndCopyConfig"  :class="tab===2? 'active': ''" @click="tabChange(2)">历史版本</button>
+              <button class="tab_item" :disabled="canSaveAndCopyConfig"  :class="tab===1? 'active': ''" @click="tabChange(1)">实例</button>
+              <button class="tab_item" :disabled="canSaveAndCopyConfig"  :class="tab===2? 'active': ''" @click="tabChange(2)">历史版本</button>
            </div>
             <div class="tab-content" v-if="tab === 0">
                 <L7Config></L7Config>
@@ -61,9 +61,9 @@
                 'canSaveConfigStatus', 'canSaveAndCopyConfigStatus', 'changeConfigName'
             ]),
             tabChange(tab){
-                if (!this.canSaveAndCopyConfig){
-                    return
-                }
+                // if (!this.canSaveAndCopyConfig){
+                //     return
+                // }
 
                 this.tab = tab
             }

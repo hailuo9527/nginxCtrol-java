@@ -2,7 +2,7 @@
   <div>
     <div class="mainContent">
       <div class="addButton">
-        <Button type="primary" size="large" icon="md-add" @click="DeviceModal = true">添加设备</Button>
+        <Button type="primary" size="large" icon="md-add" @click="getL7ServerInfoAll">添加实例</Button>
       </div>
       <div class="tableContent">
         <Table
@@ -12,10 +12,24 @@
           style="margin: 0 auto;margin-top: 50px;"
         >
           <template slot-scope="{ row }" slot="name">
-            <strong>{{ row.name }}</strong>
+            <strong>{{ row.l7_server_name }}</strong>
           </template>
-          <template slot-scope="{ row, index }" slot="action" >
-            <Icon type="ios-trash" size="22" style="cursor: pointer;"/>
+          <template slot-scope="{ row }" slot="insync">
+            <strong>{{ row.is_sync }}</strong>
+          </template>
+          <template slot-scope="{ row }" slot="last">
+            <strong>{{ row.upd_time }}</strong>
+          </template>
+          <template slot-scope="{ row }" slot="by">
+            <strong>{{ row.upd_name }}</strong>
+          </template>
+          <template slot-scope="{ row, index }" slot="action">
+            <Icon
+              type="ios-trash"
+              size="22"
+              style="cursor: pointer;"
+              @click="remove(row.id, index)"
+            />
           </template>
         </Table>
       </div>
@@ -30,7 +44,7 @@
       title="SELECT INSTANCES TO ASSOCIATE"
       width="790"
       ok-text="添加"
-      @on-ok="add"
+      @on-ok="addInstance"
     >
       <div class="main">
         <h3>Select one or more instances to which you wish to associate with this configuration</h3>
@@ -42,7 +56,11 @@
           placeholder="Select Instances system or tag "
           @on-change="GetSelectValue"
         >
-          <Option v-for="item in List" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Option
+            v-for="item in List"
+            :value="item.l7ServerName"
+            :key="item.l7ServerName"
+          >{{ item.l7ServerName }}</Option>
         </Select>
       </div>
     </Modal>
@@ -51,41 +69,98 @@
 
 
 <script>
+import {
+  selL7ServerInfoAll,
+  addInstance,
+  delInstance,
+  selNgcInstanceList
+} from "@/api/L7";
 export default {
+  props: {
+    TableValue: Array
+  },
   data() {
     return {
       columns: [
         { type: "selection", width: 60, align: "center" },
         { title: "INSTANCE NAME", slot: "name" },
-        { title: "IN SYNC", key: "insync" },
-        { title: "LAST MODIFIED", key: "last" },
-        { title: "LAST MODIFIED BY", key: "by" },
+        { title: "IN SYNC", slot: "insync" },
+        { title: "LAST MODIFIED", slot: "last" },
+        { title: "LAST MODIFIED BY", slot: "by" },
         { slot: "action", align: "center" }
-      ],
-      TableValue: [
-        {
-          name: "John Brown"
-        },
-        {
-          name: "Jim Green"
-        }
       ],
       DeviceModal: false,
       SelectModel: [],
-      List: [
-        { value: "New York", label: "New York" },
-        { value: "London", label: "London" },
-        { value: "Sydney", label: "Sydney" }
-      ]
+      List: [],
+      data: [],
+      l7ServerIds: [],
+      ids: []
     };
   },
   methods: {
-    GetSelectValue(data) {
-      console.log(data);
+    GetSelectValue(l7ServerName) {
+      this.data = l7ServerName;
+      console.log(this.data);
     },
-    add() {
+    async addInstance() {
       this.DeviceModal = false;
+      if (this.data !== []) {
+        this.data.forEach(item => {
+          for (let i = 0; i < this.List.length; i++) {
+            if (item == this.List[i].l7ServerName) {
+              this.l7ServerIds.push(this.List[i].l7ServerId);
+            }
+          }
+        });
+        this.l7ServerIds = Array.from(new Set(this.l7ServerIds));
+        console.log(this.l7ServerIds);
+        let res = await addInstance(
+          this.$route.query.nginx_conf_id,
+          this.l7ServerIds
+        );
+        console.log(res);
+      }
+    },
+    async getL7ServerInfoAll() {
+      this.DeviceModal = true;
+      let res = await selL7ServerInfoAll();
+      if (this.asyncOk(res)) {
+        console.log(res);
+        this.List = res.data.result;
+        console.log(this.List);
+      }
+    },
+    async remove(id, index) {
+      this.ids.push(id)
+      this.$Modal.confirm({
+        title: "提示",
+        content: "<p>确定删除此条列表吗？</p>",
+        onOk: async () => {
+          let res = await delInstance({
+            nginx_conf_id: this.$route.query.nginx_conf_id}, this.ids);
+          if (this.asyncOk(res)) {
+            this.$Modal.remove();
+            this.$Message.info("删除成功");
+            this.$router.push()
+          } else {
+            this.$Modal.remove();
+            this.$Message.error("删除失败");
+          }
+          console.log(res);
+        }
+      });
+    },
+    async getNgcInstanceList() {
+      console.log(this.$route.query.nginx_conf_id);
+      let json = this.$route.query.nginx_conf_id;
+      let res = await selNgcInstanceList(this.$route.query.nginx_conf_id);
+      if (this.asyncOk(res)) {
+        console.log(res);
+      }
     }
+  },
+  mounted() {
+    console.log(this.TableValue);
   }
 };
 </script>
@@ -115,5 +190,10 @@ export default {
 .commonTwo {
   background: #333333;
   color: #ffffff;
+}
+/deep/.ivu-table-header th {
+  border: none;
+  background-color: #333;
+  color: #fff;
 }
 </style>

@@ -113,3 +113,33 @@ export const delNginxConf = ({ nginx_conf_id }) => {
         }
     })
 }
+
+/** 查询实例列表 */
+export const selNgcInstanceList = ( nginx_conf_id ) => {
+    return axios.request({
+        url: '/selNgcInstanceList',
+        method: 'post',
+        params: {
+            nginx_conf_id
+        }
+    })
+}
+
+/**添加实例 */
+export const addInstance = ( nginx_conf_id, l7ServerIds ) => {
+    return axios.request({
+        url: '/addInstance',
+        method: 'post',
+        params: {nginx_conf_id},
+        data: l7ServerIds
+    })
+}
+/**删除实例 */
+export const delInstance = ({nginx_conf_id}, ids) => {
+    return axios.request({
+        url: '/delInstance',
+        method: 'post',
+        params: {nginx_conf_id},
+        data: ids,
+    })
+}

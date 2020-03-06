@@ -94,6 +94,7 @@ export default {
 /deep/.ivu-table td {
   border-bottom: none;
   border: none;
+  background-color: #f8f8f9;
 }
 /deep/.ivu-table-tbody {
   border-top: none;
@@ -103,7 +104,7 @@ export default {
   border-top: none;
   border: none;
 }
-/deep/.ivu-table-header {
+/deep/.ivu-table-header th{
   border: none;
 }
 .addName {
