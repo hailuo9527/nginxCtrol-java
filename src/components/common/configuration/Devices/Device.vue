@@ -56,13 +56,13 @@ export default {
       data: [],
       l7ServerIds: [],
       resultValue: [],
+      spinShow: true,
     };
   },
   methods: {
     // 获取选择器选中的值
     GetSelectValue(l7ServerName) {
       this.data = l7ServerName;
-      console.log(this.data);
     },
     // 添加实例
     async addInstance() {
@@ -76,15 +76,14 @@ export default {
           }
         });
         this.l7ServerIds = Array.from(new Set(this.l7ServerIds))
-        console.log(this.l7ServerIds);
         let res = await addInstance(
           this.$route.query.nginx_conf_id,
           this.l7ServerIds
         );
         if (this.asyncOk(res)) {
+          this.l7ServerIds = []
           this.getNgcInstanceList()
         }
-        console.log(res);
       }
     },
     // 查询实例列表
@@ -102,13 +101,10 @@ export default {
       this.DeviceModal = true;
       let res = await selL7ServerInfoAll();
       if (this.asyncOk(res)) {
-        console.log(res);
         this.List = res.data.result;
-        console.log(this.List);
       }
     },
     showChange(data) {
-      console.log(data)
       this.show = data
     }
   },

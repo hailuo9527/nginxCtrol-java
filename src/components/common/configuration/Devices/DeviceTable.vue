@@ -7,7 +7,7 @@
       <div class="tableContent">
         <Table
           :columns="columns"
-          :data="TableValue"
+          :data="TableData"
           width="815"
           style="margin: 0 auto;margin-top: 50px;"
         >
@@ -83,25 +83,26 @@ export default {
     return {
       columns: [
         { type: "selection", width: 60, align: "center" },
-        { title: "INSTANCE NAME", slot: "name" },
+        { title: "INSTANCE NAME", slot: "name", width: 160 },
         { title: "IN SYNC", slot: "insync" },
-        { title: "LAST MODIFIED", slot: "last" },
-        { title: "LAST MODIFIED BY", slot: "by" },
-        { slot: "action", align: "center" }
+        { title: "LAST MODIFIED", slot: "last", width: 160 },
+        { title: "LAST MODIFIED BY", slot: "by", width: 170 },
+        { slot: "action", align: "center", title: '', width: 60 }
       ],
       DeviceModal: false,
       SelectModel: [],
       List: [],
       data: [],
       l7ServerIds: [],
-      ids: []
+      ids: [],
+      TableData: []
     };
   },
+  watch: {},
   methods: {
     // 获取选择器选中的值
     GetSelectValue(l7ServerName) {
       this.data = l7ServerName;
-      console.log(this.data);
     },
     // 添加实例
     async addInstance() {
@@ -115,15 +116,18 @@ export default {
           }
         });
         this.l7ServerIds = Array.from(new Set(this.l7ServerIds));
-        console.log(this.l7ServerIds);
         let res = await addInstance(
           this.$route.query.nginx_conf_id,
           this.l7ServerIds
         );
         if (this.asyncOk(res)) {
-          this.getNgcInstanceList()
+          this.l7ServerIds = []
+          this.getNgcInstanceList();
+        } else {
+          this.$Message.error(`${res.data.result}`)
+          this.l7ServerIds = []
         }
-        console.log(res);
+
       }
     },
     // 查询所有L7服务器配置信息
@@ -131,9 +135,7 @@ export default {
       this.DeviceModal = true;
       let res = await selL7ServerInfoAll();
       if (this.asyncOk(res)) {
-        console.log(res);
         this.List = res.data.result;
-        console.log(this.List);
       }
     },
     // 删除实例
@@ -151,6 +153,7 @@ export default {
             this.ids
           );
           if (this.asyncOk(res)) {
+            this.ids = []
             this.$Modal.remove();
             this.$Message.info("删除成功");
             this.getNgcInstanceList()
@@ -158,27 +161,29 @@ export default {
             this.$Modal.remove();
             this.$Message.error("删除失败");
           }
-          console.log(res);
         }
       });
     },
     // 查询实例列表
     async getNgcInstanceList() {
-      console.log(this.$route.query.nginx_conf_id);
       let json = this.$route.query.nginx_conf_id;
       let res = await selNgcInstanceList(this.$route.query.nginx_conf_id);
       if (this.asyncOk(res)) {
         this.resultValue = res.data.result
-        //  if (res.data.result.length > 0) {
-        //    console.log(res.data.result)
-        //   this.resultValue = res.data.result
-        // } else {
-        //   this.$emit('show-change', true)
-        // }
+          if (res.data.result.length > 0) {
+           this.TableData = res.data.result
+         } else {
+           this.$emit('show-change', true)
+         }
       }
     }
   },
   mounted() {
+    this.TableData = this.TableValue;
+    this.$Message.config({
+      top: 50,
+      duration: 3
+    });
   }
 };
 </script>
@@ -212,6 +217,13 @@ export default {
 /deep/.ivu-table-header th {
   border: none;
   background-color: #333;
-  color: #fff;
+        color: #fff;
+  height: 60px;
 }
+  /deep/.ivu-table-row {
+      height: 80px;  
+        }
+  /deep/.ivu-table-header th:nth-child(6) {
+    color: #333;
+  }
 </style>
