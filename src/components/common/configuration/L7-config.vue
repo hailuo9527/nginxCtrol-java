@@ -140,7 +140,7 @@
         </div>
         <!-- 页脚按钮 -->
         <button type="button" class="ctrl-layout__new-load-balancer ae-button__white ae-button__button"><span class="ae-button__label">Load Balancer Wizard</span></button>
-        <div class="config-page__bottom-buttons" v-if="$route.params.configName">
+        <div class="config-page__bottom-buttons" v-if="!$route.params.L7">
             <div class="config-page__bottom-buttons_container">
                 <button type="button"
                         @click="previewConfig"
