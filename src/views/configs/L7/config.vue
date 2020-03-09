@@ -9,7 +9,6 @@
        </div>
        <div class="header_tab">
            <div class="tab">
-
               <button class="tab_item"  :class="tab===0? 'active': ''" @click="tabChange(0)">配置</button>
               <button class="tab_item" :disabled="canSaveAndCopyConfig"  :class="tab===1? 'active': ''" @click="tabChange(1)">实例</button>
               <button class="tab_item" :disabled="canSaveAndCopyConfig"  :class="tab===2? 'active': ''" @click="tabChange(2)">历史版本</button>
@@ -84,7 +83,7 @@
         min-width: 700px;
         .config-detail-header{
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             width: calc(100% - 30px);
             height: 54px;
             padding-left: 20px;
@@ -96,12 +95,12 @@
 
     }
     .header_tab{
-        margin-top: 10px;
+        //margin-top: 10px;
         height: calc(100% - 54px);
         .tab{
             display: flex;
             border-bottom: 1px solid #ccc;
-            //padding: 0 0px;
+            padding: 0 20px;
         }
         .tab_item{
             border: none;

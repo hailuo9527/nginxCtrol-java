@@ -42,8 +42,8 @@ module.exports = {
         open: true,
         proxy: {
             '/api' : {
-                //  target: 'http://192.168.100.:8085',
-               target: 'https://nc.naccenter.cn:8085',
+                  target: 'http://192.168.1.112:8085',
+               //target: 'https://nc.naccenter.cn:8085',
                 //ws: true,        //如果要代理 websockets，配置这个参数
                 //secure: false,  // 如果是https接口，需要配置这个参数
                 changeOrigin: true,  //是否跨域

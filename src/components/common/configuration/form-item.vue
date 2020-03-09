@@ -1,10 +1,10 @@
 <template>
     <div class="form-item" :class="classStatus">
         <div class="form-item-header" >
-            <i-switch v-model="expand" :disabled="disabled" v-if="!important && !noSwitch" @on-change="expandChange" ></i-switch>
+            <i-switch v-model="expand" :disabled="onlyShowConfig" v-if="!important && !noSwitch" @on-change="expandChange" ></i-switch>
             <span class="title">{{title}}</span>
             <PopTip :content="info"  placement="right"></PopTip>
-            <div class="actions" v-if="expand && !onlyShow">
+            <div class="actions" v-if="expand && !actionButton">
                 <Button shape="circle" icon="md-close" @click="cancel" v-if="showEdit"></Button>
                 <Button  shape="circle" ghost type="primary" @click="ok" v-if="showEdit" icon="md-checkmark"></Button>
                 <Button shape="circle" icon="md-create" @click="editHandler" v-if="!showEdit"></Button>
@@ -47,6 +47,8 @@
           return {
               showEdit: false,
               expand: false,
+              onlyShowConfig: false,
+              actionButton: false
           }
         },
         components: {
@@ -103,9 +105,16 @@
                 }
             },
             disabled(nv) {
-              //  console.log(nv+ 'disabled')
+                console.log(nv+ 'disabled')
                 if (nv){
                     this.expand = false
+                    this.onlyShowConfig = true
+                }
+
+            },
+            onlyShow(nv) {
+                if (nv && !this.onlyShowConfig){
+                    this.actionButton = nv
                 }
 
             }
@@ -152,6 +161,10 @@
             },
 
         },
+        mounted() {
+            this.onlyShowConfig = !!this.$route.params.L7
+            this.actionButton = !!this.$route.params.L7
+        }
     }
 </script>
 <style lang="less" scoped>

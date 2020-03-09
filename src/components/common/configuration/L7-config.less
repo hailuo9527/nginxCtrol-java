@@ -438,11 +438,67 @@
   right: 20px;
   z-index: 2;
 }
-.config-page__bottom-buttons button:first-of-type {
+.config-page__bottom-buttons button {
   margin-right: 20px;
+  &:last-child{
+    margin-right: 0;
+  }
 }
 
 /deep/.ivu-modal-wrap{
   margin-right: calc(100% - 100vw);
   overflow: overlay;
+}
+
+.instance-actions-container {
+  position: absolute;
+  left: -20px;
+  bottom: 0;
+  right: 0;
+  height: 120px;
+  padding: 10px;
+  background: #e8eaec;
+  border-left: 1px solid #ababab;
+  z-index: 9999;
+}
+.instance-actions-container__links {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: absolute;
+  right: 0;
+  bottom: 20px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+.instance-actions-container__info {
+  position: absolute;
+  right: 0;
+  top: 20px;
+  padding-right: 20px;
+  font-size: 16px;
+  line-height: 20px;
+  color: #666666;
+}
+.instance-actions-container__info_underline {
+  border-bottom: 1px dashed #ababab;
+  text-decoration: none;
+  cursor: pointer;
+}
+.instance-actions-container__btn {
+  margin-right: 15px;
+  cursor: pointer;
+}
+.instance-actions-container__link {
+  margin-right: 30px;
+  color: #2a79f8;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.instance-actions-container__separator {
+  border-left: 1px solid #ababab;
+  height: 40px;
+  margin-right: 20px;
 }

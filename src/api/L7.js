@@ -143,3 +143,24 @@ export const delInstance = ({nginx_conf_id}, ids) => {
         data: ids,
     })
 }
+
+/* 预览配置 */
+export const previewNginxConf = (config) => {
+    return axios.request({
+        url: '/previewNginxConf',
+        method: 'post',
+        data: config,
+    })
+}
+
+
+/* 通过L7 id 查询配置*/
+export const selNginxConfByL7ID = ({l7ServerId}) => {
+    return axios.request({
+        url: '/selNginxConfByL7ID',
+        method: 'post',
+        params: {
+            l7ServerId
+        }
+    })
+}

@@ -4,7 +4,7 @@
            <div class="header_item">
                 Virtual Servers
                <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
-               <Dropdown trigger="click"  :transfer="true" class="add_handler" @on-click="dropdownHandler" >
+               <Dropdown trigger="click"  :transfer="true" class="add_handler" v-if="$route.params.configName" @on-click="dropdownHandler" >
                    <Icon type="md-add" size="26" color="#333" class="add"/>
                    <DropdownMenu slot="list" >
                        <DropdownItem name="1">Load Balancer Wizard</DropdownItem>
@@ -21,14 +21,14 @@
             <div class="header_item">
                 Locations
                 <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
-                <Icon type="md-add" size="26" color="#333" class="add_handler" @click="editLocation(0,false)"/>
+                <Icon type="md-add" size="26" color="#333" class="add_handler" v-if="$route.params.configName" @click="editLocation(0,false)"/>
             </div>
         </div>
         <div  class="l7_config_column column_header">
             <div class="header_item">
                 Upstream Groups
                 <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
-                <Icon type="md-add" size="26" color="#333" class="add_handler" @click="editUpstream(0, false)"/>
+                <Icon type="md-add" size="26" color="#333" class="add_handler" v-if="$route.params.configName" @click="editUpstream(0, false)"/>
             </div>
         </div>
         <div class="l7_config_column column_header">
@@ -140,9 +140,15 @@
         </div>
         <!-- 页脚按钮 -->
         <button type="button" class="ctrl-layout__new-load-balancer ae-button__white ae-button__button"><span class="ae-button__label">Load Balancer Wizard</span></button>
-        <div class="config-page__bottom-buttons">
+        <div class="config-page__bottom-buttons" v-if="$route.params.configName">
             <div class="config-page__bottom-buttons_container">
-                <button :disabled="!canSaveAndCopyConfig" type="button" class="config-page__add-new ae-button__black ae-button__button" title="Save as a new configuration">
+                <button type="button"
+                        @click="previewConfig"
+                        class="config-page__add-new ae-button__black ae-button__button" title="">
+                    <span class="ae-button__label">预览</span>
+                </button>
+
+                <button :disabled="!canSaveConfig" type="button" class="config-page__add-new ae-button__black ae-button__button" title="Save as a new configuration">
                     <span class="ae-button__label">Copy and Save As...</span>
                 </button>
                 <button
@@ -153,7 +159,30 @@
                     <span class="ae-button__label">{{submitLoading? '正在保存': 'Save'}}</span>
                 </button>
             </div>
+        </div >
+
+        <div class="instance-actions-container" v-if="$route.params.L7">
+            <div class="instance-actions-container__info">
+                <span>没有关联任何配置</span>
+            </div>
+            <div class="instance-actions-container__links">
+                <router-link class="instance-actions-container__link" to="/nginxConfigs">查看全部配置</router-link>
+                <div class="instance-actions-container__separator"></div>
+                <button type="button"
+                        @click="previewConfig"
+                        class="instance-actions-container__btn ae-button__black ae-button__button" title="Preview">
+                    <span class="ae-button__label">预览</span>
+                </button>
+                <button type="button"
+                        @click="$router.push('/newNginxConfig')"
+                        class="instance-actions-container__btn ae-button__green ae-button__button" title="New Load Balancer Configuration">
+                    <span class="ae-button__label" >新建配置</span>
+                </button>
+            </div>
         </div>
+        <Drawer title="配置预览" v-model="previewOpen" width="50%">
+            <pre>{{previewData}}</pre>
+        </Drawer>
         <!-- 页脚按钮end -->
         <!-- 功能弹窗 -->
         <LoadBalancerModal :show="domainModal"   @change="modalVisibleChange" @complete="domainModal = false"/>
@@ -191,7 +220,7 @@ import VirtualServerModal from './virtualServerModal'
 import LocationModal from './locationModal'
 import UpstreamModal from './upstreamModal'
 import drawLine from '../../../libs/drawLine'
-import { getNginxConf,editNginxConf } from "../../../api/L7";
+import { getNginxConf,editNginxConf, previewNginxConf, selNginxConfByL7ID } from "../../../api/L7";
 import defaultConfig from './defaultConfig'
 import emptyConfig from './emptyConfig'
 import { mapState } from 'vuex'
@@ -221,13 +250,15 @@ export default {
             upstreamIndex: null, // upstream 序号
             upstreamServerIndex: null, // upstream 序号
             submitLoading: false,
+            previewOpen: false,
+            previewData: ''
         }
 
     },
 
     watch:{
         config(newVal, old){
-            console.log(...arguments)
+           // console.log(...arguments)
             if (newVal) {
 
             }
@@ -303,19 +334,37 @@ export default {
         },
         /* 获取配置 */
         async getConfig () {
-            let json = {
-                nginx_conf_id: this.$route.query.nginx_conf_id ,
-               // version_no: this.$route.query.version_no
+            let res
+
+            if (this.$route.params.configName) {
+                let json = { nginx_conf_id: this.$route.query.nginx_conf_id }
+                res = await getNginxConf(json)
+            }else if (this.$route.params.L7) {
+                let json = {l7ServerId: this.$route.params.L7}
+                res = await selNginxConfByL7ID(json)
             }
-            let res = await getNginxConf(json)
+
             console.log(res)
             if (this.asyncOk(res) && res.data.result) {
-                this.config = res.data.result
+                this.config = res.data.result || {}
                 if (this.config.ngcVirtualServers[0]){
                     this.virtualServerGroup = this.config.ngcVirtualServers
                     this.ngcLocationsGroup = this.config.ngcVirtualServers[0].ngcLocations || []
+                } else if (!res.data.result) {
+                    this.config = defaultConfig
                 }
 
+            }
+        },
+        /* 初始化配置 */
+        initConfig() {
+            if (this.$route.params.configName) {
+                this.getConfig(this.$route.query.nginx_conf_id)
+            }else if (this.$route.params.L7) {
+                this.getConfig(this.$route.params.L7)
+            }else {
+                this.virtualServerGroup = defaultConfig.ngcVirtualServers
+                this.ngcLocationsGroup = defaultConfig.ngcVirtualServers[0].ngcLocations
             }
         },
         /* 编辑server配置*/
@@ -346,15 +395,7 @@ export default {
             this.modify = modify
 
         },
-        /* 初始化配置 */
-        initConfig() {
-            if (this.$route.params.configName) {
-                this.getConfig()
-            }else {
-                this.virtualServerGroup = defaultConfig.ngcVirtualServers
-                this.ngcLocationsGroup = defaultConfig.ngcVirtualServers[0].ngcLocations
-            }
-        },
+
         /* 保存virtualServer */
         addVirtualServer(data) {
             //console.log(data)
@@ -437,7 +478,7 @@ export default {
                 });
             }
         },
-        /* 删除配置 */
+        /* 删除配置项 */
         removeConfig(data){
             //console.log(data)
             switch (data) {
@@ -453,13 +494,22 @@ export default {
                     this.config.ngcUpstreamGroups.splice(this.upstreamIndex,1)
                     break
             }
+        },
+        /* 预览配置 */
+        async previewConfig() {
+            this.previewOpen = true
+            let res = await previewNginxConf(this.config)
+            console.log(res)
+            if (this.asyncOk(res)) {
+                this.previewData = res.data.result
+            }
         }
     },
     mounted() {
         /* 初始化配置 */
         this.initConfig()
+        console.log(this.$route.params)
         /* 绘制配置关系图 */
-       // this.selectUpstream(0)
         window.addEventListener('resize' ,this.drawLine)
     },
     beforeDestroy() {
