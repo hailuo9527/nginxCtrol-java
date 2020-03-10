@@ -10,6 +10,8 @@
           :data="TableData"
           width="815"
           style="margin: 0 auto;margin-top: 50px;"
+          @on-selection-change="getSelect"
+          :loading="loading"
         >
           <template slot-scope="{ row }" slot="name">
             <strong>{{ row.l7_server_name }}</strong>
@@ -35,8 +37,16 @@
       </div>
     </div>
     <div class="footer">
-      <Button size="large" class="commonOne">Unlink Instance Associations</Button>
-      <Button size="large" class="commonOne">Push to selected Instances</Button>
+      <Button
+        size="large"
+        class="commonOne"
+        :class="changeStyle ? 'change_style' : ''"
+      >Unlink Instance Associations</Button>
+      <Button
+        size="large"
+        class="commonOne"
+        :class="changeStyle ? 'change_style' : ''"
+      >Push to selected Instances</Button>
       <Button size="large" class="commonTwo">Push to All Instances</Button>
     </div>
     <Modal
@@ -87,7 +97,7 @@ export default {
         { title: "IN SYNC", slot: "insync" },
         { title: "LAST MODIFIED", slot: "last", width: 160 },
         { title: "LAST MODIFIED BY", slot: "by", width: 170 },
-        { slot: "action", align: "center", title: '', width: 60 }
+        { slot: "action", align: "center", title: "", width: 60 }
       ],
       DeviceModal: false,
       SelectModel: [],
@@ -95,7 +105,9 @@ export default {
       data: [],
       l7ServerIds: [],
       ids: [],
-      TableData: []
+      TableData: [],
+      changeStyle: false,
+      loading: false
     };
   },
   watch: {},
@@ -110,7 +122,7 @@ export default {
       if (this.data !== []) {
         this.data.forEach(item => {
           for (let i = 0; i < this.List.length; i++) {
-            if (item == this.List[i].l7ServerName) {
+            if (item === this.List[i].l7ServerName) {
               this.l7ServerIds.push(this.List[i].l7ServerId);
             }
           }
@@ -121,13 +133,12 @@ export default {
           this.l7ServerIds
         );
         if (this.asyncOk(res)) {
-          this.l7ServerIds = []
+          this.l7ServerIds = [];
           this.getNgcInstanceList();
         } else {
-          this.$Message.error(`${res.data.result}`)
-          this.l7ServerIds = []
+          this.$Message.error(`${res.data.result}`);
+          this.l7ServerIds = [];
         }
-
       }
     },
     // 查询所有L7服务器配置信息
@@ -153,10 +164,10 @@ export default {
             this.ids
           );
           if (this.asyncOk(res)) {
-            this.ids = []
+            this.ids = [];
             this.$Modal.remove();
             this.$Message.info("删除成功");
-            this.getNgcInstanceList()
+            this.getNgcInstanceList();
           } else {
             this.$Modal.remove();
             this.$Message.error("删除失败");
@@ -166,15 +177,26 @@ export default {
     },
     // 查询实例列表
     async getNgcInstanceList() {
-      let json = this.$route.query.nginx_conf_id;
+      this.loading = true
       let res = await selNgcInstanceList(this.$route.query.nginx_conf_id);
       if (this.asyncOk(res)) {
-        this.resultValue = res.data.result
-          if (res.data.result.length > 0) {
-           this.TableData = res.data.result
-         } else {
-           this.$emit('show-change', true)
-         }
+        this.resultValue = res.data.result;
+        if (res.data.result.length > 0) {
+          this.TableData = res.data.result;
+          this.loading = false
+        } else {
+          this.loading = false
+          this.$emit("show-change", true);
+        }
+      }
+    },
+    //选中或者取消选中时触发
+    getSelect(selection) {
+      console.log(selection);
+      if (selection == '') {
+        this.changeStyle = false;
+      } else {
+        this.changeStyle = true;
       }
     }
   },
@@ -209,6 +231,12 @@ export default {
   margin-right: 20px;
   background: #eeeeee;
   color: #ababab;
+  cursor: default;
+}
+.change_style {
+  background: #333;
+  color: #fff;
+  cursor: pointer;
 }
 .commonTwo {
   background: #333333;
@@ -217,13 +245,23 @@ export default {
 /deep/.ivu-table-header th {
   border: none;
   background-color: #333;
-        color: #fff;
+  color: #fff;
   height: 60px;
 }
-  /deep/.ivu-table-row {
-      height: 80px;  
-        }
-  /deep/.ivu-table-header th:nth-child(6) {
-    color: #333;
-  }
+/deep/.ivu-table-row {
+  height: 80px;
+}
+/deep/.ivu-table-header th:nth-child(6) {
+  color: #333;
+}
+/deep/.ivu-table-body {
+  background-color: #f8f8f9;
+}
+/deep/.ivu-table-header {
+  background-color: #f8f8f9;
+}
+/deep/.ivu-spin-fix {
+  background-color: #f8f8f9;
+  border: none;
+}
 </style>
