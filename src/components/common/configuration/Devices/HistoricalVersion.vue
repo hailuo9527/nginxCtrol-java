@@ -26,7 +26,10 @@
         <strong>{{ row.create_time }}</strong>
       </template>
       <template slot-scope="{ row, index }" slot="version_nane">
-        <div class="version_name_father" v-if="row.version_name === null || row.version_name === '' ">
+        <div
+          class="version_name_father"
+          v-if="row.version_name === null || row.version_name === '' "
+        >
           <div class="inclusion">
             <h4 class="add_name" @click="change(row, index)" v-if="number !== index">add name</h4>
             <Input
@@ -90,7 +93,9 @@ export default {
       });
       if (this.asyncOk(res)) {
         this.TableValue = res.data.result;
-        this.loading = false
+        this.loading = false;
+      } else {
+        this.loading = false;
       }
     },
     // 编辑历史版本信息别名
@@ -177,10 +182,19 @@ export default {
 /deep/.ivu-table-row td:nth-child(4) .ivu-table-cell {
   margin-top: 0;
 }
+/deep/.ivu-table-header {
+  background-color: #f8f8f9;
+}
 /deep/.ivu-table-header th {
   border: none;
   // height: 60px;
   overflow: hidden;
+}
+/deep/.ivu-table-header {
+  background-color: #f8f8f9;
+}
+/deep/.ivu-table-body {
+  background-color: #f8f8f9;
 }
 /deep/.ivu-table-header th:nth-child(1) {
   color: #f8f8f9;
@@ -294,5 +308,6 @@ export default {
 }
 /deep/.ivu-spin-fix {
   background-color: #f8f8f9;
+  border: none;
 }
 </style>

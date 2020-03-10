@@ -254,4 +254,14 @@ export default {
 /deep/.ivu-table-header th:nth-child(6) {
   color: #333;
 }
+/deep/.ivu-table-body {
+  background-color: #f8f8f9;
+}
+/deep/.ivu-table-header {
+  background-color: #f8f8f9;
+}
+/deep/.ivu-spin-fix {
+  background-color: #f8f8f9;
+  border: none;
+}
 </style>
