@@ -175,7 +175,7 @@ export default {
   },
   watch: {
     asideList(newVal, oldVal) {
-      console.log(...arguments);
+      //console.log(...arguments);
     },
     l7_model_add(newVal, oldVal) {
         if (this.l7_model_add === false) {
@@ -293,7 +293,7 @@ export default {
   },
   created() {
     if (this.$route.params.L7) {
-      console.log(this.asideList);
+      //console.log(this.asideList);
       this.asideList.map(item => {
         if (item.l7ServerId === this.$route.params.L7) {
           this.L7setActiveAside(item);

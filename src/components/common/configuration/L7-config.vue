@@ -4,14 +4,14 @@
            <div class="header_item">
                 Virtual Servers
                <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
-               <Dropdown trigger="click"  :transfer="true" class="add_handler" v-if="$route.params.configName" @on-click="dropdownHandler" >
+               <!--<Dropdown trigger="click"  :transfer="true" class="add_handler" v-if="$route.params.configName" @on-click="dropdownHandler" >
                    <Icon type="md-add" size="26" color="#333" class="add"/>
                    <DropdownMenu slot="list" >
-                       <DropdownItem name="1">Load Balancer Wizard</DropdownItem>
+                     &lt;!&ndash;  <DropdownItem name="1">Load Balancer Wizard</DropdownItem>&ndash;&gt;
                        <DropdownItem name="2" divided>New Virtual Server</DropdownItem>
                    </DropdownMenu>
-               </Dropdown>
-
+               </Dropdown>-->
+               <Icon type="md-add" size="26" color="#333" class="add_handler" v-if="!$route.params.L7" @click="editVirtualServer(0, false)"/>
            </div>
 
 
@@ -21,14 +21,14 @@
             <div class="header_item">
                 Locations
                 <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
-                <Icon type="md-add" size="26" color="#333" class="add_handler" v-if="$route.params.configName" @click="editLocation(0,false)"/>
+                <Icon type="md-add" size="26" color="#333" class="add_handler" v-if="!$route.params.L7" @click="editLocation(0,false)"/>
             </div>
         </div>
         <div  class="l7_config_column column_header">
             <div class="header_item">
                 Upstream Groups
                 <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
-                <Icon type="md-add" size="26" color="#333" class="add_handler" v-if="$route.params.configName" @click="editUpstream(0, false)"/>
+                <Icon type="md-add" size="26" color="#333" class="add_handler" v-if="!$route.params.L7" @click="editUpstream(0, false)"/>
             </div>
         </div>
         <div class="l7_config_column column_header">
@@ -134,29 +134,54 @@
 
         </div>
 
+        <!--loading-->
+        <div class="loading-wrap "
+                v-if="loading">
+            <Loading />
+        </div>
         <!-- 关系连线 canvas -->
         <div class="ctrl-relations-canvas" ref="canvas" >
             <canvas width="2000" height="2000" id = "canvas" style="width: 2000px; height: 2000px;"></canvas>
         </div>
         <!-- 页脚按钮 -->
-        <button type="button" class="ctrl-layout__new-load-balancer ae-button__white ae-button__button"><span class="ae-button__label">Load Balancer Wizard</span></button>
+        <!--<button type="button" class="ctrl-layout__new-load-balancer ae-button__white ae-button__button">
+            <span class="ae-button__label">Load Balancer Wizard</span>
+        </button>-->
         <div class="config-page__bottom-buttons" v-if="!$route.params.L7">
             <div class="config-page__bottom-buttons_container">
                 <button type="button"
                         @click="previewConfig"
-                        class="config-page__add-new ae-button__black ae-button__button" title="">
-                    <span class="ae-button__label">预览</span>
+                        class="config-page__add-new ae-button__black ae-button__button " >
+                    <span class="ae-button__label" >预览</span>
                 </button>
 
-                <button :disabled="!canSaveConfig" type="button" class="config-page__add-new ae-button__black ae-button__button" title="Save as a new configuration">
-                    <span class="ae-button__label">Copy and Save As...</span>
+                <button :disabled="!$route.params.configName"
+                        @click="copyAndSaveModel = true"
+                        type="button" class="config-page__add-new ae-button__black ae-button__button"
+                        >
+                    <span class="ae-button__label">复制并保存为...</span>
+                    <Modal
+                            v-model="copyAndSaveModel"
+                            :loading="copyAndSaveModelLoading"
+                            width="790"
+                            title="复制一个新的配置文件"
+                            @on-ok="copyAndSaveConfig"
+                           >
+                        <div class="copy-save-model">
+
+                                <div class="copy-save-model-title">输入想要保存的配置文件名</div>
+                                <Input type="text" v-model="copyConfigName" placeholder="配置名"></Input>
+
+                        </div>
+
+                    </Modal>
                 </button>
                 <button
                         :disabled="!canSaveConfig"
                         type="button"
                         @click="submitConfig"
                         class="config-page__add-new ae-button__green ae-button__button" title="Save configuration">
-                    <span class="ae-button__label">{{submitLoading? '正在保存': 'Save'}}</span>
+                    <span class="ae-button__label" :class="submitLoading? 'loop': ''">{{submitLoading? '正在保存': '保存'}}</span>
                 </button>
             </div>
         </div >
@@ -170,12 +195,12 @@
                 <div class="instance-actions-container__separator"></div>
                 <button type="button"
                         @click="previewConfig"
-                        class="instance-actions-container__btn ae-button__black ae-button__button" title="Preview">
+                        class="instance-actions-container__btn ae-button__black ae-button__button">
                     <span class="ae-button__label">预览</span>
                 </button>
                 <button type="button"
                         @click="$router.push('/newNginxConfig')"
-                        class="instance-actions-container__btn ae-button__green ae-button__button" title="New Load Balancer Configuration">
+                        class="instance-actions-container__btn ae-button__green ae-button__button" >
                     <span class="ae-button__label" >新建配置</span>
                 </button>
             </div>
@@ -215,6 +240,7 @@
 </template>
 <script>
 import PopTip from '@/components/common/pop-tip'
+import loading from '@/components/common/loading'
 import LoadBalancerModal from './loadBalancerModal'
 import VirtualServerModal from './virtualServerModal'
 import LocationModal from './locationModal'
@@ -227,6 +253,7 @@ import { mapState } from 'vuex'
 export default {
     data () {
         return {
+            loading: false,
             dropdown: true,
             domainModal: false,
             editServerModal: false,
@@ -251,7 +278,10 @@ export default {
             upstreamServerIndex: null, // upstream 序号
             submitLoading: false,
             previewOpen: false,
-            previewData: ''
+            previewData: '',
+            copyAndSaveModel: false,
+            copyAndSaveModelLoading: false,
+            copyConfigName: ''
         }
 
     },
@@ -259,9 +289,6 @@ export default {
     watch:{
         config(newVal, old){
            // console.log(...arguments)
-            if (newVal) {
-
-            }
         }
     },
     computed: {
@@ -273,7 +300,7 @@ export default {
         }),
     },
     components: {
-        PopTip, LoadBalancerModal, VirtualServerModal, LocationModal, UpstreamModal
+        PopTip, loading, LoadBalancerModal, VirtualServerModal, LocationModal, UpstreamModal
     },
     methods: {
 
@@ -335,7 +362,7 @@ export default {
         /* 获取配置 */
         async getConfig () {
             let res
-
+            this.loading = true
             if (this.$route.params.configName) {
                 let json = { nginx_conf_id: this.$route.query.nginx_conf_id }
                 res = await getNginxConf(json)
@@ -343,8 +370,8 @@ export default {
                 let json = {l7ServerId: this.$route.params.L7}
                 res = await selNginxConfByL7ID(json)
             }
-
-            console.log(res)
+            this.loading = false
+            //console.log(res)
             if (this.asyncOk(res) && res.data.result) {
                 this.config = res.data.result || {}
                 if (this.config.ngcVirtualServers[0]){
@@ -451,6 +478,7 @@ export default {
         },
         /* 提交配置 */
         async submitConfig() {
+            if (this.submitLoading) return
             this.submitLoading = true
             this.config.config_name = this.configName
             let res = await editNginxConf(this.config)
@@ -468,12 +496,40 @@ export default {
                         content: '配置保存成功',
                         duration: 3
                     });
+                    this.$router.push({ name: 'nginxConfig',
+                        params:{
+                            configName: this.configName,
+                        },
+                        query: {
+                            nginx_conf_id: res.data.result,
+                        }
+                    } )
                 }
 
             } else {
                 this.submitLoading = false
                 this.$Message.error({
-                    content: '配置保存失败',
+                    content: res.data.result,
+                    duration: 3
+                });
+            }
+        },
+        /* 保存并复制配置 */
+        async copyAndSaveConfig () {
+            this.config.config_name = this.copyConfigName
+            this.copyAndSaveModelLoading = true
+            let res = await editNginxConf(this.config)
+            this.copyAndSaveModelLoading = false
+            //console.log(res)
+            if (this.asyncOk(res)){
+                this.$Message.success({
+                    content: '配置已更新成功',
+                    duration: 3
+                });
+                this.$router.push('/nginxConfigs')
+            }else {
+                this.$Message.error({
+                    content: res.data.result,
                     duration: 3
                 });
             }
@@ -503,7 +559,7 @@ export default {
             if (this.asyncOk(res)) {
                 this.previewData = res.data.result
             }
-        }
+        },
     },
     mounted() {
         /* 初始化配置 */
@@ -519,5 +575,5 @@ export default {
 </script>
 <style lang="less" scoped>
   @import "L7-config";
-
+    @import "modal-form";
 </style>

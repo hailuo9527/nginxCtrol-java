@@ -66,24 +66,13 @@
         },
         watch: {
             '$route'(to, from) {
-
                 if (to.path.search('/L4') !== -1) {
                     this.path = `/L4/${this.activeL4.l4_code}`
                 } else if (to.path.search('/L7') !== -1) {
                     this.path7 = `/L7/${this.activeL7.l7ServerId}`
                 }
-            },
-            activeL4 (newVal, oldVal) {
-                if (!this.$route.params.L4){  // 初始化route-link路径
-                    this.path = `/L4/${newVal.l4_code}`
-                }
-
-            },
-            activeL7 (newVal, oldVal){
-                if (!this.$route.params.L7){  // 初始化route-link路径
-                    this.path7 = `/L7/${newVal.l7ServerId}`
-                }
             }
+
         },
 
         computed: {
@@ -91,6 +80,10 @@
                 activeL4: state => state.L4.activeAside,
                 activeL7: state => state.L7.activeAside
             }),
+        },
+        mounted() {
+            this.path = `/L4/${this.activeL4.l4_code}`
+            this.path7 = `/L7/${this.activeL7.l7ServerId}`
         }
     }
 </script>

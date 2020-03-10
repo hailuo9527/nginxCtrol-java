@@ -12,7 +12,7 @@
 
 <script>
   import MyChart from '@/components/my-chart/my-chart.vue'
-  import { getChartData } from "../../../api/L4-chart";
+  import { getChartData } from "../../../api/chart";
   import configList from './chartConfigList'
   import { mapState } from 'vuex'
   export default {
@@ -40,8 +40,12 @@
 
        async getData(data) {
         let params = {
-          l4_code: this.$route.params.L4, // 'b9ce850e8874492dbd20a3a3b8e2d225'
-          time: this.chartFilter.value
+          //code: this.$route.params.L4 ,
+          code: 'b9ce850e8874492dbd20a3a3b8e2d225',
+          startTime: '2019-11-23 09:39:42',
+          endTime: '2019-12-29 09:39:42'
+
+
         }
         try {
           this.list[data.index].loading = true
@@ -78,7 +82,7 @@
 .x-chart{
     display: flex;
     justify-content: space-between;
-    padding: 107px 30px 30px 30px;
+    padding: 107px 30px 30px 30px!important;
 }
 
 </style>

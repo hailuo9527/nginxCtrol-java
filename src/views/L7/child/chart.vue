@@ -10,7 +10,7 @@
 
 <script>
   import MyChart from '@/components/my-chart/my-chart.vue'
-  import configList from './chartConfigList'
+  import configList from '../../L4/child/chartConfigList'
   import { mapState } from 'vuex'
   export default {
     name: "chart",

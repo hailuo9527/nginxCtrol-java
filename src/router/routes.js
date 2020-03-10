@@ -80,7 +80,7 @@ let defaultRoutes = [
                         meta: {
                             title: 'L7-chart'
                         },
-                        component: () => import('@/views/L7/child/chart.vue')
+                        component: () => import('@/views/L4/child/chart.vue')
                     },
                     {
                         path: 'config',

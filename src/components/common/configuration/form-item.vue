@@ -105,10 +105,12 @@
                 }
             },
             disabled(nv) {
-                console.log(nv+ 'disabled')
+                //console.log(nv+ 'disabled')
                 if (nv){
                     this.expand = false
                     this.onlyShowConfig = true
+                }else{
+                    this.onlyShowConfig = false
                 }
 
             },

@@ -6,13 +6,18 @@
 
         </div>
         <div class="config_table_wrapper">
-            <Table :columns="tableConfig" @on-row-click="goConfigDetail" :data="tableData"></Table>
+            <Table :columns="tableConfig" :loading="loading" @on-row-click="goConfigDetail" :data="tableData">
+                <template slot-scope="{ row, index }" slot="action">
+                    <!--<Button type="error" size="small" @click="remove(index)">删除</Button>-->
+                    <Icon type="md-trash" size="22" style="cursor: pointer" @click.stop="remove(row.nginx_conf_id, index)"/>
+                </template>
+            </Table>
         </div>
 
     </div>
 </template>
 <script>
-    import { getNginxConfALL } from "../../../api/L7";
+    import { getNginxConfALL, delNginxConf } from "../../../api/L7";
 
     export default {
         data () {
@@ -43,8 +48,13 @@
                         title: '最近修改人',
                         key: 'upd_name'
                     },
+                    {
+                        title: '操作',
+                        slot: 'action'
+                    }
                 ],
-                tableData: []
+                tableData: [],
+                loading: true
             }
         },
         methods: {
@@ -64,8 +74,34 @@
             async getAllConfigInfo () {
                 let res = await getNginxConfALL()
                 if (this.asyncOk(res)) {
+                    this.loading = false
                     this.tableData = res.data.result || []
                 }
+            },
+            /* 删除配置 */
+             remove(id,index) {
+                 this.$Modal.confirm({
+                     title: '提示',
+                     content: '<p>是否确定要删除此配置</p>',
+                     onOk: async () => {
+                         let res = await delNginxConf({ nginx_conf_id: id })
+                         if (this.asyncOk(res)){
+                             this.$Message.success({
+                                 content: '删除成功',
+                                 duration: 2
+                             });
+                             this.tableData.splice(index, 1)
+                         } else {
+                             this.$Message.error({
+                                 content: res.data.result,
+                                 duration: 3
+                             });
+                         }
+                     },
+                     onCancel: () => {
+                         //this.$Message.info('Clicked cancel');
+                     }
+                 });
             }
         },
         mounted() {

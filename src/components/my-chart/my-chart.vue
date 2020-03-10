@@ -7,7 +7,7 @@
     <div class="ngChart-item" >
       <!--:data-empty="!chartData.rows.length"-->
 
-      <ve-line :data="chartData" height="200px" :extend="chartExtend"   :data-empty="!chartData.rows[0]"  :settings="data.chartSettings" :loading="loading"></ve-line>
+      <ve-line :data="data.chartData" height="200px" :extend="chartExtend"   :data-empty="empty"  :settings="data.chartSettings" :loading="data.loading"></ve-line>
     </div>
   </div>
 </template>
@@ -15,7 +15,7 @@
   import VeLine from 'v-charts/lib/line.common'
   import 'v-charts/lib/style.css'
   import { formatTime } from '../../libs/vue-expand.js'
-  import { getChartData } from "../../api/L4-chart";
+  import { getChartData } from "../../api/chart";
   import { mapState } from 'vuex'
   export default {
     name: 'myChart',
@@ -119,7 +119,8 @@
         chartData: {
           rows: []
         },
-        loading: false
+        loading: true,
+        empty: false,
       }
     },
     // computed:{
@@ -133,25 +134,9 @@
         this.$emit('firstShowHandle',{ index: this.index, url: this.data.url })
         //this.getData()
       },
-      // async getData() {
-      //   let params = {
-      //     l4_code: this.$route.params.id, // 'b9ce850e8874492dbd20a3a3b8e2d225'
-      //     time: this.chartFilter.value
-      //   }
-      //   try {
-      //     this.loading = true
-      //     let res = await getChartData( this.data.url , {...params})
-      //      console.log(res)
-      //     if (this.asyncOk(res)){
-      //       this.chartData.rows = res.data.result || []
-      //       this.loading = false
-      //     }
-      //   } catch (e) {
-      //     console.log(e)
-      //   }
-      // },
     },
     mounted() {
+        console.log(this.data)
 
     }
   }
@@ -166,7 +151,7 @@
     display: block;
     float: left;
     background: #fff;
-    box-shadow: 0 0 7px -1px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 4px -1px rgba(0, 0, 0, 0.15);
   }
   .ngChart-item{
     position: relative;

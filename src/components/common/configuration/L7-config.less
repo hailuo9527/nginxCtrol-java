@@ -502,3 +502,37 @@
   height: 40px;
   margin-right: 20px;
 }
+.loading-wrap{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 54px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 99999;
+  background: #fff;
+}
+.copy-save-model{
+  padding: 20px 40px;
+  .copy-save-model-title{
+    //font-size: 12px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+}
+.loop{
+  animation: loop 3s infinite;
+}
+@-webkit-keyframes loop {
+  0%{
+    opacity: .4;
+  }
+  50%{
+    opacity: 1;
+  }
+  100%{
+    opacity: .4;
+  }
+}

@@ -19,7 +19,7 @@
         name: 'layout_default',
         data () {
           return {
-              loading: true
+              loading: false
           }
         },
         components: {
@@ -65,7 +65,6 @@
                                 this.$Spin.hide();
                             }
                         })
-
                     }
                 })
             }
