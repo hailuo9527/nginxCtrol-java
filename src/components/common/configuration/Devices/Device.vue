@@ -56,7 +56,7 @@ export default {
       data: [],
       l7ServerIds: [],
       resultValue: [],
-      spinShow: true,
+      spinShow: true
     };
   },
   methods: {
@@ -68,21 +68,24 @@ export default {
     async addInstance() {
       this.DeviceModal = false;
       if (this.data !== []) {
-        this.data.forEach((item) => {
-          for (let i = 0; i < this.List.length ; i++) {
+        this.data.forEach(item => {
+          for (let i = 0; i < this.List.length; i++) {
             if (item == this.List[i].l7ServerName) {
               this.l7ServerIds.push(this.List[i].l7ServerId);
             }
           }
         });
-        this.l7ServerIds = Array.from(new Set(this.l7ServerIds))
+        this.l7ServerIds = Array.from(new Set(this.l7ServerIds));
         let res = await addInstance(
           this.$route.query.nginx_conf_id,
           this.l7ServerIds
         );
         if (this.asyncOk(res)) {
-          this.l7ServerIds = []
-          this.getNgcInstanceList()
+          this.l7ServerIds = [];
+          this.getNgcInstanceList();
+        } else {
+          this.$Message.error(`${res.data.result}`);
+          this.l7ServerIds = [];
         }
       }
     },
@@ -92,7 +95,7 @@ export default {
       if (this.asyncOk(res)) {
         if (res.data.result.length > 0) {
           this.show = false;
-          this.resultValue = res.data.result
+          this.resultValue = res.data.result;
         }
       }
     },
@@ -105,11 +108,15 @@ export default {
       }
     },
     showChange(data) {
-      this.show = data
+      this.show = data;
     }
   },
   mounted() {
     this.getNgcInstanceList();
+    this.$Message.config({
+      top: 50,
+      duration: 3
+    });
   }
 };
 </script>
