@@ -7,7 +7,7 @@
     <div class="ngChart-item" >
       <!--:data-empty="!chartData.rows.length"-->
 
-      <ve-line :data="data.chartData" height="200px" :extend="chartExtend"   :data-empty="empty"  :settings="data.chartSettings" :loading="data.loading"></ve-line>
+      <ve-line :data="data.chartData" height="200px" :extend="chartExtend" :after-config="afterConfig" :before-config="beforeConfig"  :data-empty="!data.chartData.rows.length"  :settings="data.chartSettings" :loading="data.loading"></ve-line>
     </div>
   </div>
 </template>
@@ -28,6 +28,9 @@
         default: () => {}
       },
       index: Number
+    },
+    watch: {
+
     },
     data(){
       this.chartExtend = {
@@ -54,8 +57,7 @@
           padding: 10,
           extraCssText: 'box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);border-radius: 0;',
 
-          formatter:  (item) =>{
-            // console.log(item)
+          formatter:  this.data.tooltipFormatter || function (item) {
             let str = []
             let value = formatTime(item[0].axisValue,'YMDHMS')
             str.push(value)
@@ -67,7 +69,7 @@
               str.push('<br />')
             })
 
-            return str.join(' ')
+            return str.join('  ')
           }
         },
         yAxis: {
@@ -75,7 +77,10 @@
             show: false
           },
           nameGap: 0,
-          splitNumber: 3
+          splitNumber: 3,
+          axisLabel: {
+            formatter: this.data.yFormatter || '{value}'
+          }
         },
         xAxis: {
           axisPointer: {
@@ -84,6 +89,7 @@
               type: 'dotted'
             }
           },
+
           axisLine: {
             show: true,
             lineStyle: {
@@ -92,6 +98,7 @@
           },
           axisLabel: {
             color: '#8f8f8f',
+            //interval: this.data.interval,
             formatter: function (value, index) {
               let str = formatTime(value, 'MD')
               return str
@@ -123,21 +130,18 @@
         empty: false,
       }
     },
-    // computed:{
-    //   ...mapState({
-    //     chartFilter:  state => state.L4.chartFilter
-    //   })
-    // },
     methods: {
       firstShow(e){
         // console.log(e)
         this.$emit('firstShowHandle',{ index: this.index, url: this.data.url })
-        //this.getData()
       },
-    },
-    mounted() {
-        console.log(this.data)
-
+      beforeConfig(data){
+        //console.log(data)
+      },
+      afterConfig (options) {
+        options.xAxis[0].axisLabel.interval = this.data.interval
+        return options
+      }
     }
   }
 </script>

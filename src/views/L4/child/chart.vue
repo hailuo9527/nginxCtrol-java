@@ -41,10 +41,10 @@
        async getData(data) {
         let params = {
           //code: this.$route.params.L4 ,
-          code: 'b9ce850e8874492dbd20a3a3b8e2d225',
-          startTime: '2019-11-23 09:39:42',
-          endTime: '2019-12-29 09:39:42'
-
+          code: this.$route.params.L4 ? this.$route.params.L4 : this.$route.params.L7,
+          // startTime: '2019-11-23 09:39:42',
+          // endTime: '2019-12-29 09:39:42'
+            time: this.chartFilter.value
 
         }
         try {
@@ -52,8 +52,11 @@
           let res = await getChartData( data.url , {...params})
             //console.log(res)
           if (this.asyncOk(res)){
-            this.list[data.index].chartData.rows = res.data.result || []
-            this.list[data.index].loading = false
+              this.list[data.index].interval = parseInt(res.data.result.length / 6)
+              this.list[data.index].chartData.rows = res.data.result || []
+              this.list[data.index].loading = false
+
+             // console.log(this.list[data.index].interval)
           }
         } catch (e) {
           console.log(e)

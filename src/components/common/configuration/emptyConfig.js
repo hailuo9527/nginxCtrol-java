@@ -185,8 +185,8 @@ const  emptyConfig = {
                     service_name: '',
                     route_name: '',
                     weight_recovering_time: '',
-                    server_bound_requests_only: '',
-                    mark_as_down: '',
+                    server_bound_requests_only: false,
+                    mark_as_down: false,
                     version_no: ''
                 }
             ]

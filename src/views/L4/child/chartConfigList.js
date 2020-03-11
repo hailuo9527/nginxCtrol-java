@@ -1,4 +1,9 @@
- const configList = [
+import numerify from 'numerify'
+import numerifyBytes from 'numerify/lib/plugins/bytes.umd.js'
+numerify.register('bytes', numerifyBytes)
+
+import { formatTime } from '../../../libs/vue-expand.js'
+const configList = [
     {
         title: 'CPU 使用率%',
         color: ['#333333','#5BA9FF','#F967B0'],
@@ -14,11 +19,28 @@
                 'cpu_stolen': 'cpu.stolen',
                 'cpu_user': 'cpu.user',
             },
-           /* dataType: function (v) {
-                return v + ' %'
-              }*/
+            yAxisType: ['0,0a']
         },
-        loading: false
+        loading: false,
+        yFormatter: function (value, index) {
+
+            return  value + '%'
+        },
+        tooltipFormatter: (item) =>{
+
+            let str = []
+            let value = formatTime(item[0].axisValue,'YMDHMS')
+            str.push(value)
+            str.push('<br />')
+            item.map(data => {
+                str.push(data.marker)
+                str.push(data.seriesName)
+                str.push(numerify(data.value[1], '0,0%'))
+                str.push('<br />')
+            })
+
+            return str.join(' ')
+        },
     },
     {
         title: '服务器平均负荷',
@@ -35,41 +57,87 @@
                 'load_15': 'load.15'
             },
         },
-        loading: false
+        loading: false,
     },
     {
         title: '内存',
-        color: ['#272020','#000ADD'],
+        color: ['#5a5a5a','#4447e3'],
         url: '/selSysMemory',
         chartData: {
             rows: []
         },
         chartSettings: {
-            metrics: ['mem_total', 'men_used'],
+            metrics: ['mem_total', 'mem_used'],
             dimension: ['ctime'],
             labelMap: {
                 'mem_total': '总量',
-                'men_used': '已使用'
-            },
+                'mem_used': '已使用'
+            }
         },
-        loading: false
+        loading: false,
+        yFormatter: function (value, index) {
+            if (value.length<5){
+                return  numerify(value, '0,0b')
+            } else {
+                return  numerify(value, '0,00b')
+            }
+
+        },
+        tooltipFormatter: (item) =>{
+
+            let str = []
+            let value = formatTime(item[0].axisValue,'YMDHMS')
+            str.push(value)
+            str.push('<br />')
+            item.map(data => {
+                str.push(data.marker)
+                str.push(data.seriesName)
+                str.push(numerify(data.value[1], '0,0.00b'))
+                str.push('<br />')
+            })
+
+            return str.join('  ')
+        }
     },
     {
         title: '网络流量',
-        color: ['#272020','#000ADD'],
+        color: ['#ff7575','#2d31e0'],
         url: '/selSysNetTraffic',
         chartData: {
             rows: []
         },
         chartSettings: {
-            metrics: ['mem_total', 'men_used'],
+            metrics: ['traffic_in', 'traffic_out'],
             dimension: ['ctime'],
             labelMap: {
-                'mem_total': '总量',
-                'men_used': '已使用'
+                'traffic_in': '下载',
+                'traffic_out': '上传'
             },
         },
-        loading: false
+        loading: false,
+        yFormatter: function (value, index) {
+            if (value.length<5){
+                return  numerify(value, '0,0b')
+            } else {
+                return  numerify(value, '0,00b')
+            }
+
+        },
+        tooltipFormatter: (item) =>{
+
+            let str = []
+            let value = formatTime(item[0].axisValue,'YMDHMS')
+            str.push(value)
+            str.push('<br />')
+            item.map(data => {
+                str.push(data.marker)
+                str.push(data.seriesName)
+                str.push(numerify(data.value[1], '0,0.00b'))
+                str.push('<br />')
+            })
+
+            return str.join('  ')
+        }
     },
      {
          title: '磁盘使用',
@@ -82,28 +150,74 @@
              metrics: ['disk_total', 'disk_used'],
              dimension: ['ctime'],
              labelMap: {
-                 'mem_total': '总量',
-                 'men_used': '已使用'
+                 'disk_total': '总量',
+                 'disk_used': '已使用'
              },
          },
-         loading: false
+         loading: false,
+         yFormatter: function (value, index) {
+             if (value.length<5){
+                 return  numerify(value, '0,0b')
+             } else {
+                 return  numerify(value, '0,00b')
+             }
+
+         },
+         tooltipFormatter: (item) =>{
+
+             let str = []
+             let value = formatTime(item[0].axisValue,'YMDHMS')
+             str.push(value)
+             str.push('<br />')
+             item.map(data => {
+                 str.push(data.marker)
+                 str.push(data.seriesName)
+                 str.push(numerify(data.value[1], '0,0.00b'))
+                 str.push('<br />')
+             })
+
+             return str.join('  ')
+         }
      },
      {
-         title: '磁盘读写   ',
+         title: '磁盘读写',
          color: ['#6ab1fe','#69d9d5'],
          url: '/selSysDiskIO',
          chartData: {
              rows: []
          },
          chartSettings: {
-             metrics: ['disk_total', 'disk_used'],
+             metrics: ['io_kbs_r', 'io_kbs_w'],
              dimension: ['ctime'],
              labelMap: {
-                 'mem_total': '总量',
-                 'men_used': '已使用'
+                 'io_kbs_r': '读',
+                 'io_kbs_w': '写'
              },
          },
-         loading: false
+         loading: false,
+         yFormatter: function (value, index) {
+             if (value.length<5){
+                 return  numerify(value, '0,0b') + '/s'
+             } else {
+                 return  numerify(value, '0,00b') + '/s'
+             }
+
+         },
+         tooltipFormatter: (item) =>{
+
+             let str = []
+             let value = formatTime(item[0].axisValue,'YMDHMS')
+             str.push(value)
+             str.push('<br />')
+             item.map(data => {
+                 str.push(data.marker)
+                 str.push(data.seriesName)
+                 str.push(numerify(data.value[1], '0,0.00b') + '/s')
+                 str.push('<br />')
+             })
+
+             return str.join('  ')
+         }
      },
      {
          title: '磁盘延迟',
@@ -113,14 +227,33 @@
              rows: []
          },
          chartSettings: {
-             metrics: ['disk_total', 'disk_used'],
+             metrics: ['io_wait_r', 'io_wait_w'],
              dimension: ['ctime'],
              labelMap: {
-                 'mem_total': '总量',
-                 'men_used': '已使用'
+                 'io_wait_r': '读',
+                 'io_wait_w': '写',
              },
          },
-         loading: false
+         loading: false,
+         yFormatter: function (value, index) {
+             return numerify(value, '0,0')+ 'ms'
+
+         },
+         tooltipFormatter: (item) =>{
+
+             let str = []
+             let value = formatTime(item[0].axisValue,'YMDHMS')
+             str.push(value)
+             str.push('<br />')
+             item.map(data => {
+                 str.push(data.marker)
+                 str.push(data.seriesName)
+                 str.push(numerify(data.value[1], '0,0') + 'ms')
+                 str.push('<br />')
+             })
+
+             return str.join('  ')
+         }
      },
      {
          title: 'CPU Usage, I/O%',
@@ -130,11 +263,10 @@
              rows: []
          },
          chartSettings: {
-             metrics: ['disk_total', 'disk_used'],
+             metrics: ['cpu_iowait'],
              dimension: ['ctime'],
              labelMap: {
-                 'mem_total': '总量',
-                 'men_used': '已使用'
+                 'cpu_iowait': '总量'
              },
          },
          loading: false
@@ -147,11 +279,11 @@
              rows: []
          },
          chartSettings: {
-             metrics: ['disk_total', 'disk_used'],
+             metrics: ['io_iops_r', 'io_iops_w'],
              dimension: ['ctime'],
              labelMap: {
-                 'mem_total': '总量',
-                 'men_used': '已使用'
+                 'io_iops_r': '读',
+                 'io_iops_w': '写'
              },
          },
          loading: false
@@ -164,14 +296,33 @@
              rows: []
          },
          chartSettings: {
-             metrics: ['disk_total', 'disk_used'],
+             metrics: ['swap_total', 'swap_used'],
              dimension: ['ctime'],
              labelMap: {
-                 'mem_total': '总量',
-                 'men_used': '已使用'
+                 'swap_total': '总量',
+                 'swap_used': '已使用'
              },
          },
-         loading: false
+         loading: false,
+         yFormatter: function (value, index) {
+
+             return  numerify(value, '0,0.0b')
+         },
+         tooltipFormatter: (item) =>{
+
+             let str = []
+             let value = formatTime(item[0].axisValue,'YMDHMS')
+             str.push(value)
+             str.push('<br />')
+             item.map(data => {
+                 str.push(data.marker)
+                 str.push(data.seriesName)
+                 str.push(numerify(data.value[1], '0,0.0b'))
+                 str.push('<br />')
+             })
+
+             return str.join('  ')
+         }
      },
 
 ]

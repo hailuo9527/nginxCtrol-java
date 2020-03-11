@@ -121,7 +121,7 @@
                     </span>
                     <!--<span>{{item.upstream_servers_name}}</span>-->
                     <span>{{item.upstream_servers_name}}</span>
-                    <Icon type="md-create" class="ctrl-list-item__edit"  />
+                    <!--<Icon type="md-create" class="ctrl-list-item__edit"  />-->
                     <span class="ctrl-list-item__corner-right">
                         <span class="ctrl-list-item__corner-inner"></span>
                     </span>
@@ -564,7 +564,7 @@ export default {
     mounted() {
         /* 初始化配置 */
         this.initConfig()
-        console.log(this.$route.params)
+       // console.log(this.$route.params)
         /* 绘制配置关系图 */
         window.addEventListener('resize' ,this.drawLine)
     },

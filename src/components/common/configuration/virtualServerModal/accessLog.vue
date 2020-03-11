@@ -100,7 +100,6 @@
                 } else{
                     this.form.access_log_state = data
                 }
-
             },
         },
 

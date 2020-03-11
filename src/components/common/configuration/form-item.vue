@@ -115,8 +115,11 @@
 
             },
             onlyShow(nv) {
+                console.log(this.onlyShowConfig)
                 if (nv && !this.onlyShowConfig){
                     this.actionButton = nv
+                } else {
+                    console.log('423434')
                 }
 
             }
@@ -166,6 +169,9 @@
         mounted() {
             this.onlyShowConfig = !!this.$route.params.L7
             this.actionButton = !!this.$route.params.L7
+            if (this.onlyShow && !this.onlyShowConfig){
+                this.actionButton = true
+            }
         }
     }
 </script>
