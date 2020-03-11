@@ -164,3 +164,11 @@ export const selNginxConfByL7ID = ({l7ServerId}) => {
         }
     })
 }
+/** 推送实例 */
+export const pushInstance = (ngcInstanceInfos) => {
+    return axios.request({
+        url: '/pushInstance',
+        method: 'post',
+        data: ngcInstanceInfos
+    })
+}

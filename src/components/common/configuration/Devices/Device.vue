@@ -2,17 +2,27 @@
   <div>
     <div v-if="show">
       <div class="configuration-associations__empty">
-        <div
-          class="configuration-associations__empty__title"
-        >You don't have any instance associations yet.</div>Please add a few associations.
+        <div class="configuration-associations__empty__title">
+          You don't have any instance associations yet.
+        </div>
+        Please add a few associations.
         <!-- /react-text -->
       </div>
       <div class="configuration-associations__add-new">
-        <Button type="primary" size="large" icon="md-add" @click=" getL7ServerInfoAll">添加实例</Button>
+        <Button
+          type="primary"
+          size="large"
+          icon="md-add"
+          @click="getL7ServerInfoAll"
+          >添加实例</Button
+        >
       </div>
     </div>
     <div v-else>
-      <device-table :TableValue="resultValue" v-on:show-change="showChange"></device-table>
+      <device-table
+        :TableValue="resultValue"
+        v-on:show-change="showChange"
+      ></device-table>
     </div>
     <Modal
       v-model="DeviceModal"
@@ -22,7 +32,10 @@
       @on-ok="addInstance"
     >
       <div class="main">
-        <h3>Select one or more instances to which you wish to associate with this configuration</h3>
+        <h3>
+          Select one or more instances to which you wish to associate with this
+          configuration
+        </h3>
         <Select
           v-model="SelectModel"
           filterable
@@ -35,20 +48,27 @@
             v-for="item in List"
             :value="item.l7ServerName"
             :key="item.l7ServerName"
-          >{{ item.l7ServerName }}</Option>
+            >{{ item.l7ServerName }}</Option
+          >
         </Select>
       </div>
     </Modal>
+    <!--loading-->
+    <div class="loading-wrap " v-if="loading">
+      <Loading />
+    </div>
   </div>
 </template>
 
 <script>
 import DeviceTable from "@/components/common/configuration/Devices/DeviceTable.vue";
+import loading from "@/components/common/loading";
 import { selNgcInstanceList, selL7ServerInfoAll, addInstance } from "@/api/L7";
 export default {
-  components: { DeviceTable },
+  components: { DeviceTable, loading },
   data() {
     return {
+      loading: true,
       show: true,
       DeviceModal: false,
       SelectModel: [],
@@ -96,6 +116,9 @@ export default {
         if (res.data.result.length > 0) {
           this.show = false;
           this.resultValue = res.data.result;
+          this.loading = false;
+        } else {
+          this.loading = false;
         }
       }
     },

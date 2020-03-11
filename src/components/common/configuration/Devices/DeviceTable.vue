@@ -2,7 +2,13 @@
   <div>
     <div class="mainContent">
       <div class="addButton">
-        <Button type="primary" size="large" icon="md-add" @click="getL7ServerInfoAll">添加实例</Button>
+        <Button
+          type="primary"
+          size="large"
+          icon="md-add"
+          @click="getL7ServerInfoAll"
+          >添加实例</Button
+        >
       </div>
       <div class="tableContent">
         <Table
@@ -30,7 +36,7 @@
               type="ios-trash"
               size="22"
               style="cursor: pointer;"
-              @click="remove(row.id, index)"
+              @click="removeSingle(row.id, index)"
             />
           </template>
         </Table>
@@ -41,13 +47,19 @@
         size="large"
         class="commonOne"
         :class="changeStyle ? 'change_style' : ''"
-      >Unlink Instance Associations</Button>
+        @click="changeStyle ? removeSelected() : ''"
+        >Unlink Instance Associations</Button
+      >
       <Button
         size="large"
         class="commonOne"
         :class="changeStyle ? 'change_style' : ''"
-      >Push to selected Instances</Button>
-      <Button size="large" class="commonTwo">Push to All Instances</Button>
+        @click="changeStyle ? pushsSelectedInstance() : ''"
+        >Push to selected Instances</Button
+      >
+      <Button size="large" class="commonTwo" @click="pushAllInstance"
+        >Push to All Instances</Button
+      >
     </div>
     <Modal
       v-model="DeviceModal"
@@ -57,7 +69,10 @@
       @on-ok="addInstance"
     >
       <div class="main">
-        <h3>Select one or more instances to which you wish to associate with this configuration</h3>
+        <h3>
+          Select one or more instances to which you wish to associate with this
+          configuration
+        </h3>
         <Select
           v-model="SelectModel"
           filterable
@@ -70,20 +85,21 @@
             v-for="item in List"
             :value="item.l7ServerName"
             :key="item.l7ServerName"
-          >{{ item.l7ServerName }}</Option>
+            >{{ item.l7ServerName }}</Option
+          >
         </Select>
       </div>
     </Modal>
   </div>
 </template>
 
-
 <script>
 import {
   selL7ServerInfoAll,
   addInstance,
   delInstance,
-  selNgcInstanceList
+  selNgcInstanceList,
+  pushInstance
 } from "@/api/L7";
 export default {
   props: {
@@ -107,7 +123,8 @@ export default {
       ids: [],
       TableData: [],
       changeStyle: false,
-      loading: false
+      loading: false,
+      selectedValue: []
     };
   },
   watch: {},
@@ -149,8 +166,8 @@ export default {
         this.List = res.data.result;
       }
     },
-    // 删除实例
-    async remove(id, index) {
+    // 删除单一条实例
+    async removeSingle(id, index) {
       this.ids.push(id);
       this.$Modal.confirm({
         title: "提示",
@@ -165,6 +182,7 @@ export default {
           );
           if (this.asyncOk(res)) {
             this.ids = [];
+            this.selectedValue = [];
             this.$Modal.remove();
             this.$Message.info("删除成功");
             this.getNgcInstanceList();
@@ -175,28 +193,83 @@ export default {
         }
       });
     },
+    // 删除勾选中的实例
+    async removeSelected() {
+      if (this.selectedValue == "") {
+        this.$Message.info("请选中要移除的实例");
+      } else {
+        this.ids = this.selectedValue.map(el => {
+          return el.id;
+        });
+        this.$Modal.confirm({
+          title: "提示",
+          content: "<p>确定删除此条列表吗？</p>",
+          loading: true,
+          onOk: async () => {
+            let res = await delInstance(
+              {
+                nginx_conf_id: this.$route.query.nginx_conf_id
+              },
+              this.ids
+            );
+            if (this.asyncOk(res)) {
+              this.ids = [];
+              this.selectedValue = [];
+              this.$Modal.remove();
+              this.$Message.info("删除成功");
+              this.getNgcInstanceList();
+            } else {
+              this.$Modal.remove();
+              this.$Message.error("删除失败");
+            }
+          }
+        });
+      }
+    },
     // 查询实例列表
     async getNgcInstanceList() {
-      this.loading = true
+      this.loading = true;
       let res = await selNgcInstanceList(this.$route.query.nginx_conf_id);
       if (this.asyncOk(res)) {
         this.resultValue = res.data.result;
         if (res.data.result.length > 0) {
           this.TableData = res.data.result;
-          this.loading = false
+          this.loading = false;
         } else {
-          this.loading = false
+          this.loading = false;
           this.$emit("show-change", true);
         }
       }
     },
     //选中或者取消选中时触发
     getSelect(selection) {
-      console.log(selection);
-      if (selection == '') {
+      this.selectedValue = selection;
+      if (selection == "") {
         this.changeStyle = false;
       } else {
         this.changeStyle = true;
+      }
+    },
+    //推送全部实例
+    async pushAllInstance() {
+      let res = await pushInstance(this.TableValue);
+      if (this.asyncOk(res)) {
+        this.$Message.success("配置推送成功");
+      } else {
+        this.$Message.error(`$(res.data.result)`);
+      }
+    },
+    //推送勾选的实例
+    async pushsSelectedInstance() {
+      if (this.selectedValue == "") {
+        this.$Message.info("请选中要推送的实例");
+      } else {
+        let res = await pushInstance(this.selectedValue);
+        if (this.asyncOk(res)) {
+          this.$Message.success("配置推送成功");
+        } else {
+          this.$Message.error(`$(res.data.result)`);
+        }
       }
     }
   },
@@ -209,7 +282,6 @@ export default {
   }
 };
 </script>
-
 
 <style lang="less" scoped>
 .mainContent {
