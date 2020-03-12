@@ -109,10 +109,10 @@ export default {
     return {
       columns: [
         { type: "selection", width: 60, align: "center" },
-        { title: "INSTANCE NAME", slot: "name", width: 160 },
-        { title: "IN SYNC", slot: "insync" },
-        { title: "LAST MODIFIED", slot: "last", width: 160 },
-        { title: "LAST MODIFIED BY", slot: "by", width: 170 },
+        { title: "实例名称", slot: "name", width: 160 },
+        { title: "同步", slot: "insync" },
+        { title: "修改时间", slot: "last", width: 160 },
+        { title: "修改人", slot: "by", width: 170 },
         { slot: "action", align: "center", title: "", width: 60 }
       ],
       DeviceModal: false,
@@ -254,7 +254,7 @@ export default {
     async pushAllInstance() {
       let res = await pushInstance(this.TableValue);
       if (this.asyncOk(res)) {
-        this.$Message.success("配置推送成功");
+        this.$Message.success(`$(res.data.result)`);
       } else {
         this.$Message.error(`$(res.data.result)`);
       }
@@ -266,7 +266,7 @@ export default {
       } else {
         let res = await pushInstance(this.selectedValue);
         if (this.asyncOk(res)) {
-          this.$Message.success("配置推送成功");
+          this.$Message.success(`$(res.data.result)`);
         } else {
           this.$Message.error(`$(res.data.result)`);
         }
@@ -295,7 +295,7 @@ export default {
 }
 .footer {
   position: absolute;
-  bottom: 20px;
+  bottom: 60px;
   right: 30px;
   z-index: 2;
 }

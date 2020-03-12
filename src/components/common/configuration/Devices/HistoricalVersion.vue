@@ -1,10 +1,9 @@
 <template>
-  <div>
+  <div class="content">
     <Table
       :columns="columns"
       :data="TableValue"
       width="815"
-      height="400"
       style="margin: 0 auto;margin-top: 50px;"
       :loading="loading"
     >
@@ -78,9 +77,9 @@ export default {
           align: "center",
           slot: "button"
         },
-        { title: "Created By", slot: "name" },
-        { title: "Created Date", slot: "insync" },
-        { title: "Version Name", slot: "version_nane" }
+        { title: "创建人", slot: "name" },
+        { title: "创建时间", slot: "insync" },
+        { title: "版本名称", slot: "version_nane" }
       ],
       TableValue: []
     };
@@ -149,6 +148,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.content {
+  width: 100%;
+  overflow-y: scroll;
+}
 /deep/.ivu-table:before,
 /deep/.ivu-table:after {
   display: none;

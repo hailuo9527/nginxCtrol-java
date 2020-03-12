@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <div v-if="show">
       <div class="configuration-associations__empty">
         <div class="configuration-associations__empty__title">
@@ -68,7 +68,7 @@ export default {
   components: { DeviceTable, loading },
   data() {
     return {
-      loading: true,
+      loading: false,
       show: true,
       DeviceModal: false,
       SelectModel: [],
@@ -111,6 +111,7 @@ export default {
     },
     // 查询实例列表
     async getNgcInstanceList() {
+      this.loading = true;
       let res = await selNgcInstanceList(this.$route.query.nginx_conf_id);
       if (this.asyncOk(res)) {
         if (res.data.result.length > 0) {
@@ -145,7 +146,24 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.content {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
 .main {
   padding: 10px 30px 0;
+}
+.loading-wrap{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 99999;
+  background: #f8f8f9;
 }
 </style>
