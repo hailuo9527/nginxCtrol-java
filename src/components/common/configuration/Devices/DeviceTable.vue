@@ -254,9 +254,10 @@ export default {
     async pushAllInstance() {
       let res = await pushInstance(this.TableValue);
       if (this.asyncOk(res)) {
-        this.$Message.success(`$(res.data.result)`);
+        this.$Message.info(`${res.data.result}`);
+        this.getNgcInstanceList();
       } else {
-        this.$Message.error(`$(res.data.result)`);
+        this.$Message.error(`${res.data.result}`);
       }
     },
     //推送勾选的实例
@@ -266,9 +267,10 @@ export default {
       } else {
         let res = await pushInstance(this.selectedValue);
         if (this.asyncOk(res)) {
-          this.$Message.success(`$(res.data.result)`);
+          this.$Message.info(`${res.data.result}`);
+          this.getNgcInstanceList();
         } else {
-          this.$Message.error(`$(res.data.result)`);
+          this.$Message.error(`${res.data.result}`);
         }
       }
     }
