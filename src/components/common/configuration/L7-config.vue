@@ -371,16 +371,20 @@ export default {
                 res = await selNginxConfByL7ID(json)
             }
             this.loading = false
-            //console.log(res)
+            console.log(res)
             if (this.asyncOk(res) && res.data.result) {
                 this.config = res.data.result || {}
+                console.log(!res.data.result)
                 if (this.config.ngcVirtualServers[0]){
                     this.virtualServerGroup = this.config.ngcVirtualServers
                     this.ngcLocationsGroup = this.config.ngcVirtualServers[0].ngcLocations || []
-                } else if (!res.data.result) {
-                    this.config = defaultConfig
                 }
 
+            }else if (this.asyncOk(res)){
+                //console.log(defaultConfig)
+                this.virtualServerGroup = defaultConfig.ngcVirtualServers
+                this.ngcLocationsGroup = defaultConfig.ngcVirtualServers[0].ngcLocations || []
+                this.config = defaultConfig
             }
         },
         /* 初始化配置 */

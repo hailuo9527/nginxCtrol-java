@@ -22,7 +22,7 @@
               <router-link :to="`/L7/${$route.params.L7}/`" class="tab_item">L7-test</router-link>
               <router-link :to="`/L7/${$route.params.L7}/config`" class="tab_item">Load Balancing</router-link>
               <router-link :to="`/L7/${$route.params.L7}/analysis`" class="tab_item">Analys</router-link>
-              <div class="timezone-select">
+              <!--<div class="timezone-select">
                 UTC+08 •
                 <div class="clock">9:00</div>
                 <div class="timezone-select__dropdown-tick">
@@ -35,9 +35,9 @@
                     </DropdownMenu>
                   </Dropdown>
                 </div>
-              </div>
+              </div>-->
             </div>
-            <apply-filter v-if="$route.name === 'L7-chart'" />
+            <apply-filter v-if="$route.name === 'L7Chart'" />
           </div>
         </div>
         <router-view class="content_main"></router-view>

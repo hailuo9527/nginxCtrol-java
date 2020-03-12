@@ -129,8 +129,8 @@
                         error_log_level: this.serverForm.error_log_level,
                     }
                     this.accessLog = {
-                        access_log_state: false,
-                        use_recommended_format_state: false,
+                        access_log_state: this.serverForm.access_log_state,
+                        use_recommended_format_state: this.serverForm.use_recommended_format_state,
                         access_log_name: this.serverForm.access_log_name,
                         access_log_path: this.serverForm.access_log_path,
                         access_log_format: this.serverForm.access_log_format,
