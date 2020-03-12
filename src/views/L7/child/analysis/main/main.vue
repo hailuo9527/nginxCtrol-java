@@ -9,7 +9,7 @@
             @click="analyzerSettingsModal = true"
           />
         </div>
-        <router-link to="/L7/123/analysis/overview" class="section-box">
+        <router-link :to="`/L7/${$route.params.L7}/analysis/overview`" class="section-box">
           <h4 class="section-box-title">Build</h4>
           <div class="section-box-table">
             <div class="section-box-table-row">
@@ -27,7 +27,7 @@
             <span class="section-box-details">Open</span>
           </div>
         </router-link>
-        <router-link to="/L7/123/analysis/configAnalysis" class="section-box">
+        <router-link :to="`/L7/${$route.params.L7}/analysis/configAnalysis`" class="section-box">
           <h4 class="section-box-title">Static analysis</h4>
           <div class="section-box-table">
             <div class="section-box-table-row">
@@ -57,7 +57,7 @@
             <span class="section-box-details">Open</span>
           </div>
         </router-link>
-        <router-link to="/L7/123/analysis/servers" class="section-box">
+        <router-link :to="`/L7/${$route.params.L7}/analysis/servers`" class="section-box">
           <h4 class="section-box-title">Virtual servers</h4>
           <div class="section-box-table">
             <div class="section-box-table-row">

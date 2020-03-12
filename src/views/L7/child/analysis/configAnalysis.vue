@@ -2,11 +2,10 @@
   <div class="father">
     <div class="inner">
       <div class="main-content">
-        <router-link to="/L7/123/analysis">
-          <Button class="back-button">
-            <Icon type="md-arrow-back" style="font-size: 22px;margin: 0 10px 0 -6px;" />Back
+          <Button class="back-button" @click="$router.go(-1)">
+            <Icon type="md-arrow-back" />
+            Back
           </Button>
-        </router-link>
         <h1>Config analysis</h1>
       </div>
     </div>
@@ -28,18 +27,13 @@ export default {};
   padding: 20px 30px 30px;
   position: relative;
 }
-.router-link-active {
+.back-button {
+  font-weight: bold;
+  line-height: 32px;
   position: -webkit-sticky;
   position: sticky;
   top: 63px;
   z-index: 10;
-  display: block;
-  max-width: 0;
-  margin-bottom: -30px;
-}
-.back-button {
-  font-weight: bold;
-  line-height: 32px;
 }
 h1 {
   font: 36px "RobotoBold", Arial, sans-serif;

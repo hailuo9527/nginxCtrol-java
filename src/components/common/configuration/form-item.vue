@@ -63,7 +63,7 @@
                         this.showEdit = false
                     } else {
                         if (nv) { // 初始值为true
-                            console.log(1)
+                           // console.log(1)
                             if (this.important){
 
                                 if (!this.modify){ // 新增模式下
@@ -115,11 +115,11 @@
 
             },
             onlyShow(nv) {
-                console.log(this.onlyShowConfig)
+                //console.log(this.onlyShowConfig)
                 if (nv && !this.onlyShowConfig){
                     this.actionButton = nv
                 } else {
-                    console.log('423434')
+                    //console.log('423434')
                 }
 
             }

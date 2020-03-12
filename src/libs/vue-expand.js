@@ -111,8 +111,7 @@ export function formatTime(value, type) {
     }
 
     let dataTime = '';
-    let data = new Date();
-    data.setTime(value);
+    let data = new Date(value * 1000);
     let year = data.getFullYear();
     let month = data.getMonth() + 1;
     let day = data.getDate();

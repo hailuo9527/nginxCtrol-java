@@ -35,7 +35,7 @@
                 immediate: true
             },
             form: {
-                handler() {
+                handler(nv) {
                     this.valid = false  //  表单变化时重新验证
                 },
                 deep: true

@@ -24,7 +24,7 @@
             <span class="online"></span>
             {{item.l7ServerName}}
           </div>
-          <div class="info">{{item.l7ServerId}}</div>
+          <div class="info">{{item.nginxVersion}}</div>
           <Icon
             type="md-close"
             title="删除此项"

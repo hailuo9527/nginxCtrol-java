@@ -11,10 +11,21 @@ module.exports = {
     //baseUrl: '/ng/',
     publicPath: BASE_URL,
     pluginOptions: {
-      'style-resources-loader': {
-        preProcessor: 'less',
-        patterns: [path.resolve(__dirname, './src/assets/varibles.less')]
-      }
+       /* dll: {
+           entry: ['vue', 'axios','vue-router', 'view-design','vuex']
+           /!* entry: {
+                vue: ['vue'],
+                axios: ['axios'],
+                vueRouter: ['vue-router'],
+                viewDesign: ['view-design'],
+                vuex: ['vuex']
+
+            }*!/
+        },*/
+        'style-resources-loader': {
+            preProcessor: 'less',
+            patterns: [path.resolve(__dirname, './src/assets/varibles.less')]
+        }
     },
     /*chainWebpack: config => {
         if (process.env.NODE_ENV === 'production') {

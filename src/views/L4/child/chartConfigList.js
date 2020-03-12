@@ -27,7 +27,7 @@ const configList = [
             return  value + '%'
         },
         tooltipFormatter: (item) =>{
-
+            //console.log(item)
             let str = []
             let value = formatTime(item[0].axisValue,'YMDHMS')
             str.push(value)
@@ -35,7 +35,7 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push(numerify(data.value[1], '0,0%'))
+                str.push(data.value[1]+ '%')
                 str.push('<br />')
             })
 

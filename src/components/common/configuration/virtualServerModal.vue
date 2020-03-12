@@ -195,7 +195,7 @@
             },
             /* 检查是否有未保存的配置项 */
             checkEditStatus(data){
-                 console.log(data)
+                // console.log(data)
                 this.errorInfo[data.name] = data.value
                 Object.keys(this.errorInfo).map((item) => {
                     if (!this.errorInfo[item]){
@@ -207,7 +207,7 @@
                 })
             },
             prepareConfig(data) {
-               console.log(data)
+              // console.log(data)
                 Object.keys(data).map(item => {
                     this.serverForm[item] = data[item] // 拿到修改过后的配置对象
                 })
@@ -230,10 +230,10 @@
 
         },
         mounted() {
-            console.log(this.data)
+           // console.log(this.data)
         },
         beforeDestroy() {
-            console.log('yichu')
+            //console.log('yichu')
 
         }
     }

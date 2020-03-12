@@ -9,7 +9,7 @@
                    :open = "form.error_pages_state"
                    :valid="valid"
                    info="Define the response that will be shown for specific errors.">
-        <div slot="edit">
+        <div slot="edit" v-if="this.form.error_pages_state">
             <div :key="index" v-for="(item, index) in form.ngcErrorPages"  class="ctrl-edit-item ctrl-edit-item_edit mulity">
 
                 <div class="item-body">
@@ -45,7 +45,7 @@
 
         </div>
 
-        <div slot="show">
+        <div slot="show" v-if="this.form.error_pages_state">
             <div  class="ctrl-edit-item error-pages"
                   :key="index"
                   v-for="(item, index) in form.ngcErrorPages">
@@ -122,9 +122,6 @@
                 },
             }
         },
-        computed: {
-
-        },
         methods: {
             addErrorPage() {
                 //console.log(this.form.ngcErrorPages)
@@ -189,7 +186,11 @@
         },
 
         mounted() {
-            //console.log(this.form)
+           // console.log(this.data)
+            if (!this.data.error_pages_state && this.modify){
+                this.backConfig(this.data,emptyConfig.ngcVirtualServers[0])
+               // console.log(this.form)
+            }
         }
     }
 </script>

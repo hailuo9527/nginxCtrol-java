@@ -187,7 +187,7 @@
         </div >
 
         <div class="instance-actions-container" v-if="$route.params.L7">
-            <div class="instance-actions-container__info">
+            <div class="instance-actions-container__info" v-if="!this.config.nginx_conf_id">
                 <span>没有关联任何配置</span>
             </div>
             <div class="instance-actions-container__links">
@@ -371,10 +371,9 @@ export default {
                 res = await selNginxConfByL7ID(json)
             }
             this.loading = false
-            console.log(res)
+            //console.log(res)
             if (this.asyncOk(res) && res.data.result) {
                 this.config = res.data.result || {}
-                console.log(!res.data.result)
                 if (this.config.ngcVirtualServers[0]){
                     this.virtualServerGroup = this.config.ngcVirtualServers
                     this.ngcLocationsGroup = this.config.ngcVirtualServers[0].ngcLocations || []
@@ -408,7 +407,6 @@ export default {
         },
         /* 编辑location配置*/
         editLocation(index, modify) {
-            console.log(modify? '编辑': '新建')
             this.locationsIndex = index
            // console.log(this.ngcLocations)
             this.ngcLocations = modify ? this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[index] : emptyConfig.ngcVirtualServers[0].ngcLocations[0]
@@ -429,7 +427,7 @@ export default {
 
         /* 保存virtualServer */
         addVirtualServer(data) {
-            //console.log(data)
+            data.ngcLocations = this.ngcLocationsGroup
             if(!this.modify){
                 this.config.ngcVirtualServers.push(data)
             } else {
@@ -486,7 +484,6 @@ export default {
             this.submitLoading = true
             this.config.config_name = this.configName
             let res = await editNginxConf(this.config)
-            console.log(res)
             if (this.asyncOk(res)){
                 this.submitLoading = false
                 //this.selectUpstream(0)

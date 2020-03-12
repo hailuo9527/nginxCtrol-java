@@ -123,9 +123,6 @@
                 httpCodeList: []
             }
         },
-        computed: {
-
-        },
         methods: {
             addErrorPage() {
                 //console.log(this.form.ngcErrorPages)
