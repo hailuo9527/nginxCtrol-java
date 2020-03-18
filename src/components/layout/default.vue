@@ -26,7 +26,7 @@
             Header
         },
         methods: {
-            ...mapActions(['getAsideList', 'getL7AsideList']),
+            ...mapActions(['getAsideList', 'getL7AsideList', 'getAppAsideList']),
             handleSpinCustom() {
                 this.$Spin.show({
                     render: (h) => {
@@ -61,8 +61,13 @@
                     if(res.data.code === 'success') {
                         this.getL7AsideList().then(res => {
                             if(res.data.code === 'success'){
-                                this.loading = true
-                                this.$Spin.hide();
+                                this.getAppAsideList().then(res => {
+                                    if(res.data.code === 'success'){
+                                        this.loading = true
+                                        this.$Spin.hide();
+                                    }
+                                })
+
                             }
                         })
                     }

@@ -45,7 +45,7 @@
       </div>
     </div>
 
-    <Modal v-model="l7_model_add" width="360">
+    <Modal v-model="l7_model_add" width="480">
       <p slot="header" style="color:#333;text-align:center">
         <span>{{edit? '修改服务器配置': '添加NGINX服务器'}}</span>
       </p>
@@ -73,21 +73,21 @@
       </div>
       <div slot="footer">
         <Button
+                :loading="modal_loading"
+                @click="appModal = false"
+        >取消</Button>
+        <Button
           type="primary"
-          size="large"
-          long
           :loading="modal_loading"
           @click="addL7('formValidate')"
           v-if="addMoment"
-        >确认添加</Button>
+        >确认</Button>
         <Button
           type="primary"
-          size="large"
-          long
           :loading="modal_loading"
           @click="updL7ServerInfo('formValidate')"
           v-else
-        >确认修改</Button>
+        >确认</Button>
       </div>
     </Modal>
   </div>
@@ -207,7 +207,7 @@ export default {
      this.add_l7_form.l7ServerSSHPwd = '',
      this.add_l7_form.l7ServerSSHPort = '',
      this.add_l7_form.remark = ''
-     console.log(this.add_l7_form)
+    // console.log(this.add_l7_form)
      this.l7_model_add = true
     },
     //添加L7服务器配置信息
@@ -264,7 +264,14 @@ export default {
               if (res.data.code === 'success') {
                 this.l7_model_add = false;
                 this.$Message.success("修改成功")
-                this.getL7AsideList();
+                this.getL7AsideList().then(res => {
+                  if (res.data.code === 'success'){
+                    if (this.asideList.length){
+                      this.$router.push(`/L7/${this.asideList[0].app_service_name}`);
+                    }
+
+                  }
+                });;
               } else {
                   this.$Message.error(`${res.data.result}`)
               }

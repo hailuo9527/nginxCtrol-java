@@ -32,6 +32,22 @@ let defaultRoutes = [
                 component: () => import(/* webpackChunkName: "home" */ '@/views/Home/Home.vue')
             },
             {
+                path: '/app/:app',
+                meta: {
+                    title: 'app'
+                },
+
+                component: () => import(/* webpackChunkName: "home" */ '@/views/app/app.vue'),
+                children: [
+                    {
+                        name: 'app-overview',
+                        path: '',
+                        title: 'app-overview',
+                        component: () => import('@/views/app/child/overview.vue'),
+                    }
+                ]
+            },
+            {
                 path: '/L4/:L4',
                 // name: 'L4',
                 meta: {

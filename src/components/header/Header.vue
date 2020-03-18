@@ -4,20 +4,23 @@
             <div class="header_nav_item">
                 <router-link class="header_nav_item_label" to="/home">首页</router-link>
             </div>
-            <div class="header_nav_item">
+            <!--<div class="header_nav_item">
                 <router-link class="header_nav_item_label" :to="path">L4</router-link>
+            </div>-->
+            <div class="header_nav_item">
+                <router-link class="header_nav_item_label" :to="appPath">APP</router-link>
             </div>
             <div class="header_nav_item">
-                <router-link class="header_nav_item_label" :to="path7">L7</router-link>
+                <router-link class="header_nav_item_label" :to="path7">实例</router-link>
             </div>
             <div class="header_nav_item">
-                <Dropdown trigger="click"  class="black-dropdown" @on-click="toConfigs">
+                <Dropdown trigger="click"  class="black-dropdown">
                     <a class="header_nav_item_label" href="javascript:void(0)">
                         配置
                         <Icon type="ios-arrow-down"></Icon>
                     </a>
                     <DropdownMenu slot="list">
-                        <DropdownItem >四层配置</DropdownItem>
+                       <!-- <DropdownItem >四层配置</DropdownItem>-->
                         <DropdownItem name="nginxConfig">
 
                             <router-link to="/nginxConfigs">七层配置</router-link>
@@ -49,20 +52,14 @@
         data () {
           return {
               path: '',
-              path7: ''
+              path7: '',
+              appPath: '',
           }
         },
         methods: {
             dropEvent (data) {
                 //console.log(data)
             },
-            toConfigs(name) {
-                switch (name) {
-                    case 'nginxConfig':
-                       // this.$router.push('/nginxConfigs')
-
-                }
-            }
         },
         watch: {
             '$route'(to, from) {
@@ -70,6 +67,8 @@
                     this.path = `/L4/${this.activeL4.l4_code}`
                 } else if (to.path.search('/L7') !== -1) {
                     this.path7 = `/L7/${this.activeL7.l7ServerId}`
+                }else if (to.path.search('/app') !== -1) {
+                    this.appPath = `/app/${this.activeApp.app_service_id}`
                 }
             }
 
@@ -78,12 +77,14 @@
         computed: {
             ...mapState({
                 activeL4: state => state.L4.activeAside,
-                activeL7: state => state.L7.activeAside
+                activeL7: state => state.L7.activeAside,
+                activeApp: state => state.app.activeAside
             }),
         },
         mounted() {
             this.path = `/L4/${this.activeL4.l4_code}`
             this.path7 = `/L7/${this.activeL7.l7ServerId}`
+            this.appPath = `/app/${this.activeApp.app_service_id}`
         }
     }
 </script>
