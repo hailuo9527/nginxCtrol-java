@@ -196,7 +196,7 @@ export default {
     changeAside(item) {
       if (item.l7ServerId === this.l7ServerId) return;
       this.L7setActiveAside(item);
-      this.$router.push(`/L7/${item.l7ServerId}`);
+      this.$router.push(`/L7/${item.l7ServerId}/chart`);
     },
     //展示Model框，数据重置
     addModel() {
@@ -221,7 +221,12 @@ export default {
               this.modal_loading = false;
               if (res.data.code === 'success') {
                 this.l7_model_add = false;
-                this.getL7AsideList();
+                this.getL7AsideList().then(res => {
+                  /* 第一次添加 */
+                  if (this.asyncOk(res) && !this.$route.params.L7){
+                    this.$router.push(`/L7/${this.l7ServerId}/chart`)
+                  }
+                });
               } else {
                   this.$Message.error(`${res.data.result}`)
               }
@@ -245,7 +250,14 @@ export default {
           this.$Modal.remove();
           if (this.asyncOk(res)) {
             this.$Message.success("删除成功！");
-            this.getL7AsideList();
+            this.getL7AsideList().then(res => {
+              if (this.asyncOk(res) && !res.data.result.length){
+                this.$router.push(`/L7`)
+              }
+              if (code === this.$route.params.L7){
+                this.$router.push(`/L7/${this.l7ServerId}/chart`)
+              }
+            });
           } else {
             this.$Message.error("删除失败！");
           }
@@ -299,8 +311,12 @@ export default {
     }
   },
   created() {
+    this.getL7AsideList().then(res => {
+      if (this.asyncOk(res) && res.data.result.length) {
+        this.$router.push(`/L7/${this.l7ServerId}/chart`)
+      }
+    })
     if (this.$route.params.L7) {
-      //console.log(this.asideList);
       this.asideList.map(item => {
         if (item.l7ServerId === this.$route.params.L7) {
           this.L7setActiveAside(item);

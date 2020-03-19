@@ -57,7 +57,7 @@
                         ])
                     }
                 });
-                this.getAsideList().then(res => {
+                /*this.getAsideList().then(res => {
                     if(res.data.code === 'success') {
                         this.getL7AsideList().then(res => {
                             if(res.data.code === 'success'){
@@ -71,7 +71,9 @@
                             }
                         })
                     }
-                })
+                })*/
+                this.loading = true
+                this.$Spin.hide();
             }
         },
         mounted() {

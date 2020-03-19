@@ -1,7 +1,7 @@
 <template>
     <div class="content_wrap">
         <Aside/>
-        <div class="content_right">
+        <div class="content_right" v-if="asideList.length">
             <div class="content_right_scroll">
                 <div class="content_header">
                     <div class="header_title">
@@ -16,7 +16,7 @@
                         <div class="tab">
                             <!--<router-link :to="`/L4/${$route.params.id}/nginx`" class="tab_item">nginx</router-link>-->
                            <!-- <router-link :to="`/L4/${$route.params.id}`" class="tab_item">系统</router-link>-->
-                            <router-link :to="`/L4/${$route.params.L4}/`" class="tab_item">{{activeAside.l4_name}}</router-link>
+                            <router-link :to="`/L4/${$route.params.L4}/chart`" class="tab_item">{{activeAside.l4_name}}</router-link>
                             <router-link :to="`/L4/${$route.params.L4}/config`" class="tab_item">配置</router-link>
                         </div>
 
@@ -26,6 +26,12 @@
                 </div>
                 <router-view class="content_main"></router-view>
             </div>
+        </div>
+        <div class="content_right" v-else>
+            <div class="no-data">
+                暂无数据，请先去添加L4设备
+            </div>
+
         </div>
     </div>
 </template>

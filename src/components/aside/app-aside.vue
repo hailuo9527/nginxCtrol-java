@@ -92,7 +92,7 @@
         data() {
             const validateName = (rule, value, callback) => {
                 if (!value) {
-                    return callback(new Error("别名不能为空"));
+                    return callback(new Error("不能为空"));
                 } else {
                     callback();
                 }
@@ -112,10 +112,7 @@
             };
         },
         watch: {
-            asideList(newVal, oldVal) {
-                console.log(...arguments);
 
-            },
         },
         computed: {
             ...mapState({
@@ -130,7 +127,7 @@
             changeAside(item) {
                 if (item.app_service_id === this.appServerId) return;
                 this.appSetActiveAside(item);
-                this.$router.push(`/app/${item.app_service_id}`);
+                this.$router.push(`/app/${item.app_service_id}/overview`);
             },
             //展示Model框，数据重置
             addModel() {
@@ -162,7 +159,12 @@
                                 this.modal_loading = false;
                                 if (res.data.code === 'success') {
                                     this.appModal = false;
-                                    this.getAppAsideList();
+                                    this.getAppAsideList().then(res => {
+                                        /* 第一次添加 */
+                                        if (this.asyncOk(res) && !this.$route.params.app){
+                                            this.$router.push(`/app/${this.appServerId}/overview`)
+                                        }
+                                    });
                                 } else {
                                     this.$Message.error(`${res.data.result}`)
                                 }
@@ -187,12 +189,12 @@
                         if (this.asyncOk(res)) {
                             this.$Message.success("删除成功！");
                             this.getAppAsideList().then(res => {
-                                if (res.data.code === 'success'){
-                                    if (this.asideList.length){
-                                        this.$router.push(`/app/${this.asideList[0].app_service_name}`);
-                                    }
+                                if (this.asyncOk(res) && !res.data.result.length){
+                                    this.$router.push(`/app`)
                                 }
-
+                                if (id === this.$route.params.app){
+                                    this.$router.push(`/app/${this.appServerId}/overview`)
+                                }
 
                             });
                         } else {
@@ -229,9 +231,14 @@
 
         },
         created() {
+            this.getAppAsideList().then(res => {
+                if (this.asyncOk(res) && res.data.result.length) {
+                    this.$router.push(`/app/${this.appServerId}/overview`)
+                }
+            })
             if (this.$route.params.app) {
                 this.asideList.map(item => {
-                    if (item.app_service_name === this.$route.params.app) {
+                    if (item.app_service_id === this.$route.params.app) {
                         this.appSetActiveAside(item);
                     }
                 });

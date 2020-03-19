@@ -32,7 +32,7 @@ let defaultRoutes = [
                 component: () => import(/* webpackChunkName: "home" */ '@/views/Home/Home.vue')
             },
             {
-                path: '/app/:app',
+                path: '/app',
                 meta: {
                     title: 'app'
                 },
@@ -41,14 +41,14 @@ let defaultRoutes = [
                 children: [
                     {
                         name: 'app-overview',
-                        path: '',
+                        path: ':app/overview',
                         title: 'app-overview',
                         component: () => import('@/views/app/child/overview.vue'),
                     }
                 ]
             },
             {
-                path: '/L4/:L4',
+                path: '/L4',
                 // name: 'L4',
                 meta: {
                     title: 'L4'
@@ -56,7 +56,7 @@ let defaultRoutes = [
                 component: () => import(/* webpackChunkName: "L4" */ /* webpackPrefetch: true */'@/views/L4/L4.vue'),
                 children: [
                     {
-                        path: '',
+                        path: ':L4/chart',
                         name: 'L4-chart',
                         meta: {
                             title: 'L4-chart'
@@ -73,7 +73,7 @@ let defaultRoutes = [
                     },*/
                     {
                         name: 'L4-config',
-                        path: 'config',
+                        path: ':L4/config',
                         meta: {
                             title: 'L4-config'
                         },
@@ -83,7 +83,7 @@ let defaultRoutes = [
                 ]
             },
             {
-                path: 'L7/:L7',
+                path: 'L7',
                 //name: 'L7',
                 meta: {
                     title: 'L7'
@@ -91,7 +91,7 @@ let defaultRoutes = [
                 component: () => import(/* webpackChunkName: "L4" */ '@/views/L7/L7.vue'),
                 children: [
                     {
-                        path: '',
+                        path: ':L7/chart',
                         name: 'L7Chart',
                         meta: {
                             title: 'L7-chart'
@@ -99,7 +99,7 @@ let defaultRoutes = [
                         component: () => import('@/views/L4/child/chart.vue')
                     },
                     {
-                        path: 'config',
+                        path: ':L7/config',
                         name: 'L7Config',
                         meta: {
                             title: 'L7-config'
@@ -107,7 +107,7 @@ let defaultRoutes = [
                         component: () => import('@/views/L7/child/config.vue')
                     },
                     {
-                        path: 'analysis',
+                        path: ':L7/analysis',
                         meta: {
                             title: 'L7-analysis'
                         },
@@ -177,33 +177,7 @@ let defaultRoutes = [
 
                 component: () => import(/* webpackChunkName: "nginxConfigs" */ '@/views/configs/L7/config.vue')
             },
-           /* {
-                path: '/L7/:L7',
-                // name: 'L4',
-                meta: {
-                    title: 'L7'
-                },
-                component: () => import(/!* webpackChunkName: "L4" *!/ /!* webpackPrefetch: true *!/'@/views/L7/L7.vue'),
-                children: [
-                    {
-                        path: '',
-                        name: 'L7-chart',
-                        meta: {
-                            title: 'L7-chart'
-                        },
-                        component: () => import('@/views/L7/child/chart.vue')
-                    },
-                    {
-                        path: 'config',
-                        name: 'L7-config',
-                        meta: {
-                            title: 'L7-config'
-                        },
-                        component: () => import('@/views/L7/child/config.vue')
-                    },
 
-                ]
-            }*/
         ]
     },
     {
