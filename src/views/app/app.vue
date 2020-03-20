@@ -8,14 +8,24 @@
                         <span>
                           {{activeAside.app_service_name}}
                           <Icon class="icon" @click="openDrawer = true" type="md-settings" />
-                            <Drawer :title="activeAside.app_service_name" placement="left" :closable="false" v-model="openDrawer">
-                            <div>
-                                <div>
-                                    <Icon type="md-happy" />
-                                    <span>状态</span>: {{activeAside.is_sync ? '已同步': '未同步'}}
+                            <Drawer :title="activeAside.app_service_name"
+                                    width="520"
+                                    placement="left" class="left-drawer" :closable="false" v-model="openDrawer">
+                            <div class="content">
+                                <div class="row-item">
+                                    <div class="status">
+                                        <Icon type="md-happy" size="20" color="#21a37a"/>
+                                        <span>状态</span>: {{activeAside.is_sync ? '已同步': '未同步'}}
+                                    </div>
                                 </div>
-                                <div>
-                                    <p>configs</p>
+
+                                <div class="row-item">
+                                    关联的实例
+                                </div>
+                                <div class="row-item">
+                                    <div class="list-item" :key="item.l7ServerId" v-for="item in detailInfo.l7ServerInfoList">
+                                        {{item.l7ServerName}}
+                                    </div>
                                 </div>
                             </div>
 
@@ -35,7 +45,7 @@
                                 <div>
                                     <Form ref="formValidate" :model="appForm" :rules="ruleValidate">
                                         <FormItem label="虚拟IP" prop="app_vip">
-                                            <popTip content="对外开放的IP地址"></popTip>
+                                            <popTip content="对外开放的IP地址,开启热备份时必填"></popTip>
                                              <Input v-model="appForm.app_vip"></Input>
                                         </FormItem>
                                         <FormItem label="选择实例" prop="l7_server_ids">
@@ -43,14 +53,25 @@
                                             <Select v-model="appForm.l7_server_ids" filterable multiple @on-select="selectL7">
                                                 <Option v-for="item in L7List" :value="item.l7ServerId" :key="item.l7ServerId">{{ item.l7ServerName }}</Option>
                                             </Select>
+                                             <div v-if="!L7List.length" class="">
+                                                暂无实例，
+                                                <router-link to="/L7">点击创建</router-link>
+
+                                            </div>
                                         </FormItem>
-                                        <FormItem label="选择配置">
+                                        <FormItem label="选择配置" prop="nginx_conf_id">
                                             <popTip content="选择一个配置并发布到当前APP"></popTip>
                                             <Select v-model="appForm.nginx_conf_id" filterable >
                                                  <Option v-for="item in configList" :value="item.nginx_conf_id" >{{item.config_name}}</Option>
                                             </Select>
+                                             <div v-if="!configList.length" class="">
+                                                暂无配置，
+                                                <router-link to="/newNginxConfig">点击创建</router-link>
+
+                                            </div>
                                         </FormItem>
-                                        <FormItem label="是否开启热备份">
+
+                                        <FormItem label="是否开启热备份" v-if="L7List.length>1">
 
                                             <i-switch  v-model="appForm.configure_ha" >
                                                 <span slot="open">On</span>
@@ -86,7 +107,7 @@
             </div>
         </div>
         <div class="content_right" v-else>
-            <div class="no-data">暂无数据，请先去创建APP</div>
+            <div class="no-data">暂无数据，点击左侧“+”创建APP</div>
         </div>
     </div>
 </template>
@@ -95,7 +116,7 @@
     import popTip from "@/components/common/pop-tip";
     import { mapState, mapMutations, mapActions } from "vuex";
     import { pushApp } from "../../api/app";
-    import { getNginxConfALL, selL7ServerInfoAll } from "../../api/L7";
+    import { getNginxConfALL, selL7ServerInfoAll, selAppDetails } from "../../api/L7";
 
     export default {
 
@@ -109,7 +130,12 @@
             }
             const Ip = (rule, value, callback) => {
                 if (!value) {
-                    return callback(new Error("IP不能为空"));
+                    if(this.appForm.configure_ha){
+                        return callback(new Error("IP不能为空"));
+                    }else {
+                        callback()
+                    }
+
                 } else if (!/^(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/.test(value)) {
                     callback("IP格式不正确");
                 } else {
@@ -127,12 +153,16 @@
                         { required: true, validator: selection, trigger: 'change' }
                     ],
                     app_vip: [
-                        { required: true, validator: Ip }
+                        { validator: Ip }
+                    ],
+                    nginx_conf_id: [
+                        { required: true, message: '必须选择一个配置', trigger: 'change' }
                     ]
                 },
                 modal_loading: false,
                 configList: [],
-                L7List: []
+                L7List: [],
+                detailInfo: {}
 
             };
         },
@@ -144,6 +174,7 @@
             ...mapActions(['getAppAsideList']),
             publicApp() {
               this.appModal = true
+                this.appForm = this.activeAside
               this.getAllConfigInfo()
             },
             /* 发布APP */
@@ -174,6 +205,7 @@
             /* 获取配置 */
             async getAllConfigInfo () {
                 let res = await getNginxConfALL()
+                console.log(res)
                 if (this.asyncOk(res)) {
                     this.configList = res.data.result || []
                 }
@@ -190,11 +222,20 @@
             selectL7(item) {
                 //console.log(item)
 
+            },
+            /* 侧栏获取app详细信息 */
+            async selAppDetails(id) {
+                let res =await selAppDetails({id: id})
+                console.log(res)
+                if (this.asyncOk(res)) {
+                    this.detailInfo = res.data.result || {}
+                }
             }
         },
         watch: {
             openDrawer(val, oldVal) {
                 if (val) {
+                    this.selAppDetails(this.activeAside.app_server_id)
                 }
             }
         },

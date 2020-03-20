@@ -63,3 +63,16 @@ export const selAppInfoList = () => {
 }
 
 
+/*
+*   查询所有应用列表
+*
+* */
+export const selAppDetails = ({id}) => {
+    return axios.request({
+        url: '/selAppDetails',
+        method: 'post',
+        params: {
+            id
+        }
+    })
+}

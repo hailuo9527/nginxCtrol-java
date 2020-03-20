@@ -21,7 +21,8 @@
                         :key="item.app_service_id"
                 >
                     <div class="title">
-                        <span class="online"></span>
+                        <span class="online" v-if="item.is_sync"></span>
+                        <span class="offline" v-else></span>
                         {{item.app_service_name}}
                     </div>
                     <div class="info">{{item.description}}</div>
@@ -125,7 +126,7 @@
             ...mapActions(["getAppAsideList"]),
             ...mapMutations(["appSetActiveAside"]),
             changeAside(item) {
-                if (item.app_service_id === this.appServerId) return;
+                //if (item.app_service_id === this.appServerId) return;
                 this.appSetActiveAside(item);
                 this.$router.push(`/app/${item.app_service_id}/overview`);
             },

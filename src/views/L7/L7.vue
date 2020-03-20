@@ -19,9 +19,11 @@
             <div class="tab">
               <!--<router-link :to="`/L4/${$route.params.id}/nginx`" class="tab_item">nginx</router-link>-->
               <!-- <router-link :to="`/L4/${$route.params.id}`" class="tab_item">系统</router-link>-->
-              <router-link :to="`/L7/${$route.params.L7}/chart`" class="tab_item">L7-test</router-link>
-              <router-link :to="`/L7/${$route.params.L7}/config`" class="tab_item">Load Balancing</router-link>
-              <router-link :to="`/L7/${$route.params.L7}/analysis`" class="tab_item">Analys</router-link>
+              <router-link :to="`/L7/${$route.params.L7}/nginx`" class="tab_item">{{activeAside.nginxVersion}}</router-link>
+              <router-link :to="`/L7/${$route.params.L7}/chart`" class="tab_item">系统</router-link>
+
+              <router-link :to="`/L7/${$route.params.L7}/config`" class="tab_item">配置</router-link>
+              <router-link :to="`/L7/${$route.params.L7}/analysis`" class="tab_item">分析</router-link>
               <!--<div class="timezone-select">
                 UTC+08 •
                 <div class="clock">9:00</div>
@@ -53,7 +55,7 @@
 <script>
 import Aside from "@/components/aside/L7-aside.vue";
 import applyFilter from "@/components/common/filter.vue";
-import { deviceManage } from "../../api/L4";
+
 import { mapState, mapMutations } from "vuex";
 export default {
   name: "L4",
