@@ -108,7 +108,7 @@
             </div>
         </div>
         <!--upstream servers-->
-        <div class="l7_config_column column_body column_body_upstream">
+        <div class="l7_config_column column_body column_body_upstream" ref="scroll">
             <div  class="upstream-groups" >
                 <div ref="end1"
 
@@ -189,6 +189,9 @@
         <div class="instance-actions-container" v-if="$route.params.L7">
             <div class="instance-actions-container__info" v-if="!this.config.nginx_conf_id">
                 <span>没有关联任何配置</span>
+            </div>
+            <div class="instance-actions-container__info" v-else>
+                <span>关联配置：{{this.config.config_name}}</span>
             </div>
             <div class="instance-actions-container__links">
                 <router-link class="instance-actions-container__link" to="/nginxConfigs">查看全部配置</router-link>
@@ -358,6 +361,16 @@ export default {
 
 
 
+        },
+        /* 滚动重绘 */
+        checkDivScroolTop(){
+            //获取节点
+            let scrollDiv = this.$refs.scroll;
+            //绑定事件
+            scrollDiv.addEventListener('scroll', ()=> {
+                //console.log(scrollDiv.scrollTop);
+                this.drawLine()
+            });
         },
         /* 获取配置 */
         async getConfig () {
@@ -568,6 +581,7 @@ export default {
        // console.log(this.$route.params)
         /* 绘制配置关系图 */
         window.addEventListener('resize' ,this.drawLine)
+        this.checkDivScroolTop();
     },
     beforeDestroy() {
         window.removeEventListener('resize', this.drawLine)

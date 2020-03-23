@@ -128,7 +128,7 @@
             changeAside(item) {
                 //if (item.app_service_id === this.appServerId) return;
                 this.appSetActiveAside(item);
-                this.$router.push(`/app/${item.app_service_id}/overview`);
+                this.$router.replace(`/app/${item.app_service_id}/overview`);
             },
             //展示Model框，数据重置
             addModel() {
@@ -163,7 +163,7 @@
                                     this.getAppAsideList().then(res => {
                                         /* 第一次添加 */
                                         if (this.asyncOk(res) && !this.$route.params.app){
-                                            this.$router.push(`/app/${this.appServerId}/overview`)
+                                            this.$router.replace(`/app/${this.appServerId}/overview`)
                                         }
                                     });
                                 } else {
@@ -194,7 +194,7 @@
                                     this.$router.push(`/app`)
                                 }
                                 if (id === this.$route.params.app){
-                                    this.$router.push(`/app/${this.appServerId}/overview`)
+                                    this.$router.replace(`/app/${this.appServerId}/overview`)
                                 }
 
                             });
@@ -234,16 +234,19 @@
         created() {
             this.getAppAsideList().then(res => {
                 if (this.asyncOk(res) && res.data.result.length) {
-                    this.$router.push(`/app/${this.appServerId}/overview`)
+                    if(!this.$route.params.app){
+                        this.$router.replace(`/app/${this.appServerId}/overview`)
+                    } else{
+                        this.asideList.map(item => {
+                            if (item.app_service_id === this.$route.params.app) {
+                                this.appSetActiveAside(item);
+                            }
+                        });
+                    }
+
                 }
             })
-            if (this.$route.params.app) {
-                this.asideList.map(item => {
-                    if (item.app_service_id === this.$route.params.app) {
-                        this.appSetActiveAside(item);
-                    }
-                });
-            }
+
         }
     };
 </script>

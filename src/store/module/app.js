@@ -25,7 +25,7 @@ export default {
                 commit('appChangeLoadingStatus', true)
                 selAppInfoList().then(res => {
                     if (res.data.code === 'success'){
-                         console.log(res)
+                        // console.log(res)
                         commit('appSetAsideList', res.data.result || [])
                         commit('appSetActiveAside', res.data.result[0])
                         commit('appChangeLoadingStatus', false)

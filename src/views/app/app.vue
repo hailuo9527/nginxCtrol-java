@@ -9,7 +9,7 @@
                           {{activeAside.app_service_name}}
                           <Icon class="icon" @click="openDrawer = true" type="md-settings" />
                             <Drawer :title="activeAside.app_service_name"
-                                    width="520"
+                                    width="420"
                                     placement="left" class="left-drawer" :closable="false" v-model="openDrawer">
                             <div class="content">
                                 <div class="row-item">
@@ -19,13 +19,52 @@
                                     </div>
                                 </div>
 
-                                <div class="row-item">
-                                    关联的实例
+                                <div class="row-item" @click="collapsed = !collapsed">
+                                    <div class="title" :class="collapsed? 'collapsed': ''" >
+                                        <span>关联的实例</span>
+                                        <Icon type="ios-arrow-forward" size="20" class="icon"/>
+                                    </div>
+
+                                </div>
+                                <div class="row-item"  v-show="collapsed" v-if="detailInfo.l7ServerInfoList">
+                                    <div class="info-list">
+                                         <div class="list-item no-item" v-if="!detailInfo.l7ServerInfoList.length">
+                                        暂无数据， 点击发布按钮关联实例
+                                    </div>
+                                    <div class="list-item" :key="item.l7ServerId" v-for="item in detailInfo.l7ServerInfoList">
+                                        <router-link :to="`/L7/${item.l7ServerId}/chart`">
+                                            <Icon type="ios-color-filter-outline" />
+                                            {{item.l7ServerName}}
+                                        </router-link>
+
+                                    </div>
+                                    </div>
+
+                                </div>
+                                <div class="row-item" >
+                                    <div class="title"  >
+                                        <span>关联的配置</span>
+
+                                    </div>
+
                                 </div>
                                 <div class="row-item">
-                                    <div class="list-item" :key="item.l7ServerId" v-for="item in detailInfo.l7ServerInfoList">
-                                        {{item.l7ServerName}}
+                                    <div class="info-list">
+                                         <div class="list-item no-item" v-if="!detailInfo.nginxConf">
+                                        暂无数据， 点击发布按钮关联配置
+                                        </div>
+                                        <div class="list-item" v-if="detailInfo.nginxConf">
+                                            <router-link :to="{name: 'nginxConfig',
+                                            params:{configName: detailInfo.nginxConf.config_name,},
+                                            query: {nginx_conf_id: detailInfo.nginxConf.nginx_conf_id}}">
+
+                                                <Icon type="ios-color-filter-outline" />
+                                                {{detailInfo.nginxConf.config_name}}
+                                            </router-link>
+
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -115,8 +154,9 @@
     import Aside from "@/components/aside/app-aside.vue";
     import popTip from "@/components/common/pop-tip";
     import { mapState, mapMutations, mapActions } from "vuex";
-    import { pushApp } from "../../api/app";
-    import { getNginxConfALL, selL7ServerInfoAll, selAppDetails } from "../../api/L7";
+    import { pushApp, selAppDetails } from "../../api/app";
+    import { getNginxConfALL, selL7ServerInfoAll,  } from "../../api/L7";
+
 
     export default {
 
@@ -162,7 +202,8 @@
                 modal_loading: false,
                 configList: [],
                 L7List: [],
-                detailInfo: {}
+                detailInfo: {},
+                collapsed: false,
 
             };
         },
@@ -225,7 +266,7 @@
             },
             /* 侧栏获取app详细信息 */
             async selAppDetails(id) {
-                let res =await selAppDetails({id: id})
+                let res = await selAppDetails({app_server_id: this.activeAside.app_service_id})
                 console.log(res)
                 if (this.asyncOk(res)) {
                     this.detailInfo = res.data.result || {}
@@ -235,7 +276,8 @@
         watch: {
             openDrawer(val, oldVal) {
                 if (val) {
-                    this.selAppDetails(this.activeAside.app_server_id)
+                    console.log(this.activeAside.app_service_id)
+                    this.selAppDetails()
                 }
             }
         },

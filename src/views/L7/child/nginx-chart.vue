@@ -13,7 +13,7 @@
 <script>
     import MyChart from '@/components/my-chart/my-chart.vue'
     import { getChartData } from "../../../api/chart";
-    import configList from '../../L4/child/chartConfigList'
+    import configList from './chartConfigList'
     import { mapState } from 'vuex'
     export default {
         name: "chart",

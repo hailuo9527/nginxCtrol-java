@@ -2,7 +2,7 @@ const path = require('path');
 // 配置文件
 
 const TEST_URL = process.env.NODE_ENV === 'production'
-    ? 'http://wingsbro.mynetgear.com:8081'
+    ? '//192.168.1.49:8081'
     : '/'
 const BASE_URL = process.env.NODE_ENV === 'production'
     ? '//nc.naccenter.cn/ng/'

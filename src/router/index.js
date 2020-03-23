@@ -20,6 +20,7 @@ Vue.component("LoadingBar", LoadingBar)
 const router = new VueRouter({
   mode: 'history',
   base: '/ng/',
+  //base: '/',
   routes
 });
 

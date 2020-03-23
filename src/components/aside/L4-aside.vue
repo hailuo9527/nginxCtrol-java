@@ -97,7 +97,7 @@
             changeAside (item) {
                 if(item.l4_code === this.l4_code) return
                 this.setActiveAside(item)
-                this.$router.push(`/L4/${item.l4_code}/chart`)
+                this.$router.replace(`/L4/${item.l4_code}/chart`)
             },
             addL4(name) {
                 this.$refs[name].validate((valid) => {
@@ -111,7 +111,7 @@
                                 this.getAsideList().then(res => {
                                     /* 第一次添加 */
                                     if (this.asyncOk(res) && !this.$route.params.L4){
-                                        this.$router.push(`/L4/${this.l4_code}/chart`)
+                                        this.$router.replace(`/L4/${this.l4_code}/chart`)
                                     }
                                 })
                             }
@@ -138,7 +138,7 @@
                                     this.$router.push(`/L4`)
                                 }
                                 if (code === this.$route.params.L4){
-                                    this.$router.push(`/L4/${this.l4_code}/chart`)
+                                    this.$router.replace(`/L4/${this.l4_code}/chart`)
                                 }
                             })
                         } else {
@@ -151,16 +151,18 @@
         created() {
             this.getAsideList().then(res => {
                 if (this.asyncOk(res) && res.data.result.length) {
-                    this.$router.push(`/L4/${this.l4_code}/chart`)
+                    if(!this.$route.params.L4){
+                        this.$router.replace(`/L4/${this.l4_code}/chart`)
+                    }else{
+                        this.asideList.map((item) => {
+                            if(item.l4_code === this.$route.params.L4) {
+                                this.setActiveAside(item)
+                            }
+                        })
+                    }
+
                 }
             })
-            if (this.$route.params.L4){
-                this.asideList.map((item) => {
-                    if(item.l4_code === this.$route.params.L4) {
-                        this.setActiveAside(item)
-                    }
-                })
-            }
         },
     }
 </script>

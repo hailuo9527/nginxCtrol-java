@@ -7,13 +7,9 @@
           <div class="header_title">
             <span>
               {{activeAside.l7ServerName}}
-              <Icon class="icon" @click="openDrawer = true" type="md-settings" />
+              <!--<Icon class="icon" @click="openDrawer = true" type="md-settings" />-->
             </span>
-            <Drawer title="Basic Drawer" placement="left" :closable="false" v-model="openDrawer">
-              <p>{{test}}</p>
-              <p>Some contents...</p>
-              <p>Some contents...</p>
-            </Drawer>
+
           </div>
           <div class="header_tab">
             <div class="tab">
