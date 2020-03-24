@@ -55,7 +55,7 @@
                     } else {
                         console.log(valid)
                         this.valid = false
-                        this.$Message.error('Fail!');
+                        this.$Message.error('校验失败，请检查输入是否有误!');
                     }
                 })
             },

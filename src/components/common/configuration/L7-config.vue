@@ -187,12 +187,29 @@
         </div >
 
         <div class="instance-actions-container" v-if="$route.params.L7">
-            <div class="instance-actions-container__info" v-if="!this.config.nginx_conf_id">
-                <span>没有关联任何配置</span>
+            <div class="instance-actions-container__info" >
+                <div class="tip">
+                    <span v-if="!config.nginx_conf_id">没有关联任何配置</span>
+                    <span v-else>关联配置：
+                     <router-link :to="{name: 'nginxConfig',
+                                            params:{configName: config.config_name,},
+                                            query: {nginx_conf_id: config.nginx_conf_id}}">
+                                                {{config.config_name}}
+                      </router-link>
+                    </span>
+                </div>
+                <div class="tip">
+                    <span v-if="!relevanceApp">没有关联任何APP</span>
+                    <span v-else>关联APP：
+                     <router-link :to="`/app/${relevanceApp.app_service_id}/overview`">
+
+                                                {{relevanceApp.app_service_name}}
+                      </router-link>
+                    </span>
+                </div>
+
             </div>
-            <div class="instance-actions-container__info" v-else>
-                <span>关联配置：{{this.config.config_name}}</span>
-            </div>
+
             <div class="instance-actions-container__links">
                 <router-link class="instance-actions-container__link" to="/nginxConfigs">查看全部配置</router-link>
                 <div class="instance-actions-container__separator"></div>
@@ -249,7 +266,7 @@ import VirtualServerModal from './virtualServerModal'
 import LocationModal from './locationModal'
 import UpstreamModal from './upstreamModal'
 import drawLine from '../../../libs/drawLine'
-import { getNginxConf,editNginxConf, previewNginxConf, selNginxConfByL7ID } from "../../../api/L7";
+import { getNginxConf,editNginxConf, previewNginxConf, selNginxConfByL7ID, getL7RelevanceConfig } from "../../../api/L7";
 import defaultConfig from './defaultConfig'
 import emptyConfig from './emptyConfig'
 import { mapState } from 'vuex'
@@ -284,7 +301,8 @@ export default {
             previewData: '',
             copyAndSaveModel: false,
             copyAndSaveModelLoading: false,
-            copyConfigName: ''
+            copyConfigName: '',
+            relevanceApp: null // 关联的app
         }
 
     },
@@ -299,7 +317,7 @@ export default {
             canSaveConfig: state => state.L7.canSaveConfig,
             canSaveAndCopyConfig: state => state.L7.canSaveAndCopyConfig,
             configName: state => state.L7.configName,
-
+            l7ServerId: state => state.L7.activeAside.l7ServerId,
         }),
     },
     components: {
@@ -384,7 +402,7 @@ export default {
                 res = await selNginxConfByL7ID(json)
             }
             this.loading = false
-            //console.log(res)
+            console.log(res)
             if (this.asyncOk(res) && res.data.result) {
                 this.config = res.data.result || {}
                 if (this.config.ngcVirtualServers[0]){
@@ -574,10 +592,19 @@ export default {
                 this.previewData = res.data.result
             }
         },
+        /* 通过实例主键ID查询该实例是否与配置文件或者APP关联 */
+        async getL7RelevanceConfig() {
+            let res = await getL7RelevanceConfig({ l7ServerId : this.l7ServerId})
+            if (this.asyncOk(res)){
+                console.log(res.data.result)
+                this.relevanceApp = res.data.result
+            }
+        }
     },
     mounted() {
         /* 初始化配置 */
         this.initConfig()
+        this.getL7RelevanceConfig()
        // console.log(this.$route.params)
         /* 绘制配置关系图 */
         window.addEventListener('resize' ,this.drawLine)
