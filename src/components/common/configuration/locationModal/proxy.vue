@@ -20,10 +20,13 @@
                     <div class="proxy_wrapper">
                         <div class="ctrl-edit-item ctrl-edit-item_edit mulity" v-for="(item, index) in form.ngcLocationHeaders">
 
-                            <FormItem label="" class="line-form-item" prop="headers_key">
+                            <FormItem label="" class="line-form-item" :prop="'ngcLocationHeaders.'+ index + '.headers_key'"
+                                      :rules="{required: true, message: '不能为空', trigger: 'blur'}"
+                            >
                                 <Input placeholder="Header" v-model.trim="item.headers_key"></Input>
                             </FormItem>
-                            <FormItem label="" class="line-form-item" prop="headers_value">
+                            <FormItem label="" class="line-form-item" :prop="'ngcLocationHeaders.'+ index + '.headers_value'"
+                                      :rules="{required: true, message: '不能为空', trigger: 'blur'}">
                                 <Input placeholder="Value" v-model.trim="item.headers_value"></Input>
                             </FormItem>
 

@@ -172,3 +172,14 @@ export const pushInstance = (ngcInstanceInfos) => {
         data: ngcInstanceInfos
     })
 }
+
+/* 通过实例主键ID查询该实例是否与配置文件或者APP关联*/
+export const getL7RelevanceConfig = ({l7ServerId}) => {
+    return axios.request({
+        url: '/getL7RelevanceConfig',
+        method: 'post',
+        params: {
+            l7ServerId
+        }
+    })
+}

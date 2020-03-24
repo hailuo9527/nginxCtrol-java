@@ -217,7 +217,7 @@ export default {
           this.modal_loading = true;
           addL7ServerInfo(this.add_l7_form)
             .then(res => {
-              console.log(res);
+             // console.log(res);
               this.modal_loading = false;
               if (res.data.code === 'success') {
                 this.l7_model_add = false;
