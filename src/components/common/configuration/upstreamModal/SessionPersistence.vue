@@ -153,7 +153,7 @@ export default {
     }
     return {
       title: "SESSION PERSISTENCE",
-      info: "Enables session affinity, which causes requests from the same client to be passed to the same server in a group of servers",
+      info: "启用会话关联，这将导致来自同一客户端的请求传递到一组服务器中的同一服务器",
       formRules: {
         cookie: [
           { required: true, message: '不能为空' },

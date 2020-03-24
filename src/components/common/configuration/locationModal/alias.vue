@@ -39,7 +39,7 @@
 
             return {
                 title: 'ALIAS',
-                info: 'Define an alias for the URI path on the filesystem when serving static content directly.',
+                info: '直接为静态内容提供服务时，为文件系统上的URI路径定义一个别名。',
                 formRules: {
                     alias_path: [
                         { required: true, message: '不能为空' }

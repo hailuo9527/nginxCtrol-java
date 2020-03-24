@@ -7,11 +7,11 @@
                    :modify="modify"
                    :open = "form.ssl_certificate_state"
                    :valid="valid"
-                   info="Specify the path to the file containing server certificate. The secret key can be placed in the certificate file or defined separately. Both the certificate and the key should be in the PEM format.">
+                   info="指定包含服务器证书的文件的路径。密钥可以放在证书文件中，也可以单独定义。证书和密钥都应采用PEM格式。">
 
         <div slot="edit" class="ctrl-edit-item ctrl-edit-item_edit">
             <div class="ctrl-edit-item__note">
-                Please enable SSL in "Listening Address and Port" and make sure you have manually uploaded both the certificate and the key to the server.
+                请在“侦听地址和端口”中启用SSL，并确保已将证书和密钥手动上载到服务器。
             </div>
             <Form ref="form" :model="form" :rules="formRules" :hide-required-mark="true"   @submit.native.prevent>
                 <FormItem label="FILE" class="line-form-item" prop="ssl_file">
@@ -25,7 +25,7 @@
 
         <div slot="show" class="ctrl-edit-item">
             <div class="ctrl-edit-item__note">
-                Please enable SSL in "Listening Address and Port" and make sure you have manually uploaded both the certificate and the key to the server.
+                请在“侦听地址和端口”中启用SSL，并确保已将证书和密钥手动上载到服务器。
             </div>
             <div class="ctrl-edit-properties__row">
                 <span class="label">FILE</span>

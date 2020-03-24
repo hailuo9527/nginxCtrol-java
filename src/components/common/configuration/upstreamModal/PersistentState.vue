@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       title: "PERSISTENT STATE",
-      info: "Specifies a file that keeps the state of the upstream group.",
+      info: "指定保留upstream group状态的文件。",
       formRules: {
         persistent_file: [
           {required: true, message: '不能为空'}

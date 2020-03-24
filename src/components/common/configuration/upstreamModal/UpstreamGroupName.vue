@@ -41,7 +41,7 @@ export default {
     };
     return {
       title: "UPSTREAM GROUP NAME",
-      info: "Define the name for a group of servers to use with the proxy_pass.",
+      info: "定义要与代理过程一起使用的一组服务器的名称。",
       formRules: {
         group_name: [
           { validator: validateName, trigger: 'blur'}

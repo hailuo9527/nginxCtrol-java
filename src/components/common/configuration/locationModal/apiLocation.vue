@@ -31,7 +31,7 @@
 
             return {
                 title: 'USE AS NGINX API LOCATION',
-                info: 'Enable read-only REST API provided by the NGINX API module. Make sure to limit the access to the API using allow/deny. For more details, please refer to the NGINX documentation.',
+                info: '启用NGINX API模块提供的只读restapi。确保使用allow/deny限制对API的访问。有关更多详细信息，请参阅NGINX文档。',
 
                 formRules: {
 

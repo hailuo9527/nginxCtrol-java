@@ -39,7 +39,7 @@
 
             return {
                 title: 'ROOT',
-                info: 'Define the root directory for the static content when serving it directly.',
+                info: '直接为静态内容提供服务时，为其定义根目录。',
                 formRules: {
                     root_path: [
                         { required: true, message: '不能为空' }

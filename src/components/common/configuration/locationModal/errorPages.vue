@@ -8,7 +8,7 @@
                    :disabled="disabled"
                    :open = "form.error_pages_state"
                    :valid="valid"
-                   info="Define the response that will be shown for specific errors.">
+                   info="定义针对特定错误显示的响应。">
         <div slot="edit" v-if="this.form.error_pages_state">
             <div :key="index" v-for="(item, index) in form.ngcErrorPages"  class="ctrl-edit-item ctrl-edit-item_edit mulity">
 

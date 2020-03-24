@@ -48,37 +48,36 @@
         class="commonOne"
         :class="changeStyle ? 'change_style' : ''"
         @click="changeStyle ? removeSelected() : ''"
-        >Unlink Instance Associations</Button
+        >解除实例关联</Button
       >
       <Button
         size="large"
         class="commonOne"
         :class="changeStyle ? 'change_style' : ''"
         @click="changeStyle ? pushsSelectedInstance() : ''"
-        >Push to selected Instances</Button
+        >推送选中实例</Button
       >
       <Button size="large" class="commonTwo" @click="pushAllInstance"
-        >Push to All Instances</Button
+        >推送所有实例</Button
       >
     </div>
     <Modal
       v-model="DeviceModal"
-      title="SELECT INSTANCES TO ASSOCIATE"
+      title="选择要关联的实例"
       width="790"
       ok-text="添加"
       @on-ok="addInstance"
     >
       <div class="main">
         <h3>
-          Select one or more instances to which you wish to associate with this
-          configuration
+          请添加一些关联。选择一个或多个要与此关联的实例配置
         </h3>
         <Select
           v-model="SelectModel"
           filterable
           multiple
           style="margin-top: 40px;"
-          placeholder="Select Instances system or tag "
+          placeholder="选择Instances system或tag"
           @on-change="GetSelectValue"
         >
           <Option

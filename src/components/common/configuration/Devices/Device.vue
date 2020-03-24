@@ -3,9 +3,9 @@
     <div v-if="show">
       <div class="configuration-associations__empty">
         <div class="configuration-associations__empty__title">
-          You don't have any instance associations yet.
+          您还没有任何实例关联
         </div>
-        Please add a few associations.
+        请添加一些实例关联
         <!-- /react-text -->
       </div>
       <div class="configuration-associations__add-new">
@@ -26,22 +26,21 @@
     </div>
     <Modal
       v-model="DeviceModal"
-      title="SELECT INSTANCES TO ASSOCIATE"
+      title="选择要关联的实例"
       width="790"
       ok-text="添加"
       @on-ok="addInstance"
     >
       <div class="main">
         <h3>
-          Select one or more instances to which you wish to associate with this
-          configuration
+          请添加一些关联。选择一个或多个要与此关联的实例配置
         </h3>
         <Select
           v-model="SelectModel"
           filterable
           multiple
           style="margin-top: 40px;"
-          placeholder="Select Instances system or tag "
+          placeholder="选择Instances system或tag"
           @on-change="GetSelectValue"
         >
           <Option

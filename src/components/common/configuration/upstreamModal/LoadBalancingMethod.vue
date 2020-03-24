@@ -43,11 +43,11 @@
            </FormItem>
          </div>
        </Form>
-      <div class="ctrl-edit-item__note" v-if="form.load_balancing_method==='weighted round-robin'">Requests are distributed between the servers using a weighted round-robin balancing method</div>
-      <div class="ctrl-edit-item__note" v-if="form.load_balancing_method==='hash'">The client-server mapping is based on the hashed key value</div>
-      <div class="ctrl-edit-item__note" v-if="form.load_balancing_method==='ip_hash'">Requests are distributed between servers based on client IP addresses</div>
-      <div class="ctrl-edit-item__note" v-if="form.load_balancing_method==='least_conn'">A request is passed to the server with the least number of active connections</div>
-      <div class="ctrl-edit-item__note" v-if="form.load_balancing_method==='least_time'">A request is passed to the server with the least average response time and least number of active connections</div>
+      <div class="ctrl-edit-item__note" v-if="form.load_balancing_method==='weighted round-robin'">使用加权循环平衡方法在服务器之间分发请求</div>
+      <div class="ctrl-edit-item__note" v-if="form.load_balancing_method==='hash'">客户机-服务器映射基于散列键值</div>
+      <div class="ctrl-edit-item__note" v-if="form.load_balancing_method==='ip_hash'">请求基于客户端IP地址在服务器之间分布</div>
+      <div class="ctrl-edit-item__note" v-if="form.load_balancing_method==='least_conn'">将请求传递给活动连接数最少的服务器</div>
+      <div class="ctrl-edit-item__note" v-if="form.load_balancing_method==='least_time'">以最少的平均响应时间和最少的活动连接数将请求传递到服务器</div>
     </div>
 
     <div slot="show" class="ctrl-edit-item">
@@ -70,7 +70,7 @@ export default {
   data() {
     return {
       title: "LOAD BALANCING METHOD",
-      info: "This is the load balancing method to use against the specified upstream group.",
+      info: "这是针对指定upstream group使用的负载平衡方法。",
       formRules: {
         load_balancing_method: [
           { required: true, message: '请选择一项', trigger: 'change' }

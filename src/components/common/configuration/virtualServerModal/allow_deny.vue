@@ -7,7 +7,7 @@
                    :modify="modify"
                    :open = "form.allow_deny_state"
                    :valid="valid"
-                   info="Allow or deny access for specific IP or network.">
+                   info="允许或拒绝特定IP或网络的访问">
         <div slot="edit">
             <draggable v-model="form.ngcAllowDenies" handle=".drag-handle" @start="drag = true"
                        ghost-class="drag-item-ghost"

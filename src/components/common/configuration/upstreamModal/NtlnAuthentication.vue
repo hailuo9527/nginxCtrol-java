@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       title: "NTLM AUTHENTICATION",
-      info: "Use specific technique to proxy NTLM authentication requests to upstream servers.",
+      info: "使用特定技术将NTLM身份验证请求代理到upstream servers.。",
       formRules: {}
     };
   },

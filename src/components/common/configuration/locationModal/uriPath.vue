@@ -51,7 +51,7 @@
 
             return {
                 title: 'URI-PATH/ROUTE',
-                info: 'Location definitions are central to the request routing mechanism in NGINX. Location specifies whether NGINX will proxy a particular request or serve it directly.',
+                info: 'Location定义是NGINX中请求路由机制的核心。Location指定NGINX是代理一个特定的请求还是直接服务它。',
                 formRules: {
                     url_path_route_key: [
 

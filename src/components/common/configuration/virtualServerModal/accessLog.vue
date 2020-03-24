@@ -7,13 +7,13 @@
                    :modify="modify"
                    :open = "form.access_log_state"
                    :valid="valid"
-                   info="Enables access log for this virtual server. Log can be found at /var/log/nginx/access.log">
+                   info="启用此虚拟服务器的访问日志。日志可以在/var/Log/nginx/access.Log中找到">
         <div slot="edit">
             <div  class="ctrl-edit-item ctrl-edit-item_edit">
 
                 <div class="item-body">
                     <Form ref="form" :model="form" :rules="formRules"    @submit.native.prevent>
-                        <FormItem label="USE DEFAULT FORMAT" class="aline-center" >
+                        <FormItem label="使用默认格式" class="aline-center" >
                             <i-switch v-model="form.use_recommended_format_state" @on-change="changeStatus">
                             </i-switch>
                         </FormItem>

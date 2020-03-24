@@ -48,7 +48,7 @@
                     <PopTip
                       style="margin-left: 10px;margin-top: 2px;"
                       :size="18"
-                      content="To make this work you should setup the shared memory zone inside the upstream group.Also, the resolver directive must be specified in the http block."
+                      content="若要使此工作正常，应在upstream group内设置共享内存区域。此外，还必须在http块中指定resolver指令。"
                       placement="right"
                     ></PopTip>
                   </FormItem>
@@ -124,7 +124,7 @@ export default {
     }
     return {
       title: "UPSTREAM SERVERS",
-      info: "Specify the backend servers in the upstream group. A server is identified by an IP address or FQDN. An optional port may be specified, and the default port is 80.",
+      info: "指定upstream group中的后端服务器。服务器由IP地址或FQDN标识。可以指定可选端口，默认端口为80。",
       formRules: {
         upstream_servers_name: [
           { required: 'true', message: '不能为空' }

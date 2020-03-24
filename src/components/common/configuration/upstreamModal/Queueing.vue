@@ -50,7 +50,7 @@ export default {
     }
     return {
       title: "QUEUEING",
-      info: "If an upstream server cannot be selected immediately while processing a request, the request will be placed into the queue.",
+      info: "如果在处理请求时无法立即选择upstream server，则该请求将被放入队列中。",
       formRules: {
         queueing_number: [
           { required: true, message: '不能为空'},

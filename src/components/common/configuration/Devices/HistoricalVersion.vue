@@ -10,13 +10,13 @@
       <template slot-scope="{ row, index }" slot="button">
         <div class="column" v-if="index !== 0"></div>
         <div class="indexColumn" v-else></div>
-        <div class="circle" v-if="index === 0">{{index+1}}</div>
+        <div class="circle" v-if="index === 0">{{row.version_no}}</div>
         <div
           class="exceptIndex"
           v-if="index !== 0"
           @click="changeStyle(index)"
           :class="changestyle && num === index?'buttonStyle': '' "
-        >{{index+1}}</div>
+        >{{row.version_no}}</div>
       </template>
       <template slot-scope="{ row }" slot="name">
         <strong>{{ row.user_name }}</strong>
@@ -30,7 +30,7 @@
           v-if="row.version_name === null || row.version_name === '' "
         >
           <div class="inclusion">
-            <h4 class="add_name" @click="change(row, index)" v-if="number !== index">add name</h4>
+            <h4 class="add_name" @click="change(row, index)" v-if="number !== index">修改名称</h4>
             <Input
               v-if="StyleChange &&number === index"
               ref="res"
@@ -57,7 +57,7 @@
         </div>
       </template>
     </Table>
-    <div class="compareButton" :class="changestyle?'compareChange' : '' ">Compare and Revert...</div>
+    <div class="compareButton" :class="changestyle?'compareChange' : '' ">对比和还原...</div>
   </div>
 </template>
 

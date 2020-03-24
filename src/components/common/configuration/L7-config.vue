@@ -3,7 +3,7 @@
        <div class="l7_config_column column_header">
            <div class="header_item">
                 Virtual Servers
-               <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
+               <PopTip content="Select Instances system或tagVirtual servers是传入请求的入口点。虚拟服务器定义域名和端口、NGINX路由请求的方式以及安全策略。NGINX配置中可以定义许多虚拟服务器。" style="margin-left: 5px;" placement="bottom"></PopTip>
                <!--<Dropdown trigger="click"  :transfer="true" class="add_handler" v-if="$route.params.configName" @on-click="dropdownHandler" >
                    <Icon type="md-add" size="26" color="#333" class="add"/>
                    <DropdownMenu slot="list" >
@@ -20,21 +20,21 @@
         <div class="l7_config_column column_header">
             <div class="header_item">
                 Locations
-                <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
+                <PopTip content="Locations描述NGINX中的请求路由。Locations匹配导致对特定请求使用代理/负载平衡，或直接为内容提供服务。Locations属于虚拟服务器层次结构。可以为单个虚拟服务器定义多个Locations/routes。" style="margin-left: 5px;" placement="bottom"></PopTip>
                 <Icon type="md-add" size="26" color="#333" class="add_handler" v-if="!$route.params.L7" @click="editLocation(0,false)"/>
             </div>
         </div>
         <div  class="l7_config_column column_header">
             <div class="header_item">
                 Upstream Groups
-                <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
+                <PopTip content="Upstream Groups是用于代理/负载平衡的服务器池。Upstream Groups包含Upstream Servers定义和负载平衡选项。Upstream Groups可以在跨多个虚拟服务器的任何location/route中使用。" style="margin-left: 5px;" placement="bottom"></PopTip>
                 <Icon type="md-add" size="26" color="#333" class="add_handler" v-if="!$route.params.L7" @click="editUpstream(0, false)"/>
             </div>
         </div>
         <div class="l7_config_column column_header">
             <div class="header_item">
                 Upstream Servers
-                <PopTip content="123" style="margin-left: 5px;" placement="bottom"></PopTip>
+                <PopTip content="Upstream Servers是NGINX负载均衡器发送流量的应用程序后端。服务器定义属于Upstream Groups。Upstream Servers可以在许多Upstream Groups中定义。" style="margin-left: 5px;" placement="bottom"></PopTip>
                 <!--<Icon type="md-add" size="26" color="#333" class="add_handler"/>-->
             </div>
         </div>

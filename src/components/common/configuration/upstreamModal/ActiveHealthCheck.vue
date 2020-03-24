@@ -56,7 +56,7 @@ export default {
     }
     return {
       title: "ACTIVE HEALTHCHECK",
-      info: "Enable periodic active health checks for the servers in this upstream group.",
+      info: "为此upstream group中的服务器启用定期活动运行状况检查。",
       formRules: {
         healthcheck_url: [
           {validator: urlRule}

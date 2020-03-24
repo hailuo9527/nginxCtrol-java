@@ -164,7 +164,7 @@
 
             return {
                 title: 'PROXY',
-                info: 'Proxy requests to upstream servers.',
+                info: '向upstream servers发送代理请求。',
                 formRules: {
                     proxy_url: [
                         { validator: proxyUrl }

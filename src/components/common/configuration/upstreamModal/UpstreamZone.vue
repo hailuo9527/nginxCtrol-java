@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       title: "UPSTREAM ZONE",
-      info: "This is a shared memory zone to use with the upstream group. Upstream zone keeps the group's configuration, the run-time state, and the performance metrics/counters.",
+      info: "这是要与upstream group一起使用的共享内存区域。Upstream zone保留组的配置、运行时状态和性能度量/计数器。",
       formRules: {
         upstream_zone_name: [
           { required: true, message: '不能为空' }

@@ -39,7 +39,7 @@ export default {
     }
     return {
       title: "KEEPALIVE CONNECTION POOL",
-      info: "The keepalive connection pool can be used to reduce the latency of communications to the upstream servers.",
+      info: "keepalive连接池可用于减少到upstream servers的通信延迟。",
       formRules: {
         keepalive_connection_pool_value: [
           { required: true, message: '不能为空'},

@@ -7,7 +7,7 @@
                    :modify="modify"
                    :open = "form.domain_names_state"
                    :valid="valid"
-                   info="Domain names that are served by this virtual server. This corresponds with the server_name directive in NGINX configuration.">
+                   info="此虚拟服务器提供服务的域名。这与NGINX配置中的server_name指令相对应。">
         <div slot="edit" class="ctrl-edit-item ctrl-edit-item_edit">
             <Form ref="form" :model="form" :rules="formRules"    @submit.native.prevent>
                 <FormItem class="input line-form-item with-button" prop="domain_name">
@@ -20,7 +20,7 @@
                 </FormItem>
             </Form>
 
-            <div class="ctrl-edit-item__note">Prefix the name with ~ to use a regular expression</div>
+            <div class="ctrl-edit-item__note">在名称前面加上 ~ 以使用正则表达式</div>
         </div>
 
         <div slot="show" class="ctrl-edit-item">

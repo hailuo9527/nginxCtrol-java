@@ -8,7 +8,7 @@
                    :open = "form.error_log_state"
                    :valid="valid"
                    :onlyShow="true"
-                   info="Define the response that will be shown for specific errors.">
+                   info="定义针对特定错误显示的响应。">
         <div slot="edit" class="ctrl-edit-item ctrl-edit-item_edit">
             123
         </div>

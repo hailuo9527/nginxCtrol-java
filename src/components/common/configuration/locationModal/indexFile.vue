@@ -51,7 +51,7 @@
             };
             return {
                 title: 'INDEX FILES',
-                info: 'Define the response that will be shown for specific errors.',
+                info: '定义针对特定错误显示的响应。',
                 formRules: {
                     indexFile: [
                         { validator: indexFile }

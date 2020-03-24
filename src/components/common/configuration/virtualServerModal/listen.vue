@@ -8,7 +8,7 @@
                    :modify="modify"
                    :valid="valid"
                    :important="true"
-                   info="Address and port (IPv4 or IPv6) or UNIX domain socket path on which the server will accept requests.">
+                   info="服务器将接受请求的地址和端口（IPv4或IPv6）或UNIX domain socket路径。">
 
         <div slot="edit">
             <div :key="index" v-for="(item, index) in form.ngcListenings" class="ctrl-edit-item ctrl-edit-item_edit mulity">
