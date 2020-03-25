@@ -120,6 +120,8 @@ export default {
         } else {
           this.loading = false;
         }
+      } else {
+        this.loading = false;
       }
     },
     // 查询所有L7服务器配置信息
