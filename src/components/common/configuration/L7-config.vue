@@ -458,7 +458,7 @@ export default {
 
         /* 保存virtualServer */
         addVirtualServer(data) {
-            data.ngcLocations = this.ngcLocationsGroup
+            //data.ngcLocations = this.ngcLocationsGroup
             if(!this.modify){
                 this.config.ngcVirtualServers.push(data)
             } else {
@@ -488,7 +488,7 @@ export default {
         selectVirtualServer(index) {
             this.virtualServerIndex = index
             this.ngcVirtualServers = this.config.ngcVirtualServers[this.virtualServerIndex]
-           // console.log(this.ngcVirtualServers)
+            console.log(this.ngcVirtualServers)
             this.ngcLocationsGroup =  this.ngcVirtualServers.ngcLocations
             this.locationsIndex = null
         },
