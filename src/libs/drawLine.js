@@ -43,7 +43,7 @@ function drawLine (canvas, start, end) {
     /* 获取画笔结束位置 */
     function getLineEnd(obj) {
         if (!obj) return
-        let x = getPosition(obj).x - 10
+        let x = getPosition(obj).x
         let y = getPosition(obj).y + obj.getBoundingClientRect().height / 2
         return {
             x: x,
@@ -73,7 +73,8 @@ function drawLine (canvas, start, end) {
     if(getLineStart(start).y > getLineEnd(end).y){
         y2= y1-r
     }
-    if ( getLineStart(start).y === getLineEnd(end).y ) { // 水平连线时
+    //console.log(getLineStart(start).y ,getLineEnd(end).y )
+    if ( parseInt(getLineStart(start).y) === parseInt(getLineEnd(end).y) ) { // 水平连线时
         ctx.lineTo(getLineEnd(end).x, getLineEnd(end).y);
     } else {
         ctx.arcTo(x1, y1, x2, y2, r);   // 创建一个弧
@@ -86,8 +87,8 @@ function drawLine (canvas, start, end) {
         ctx.arcTo(x3, y3, x4, y4, r);   // 创建一个弧
     }
 
-    ctx.strokeStyle="#e5e5e5";
-    ctx.lineWidth=3;
+    ctx.strokeStyle="#d8d8d8";
+    ctx.lineWidth=2;
     ctx.stroke();
 
 

@@ -50,10 +50,10 @@
 
                     if (valid) {
                         this.valid = true
-                        console.log(this.form)
+                        //console.log(this.form)
                         this.$emit('readyOk', this.form)
                     } else {
-                        console.log(valid)
+                        //console.log(valid)
                         this.valid = false
                         this.$Message.error('校验失败，请检查输入是否有误!');
                     }

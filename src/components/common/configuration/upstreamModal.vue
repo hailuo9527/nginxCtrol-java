@@ -226,14 +226,9 @@ export default {
     },
 
     handleSubmit() {
-
-      console.log('保存')
       // 验证是否有未确认的更改
-       console.log(this.errorInfo)
       let flag = true
-
       Object.keys(this.errorInfo).map((item) => {
-        console.log(this.errorInfo[item])
         if (this.errorInfo[item]){
           flag = false
           this.errorTip = {
@@ -243,7 +238,6 @@ export default {
         }
       })
       if (flag) {
-        console.log(this.serverForm)
         this.$emit('submit', this.serverForm)
         this.change(false)
       }
@@ -263,7 +257,6 @@ export default {
       })
     },
     prepareConfig(data) {
-      console.log(data)
       Object.keys(data).map(item => {
         this.serverForm[item] = data[item] // 拿到修改过后的配置对象
       })
