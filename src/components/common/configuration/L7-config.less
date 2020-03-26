@@ -124,6 +124,7 @@
         border: 1px solid transparent;
         margin-bottom: 8px;
         position: relative;
+        height: 35px;
         &:hover{
           background: #e5e5e5;
           .ctrl-list-item__edit {
@@ -162,6 +163,7 @@
         border: 1px solid transparent;
         margin-bottom: 8px;
         position: relative;
+        height: 35px;
         &_corners{
           border-radius: 2px;
         }
@@ -239,6 +241,15 @@
       }
       .ctrl-list-item__corner-inner {
         background: #2a79f8!important;
+      }
+      .ctrl-list-item__corner-left, .ctrl-list-item__corner-right{
+        visibility: visible;
+      }
+    }
+    .line-selected{
+      background: #e5e5e5;
+      .ctrl-list-item__corner-inner {
+        background: #e5e5e5;
       }
       .ctrl-list-item__corner-left, .ctrl-list-item__corner-right{
         visibility: visible;

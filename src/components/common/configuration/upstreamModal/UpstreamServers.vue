@@ -161,7 +161,6 @@ export default {
       }
       this.valid = flag
       if (flag){
-        console.log(this.form)
         this.$emit('readyOk', this.form)
       } else {
         this.$Message.error('验证失败')

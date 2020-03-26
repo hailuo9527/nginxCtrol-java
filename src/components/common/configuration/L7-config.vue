@@ -66,41 +66,41 @@
             </div>
         </div>
         <!--location-->
-        <div  class="l7_config_column column_body">
+        <div  class="l7_config_column column_body" ref="locations">
             <div class="locations">
-                <div class="ctrl-list-item "
+                <div ref="start" class="ctrl-list-item "
                      @click="selectLocation(index)"
-                     v-if=""
                      v-for="(item, index) in ngcLocationsGroup"
                      :key="index"
-                     :class="locationsIndex === index ? 'list-selected' : ''"
+                     :class="{ 'list-selected' : activeLocationIndex === index, 'line-selected': item.isLine && activeLocationIndex === null }"
                 >
-                    <span class="ctrl-location "
-                          :class="item.url_path_route_value === '/' ? 'ctrl-location_default' : ''"
-                          @click="locationsIndex=index">
+                        <span class="ctrl-location "
+                              :class="item.url_path_route_value === '/' ? 'ctrl-location_default' : ''"
+                              @click="locationsIndex=index">
                         <span>{{item.url_path_route_value|| '无'}}</span>
                         <span class="ctrl-location__label">{{item.url_path_route_value === '/' ? 'default route': ''}}</span>
-                    </span>
-                    <Icon type="md-create" class="ctrl-list-item__edit" @click="editLocation(index,true)"/>
+                        </span>
+                        <Icon type="md-create" class="ctrl-list-item__edit" @click="editLocation(index,true)"/>
                 </div>
+
 
             </div>
         </div>
         <!--upstream groups-->
-        <div  class="l7_config_column column_body column_body_upstream">
+        <div  class="l7_config_column column_body column_body_upstream" ref="upstreamGroup">
             <div class="upstream-groups">
-                <div ref="start1"
+                <div
                      v-if="config.ngcUpstreamGroups.length"
                      v-for="(item, key) in config.ngcUpstreamGroups"
-                     :class="upstreamIndex === key ? 'list-selected': ''"
+                     :class="{'list-selected':upstreamIndex === key , 'line-selected': item.isLine && activeLocationIndex!== null}"
                      @click="selectUpstream(key)"
                      class="ctrl-list-item ctrl-list-item_corners ">
-                        <span class="ctrl-list-item__corner-left">
+                        <span ref="end" class="ctrl-list-item__corner-left">
                             <span class="ctrl-list-item__corner-inner"></span>
                         </span>
                         <span>{{item.group_name}}</span>
                         <Icon type="md-create" class="ctrl-list-item__edit" @click="editUpstream(key, true)"/>
-                        <span class="ctrl-list-item__corner-right">
+                        <span ref="start1" class="ctrl-list-item__corner-right">
                             <span class="ctrl-list-item__corner-inner"></span>
                         </span>
                 </div>
@@ -108,15 +108,14 @@
             </div>
         </div>
         <!--upstream servers-->
-        <div class="l7_config_column column_body column_body_upstream" ref="scroll">
+        <div class="l7_config_column column_body column_body_upstream" ref="upstreamServers">
             <div  class="upstream-groups" >
-                <div ref="end1"
-
+                <div
                      v-for="(item, end) in ngcUpstreamServers"
                      :class="upstreamServerIndex === end? 'list-selected':'' "
                      @click="selectUpServer(end)"
                      class="ctrl-list-item ctrl-list-item_corners default ">
-                    <span class="ctrl-list-item__corner-left">
+                    <span ref="end1" class="ctrl-list-item__corner-left">
                         <span class="ctrl-list-item__corner-inner"></span>
                     </span>
                     <!--<span>{{item.upstream_servers_name}}</span>-->
@@ -356,38 +355,64 @@ export default {
             }
 
         },
-
-        /* 绘制关系图*/
-        drawLine () {
-
+        /* 重置画布 */
+        clearCanvas() {
             let canvas = document.getElementById("canvas");
             const context = canvas.getContext('2d');
             context.clearRect(0, 0, canvas.width, canvas.height);
-            this.$nextTick(() => {
-                //console.log(this.$refs.end1)
-                if (!this.$refs.end1) return
+        },
+        /* 绘制关系图*/
+        drawGroupToServers (start, end) {
+            this.clearCanvas()
+            this.$nextTick(()=>{
                 if(this.upstreamServerIndex !== null){
-                    drawLine(this.$refs.canvas, this.$refs.start1[this.upstreamIndex], this.$refs.end1[this.upstreamServerIndex])
+                    drawLine(this.$refs.canvas, start[this.upstreamIndex], end[this.upstreamServerIndex])
                 }else {
-                    this.$refs.end1.map((item,index)=> {
-                        drawLine(this.$refs.canvas, this.$refs.start1[this.upstreamIndex], this.$refs.end1[index])
+                    end.map((item,index)=> {
+                        drawLine(this.$refs.canvas, start[this.upstreamIndex], end[index])
                     })
                 }
             })
+        },
+        drawLocationsToGroup(start, end ){
+            this.clearCanvas()
+            if(this.activeLocationIndex !== null){
+                this.config.ngcUpstreamGroups.map((value, key)=> {
+                    if (this.ngcLocationsGroup[this.activeLocationIndex].proxy_url.split('//')[1] === value.group_name){
+                        value.isLine = true
+                        drawLine(this.$refs.canvas, start[this.activeLocationIndex], end[key])
+                    } else {
+                        value.isLine = false
+                    }
+                })
+            } else{
+                this.ngcLocationsGroup.map((item,index)=> {
 
-
-
-
-
+                    if (item.proxy_url.split('//')[1] === this.config.ngcUpstreamGroups[this.upstreamIndex].group_name){
+                        this.$set(item, 'isLine', true)
+                        drawLine(this.$refs.canvas, start[index], end[this.upstreamIndex])
+                    }else{
+                        this.$set(item, 'isLine', false)
+                    }
+                })
+            }
+        },
+        drawLine() {
+            this.drawGroupToServers(this.$refs.start1, this.$refs.end1)
+            this.drawLocationsToGroup(this.$refs.start, this.$refs.end)
         },
         /* 滚动重绘 */
-        checkDivScroolTop(){
+        checkDivScrollTop(el, callback, start, end){
             //获取节点
-            let scrollDiv = this.$refs.scroll;
+            let scrollDiv = this.$refs[el];
             //绑定事件
-            scrollDiv.addEventListener('scroll', ()=> {
-                //console.log(scrollDiv.scrollTop);
-                this.drawLine()
+            scrollDiv.addEventListener('scroll', () => {
+                if ( start &&  end) {
+                    callback(start, end)
+
+                } else {
+                    callback()
+                }
             });
         },
         /* 获取配置 */
@@ -402,7 +427,7 @@ export default {
                 res = await selNginxConfByL7ID(json)
             }
             this.loading = false
-            console.log(res)
+            //console.log(res)
             if (this.asyncOk(res) && res.data.result) {
                 this.config = res.data.result || {}
                 if (this.config.ngcVirtualServers[0]){
@@ -451,7 +476,7 @@ export default {
             this.upstreamModal = true
             this.upstreamIndex = index
             this.ngcUpstreamGroups = modify ? this.config.ngcUpstreamGroups[index] : emptyConfig.ngcUpstreamGroups[0]
-            console.log(this.ngcUpstreamGroups)
+            //console.log(this.ngcUpstreamGroups)
             this.modify = modify
 
         },
@@ -488,21 +513,32 @@ export default {
         selectVirtualServer(index) {
             this.virtualServerIndex = index
             this.ngcVirtualServers = this.config.ngcVirtualServers[this.virtualServerIndex]
-            console.log(this.ngcVirtualServers)
+            //console.log(this.ngcVirtualServers)
             this.ngcLocationsGroup =  this.ngcVirtualServers.ngcLocations
-            this.locationsIndex = null
+            this.activeLocationIndex = null
+            this.clearCanvas()
         },
+        /* 选择location */
         selectLocation(index) {
             this.activeLocationIndex = index
+            this.upstreamIndex = null
+            this.ngcUpstreamServers = []
+
             //this.ngcLocations = this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[]
+            this.drawLocationsToGroup(this.$refs.start, this.$refs.end)
         },
         /* 切换upgroup */
         selectUpstream(index){
             this.upstreamIndex = index
             this.upstreamServerIndex = null
+            this.activeLocationIndex = null
             this.ngcUpstreamGroups = this.config.ngcUpstreamGroups[index]
             this.ngcUpstreamServers = this.ngcUpstreamGroups.ngcUpstreamServers || []
-            this.drawLine()
+            this.$nextTick(() => {
+                this.drawGroupToServers(this.$refs.start1, this.$refs.end1)
+                this.drawLocationsToGroup(this.$refs.start, this.$refs.end)
+            })
+
         },
         /* 切换upserver */
         selectUpServer(index){
@@ -587,7 +623,6 @@ export default {
         async previewConfig() {
             this.previewOpen = true
             let res = await previewNginxConf(this.config)
-            console.log(res)
             if (this.asyncOk(res)) {
                 this.previewData = res.data.result
             }
@@ -596,7 +631,6 @@ export default {
         async getL7RelevanceConfig() {
             let res = await getL7RelevanceConfig({ l7ServerId : this.l7ServerId})
             if (this.asyncOk(res)){
-                console.log(res.data.result)
                 this.relevanceApp = res.data.result
             }
         }
@@ -608,7 +642,14 @@ export default {
        // console.log(this.$route.params)
         /* 绘制配置关系图 */
         window.addEventListener('resize' ,this.drawLine)
-        this.checkDivScroolTop();
+    },
+    updated() {
+      console.log('update')
+        //this.drawLine()
+        //this.clearCanvas()
+        this.checkDivScrollTop('locations', this.drawLocationsToGroup, this.$refs.start, this.$refs.end);
+        this.checkDivScrollTop('upstreamGroup', this.drawLine);
+        this.checkDivScrollTop('upstreamServers', this.drawGroupToServers, this.$refs.start1, this.$refs.end1);
     },
     beforeDestroy() {
         window.removeEventListener('resize', this.drawLine)
