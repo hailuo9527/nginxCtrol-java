@@ -238,6 +238,8 @@ export default {
           this.loading = false;
           this.$emit("show-change", true);
         }
+      } else {
+        this.loading = false;
       }
     },
     //选中或者取消选中时触发
