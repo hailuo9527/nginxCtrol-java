@@ -35,7 +35,7 @@
                 </div>
               </div>-->
             </div>
-            <apply-filter v-if="$route.name === 'L7Chart'" />
+            <apply-filter v-if="$route.name === 'L7Chart' || $route.name === 'L7Nginx'" />
           </div>
         </div>
         <router-view class="content_main"></router-view>

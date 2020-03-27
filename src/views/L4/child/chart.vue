@@ -42,9 +42,9 @@
         let params = {
           //code: this.$route.params.L4 ,
           code: this.$route.params.L4 ? this.$route.params.L4 : this.$route.params.L7,
-          // startTime: '2019-11-23 09:39:42',
-          // endTime: '2019-12-29 09:39:42'
-            time: this.chartFilter.value
+            startTime: this.chartFilter.key === 5 ? this.chartFilter.value[0]: '',
+            endTime: this.chartFilter.key === 5? this.chartFilter.value[1]: '',
+            time: this.chartFilter.key<5 ? this.chartFilter.value : ''
 
         }
         try {

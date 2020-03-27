@@ -7,7 +7,7 @@
         <span class="tab_item" :class="chartFilter.key === 4 ? 'active' : ''" @click="tabChange(4)">1W</span>
         <DatePicker
                 class=" date-picker"
-                :class="chartFilter.key === 5 ? 'active' : ''"
+
                 :open="open"
                 :value="value"
                 :options="options"
@@ -16,10 +16,10 @@
                 @on-change="handleChange"
                 @on-clear="handleClear"
                 @on-ok="handleOk">
-            <span @click="handleClick">
+            <span @click="handleClick" class="tab_item" :class="chartFilter.key === 5 ? 'active' : ''">
                 <Icon type="ios-calendar-outline"></Icon>
-                <template v-if="value === ''">日期</template>
-                <template v-else>{{ value }}</template>
+                <template v-if="!value[0]">日期</template>
+                <template v-else>{{ (value[0]&&value[1]) && `${value[0]} - ${value[1]}` }}</template>
             </span>
         </DatePicker>
     </div>
@@ -51,16 +51,26 @@
             ]),
             handleClick () {
                 this.open = !this.open;
-                this.tabChange(5)
+
             },
             handleChange (date) {
-                this.value = (date[0]&&date[1]) && `${date[0]} - ${date[1]}`;
+                console.log(date)
+                //this.value = (date[0]&&date[1]) && `${date[0]} - ${date[1]}`;
+                this.value = date
+
             },
             handleClear () {
                 this.open = false;
-                //this.value = '';
+                console.log('gaunbi')
+                console.log(this.value)
+                if (this.chartFilter.key === 5){
+                    this.changeChartFilter({key: 1, value: 4})
+                }
+
             },
             handleOk () {
+                console.log(this.value)
+                this.tabChange(5)
                 this.open = false;
             },
             tabChange ( index) {
@@ -86,7 +96,7 @@
                         this.changeChartFilter({key: index, value: 24*7})
                         break
                     case 5:
-
+                        this.changeChartFilter({key: index, value: this.value})
                         break
                 }
 
