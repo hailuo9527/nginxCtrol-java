@@ -1,8 +1,6 @@
 import numerify from 'numerify'
-import numerifyBytes from 'numerify/lib/plugins/bytes.umd.js'
-numerify.register('bytes', numerifyBytes)
 
-import { formatTime } from '../../../libs/vue-expand.js'
+import { formatTime, formatFileSize, formatByteSize, byteConvert } from '../../../libs/vue-expand.js'
 const configList = [
     {
         title: 'CPU 使用率%',
@@ -67,20 +65,17 @@ const configList = [
             rows: []
         },
         chartSettings: {
-            metrics: ['mem_total', 'mem_used'],
+            metrics: ['mem_total', 'mem_available'],
             dimension: ['ctime'],
             labelMap: {
                 'mem_total': '总量',
-                'mem_used': '已使用'
+                'mem_available': '可用'
             }
         },
         loading: false,
         yFormatter: function (value, index) {
-            if (value.length<5){
-                return  numerify(value, '0,0b')
-            } else {
-                return  numerify(value, '0,00b')
-            }
+
+            return formatByteSize(value)
 
         },
         tooltipFormatter: (item) =>{
@@ -92,7 +87,7 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push(numerify(data.value[1], '0,0.00b'))
+                str.push(formatFileSize(data.value[1]))
                 str.push('<br />')
             })
 
@@ -103,24 +98,21 @@ const configList = [
         title: '网络流量',
         color: ['#ff7575','#2d31e0'],
         url: '/selSysNetTraffic',
+        supUrl:'/selSysNetTrafficDiffType',
         chartData: {
             rows: []
         },
         chartSettings: {
-            metrics: ['traffic_in', 'traffic_out'],
+            metrics: ['transmitBytes', 'receiveBytes'],
             dimension: ['ctime'],
             labelMap: {
-                'traffic_in': '下载',
-                'traffic_out': '上传'
+                'transmitBytes': '下载',
+                'receiveBytes': '上传'
             },
         },
         loading: false,
         yFormatter: function (value, index) {
-            if (value.length<5){
-                return  numerify(value, '0,0b')
-            } else {
-                return  numerify(value, '0,00b')
-            }
+            return formatByteSize(value)
 
         },
         tooltipFormatter: (item) =>{
@@ -132,7 +124,7 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push(numerify(data.value[1], '0,0.00b'))
+                str.push(formatFileSize(data.value[1]))
                 str.push('<br />')
             })
 
@@ -143,24 +135,21 @@ const configList = [
          title: '磁盘使用',
          color: ['#fb9fcc','#a2e7e5'],
          url: '/selSysDiskUsage',
+         supUrl:'/selSysDiskUseDataType',
          chartData: {
              rows: []
          },
          chartSettings: {
-             metrics: ['disk_total', 'disk_used'],
+             metrics: ['disk_total', 'disk_usedavail'],
              dimension: ['ctime'],
              labelMap: {
                  'disk_total': '总量',
-                 'disk_used': '已使用'
+                 'disk_usedavail': '可用'
              },
          },
          loading: false,
          yFormatter: function (value, index) {
-             if (value.length<5){
-                 return  numerify(value, '0,0b')
-             } else {
-                 return  numerify(value, '0,00b')
-             }
+            return formatByteSize(value)
 
          },
          tooltipFormatter: (item) =>{
@@ -172,7 +161,7 @@ const configList = [
              item.map(data => {
                  str.push(data.marker)
                  str.push(data.seriesName)
-                 str.push(numerify(data.value[1], '0,0.00b'))
+                 str.push(formatFileSize(data.value[1]))
                  str.push('<br />')
              })
 
@@ -183,6 +172,7 @@ const configList = [
          title: '磁盘读写',
          color: ['#6ab1fe','#69d9d5'],
          url: '/selSysDiskIO',
+         supUrl: '/selSysDiskIODataType',
          chartData: {
              rows: []
          },
@@ -196,11 +186,7 @@ const configList = [
          },
          loading: false,
          yFormatter: function (value, index) {
-             if (value.length<5){
-                 return  numerify(value, '0,0b') + '/s'
-             } else {
-                 return  numerify(value, '0,00b') + '/s'
-             }
+            return formatByteSize(value) + '/s'
 
          },
          tooltipFormatter: (item) =>{
@@ -212,7 +198,7 @@ const configList = [
              item.map(data => {
                  str.push(data.marker)
                  str.push(data.seriesName)
-                 str.push(numerify(data.value[1], '0,0.00b') + '/s')
+                 str.push(formatFileSize(data.value[1]) + '/s')
                  str.push('<br />')
              })
 
@@ -296,17 +282,17 @@ const configList = [
              rows: []
          },
          chartSettings: {
-             metrics: ['swap_total', 'swap_used'],
+             metrics: ['swap_total', 'swap_usedavail'],
              dimension: ['ctime'],
              labelMap: {
                  'swap_total': '总量',
-                 'swap_used': '已使用'
+                 'swap_usedavail': '可用'
              },
          },
          loading: false,
          yFormatter: function (value, index) {
 
-             return  numerify(value, '0,0.0b')
+             return  formatByteSize(value)
          },
          tooltipFormatter: (item) =>{
 
@@ -317,7 +303,7 @@ const configList = [
              item.map(data => {
                  str.push(data.marker)
                  str.push(data.seriesName)
-                 str.push(numerify(data.value[1], '0,0.0b'))
+                 str.push(formatFileSize(data.value[1]))
                  str.push('<br />')
              })
 

@@ -19,7 +19,7 @@
               <router-link :to="`/L7/${$route.params.L7}/chart`" class="tab_item">系统</router-link>
 
               <router-link :to="`/L7/${$route.params.L7}/config`" class="tab_item">配置</router-link>
-              <router-link :to="`/L7/${$route.params.L7}/analysis`" class="tab_item">分析</router-link>
+              <!--<router-link :to="`/L7/${$route.params.L7}/analysis`" class="tab_item">分析</router-link>-->
               <!--<div class="timezone-select">
                 UTC+08 •
                 <div class="clock">9:00</div>

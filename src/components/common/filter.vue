@@ -61,8 +61,8 @@
             },
             handleClear () {
                 this.open = false;
-                console.log('gaunbi')
-                console.log(this.value)
+                //console.log('gaunbi')
+                //console.log(this.value)
                 if (this.chartFilter.key === 5){
                     this.changeChartFilter({key: 1, value: 4})
                 }

@@ -2,7 +2,19 @@
 <template>
   <div class="ngChart"  v-view-lazy="(e)=>firstShow(e)">
     <div class="nc-tip">
-      <p class="title">{{data.title}}</p>
+      <div class="title">
+        {{data.title}}
+        <Dropdown v-if="data.supData" @on-click="change">
+          <a href="javascript:void(0)">
+            {{supParams}}
+            <Icon type="ios-arrow-down"></Icon>
+          </a>
+          <DropdownMenu slot="list">
+            <DropdownItem v-for="(item, index) in data.supData" :name="item" :key="index">{{item}}</DropdownItem>
+
+          </DropdownMenu>
+        </Dropdown>
+      </div>
     </div>
     <div class="ngChart-item" >
       <!--:data-empty="!chartData.rows.length"-->
@@ -27,7 +39,8 @@
         type: Object,
         default: () => {}
       },
-      index: Number
+      index: Number,
+
     },
     watch: {
 
@@ -128,19 +141,32 @@
         },
         loading: true,
         empty: false,
+        supParams: null,
+      }
+    },
+    updated() {
+      //console.log(this.data.supData)
+      if (this.data.supData){
+
       }
     },
     methods: {
       firstShow(e){
-        // console.log(e)
         this.$emit('firstShowHandle',{ index: this.index, url: this.data.url })
       },
       beforeConfig(data){
         //console.log(data)
       },
       afterConfig (options) {
+        if (this.data.supData && !this.supParams){
+          this.supParams = this.data.supData[0]
+        }
         options.xAxis[0].axisLabel.interval = this.data.interval
         return options
+      },
+      change(name) {
+        this.supParams = name
+        this.$emit('firstShowHandle',{ index: this.index, url: this.data.url, supParams: this.supParams })
       }
     }
   }

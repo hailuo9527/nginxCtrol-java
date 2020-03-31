@@ -145,3 +145,75 @@ export function formatTime(value, type) {
     }
     return dataTime;
 }
+/*
+*  B转换到KB,MB,GB并保留两位小数
+* */
+export function formatFileSize(fileSize) {
+    let temp;
+    if (fileSize < 1024) {
+        return fileSize + 'B';
+    } else if (fileSize < (1024 * 1024)) {
+        temp = fileSize / 1024;
+        temp = temp.toFixed(2);
+        return temp + 'KB';
+    } else if (fileSize < (1024 * 1024 * 1024)) {
+        temp = fileSize / (1024 * 1024);
+        temp = temp.toFixed(2);
+        return temp + 'MB';
+    } else {
+        temp = fileSize / (1024 * 1024 * 1024);
+        temp = temp.toFixed(2);
+        return temp + 'GB';
+    }
+}
+
+/*
+*  B转换到KB,MB,GB并保留位小数
+* */
+export function formatByteSize(fileSize) {
+    let temp;
+    if (fileSize < 1024) {
+        return fileSize + 'B';
+    } else if (fileSize < (1024 * 1024)) {
+        temp = fileSize / 1024;
+        temp = temp.toFixed(1);
+        if (parseInt(temp) > 100){
+
+            return (temp/1000).toFixed(1) + 'MB'
+        }else {
+            return temp + 'KB';
+        }
+    } else if (fileSize < (1024 * 1024 * 1024)) {
+        temp = fileSize / (1024 * 1024);
+        temp = temp.toFixed(1);
+        if (parseInt(temp) > 100){
+
+            return (temp/1000).toFixed(1) + 'GB'
+        }else {
+            return temp + 'MB';
+        }
+
+    } else {
+        temp = fileSize / (1024 * 1024 * 1024);
+        temp = temp.toFixed(1);
+        return temp + 'GB';
+    }
+}
+
+export function byteConvert(bytes) {
+    if (isNaN(bytes)) {
+        return '';
+    }
+    var symbols = ['b', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    var exp = Math.floor(Math.log(bytes)/Math.log(2));
+    if (exp < 1) {
+        exp = 0;
+    }
+    var i = Math.floor(exp / 10);
+    bytes = bytes / Math.pow(2, 10 * i);
+
+    if (bytes.toString().length > bytes.toFixed(2).toString().length) {
+        bytes = bytes.toFixed(2);
+    }
+    return bytes + ' ' + symbols[i];
+};
