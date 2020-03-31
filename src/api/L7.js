@@ -183,3 +183,15 @@ export const getL7RelevanceConfig = ({l7ServerId}) => {
         }
     })
 }
+
+
+/* 根据主键询L7服务器配置明细信息*/
+export const selL7ServerInfo = ({l7ServerId}) => {
+    return axios.request({
+        url: '/L7/selL7ServerInfo',
+        method: 'post',
+        params: {
+            l7ServerId
+        }
+    })
+}

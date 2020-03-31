@@ -1,6 +1,6 @@
 import numerify from 'numerify'
 
-import { formatTime, formatFileSize, formatByteSize, byteConvert } from '../../../libs/vue-expand.js'
+import { formatTime, formatFileSize, formatByteSize, formatBpsSize } from '../../../libs/vue-expand.js'
 const configList = [
     {
         title: 'CPU 使用率%',
@@ -112,7 +112,7 @@ const configList = [
         },
         loading: false,
         yFormatter: function (value, index) {
-            return formatByteSize(value)
+            return formatBpsSize(value)
 
         },
         tooltipFormatter: (item) =>{
@@ -124,7 +124,7 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push(formatFileSize(data.value[1]))
+                str.push(formatBpsSize(data.value[1]))
                 str.push('<br />')
             })
 
@@ -209,6 +209,7 @@ const configList = [
          title: '磁盘延迟',
          color: ['#69d9d5','#6ab1fe'],
          url: '/selSysDiskLatency',
+         supUrl: '/selSysDiskIODataType',
          chartData: {
              rows: []
          },
@@ -261,6 +262,7 @@ const configList = [
          title: '磁盘性能指标',
          color: ['#eccc25','#ff7c7c'],
          url: '/selSysDiskIOPS',
+         supUrl: '/selSysDiskIODataType',
          chartData: {
              rows: []
          },

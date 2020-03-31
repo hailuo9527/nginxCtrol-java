@@ -7,7 +7,61 @@
           <div class="header_title">
             <span>
               {{activeAside.l7ServerName}}
-              <!--<Icon class="icon" @click="openDrawer = true" type="md-settings" />-->
+              <Icon class="icon" @click="openDrawer = true" type="md-settings" />
+              <Drawer title="实例详细信息"
+                      width="420"
+                      placement="left" class="left-drawer" :closable="false" v-model="openDrawer">
+                            <div class="content">
+                              <div class="row-item">
+                                    <div class="status">
+                                        <span>实例名称</span>: {{appInfo.l7ServerName || '无'}}
+                                    </div>
+                                </div>
+                                <div class="row-item">
+                                    <div class="status">
+                                        <span>NGINX版本号</span>: {{appInfo.nginxVersion || '无'}}
+                                    </div>
+                                </div>
+                                <div class="row-item">
+                                    <div class="status">
+                                        <span>IP地址</span>: {{appInfo.l7ServerSSHIp || '无'}}
+                                    </div>
+                                </div>
+                                <div class="row-item">
+                                    <div class="status">
+
+                                        <span>端口号</span>: {{appInfo.l7ServerSSHPort || '无'}}
+                                    </div>
+                                </div>
+
+                              <div class="row-item">
+                                    <div class="status">
+
+                                        <span>处理器</span>: {{appInfo.cpu_MHz+ 'MHZ' || '无'}}
+                                    </div>
+                                </div>
+                              <div class="row-item">
+                                    <div class="status">
+                                        <span>处理器核心</span>: {{appInfo.cpu_count+ '核' || '无'}}
+                                    </div>
+                                </div>
+                              <div class="row-item">
+                                    <div class="status">
+                                        <span>内存</span>: {{ formatFileSize(appInfo.mem_total)  || '无'}}
+                                    </div>
+                                </div>
+                              <div class="row-item">
+                                    <div class="status">
+                                        <span>磁盘</span>: {{formatFileSize(appInfo.disk_total) || '无'}}
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+
+                        </Drawer>
             </span>
 
           </div>
@@ -51,14 +105,16 @@
 <script>
 import Aside from "@/components/aside/L7-aside.vue";
 import applyFilter from "@/components/common/filter.vue";
-
+import { selL7ServerInfo } from "../../api/L7";
+import {formatFileSize} from "../../libs/vue-expand";
 import { mapState, mapMutations } from "vuex";
 export default {
   name: "L4",
   data() {
     return {
       openDrawer: false,
-      test: ""
+      test: "",
+      appInfo: {}
     };
   },
   components: {
@@ -66,11 +122,20 @@ export default {
     applyFilter
   },
   methods: {
-    ...mapMutations(["L7setActiveAside"])
+    ...mapMutations(["L7setActiveAside"]),
+    /* 获取配置详细信息 */
+    async selL7ServerInfo() {
+      let res = await selL7ServerInfo({ l7ServerId: this.activeAside.l7ServerId })
+      console.log(res)
+      if (this.asyncOk(res)){
+        this.appInfo = res.data.result || {}
+      }
+    }
   },
   watch: {
     openDrawer(val, oldVal) {
       if (val) {
+        this.selL7ServerInfo()
       }
     }
   },
@@ -95,5 +160,8 @@ export default {
   height: calc(100%);
   padding: 98px 10px 0 10px;
   //box-sizing: border-box;
+}
+.left-drawer .content .row-item .status{
+  padding-top: 15px;
 }
 </style>

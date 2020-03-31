@@ -149,6 +149,9 @@ export function formatTime(value, type) {
 *  B转换到KB,MB,GB并保留两位小数
 * */
 export function formatFileSize(fileSize) {
+    if (!fileSize) {
+        return '';
+    }
     let temp;
     if (fileSize < 1024) {
         return fileSize + 'B';
@@ -171,6 +174,9 @@ export function formatFileSize(fileSize) {
 *  B转换到KB,MB,GB并保留位小数
 * */
 export function formatByteSize(fileSize) {
+    if (!fileSize) {
+        return '';
+    }
     let temp;
     if (fileSize < 1024) {
         return fileSize + 'B';
@@ -217,3 +223,39 @@ export function byteConvert(bytes) {
     }
     return bytes + ' ' + symbols[i];
 };
+
+/*
+*  bps 比特率
+* */
+export function formatBpsSize(fileSize) {
+    if (!fileSize) {
+        return '';
+    }
+    let temp;
+    if (fileSize < 1024) {
+        return fileSize + 'bps';
+    } else if (fileSize < (1024 * 1024)) {
+        temp = fileSize / 1024;
+        temp = temp.toFixed(1);
+        if (parseInt(temp) > 100){
+
+            return (temp/1000).toFixed(1) + 'Mbps'
+        }else {
+            return temp + 'Kbps';
+        }
+    } else if (fileSize < (1024 * 1024 * 1024)) {
+        temp = fileSize / (1024 * 1024);
+        temp = temp.toFixed(1);
+        if (parseInt(temp) > 100){
+
+            return (temp/1000).toFixed(1) + 'Gbps'
+        }else {
+            return temp + 'Mbps';
+        }
+
+    } else {
+        temp = fileSize / (1024 * 1024 * 1024);
+        temp = temp.toFixed(1);
+        return temp + 'Gbps';
+    }
+}
