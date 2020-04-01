@@ -1,6 +1,6 @@
 import numerify from 'numerify'
 
-import { formatTime, formatFileSize, formatByteSize, formatBpsSize } from '../../../libs/vue-expand.js'
+import { formatTime, formatFileSize, formatByteSize, formatBpsSize, formatBps } from '../../../libs/vue-expand.js'
 const configList = [
     {
         title: 'CPU 使用率%',
@@ -124,7 +124,7 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push(formatBpsSize(data.value[1]))
+                str.push(formatBps(data.value[1]))
                 str.push('<br />')
             })
 

@@ -247,11 +247,32 @@ export function formatBpsSize(fileSize) {
         temp = fileSize / (1024 * 1024);
         temp = temp.toFixed(1);
         if (parseInt(temp) > 100){
-
             return (temp/1000).toFixed(1) + 'Gbps'
         }else {
             return temp + 'Mbps';
         }
+
+    } else {
+        temp = fileSize / (1024 * 1024 * 1024);
+        temp = temp.toFixed(1);
+        return temp + 'Gbps';
+    }
+}
+export function formatBps(fileSize) {
+    if (!fileSize) {
+        return '';
+    }
+    let temp;
+    if (fileSize < 1024) {
+        return fileSize + 'bps';
+    } else if (fileSize < (1024 * 1024)) {
+        temp = fileSize / 1024;
+        temp = temp.toFixed(1);
+        return temp + 'Kbps';
+    } else if (fileSize < (1024 * 1024 * 1024)) {
+        temp = fileSize / (1024 * 1024);
+        temp = temp.toFixed(1);
+        return temp + 'Mbps';
 
     } else {
         temp = fileSize / (1024 * 1024 * 1024);
