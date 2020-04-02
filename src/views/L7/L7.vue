@@ -19,6 +19,16 @@
                                 </div>
                                 <div class="row-item">
                                     <div class="status">
+                                        <span>实例是否可用</span>: {{appInfo.usable_status ? '可用' : '不可用'}}
+                                    </div>
+                                </div>
+                                <div class="row-item">
+                                    <div class="status">
+                                        <span>NGINX是否启用</span>: {{appInfo.run_status ? '已启用' : '未启用'}}
+                                    </div>
+                                </div>
+                                <div class="row-item">
+                                    <div class="status">
                                         <span>NGINX版本号</span>: {{appInfo.nginxVersion || '无'}}
                                     </div>
                                 </div>
