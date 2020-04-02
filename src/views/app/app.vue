@@ -217,6 +217,7 @@
               this.appModal = true
                 this.appForm = this.activeAside
               this.getAllConfigInfo()
+                this.selUsableL7Server()
             },
             /* 发布APP */
             pushApp(name) {
@@ -246,15 +247,13 @@
             /* 获取配置 */
             async getAllConfigInfo () {
                 let res = await getNginxConfALL()
-                console.log(res)
                 if (this.asyncOk(res)) {
                     this.configList = res.data.result || []
                 }
             },
             /* 获取L7实例 */
             async selUsableL7Server() {
-                let res = await selUsableL7Server({ app_service_id: this.activeAside.app_service_id})
-                //console.log(res)
+                let res = await selUsableL7Server({ app_service_id: this.$route.params.app})
                 if (this.asyncOk(res)) {
                     this.L7List = res.data.result || []
                 }
@@ -276,7 +275,7 @@
         watch: {
             openDrawer(val, oldVal) {
                 if (val) {
-                    console.log(this.activeAside.app_service_id)
+                    //console.log(this.activeAside.app_service_id)
                     this.selAppDetails()
                 }
             }
@@ -286,9 +285,6 @@
                 asideList: state => state.app.asideList,
                 activeAside: state => state.app.activeAside
             })
-        },
-        created() {
-            this.selUsableL7Server()
         },
         beforeRouteLeave(to, from, next) {
             // 导航离开该组件的对应路由时调用

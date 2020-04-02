@@ -127,7 +127,8 @@ export default {
     // 查询可用（空闲）的nginx实例
     async getL7ServerInfoAll() {
       this.DeviceModal = true;
-      let res = await selUsableL7Server();
+      let res = await selUsableL7Server({app_service_id: ''});
+      //console.log(res)
       if (this.asyncOk(res)) {
         this.List = res.data.result;
       }
