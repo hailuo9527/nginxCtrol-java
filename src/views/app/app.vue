@@ -155,7 +155,7 @@
     import popTip from "@/components/common/pop-tip";
     import { mapState, mapMutations, mapActions } from "vuex";
     import { pushApp, selAppDetails } from "../../api/app";
-    import { getNginxConfALL, selL7ServerInfoAll,  } from "../../api/L7";
+    import { getNginxConfALL, selL7ServerInfoAll, selUsableL7Server } from "../../api/L7";
 
 
     export default {
@@ -252,8 +252,8 @@
                 }
             },
             /* 获取L7实例 */
-            async selL7ServerInfoAll() {
-                let res = await selL7ServerInfoAll()
+            async selUsableL7Server() {
+                let res = await selUsableL7Server()
                 //console.log(res)
                 if (this.asyncOk(res)) {
                     this.L7List = res.data.result || []
@@ -267,7 +267,7 @@
             /* 侧栏获取app详细信息 */
             async selAppDetails(id) {
                 let res = await selAppDetails({app_server_id: this.activeAside.app_service_id})
-                console.log(res)
+                //console.log(res)
                 if (this.asyncOk(res)) {
                     this.detailInfo = res.data.result || {}
                 }
@@ -288,7 +288,7 @@
             })
         },
         created() {
-            this.selL7ServerInfoAll()
+            this.selUsableL7Server()
         },
         beforeRouteLeave(to, from, next) {
             // 导航离开该组件的对应路由时调用

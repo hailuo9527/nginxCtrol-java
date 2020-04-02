@@ -69,7 +69,7 @@
             <div class="tab">
               <!--<router-link :to="`/L4/${$route.params.id}/nginx`" class="tab_item">nginx</router-link>-->
               <!-- <router-link :to="`/L4/${$route.params.id}`" class="tab_item">系统</router-link>-->
-              <router-link :to="`/L7/${$route.params.L7}/nginx`" class="tab_item">{{activeAside.nginxVersion}}</router-link>
+              <router-link :to="`/L7/${$route.params.L7}/nginx`" class="tab_item">{{activeAside.nginxVersion || 'NGINX version'}}</router-link>
               <router-link :to="`/L7/${$route.params.L7}/chart`" class="tab_item">系统</router-link>
 
               <router-link :to="`/L7/${$route.params.L7}/config`" class="tab_item">配置</router-link>

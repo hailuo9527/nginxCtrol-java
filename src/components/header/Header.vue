@@ -22,7 +22,6 @@
                     <DropdownMenu slot="list">
                        <!-- <DropdownItem >四层配置</DropdownItem>-->
                         <DropdownItem name="nginxConfig">
-
                             <router-link to="/nginxConfigs">七层配置</router-link>
                         </DropdownItem>
                     </DropdownMenu>

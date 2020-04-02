@@ -21,10 +21,10 @@
           :key="item.l7ServerId"
         >
           <div class="title">
-            <span class="online"></span>
+            <span :class="item.status ? 'online' : 'error'"></span>
             {{item.l7ServerName}}
           </div>
-          <div class="info">{{item.nginxVersion}}</div>
+          <div class="info">{{item.nginxVersion || 'NGINX安装失败或未安装'}}</div>
           <Icon
             type="md-close"
             title="删除此项"
@@ -331,4 +331,5 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "aside";
+
 </style>

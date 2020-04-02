@@ -69,16 +69,20 @@
               this.getChartData(data)
           }else {
               /* 首次执行 */
+              //console.log('首次执行')
               if (this.list[data.index].supUrl ){
                   let json = {
                       code: this.$route.params.L4 ? this.$route.params.L4 : this.$route.params.L7
                   }
                   let res = await getSupData(this.list[data.index].supUrl, json)
-                  //console.log(res)
+                  console.log(res)
                   if(res.data.code === 'success') {
-                      this.supData = res.data.result
-                      this.$set(this.list[data.index], 'supData', res.data.result)
-                      this.getChartData(data)
+                      this.supData = res.data.result.length ? res.data.result : null
+                      this.$set(this.list[data.index], 'supData', this.supData)
+                      if (res.data.result.length){
+                          this.getChartData(data)
+                      }
+
                   }
 
 

@@ -195,3 +195,11 @@ export const selL7ServerInfo = ({l7ServerId}) => {
         }
     })
 }
+
+/* 查询可用（空闲）的nginx实例*/
+export const selUsableL7Server = () => {
+    return axios.request({
+        url: '/L7/selUsableL7Server',
+        method: 'post',
+    })
+}
