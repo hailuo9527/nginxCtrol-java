@@ -253,7 +253,7 @@
             },
             /* 获取L7实例 */
             async selUsableL7Server() {
-                let res = await selUsableL7Server()
+                let res = await selUsableL7Server({ app_service_id: this.activeAside.app_service_id})
                 //console.log(res)
                 if (this.asyncOk(res)) {
                     this.L7List = res.data.result || []

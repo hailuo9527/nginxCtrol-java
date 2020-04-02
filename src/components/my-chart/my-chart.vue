@@ -5,7 +5,7 @@
       <div class="title">
         {{data.title}}
         <Dropdown v-if="data.supData" @on-click="change">
-          <a href="javascript:void(0)">
+          <a href="javascript:void(0)" v-if="data.supData.length">
             {{supParams}}
             <Icon type="ios-arrow-down"></Icon>
           </a>
@@ -142,12 +142,6 @@
         loading: true,
         empty: false,
         supParams: null,
-      }
-    },
-    updated() {
-      //console.log(this.data.supData)
-      if (this.data.supData){
-
       }
     },
     methods: {

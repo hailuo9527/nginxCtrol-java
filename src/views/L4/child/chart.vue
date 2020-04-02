@@ -45,22 +45,30 @@
                 startTime: this.chartFilter.key === 5 ? this.chartFilter.value[0]: '',
                 endTime: this.chartFilter.key === 5? this.chartFilter.value[1]: '',
                 time: this.chartFilter.key<5 ? this.chartFilter.value : '',
-                label : data.supParams ? data.supParams : this.supData[0]
+            }
+
+            if (this.list[data.index].supUrl){
+                if (data.supParams){
+                    params.label = data.supParams
+                }else if (this.supData[0]){
+                    params.label = this.supData[0]
+                } else {
+                    this.list[data.index].chartData.rows = []
+                    return
+                }
             }
 
             try {
                 this.list[data.index].loading = true
-                //console.log(this.supData)
                 let res = await getChartData( data.url , {...params})
-                //console.log(res)
                 if (this.asyncOk(res)){
                     this.list[data.index].interval = parseInt(res.data.result.length / 6)
                     this.list[data.index].chartData.rows = res.data.result || []
                     this.list[data.index].loading = false
-                    //console.log(this.list[data.index].interval)
+
                 }
             } catch (e) {
-                // console.log('rewr')
+
             }
         },
        async getData(data) {
@@ -69,20 +77,19 @@
               this.getChartData(data)
           }else {
               /* 首次执行 */
-              //console.log('首次执行')
               if (this.list[data.index].supUrl ){
+                  /* 有supUrl */
+                  this.supData = [] //清空图表下拉菜单
                   let json = {
                       code: this.$route.params.L4 ? this.$route.params.L4 : this.$route.params.L7
                   }
+                  this.list[data.index].loading = true
                   let res = await getSupData(this.list[data.index].supUrl, json)
-                  console.log(res)
+                  this.list[data.index].loading = false
                   if(res.data.code === 'success') {
-                      this.supData = res.data.result.length ? res.data.result : null
+                      this.supData = res.data.result
                       this.$set(this.list[data.index], 'supData', this.supData)
-                      if (res.data.result.length){
-                          this.getChartData(data)
-                      }
-
+                      this.getChartData(data)
                   }
 
 

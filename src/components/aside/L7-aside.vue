@@ -15,13 +15,13 @@
       <div class="aside-list-wrap">
         <div
           class="aside-item"
-          :class="item.l7ServerId === $route.params.L7 ? 'active' : ''"
+          :class="{'active': item.l7ServerId === $route.params.L7 , 'disable': !item.run_status}"
           @click="changeAside(item)"
           v-for="(item, index) in asideList"
           :key="item.l7ServerId"
         >
           <div class="title">
-            <span :class="item.status ? 'online' : 'error'"></span>
+            <span :class="item.usable_status ? 'online' : 'error'"></span>
             {{item.l7ServerName}}
           </div>
           <div class="info">{{item.nginxVersion || 'NGINX安装失败或未安装'}}</div>
@@ -73,7 +73,6 @@
       </div>
       <div slot="footer">
         <Button
-                :loading="modal_loading"
                 @click="appModal = false"
         >取消</Button>
         <Button
@@ -278,9 +277,9 @@ export default {
                 this.$Message.success("修改成功")
                 this.getL7AsideList().then(res => {
                   if (res.data.code === 'success'){
-                    if (this.asideList.length){
+                   /* if (this.asideList.length){
                       this.$router.replace(`/L7/${this.asideList[0].app_service_name}`);
-                    }
+                    }*/
 
                   }
                 });;
