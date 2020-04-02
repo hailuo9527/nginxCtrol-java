@@ -62,7 +62,7 @@
 <script>
 import DeviceTable from "@/components/common/configuration/Devices/DeviceTable.vue";
 import loading from "@/components/common/loading";
-import { selNgcInstanceList, selL7ServerInfoAll, addInstance } from "@/api/L7";
+import { selNgcInstanceList, selUsableL7Server, addInstance } from "@/api/L7";
 export default {
   components: { DeviceTable, loading },
   data() {
@@ -124,10 +124,10 @@ export default {
         this.loading = false;
       }
     },
-    // 查询所有L7服务器配置信息
+    // 查询可用（空闲）的nginx实例
     async getL7ServerInfoAll() {
       this.DeviceModal = true;
-      let res = await selL7ServerInfoAll();
+      let res = await selUsableL7Server();
       if (this.asyncOk(res)) {
         this.List = res.data.result;
       }

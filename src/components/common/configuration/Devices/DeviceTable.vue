@@ -94,7 +94,7 @@
 
 <script>
 import {
-  selL7ServerInfoAll,
+  selUsableL7Server,
   addInstance,
   delInstance,
   selNgcInstanceList,
@@ -157,10 +157,10 @@ export default {
         }
       }
     },
-    // 查询所有L7服务器配置信息
+    // 查询可用（空闲）的nginx实例
     async getL7ServerInfoAll() {
       this.DeviceModal = true;
-      let res = await selL7ServerInfoAll();
+      let res = await selUsableL7Server();
       if (this.asyncOk(res)) {
         this.List = res.data.result;
       }
