@@ -15,6 +15,7 @@
   import { getChartData, getSupData } from "../../../api/chart";
   import configList from './chartConfigList'
   import { mapState } from 'vuex'
+  import mixin from './mixins'
   export default {
     name: "chart",
     components: {
@@ -27,6 +28,7 @@
         loading: false,
         reload: true,
           supData: [],
+          timer: null
       }
     },
 
@@ -65,13 +67,19 @@
                     this.list[data.index].interval = parseInt(res.data.result.length / 6)
                     this.list[data.index].chartData.rows = res.data.result || []
                     this.list[data.index].loading = false
+                   /* this.timer = setInterval(() =>{
+                        this.list[data.index].chartData.rows.shift()
+                        this.list[data.index].chartData.rows.push({ctime: ''})
+                        //this.$set(this.list[data.index], 'markAreaData', )
+
+                    }, 1000 * 6)*/
 
                 }
             } catch (e) {
 
             }
         },
-       async getData(data) {
+        async getData(data) {
           if (data.supParams){
               /*  切换参数， 重新执行 */
               this.getChartData(data)
@@ -83,12 +91,15 @@
                   let json = {
                       code: this.$route.params.L4 ? this.$route.params.L4 : this.$route.params.L7
                   }
+                  /* 获取下拉菜单 */
                   this.list[data.index].loading = true
                   let res = await getSupData(this.list[data.index].supUrl, json)
                   this.list[data.index].loading = false
                   if(res.data.code === 'success') {
                       this.supData = res.data.result
+                      //console.log(this.supData)
                       this.$set(this.list[data.index], 'supData', this.supData)
+                      this.$set(this.list[data.index], 'supParams', this.supData[0] ? this.supData[0]: null)
                       this.getChartData(data)
                   }
 
@@ -101,6 +112,7 @@
 
 
       },
+        /* 自动更新数据 */
     },
     computed:{
       ...mapState({
@@ -109,12 +121,17 @@
     },
     watch:{
       '$route'(val,oldVal) {
+
        this.updateComponent()
       },
       chartFilter() {
         this.updateComponent()
       }
     },
+      beforeDestroy() {
+        clearInterval(this.timer);
+        this.timer = null
+      }
 
   }
 </script>

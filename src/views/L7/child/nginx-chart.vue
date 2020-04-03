@@ -49,7 +49,7 @@
                 try {
                     this.list[data.index].loading = true
                     let res = await getChartData( data.url , {...params})
-                    console.log(res)
+                    // console.log(res)
                     if (this.asyncOk(res)){
                         this.list[data.index].interval = parseInt(res.data.result.length / 6)
                         this.list[data.index].chartData.rows = res.data.result || []
@@ -69,6 +69,7 @@
         },
         watch:{
             '$route'(val,oldVal) {
+
                 this.updateComponent()
             },
             chartFilter() {

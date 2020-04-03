@@ -4,7 +4,7 @@
     <div class="nc-tip">
       <div class="title">
         {{data.title}}
-        <Dropdown v-if="data.supData" @on-click="change">
+        <Dropdown v-if="supParams" @on-click="change">
           <a href="javascript:void(0)" v-if="data.supData.length">
             {{supParams}}
             <Icon type="ios-arrow-down"></Icon>
@@ -19,16 +19,15 @@
     <div class="ngChart-item" >
       <!--:data-empty="!chartData.rows.length"-->
 
-      <ve-line :data="data.chartData" height="200px" :extend="chartExtend" :after-config="afterConfig" :before-config="beforeConfig"  :data-empty="!data.chartData.rows.length"  :settings="data.chartSettings" :loading="data.loading"></ve-line>
+      <ve-line :data="data.chartData"  height="200px" :extend="chartExtend" :after-set-option-once="afterSetOption" :after-config="afterConfig" :before-config="beforeConfig"  :data-empty="!data.chartData.rows.length"  :settings="data.chartSettings" :loading="data.loading"></ve-line>
     </div>
   </div>
 </template>
 <script>
   import VeLine from 'v-charts/lib/line.common'
   import 'v-charts/lib/style.css'
+  import 'echarts/lib/component/markArea'
   import { formatTime } from '../../libs/vue-expand.js'
-  import { getChartData } from "../../api/chart";
-  import { mapState } from 'vuex'
   export default {
     name: 'myChart',
     components: {
@@ -78,7 +77,7 @@
             item.map(data => {
               str.push(data.marker)
               str.push(data.seriesName)
-              str.push(data.value[1])
+              str.push(data.value[1] ? data.value[1] : '无数据')
               str.push('<br />')
             })
 
@@ -102,7 +101,6 @@
               type: 'dotted'
             }
           },
-
           axisLine: {
             show: true,
             lineStyle: {
@@ -111,8 +109,10 @@
           },
           axisLabel: {
             color: '#8f8f8f',
-            //interval: this.data.interval,
+            interval: this.data.interval,
             formatter: function (value, index) {
+              //console.log(value)
+              if (!value) return
               let str = formatTime(value, 'MD')
               return str
             }
@@ -131,7 +131,23 @@
           },
           markPoint: {
             symbol: 'circle'
-          }
+          },
+          markArea: {
+            silent: true,
+            itemStyle:{
+              color:'#eeeeee'
+            },
+            /*data: [
+                    [{
+                      xAxis: '1585895458',
+                      yAxis: 0
+                    }, {
+                      xAxis: '1585897200',
+                      y: '-100%'
+                    }]
+            ]*/
+          },
+
         }
       }
 
@@ -158,10 +174,21 @@
         options.xAxis[0].axisLabel.interval = this.data.interval
         return options
       },
+      afterSetOption(echart) {
+        //console.log(echart)
+        //console.log(this.data)
+      },
       change(name) {
         this.supParams = name
         this.$emit('firstShowHandle',{ index: this.index, url: this.data.url, supParams: this.supParams })
       }
+    },
+    updated() {
+      //this.supParams = this.data.supData[0]
+    },
+    mounted() {
+
+      //console.log(this.p)
     }
   }
 </script>

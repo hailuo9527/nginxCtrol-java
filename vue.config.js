@@ -11,17 +11,17 @@ module.exports = {
     //baseUrl: '/ng/',
     publicPath: TEST_URL,
     pluginOptions: {
-       /* dll: {
+        dll: {
            entry: ['vue', 'axios','vue-router', 'view-design','vuex']
-           /!* entry: {
+           /* entry: {
                 vue: ['vue'],
                 axios: ['axios'],
                 vueRouter: ['vue-router'],
                 viewDesign: ['view-design'],
                 vuex: ['vuex']
 
-            }*!/
-        },*/
+            }*/
+        },
         'style-resources-loader': {
             preProcessor: 'less',
             patterns: [path.resolve(__dirname, './src/assets/varibles.less')]

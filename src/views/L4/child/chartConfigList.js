@@ -10,6 +10,7 @@ const configList = [
             rows: []
         },
         chartSettings: {
+            digit: 3,
             metrics: ['cpu_system', 'cpu_stolen', 'cpu_user'],
             dimension: ['ctime'],
             labelMap: {
@@ -25,7 +26,6 @@ const configList = [
             return  value + '%'
         },
         tooltipFormatter: (item) =>{
-            //console.log(item)
             let str = []
             let value = formatTime(item[0].axisValue,'YMDHMS')
             str.push(value)
@@ -33,7 +33,7 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push(data.value[1]+ '%')
+                str.push(data.value[1] ? data.value[1] + '%': '无数据' )
                 str.push('<br />')
             })
 
@@ -87,7 +87,7 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push(formatFileSize(data.value[1]))
+                str.push( data.value[1]? formatFileSize(data.value[1]) : '无数据')
                 str.push('<br />')
             })
 
@@ -106,8 +106,8 @@ const configList = [
             metrics: ['transmitBytes', 'receiveBytes'],
             dimension: ['ctime'],
             labelMap: {
-                'transmitBytes': '下载',
-                'receiveBytes': '上传'
+                'transmitBytes': '上传',
+                'receiveBytes': '下载'
             },
         },
         loading: false,
@@ -124,7 +124,7 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push(formatBps(data.value[1]))
+                str.push(data.value[1] ? formatBps(data.value[1]): '无数据')
                 str.push('<br />')
             })
 
@@ -161,7 +161,7 @@ const configList = [
              item.map(data => {
                  str.push(data.marker)
                  str.push(data.seriesName)
-                 str.push(formatFileSize(data.value[1]))
+                 str.push(data.value[1] ? formatFileSize(data.value[1]) : '无数据')
                  str.push('<br />')
              })
 
@@ -198,7 +198,7 @@ const configList = [
              item.map(data => {
                  str.push(data.marker)
                  str.push(data.seriesName)
-                 str.push(formatFileSize(data.value[1]) + '/s')
+                 str.push( data.value[1] ? formatFileSize(data.value[1]) + '/s' : '无数据')
                  str.push('<br />')
              })
 
@@ -235,7 +235,7 @@ const configList = [
              item.map(data => {
                  str.push(data.marker)
                  str.push(data.seriesName)
-                 str.push(numerify(data.value[1], '0,0') + 'ms')
+                 str.push(data.value[1] ? numerify(data.value[1], '0,0') + 'ms' : '无数据')
                  str.push('<br />')
              })
 
@@ -305,7 +305,7 @@ const configList = [
              item.map(data => {
                  str.push(data.marker)
                  str.push(data.seriesName)
-                 str.push(formatFileSize(data.value[1]))
+                 str.push(data.value[1] ? formatFileSize(data.value[1]) : '无数据')
                  str.push('<br />')
              })
 

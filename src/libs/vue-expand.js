@@ -106,7 +106,7 @@ export function asyncOk(res) {
  * @returns {*}
  */
 export function formatTime(value, type) {
-    if (value == null||value==='') {
+    if (value == null||value==='' || value === undefined) {
         return null;
     }
 
@@ -175,7 +175,7 @@ export function formatFileSize(fileSize) {
 * */
 export function formatByteSize(fileSize) {
     if (!fileSize) {
-        return '';
+        return 0+ 'B';
     }
     let temp;
     if (fileSize < 1024) {
