@@ -45,6 +45,7 @@
 
     },
     data(){
+
       this.chartExtend = {
         // color: ['#333333','#5BA9FF', '#f96cb3', '#030ddd', '#ff7b7b','#ff7070', '#9bccfd','#fc9487','#59d5d0'],
         legend: {
@@ -89,7 +90,10 @@
             show: false
           },
           nameGap: 0,
-          splitNumber: 3,
+          splitNumber: 1,
+          minInterval: {
+            minInterval: 1
+          },
           axisLabel: {
             formatter: this.data.yFormatter || '{value}'
           }
@@ -110,9 +114,13 @@
           axisLabel: {
             color: '#8f8f8f',
             interval: this.data.interval,
-            formatter: function (value, index) {
+            formatter:  (value, index) => {
               //console.log(value)
               if (!value) return
+              if (this.timeInterval) {
+                let str = formatTime(value, 'HM')
+                return str
+              }
               let str = formatTime(value, 'MD')
               return str
             }
@@ -137,15 +145,15 @@
             itemStyle:{
               color:'#eeeeee'
             },
-            /*data: [
-                    [{
-                      xAxis: '1585895458',
+            data: [
+                    /*[{
+                      xAxis: '1586221561',
                       yAxis: 0
                     }, {
-                      xAxis: '1585897200',
+                      xAxis: '1586223306',
                       y: '-100%'
-                    }]
-            ]*/
+                    }]*/
+            ]
           },
 
         }
@@ -158,6 +166,7 @@
         loading: true,
         empty: false,
         supParams: null,
+        timeInterval: false
       }
     },
     methods: {
@@ -166,11 +175,37 @@
       },
       beforeConfig(data){
         //console.log(data)
+        if (data.rows.length){
+          let startTime = new Date(data.rows[0].ctime * 1000)
+          let endTime = new Date(data.rows[data.rows.length - 1].ctime * 1000)
+          // console.log(startTime, endTime)
+          this.timeInterval = startTime.setHours(0, 0, 0, 0) === endTime.setHours(0, 0, 0, 0)
+        }
+
       },
       afterConfig (options) {
         if (this.data.supData && !this.supParams){
           this.supParams = this.data.supData[0]
         }
+        //console.log(options)
+        if (this.data.markAreaData && this.data.markAreaData.length) {
+          let arr = []
+          this.data.markAreaData.map((item, index) => {
+            let markAreaDataItem = [{
+              xAxis: item.stime,
+              yAxis: 0
+            }, {
+              xAxis: item.etime,
+              y: '-100%'
+            }]
+              arr.push(markAreaDataItem)
+          })
+
+          options.series.map((item, index)=> {
+            item.markArea.data= arr
+          })
+        }
+
         options.xAxis[0].axisLabel.interval = this.data.interval
         return options
       },
@@ -183,13 +218,6 @@
         this.$emit('firstShowHandle',{ index: this.index, url: this.data.url, supParams: this.supParams })
       }
     },
-    updated() {
-      //this.supParams = this.data.supData[0]
-    },
-    mounted() {
-
-      //console.log(this.p)
-    }
   }
 </script>
 <style lang="less" scoped>

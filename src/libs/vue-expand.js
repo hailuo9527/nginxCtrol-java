@@ -137,6 +137,8 @@ export function formatTime(value, type) {
         dataTime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
     } else if (type === 'HMS') {
         dataTime = hour + ':' + minute + ':' + second;
+    } else if (type === 'HM'){
+        dataTime = hour + ':' + minute
     } else if (type === 'YM') {
         dataTime = year + '-' + month;
     }

@@ -20,7 +20,7 @@ let defaultRoutes = [
 
         path: '/',
         redirect: '/login',
-        component: () => import('@/components/layout/default.vue'),
+        component: () => import(/* webpackChunkName: "layout" */'@/components/layout/default.vue'),
         children: [
             {
                 path: '/home',
@@ -53,7 +53,7 @@ let defaultRoutes = [
                 meta: {
                     title: 'L4'
                 },
-                component: () => import(/* webpackChunkName: "L4" */ /* webpackPrefetch: true */'@/views/L4/L4.vue'),
+                component: () => import(/* webpackChunkName: "L4" */'@/views/L4/L4.vue'),
                 children: [
                     {
                         path: ':L4/chart',
@@ -61,7 +61,7 @@ let defaultRoutes = [
                         meta: {
                             title: 'L4-chart'
                         },
-                        component: () => import('@/views/L4/child/chart.vue')
+                        component: () => import(/* webpackChunkName: "L4-chart" */'@/views/L4/child/chart.vue')
                     },
                     /*{
                         path: '',
@@ -88,7 +88,7 @@ let defaultRoutes = [
                 meta: {
                     title: 'L7'
                 },
-                component: () => import(/* webpackChunkName: "L4" */ '@/views/L7/L7.vue'),
+                component: () => import(/* webpackChunkName: "L7" */ '@/views/L7/L7.vue'),
                 children: [
                     {
                         path: ':L7/nginx',
@@ -96,7 +96,7 @@ let defaultRoutes = [
                         meta: {
                             title: 'L7-chart'
                         },
-                        component: () => import('@/views/L7/child/nginx-chart.vue')
+                        component: () => import(/* webpackChunkName: "nginx-chart" */'@/views/L7/child/nginx-chart.vue')
                     },
                     {
                         path: ':L7/chart',
@@ -104,7 +104,7 @@ let defaultRoutes = [
                         meta: {
                             title: 'L7-chart'
                         },
-                        component: () => import('@/views/L4/child/chart.vue')
+                        component: () => import(/* webpackChunkName: "L7-chart" */'@/views/L4/child/chart.vue')
                     },
                     {
                         path: ':L7/config',
@@ -112,21 +112,21 @@ let defaultRoutes = [
                         meta: {
                             title: 'L7-config'
                         },
-                        component: () => import('@/views/L7/child/config.vue')
+                        component: () => import(/* webpackChunkName: "L7-config" */'@/views/L7/child/config.vue')
                     },
                     {
                         path: ':L7/analysis',
                         meta: {
                             title: 'L7-analysis'
                         },
-                        component: () => import('@/views/L7/child/analysis.vue'),
+                        component: () => import(/* webpackChunkName: "L7-analysis" */'@/views/L7/child/analysis.vue'),
                         children: [
                             {
                                 path: '',
                                 meta: {
                                     title: 'reports'
                                 },
-                                component: () => import('@/views/L7/child/analysis/main/main.vue')
+                                component: () => import(/* webpackChunkName: "L7-analysis-main" */'@/views/L7/child/analysis/main/main.vue')
                             },
                             {
                                 path: 'overview',
@@ -134,7 +134,7 @@ let defaultRoutes = [
                                 meta: {
                                     title: 'overview'
                                 },
-                                component: () => import('@/views/L7/child/analysis/overview.vue')
+                                component: () => import(/* webpackChunkName: "L7-analysis-overview" */'@/views/L7/child/analysis/overview.vue')
                             },
                             {
                                 path: 'configAnalysis',
@@ -142,7 +142,7 @@ let defaultRoutes = [
                                 meta: {
                                     title: 'overview'
                                 },
-                                component: () => import('@/views/L7/child/analysis/configAnalysis.vue')
+                                component: () => import(/* webpackChunkName: "L7-configAnalysis" */'@/views/L7/child/analysis/configAnalysis.vue')
                             },
                             {
                                 path: 'servers',
@@ -150,7 +150,7 @@ let defaultRoutes = [
                                 meta: {
                                     title: 'overview'
                                 },
-                                component: () => import('@/views/L7/child/analysis/servers.vue')
+                                component: () => import(/* webpackChunkName: "L7-servers" */'@/views/L7/child/analysis/servers.vue')
                             },
                         ]
 

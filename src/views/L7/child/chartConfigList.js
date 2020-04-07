@@ -129,7 +129,7 @@ const configList = [
     },
     {
         title: 'NGINX 文件描述符个数',
-        color: ['#ff8a8a'],
+        color: ['#ffb5b5'],
         url: '/selNginxFileDescriptors',
         chartData: {
             rows: []
@@ -233,18 +233,54 @@ const configList = [
         },
     },
     {
+        title: 'NGINX 流量',
+        color: ['#add4ff'],
+        url: '/selNginxTraffic',
+        chartData: {
+            rows: []
+        },
+        chartSettings: {
+            metrics: ['http_request_body_bytes_sent'],
+            dimension: ['ctime'],
+            labelMap: {
+                'http_request_body_bytes_sent': '发送到客户端',
+            },
+        },
+        loading: false,
+        yFormatter: function (value, index) {
+
+            return  value
+        },
+        tooltipFormatter: (item) =>{
+            //console.log(item)
+            let str = []
+            let value = formatTime(item[0].axisValue,'YMDHMS')
+            str.push(value)
+            str.push('<br />')
+            item.map(data => {
+                str.push(data.marker)
+                str.push(data.seriesName)
+                str.push( data.value[1] ? data.value[1] : '无数据')
+                str.push('<br />')
+            })
+
+            return str.join(' ')
+        },
+    },
+    {
         title: 'NGINX 错误响应码',
-        color: ['#f979b9', '#333333'],
+        color: ['#add4ff', '#f5e483', '#6ab1fe'],
         url: '/selNginxHttpErrors',
         chartData: {
             rows: []
         },
         chartSettings: {
-            metrics: ['http_status_4xx', 'http_status_5xx'],
+            metrics: ['http_status_4xx', 'http_status_5xx', 'http_status_discarded'],
             dimension: ['ctime'],
             labelMap: {
                 'http_status_4xx': '4XX',
                 'http_status_5xx': '5XX',
+                'http_status_discarded': '丢弃',
             },
         },
         loading: false,
@@ -270,7 +306,7 @@ const configList = [
     },
     {
         title: 'NGINX HTTP 版本',
-        color: ['#f979b9', '#333333', '#5BA9FF'],
+        color: ['#e4b5fe', '#8085ee', '#add4ff'],
         url: '/selNginxHttpVersion',
         chartData: {
             rows: []
@@ -334,7 +370,79 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push( data.value[1] ? value[1] : '无数据')
+                str.push( data.value[1] ? data.value[1] : '无数据')
+                str.push('<br />')
+            })
+
+            return str.join(' ')
+        },
+    },
+    {
+        title: 'NGINX 请求耗时',
+        color: ['#fcb3d8','#b3b6f5'],
+        url: '/selNginxRequestTime',
+        chartData: {
+            rows: []
+        },
+        chartSettings: {
+            metrics: ['http_request_time', 'pctl_http_request_time'],
+            dimension: ['ctime'],
+            labelMap: {
+                'http_request_time': 'http.request.time',
+                'pctl_http_request_time': 'http.request.time.pctl95'
+            },
+        },
+        loading: false,
+        yFormatter: function (value, index) {
+
+            return  value + 'ms'
+        },
+        tooltipFormatter: (item) =>{
+            //console.log(item)
+            let str = []
+            let value = formatTime(item[0].axisValue,'YMDHMS')
+            str.push(value)
+            str.push('<br />')
+            item.map(data => {
+                str.push(data.marker)
+                str.push(data.seriesName)
+                str.push( data.value[1] ? data.value[1] + 'ms' : '无数据')
+                str.push('<br />')
+            })
+
+            return str.join(' ')
+        },
+    },
+    {
+        title: 'NGINX 响应耗时',
+        color: ['#f5e483','#e4b5fe'],
+        url: '/selNginxUpstreamResponseTime',
+        chartData: {
+            rows: []
+        },
+        chartSettings: {
+            metrics: ['upstream_response_time', 'pctl_upstream_response_time'],
+            dimension: ['ctime'],
+            labelMap: {
+                'upstream_response_time': 'upstream.response.time',
+                'pctl_upstream_response_time': 'upstream.response.time.pctl95'
+            },
+        },
+        loading: false,
+        yFormatter: function (value, index) {
+
+            return  value + 'ms'
+        },
+        tooltipFormatter: (item) =>{
+            //console.log(item)
+            let str = []
+            let value = formatTime(item[0].axisValue,'YMDHMS')
+            str.push(value)
+            str.push('<br />')
+            item.map(data => {
+                str.push(data.marker)
+                str.push(data.seriesName)
+                str.push( data.value[1] ? data.value[1] +'ms' : '无数据')
                 str.push('<br />')
             })
 

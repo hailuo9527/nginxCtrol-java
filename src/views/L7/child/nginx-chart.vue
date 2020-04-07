@@ -38,28 +38,72 @@
                 })
             },
 
-            async getData(data) {
+            async getChartData(data) {
                 let params = {
+                    //code: this.$route.params.L4 ,
                     code: this.$route.params.L4 ? this.$route.params.L4 : this.$route.params.L7,
-                     startTime: this.chartFilter.key === 5 ? this.chartFilter.value[0]: '',
-                     endTime: this.chartFilter.key === 5? this.chartFilter.value[1]: '',
-                    time: this.chartFilter.key<5 ? this.chartFilter.value : ''
-
+                    startTime: this.chartFilter.key === 5 ? this.chartFilter.value[0]: '',
+                    endTime: this.chartFilter.key === 5? this.chartFilter.value[1]: '',
+                    time: this.chartFilter.key<5 ? this.chartFilter.value : '',
                 }
+
+                if (this.list[data.index].supUrl){
+                    if (data.supParams){
+                        params.label = data.supParams
+                    }else if (this.supData[0]){
+                        params.label = this.supData[0]
+                    } else {
+                        this.list[data.index].chartData.rows = []
+                        return
+                    }
+                }
+
                 try {
                     this.list[data.index].loading = true
                     let res = await getChartData( data.url , {...params})
-                    // console.log(res)
                     if (this.asyncOk(res)){
-                        this.list[data.index].interval = parseInt(res.data.result.length / 6)
-                        this.list[data.index].chartData.rows = res.data.result || []
+                        this.list[data.index].interval = parseInt(res.data.result.data.length / 6)
+                        this.list[data.index].chartData.rows = res.data.result.data || []
+                        this.list[data.index].markAreaData = res.data.result.nullListTime || []
                         this.list[data.index].loading = false
-
-                        // console.log(this.list[data.index].interval)
                     }
                 } catch (e) {
-                    console.log(e)
+
                 }
+            },
+            async getData(data) {
+                if (data.supParams){
+                    /*  切换参数， 重新执行 */
+                    this.getChartData(data)
+                }else {
+                    /* 首次执行 */
+                    if (this.list[data.index].supUrl ){
+                        /* 有supUrl */
+                        this.supData = [] //清空图表下拉菜单
+                        this.$set(this.list[data.index], 'supData', this.supData)
+                        let json = {
+                            code: this.$route.params.L4 ? this.$route.params.L4 : this.$route.params.L7
+                        }
+                        /* 获取下拉菜单 */
+                        this.list[data.index].loading = true
+                        let res = await getSupData(this.list[data.index].supUrl, json)
+                        this.list[data.index].loading = false
+                        if(res.data.code === 'success') {
+                            this.supData = res.data.result
+                            //console.log(this.supData)
+                            this.$set(this.list[data.index], 'supData', this.supData)
+                            this.$set(this.list[data.index], 'supParams', this.supData[0] ? this.supData[0]: null)
+                            this.getChartData(data)
+                        }
+
+
+                    }else {
+                        this.getChartData(data)
+                    }
+                }
+
+
+
             },
         },
         computed:{
