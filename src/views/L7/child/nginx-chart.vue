@@ -120,6 +120,9 @@
                 this.updateComponent()
             }
         },
+        mounted() {
+            // console.log(configList)
+        }
 
     }
 </script>

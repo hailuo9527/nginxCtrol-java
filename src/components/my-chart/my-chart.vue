@@ -204,6 +204,10 @@
           options.series.map((item, index)=> {
             item.markArea.data= arr
           })
+        } else {
+            options.series.map((item, index)=> {
+                item.markArea.data= []
+            })
         }
 
         options.xAxis[0].axisLabel.interval = this.data.interval

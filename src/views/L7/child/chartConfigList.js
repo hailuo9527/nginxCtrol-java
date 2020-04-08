@@ -249,7 +249,7 @@ const configList = [
         loading: false,
         yFormatter: function (value, index) {
 
-            return  value
+            return formatByteSize(value)
         },
         tooltipFormatter: (item) =>{
             //console.log(item)
@@ -260,7 +260,7 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push( data.value[1] ? data.value[1] : '无数据')
+                str.push( data.value[1]? formatFileSize(data.value[1]) : '无数据')
                 str.push('<br />')
             })
 
@@ -334,7 +334,7 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push( data.value[1] ? data.value[1] : '无数据')
+                str.push( data.value[1] ? numerify(data.value[1], '0,0') : '无数据')
                 str.push('<br />')
             })
 
@@ -370,7 +370,7 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push( data.value[1] ? data.value[1] : '无数据')
+                str.push( data.value[1] ? numerify(data.value[1], '0,0') : '无数据')
                 str.push('<br />')
             })
 

@@ -1,6 +1,6 @@
 <template>
   <div class="aside-wrap">
-    <Input suffix="ios-search" placeholder="Systems" clearable />
+    <Input suffix="ios-search" placeholder="实例名" v-model.trim="searchString" clearable />
     <div style="display: flex; justify-content: center">
       <div class="add-list" @click="addModel">
         <!--      <span>添加</span>-->
@@ -17,7 +17,7 @@
           class="aside-item"
           :class="{'active': item.l7ServerId === $route.params.L7 , 'disable': !item.run_status}"
           @click="changeAside(item)"
-          v-for="(item, index) in asideList"
+          v-for="(item, index) in filterAside"
           :key="item.l7ServerId"
         >
           <div class="title">
@@ -35,6 +35,9 @@
           />
           <Icon type="ios-create" size="18" color="#555" title="编辑" class="edit" @click="editModel(item)" />
         </div>
+      </div>
+      <div class="aside-list-wrap" style="text-align: center" v-if="!filterAside.length">
+        未搜索到匹配的实例
       </div>
       <div
         class="load-wrap"
@@ -169,7 +172,8 @@ export default {
         ]
       },
       modal_loading: false,
-      edit: false
+      edit: false,
+      searchString: ''
     };
   },
   watch: {
@@ -187,7 +191,24 @@ export default {
       asideList: state => state.L7.asideList,
       l7ServerId: state => state.L7.activeAside.l7ServerId,
       listLoading: state => state.L7.listLoading
-    })
+    }),
+      // 匹配搜索
+      filterAside: function () {
+          let arr = this.asideList
+          let searchString = this.searchString
+
+          if(!searchString){
+              return arr;
+          }
+          arr = arr.filter(function(item){
+              if(item.l7ServerName.indexOf(searchString) !== -1){
+                  return item;
+              }
+          })
+
+          // 返回过来后的数组
+          return arr;
+      }
   },
   methods: {
     ...mapActions(["getL7AsideList"]),

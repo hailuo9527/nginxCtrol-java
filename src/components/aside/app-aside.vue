@@ -1,6 +1,6 @@
 <template>
     <div class="aside-wrap">
-        <Input suffix="ios-search" placeholder="Systems" clearable />
+        <Input suffix="ios-search" v-model.trim="searchString" placeholder="搜索APP" clearable />
         <div style="display: flex; justify-content: center">
             <div class="add-list" @click="addModel">
                 <!--      <span>添加</span>-->
@@ -17,7 +17,7 @@
                         class="aside-item"
                         :class="item.app_service_id === $route.params.app ? 'active' : ''"
                         @click="changeAside(item)"
-                        v-for="(item, index) in asideList"
+                        v-for="(item, index) in filterAside"
                         :key="item.app_service_id"
                 >
                     <div class="title">
@@ -36,6 +36,9 @@
                     />
                     <Icon type="ios-create" size="18" color="#555" title="编辑" class="edit" @click="editModel(item)" />
                 </div>
+            </div>
+            <div class="aside-list-wrap" style="text-align: center" v-if="!filterAside.length">
+                未搜索到匹配的APP
             </div>
             <div
                     class="load-wrap"
@@ -109,7 +112,8 @@
                     ]
                 },
                 modal_loading: false,
-                edit: false
+                edit: false,
+                searchString: ''
             };
         },
         watch: {
@@ -120,7 +124,24 @@
                 asideList: state => state.app.asideList,
                 appServerId: state => state.app.activeAside.app_service_id,
                 listLoading: state => state.app.listLoading
-            })
+            }),
+            // 匹配搜索
+            filterAside: function () {
+                let arr = this.asideList
+                let searchString = this.searchString
+
+                if(!searchString){
+                    return arr;
+                }
+                arr = arr.filter(function(item){
+                    if(item.app_service_name.indexOf(searchString) !== -1){
+                        return item;
+                    }
+                })
+
+                // 返回过来后的数组
+                return arr;
+            }
         },
         methods: {
             ...mapActions(["getAppAsideList"]),

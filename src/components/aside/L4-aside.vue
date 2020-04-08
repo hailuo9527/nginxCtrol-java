@@ -1,6 +1,6 @@
 <template>
     <div class="aside-wrap">
-        <Input suffix="ios-search" placeholder="Systems"  clearable />
+        <Input suffix="ios-search" placeholder="搜索L4"  v-model.trim="searchString"  clearable />
         <div style="display: flex; justify-content: center">
             <div class="add-list" @click="l4_model_add = true">
                 <!--      <span>添加</span>-->
@@ -17,7 +17,7 @@
                 <div class="aside-item"
                      :class="item.l4_code === $route.params.L4 ? 'active' : ''"
                      @click="changeAside(item)"
-                     v-for="(item, index) in asideList" :key="item.l4_code">
+                     v-for="(item, index) in filterAside" :key="item.l4_code">
                     <div class="title">
                         <span class="online" ></span>
                         {{item.l4_name}}
@@ -25,6 +25,9 @@
                     <div class="info">{{item.l4_code}}</div>
                     <Icon type="ios-close-circle" title="删除此项" class="delete" size="18" color="#555" @click.stop="removeDevice(item.l4_code)"/>
                 </div>
+            </div>
+            <div class="aside-list-wrap" style="text-align: center" v-if="!filterAside.length">
+                未搜索到匹配的L4设备
             </div>
             <div class="load-wrap" style="display: flex; justify-content: center;align-items: center;" v-if="listLoading">
                 <Loading />
@@ -78,7 +81,8 @@
                         { required: true, message: '自定义名称不能为空', trigger: 'blur' }
                     ]
                 },
-                modal_loading: false
+                modal_loading: false,
+                searchString: ''
 
             }
         },
@@ -87,7 +91,24 @@
                 asideList: state => state.L4.asideList,
                 l4_code: state => state.L4.activeAside.l4_code,
                 listLoading: state => state.L4.listLoading
-            })
+            }),
+            // 匹配搜索
+            filterAside: function () {
+                let arr = this.asideList
+                let searchString = this.searchString
+
+                if(!searchString){
+                    return arr;
+                }
+                arr = arr.filter(function(item){
+                    if(item.l4_name.indexOf(searchString) !== -1){
+                        return item;
+                    }
+                })
+
+                // 返回过来后的数组
+                return arr;
+            }
         },
         methods: {
             ...mapActions(['getAsideList']),
