@@ -95,9 +95,10 @@
   </div>
 </template>
 <script>
-import { mapState, mapMutations, mapActions } from "vuex";
-import { addL7ServerInfo, delL7ServerInfo, updL7ServerInfo } from "../../api/L7";
-export default {
+  import {mapActions, mapMutations, mapState} from "vuex";
+  import {addL7ServerInfo, delL7ServerInfo, updL7ServerInfo} from "../../api/L7";
+
+  export default {
   name: "MyAside",
   data() {
     const validatel7ServerName = (rule, value, callback) => {

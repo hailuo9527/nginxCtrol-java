@@ -76,3 +76,15 @@ export const selAppDetails = ({app_server_id}) => {
         }
     })
 }
+
+/* 获取流量数据， 绘制关系图 */
+
+export const appViewData = ({app_service_id}) => {
+    return axios.request({
+        url: '/appViewData',
+        method: 'get',
+        params: {
+            app_service_id
+        }
+    })
+}

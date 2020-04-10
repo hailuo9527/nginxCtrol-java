@@ -231,7 +231,7 @@ export function byteConvert(bytes) {
 * */
 export function formatBpsSize(fileSize) {
     if (!fileSize) {
-        return '';
+        return 0 + 'bps';
     }
     let temp;
     if (fileSize < 1024) {
