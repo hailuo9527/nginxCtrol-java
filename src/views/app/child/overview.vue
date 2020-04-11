@@ -19,14 +19,7 @@
         },
         data () {
             this.chartSettings = {
-                links: [
-                    // { source: '请求数总量', target: '应用数据',  },
-                    // { source: '首页', target: '列表页b', },
-                    // { source: '列表页a', target: '内容页a-1',  },
-                    // { source: '列表页a', target: '内容页a-2',  },
-                    // { source: '列表页b', target: '内容页b-1',},
-                    // { source: '列表页b', target: '内容页b-2', }
-                ]
+                links: []
             }
             this.chartExtend = {
                 series: {
@@ -37,15 +30,7 @@
             return {
                 chartData: {
                     columns: ['页面', '访问量'],
-                    rows: [
-                        // { '页面': '请求数总量', '访问量': 10000 },
-                        // { '页面': '应用数据', '访问量': 40000 },
-                        // { '页面': '列表页b', '访问量': 60000 },
-                        // { '页面': '内容页a-1', '访问量': 30000 },
-                        // { '页面': '内容页a-2', '访问量': 10000 },
-                        // { '页面': '内容页b-1', '访问量': 40000 },
-                        // { '页面': '内容页b-2', '访问量': 20000 }
-                    ]
+                    rows: []
                 },
                 loading: false,
                 dataEmpty: false
@@ -60,9 +45,13 @@
                 console.log(this.chartSettings.links)
                 console.log(this.chartData.rows)
                 console.log(res.data.result)
-                this.chartData.rows[0] = {"页面": 'requests_total', "访问量": res.data.result.requests_total}
-                this.chartData.rows[1] = {"页面": 'appdata', "访问量": res.data.result.appdata.length}
+                this.chartData.rows[0] = {"页面": 'requests_total', "访问量": 100000}
+                this.chartData.rows[1] = {"页面": 'appdata', "访问量": 20000}
+                this.chartData.rows[2] = {"页面": 'aaa', "访问量": 10000}
+                this.chartData.rows[3] = {"页面": 'bbb', "访问量": 10000}
                 this.chartSettings.links[0] = {source: 'requests_total', target: 'appdata'}
+                this.chartSettings.links[1] = {source: 'appdata', target: 'aaa'}
+                this.chartSettings.links[2] = {source: 'appdata', target: 'bbb'}
                 console.log(this.chartSettings.links)
                 console.log(this.chartData.rows)
                 // this.chartData.rows[0]['访问量'] = res.data.result.requests_total
