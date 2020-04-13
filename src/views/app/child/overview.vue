@@ -36,44 +36,39 @@ export default {
         rows: []
       },
       loading: false,
-      dataEmpty: false
+      dataEmpty: false,
     };
   },
   methods: {
-    // getdata(data) {
-    //     console.log(data)
-    // },
     async getChartData() {
       this.loading = true;
       let res = await appViewData({ app_service_id: this.$route.params.app });
       if (res.data.code === "success") {
         console.log(res.data.result);
-        this.chartData.rows[0] = {
-          页面: "requests_total",
+        this.$set(this.chartData.rows, 0, {
+          页面: "请求总数",
           访问量: res.data.result.requests_total
-        };
-        this.chartData.rows[1] = {
-          页面: "appdata",
+        });
+        this.$set(this.chartData.rows, 1, {
+          页面: "应用数据",
           访问量: res.data.result.appdata.length
-        };
-        this.chartSettings.links[0] = {
-          source: "requests_total",
-          target: "appdata"
-        };
+        });
+        this.$set(this.chartSettings.links, 0, {
+          source: "请求总数",
+          target: "应用数据",
+        });
         if (res.data.result.appdata.length > 0) {
           res.data.result.appdata.forEach(function(e, i) {
-            this.chartData.rows[i + 2] = {
-              页面: "stub_requests"+i,
+            this.$set(this.chartData.rows, i + 2, {
+              页面: "子请求数" + (i+1),
               访问量: e.stub_requests
-            };
-            this.chartSettings.links[i + 1] = {
-              source: "appdata",
-              target: "stub_requests"+i
-            };
+            });
+            this.$set(this.chartSettings.links, i + 1, {
+              source: "应用数据",
+              target: "子请求数" + (i+1)
+            });
           }, this);
         }
-        console.log(this.chartSettings.links);
-        console.log(this.chartData.rows);
         this.loading = false;
       } else {
         this.loading = false;
@@ -81,7 +76,6 @@ export default {
     }
   },
   mounted() {
-    // this.getdata()
     this.getChartData();
   }
 };
