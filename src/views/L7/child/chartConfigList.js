@@ -3,7 +3,7 @@ import { formatTime, formatFileSize, formatByteSize, formatBpsSize, formatBps } 
 const configList = [
     {
         title: 'NGINX 每秒连接数',
-        color: ['#333333','#5BA9FF','#F967B0'],
+        color: ['#63d8d3','#fa97c8','#F967B0'],
         url: '/selNginxConnections_s',
         chartData: {
             rows: []
@@ -13,8 +13,7 @@ const configList = [
             dimension: ['ctime'],
             labelMap: {
                 'http_conn_accepted': '连接/S',
-                'http_conn_dropped': '关闭/S',
-
+                'http_conn_dropped': '丢弃/S',
             },
         },
         loading: false,
@@ -26,7 +25,7 @@ const configList = [
     },
     {
         title: 'NGINX 每秒请求数',
-        color: ['#333333','#5BA9FF','#F967B0'],
+        color: ['#fa80bc','#5BA9FF','#F967B0'],
         url: '/selNginxRequests_s',
         chartData: {
             rows: []
@@ -48,7 +47,7 @@ const configList = [
     },
     {
         title: 'NGINX 当前连接数',
-        color: ['#333333','#5BA9FF','#F967B0'],
+        color: ['#d2bd4b','#333333','#87bffd'],
         url: '/selNginxCurrentConnections',
         chartData: {
             rows: []
@@ -71,7 +70,7 @@ const configList = [
     },
     {
         title: 'NGINX 当前请求数',
-        color: ['#333333','#5BA9FF','#F967B0'],
+        color: ['#333333','#d2bd4b','#F967B0'],
         url: '/selNginxCurrentRequests',
         chartData: {
             rows: []
@@ -80,9 +79,9 @@ const configList = [
             metrics: ['http_request_current', 'http_request_reading', 'http_request_writing'],
             dimension: ['ctime'],
             labelMap: {
-                'http_request_current': '全部',
-                'http_request_reading': '请求',
-                'http_request_writing': '响应'
+                'http_request_current': '当前请求',
+                'http_request_reading': '在读请求',
+                'http_request_writing': '在写请求'
 
             },
         },
@@ -248,11 +247,11 @@ const configList = [
         },
         loading: false,
         yFormatter: function (value, index) {
+            return formatBpsSize(value)
 
-            return formatByteSize(value)
         },
         tooltipFormatter: (item) =>{
-            //console.log(item)
+
             let str = []
             let value = formatTime(item[0].axisValue,'YMDHMS')
             str.push(value)
@@ -260,12 +259,12 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push( data.value[1]? formatFileSize(data.value[1]) : '无数据')
+                str.push(data.value[1] ? formatBps(data.value[1]): '无数据')
                 str.push('<br />')
             })
 
-            return str.join(' ')
-        },
+            return str.join('  ')
+        }
     },
     {
         title: 'NGINX 错误响应码',

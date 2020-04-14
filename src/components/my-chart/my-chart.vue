@@ -166,7 +166,8 @@
         loading: true,
         empty: false,
         supParams: null,
-        timeInterval: false
+        timeInterval: false,
+        timer: null,
       }
     },
     methods: {
@@ -222,6 +223,14 @@
         this.$emit('firstShowHandle',{ index: this.index, url: this.data.url, supParams: this.supParams })
       }
     },
+    mounted() {
+      this.timer = setInterval(() => {
+        this.$emit('firstShowHandle',{ index: this.index, url: this.data.url, supParams: this.supParams || null })
+      }, 1000 * 60)
+    },
+    beforeDestroy() {
+      clearInterval(this.timer)
+    }
   }
 </script>
 <style lang="less" scoped>

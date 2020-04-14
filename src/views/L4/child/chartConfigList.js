@@ -106,8 +106,8 @@ const configList = [
             metrics: ['transmitBytes', 'receiveBytes'],
             dimension: ['ctime'],
             labelMap: {
-                'transmitBytes': '上传',
-                'receiveBytes': '下载'
+                'transmitBytes': '发送',
+                'receiveBytes': '接收'
             },
         },
         loading: false,
@@ -170,7 +170,7 @@ const configList = [
      },
      {
          title: '磁盘读写',
-         color: ['#6ab1fe','#69d9d5'],
+         color: ['#5e83fe','#69d9d5'],
          url: '/selSysDiskIO',
          supUrl: '/selSysDiskIODataType',
          chartData: {
@@ -207,7 +207,7 @@ const configList = [
      },
      {
          title: '磁盘延迟',
-         color: ['#69d9d5','#6ab1fe'],
+         color: ['#3a49fe','#69d9d5'],
          url: '/selSysDiskLatency',
          supUrl: '/selSysDiskIODataType',
          chartData: {
@@ -256,11 +256,29 @@ const configList = [
                  'cpu_iowait': '总量'
              },
          },
-         loading: false
+         loading: false,
+         yFormatter: function (value, index) {
+
+             return  value + '%'
+         },
+         tooltipFormatter: (item) =>{
+             let str = []
+             let value = formatTime(item[0].axisValue,'YMDHMS')
+             str.push(value)
+             str.push('<br />')
+             item.map(data => {
+                 str.push(data.marker)
+                 str.push(data.seriesName)
+                 str.push(data.value[1] ? data.value[1] + '%': '无数据' )
+                 str.push('<br />')
+             })
+
+             return str.join(' ')
+         },
      },
      {
-         title: '磁盘性能指标',
-         color: ['#eccc25','#ff7c7c'],
+         title: '磁盘性能指标(IOPS)',
+         color: ['#3a49fe','#69d9d5'],
          url: '/selSysDiskIOPS',
          supUrl: '/selSysDiskIODataType',
          chartData: {

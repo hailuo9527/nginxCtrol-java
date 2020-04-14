@@ -8,6 +8,7 @@
       :loading="loading"
       :data-empty="dataEmpty"
       :extend="chartExtend"
+      :events="chartEvents"
     ></ve-sankey>
   </div>
 </template>
@@ -27,16 +28,37 @@ export default {
     this.chartExtend = {
       series: {
         type: "sankey",
-        focusNodeAdjacency: true
+        focusNodeAdjacency: true,
+        label: {
+          backgroundColor: {
+
+            // 这里可以是图片的 URL，
+            // 或者图片的 dataURI，
+            // 或者 HTMLImageElement 对象，
+            // 或者 HTMLCanvasElement 对象。
+          }
+        }
       }
     };
+    let self = this
+    this.chartEvents = {
+      click: function (e) {
+        self.name = e.name
+        console.log(e)
+        let target = e.event.target.dataType
+        if (target === 'node'){
+          console.log(target)
+        }
+      }
+    }
     return {
       chartData: {
         columns: ["页面", "访问量"],
         rows: []
       },
       loading: false,
-      dataEmpty: false
+      dataEmpty: false,
+      name: ''
     };
   },
   watch: {
