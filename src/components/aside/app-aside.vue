@@ -26,15 +26,16 @@
                         {{item.app_service_name}}
                     </div>
                     <div class="info">{{item.description}}</div>
-                    <Icon
+                    <!--<Icon
                             type="md-close"
                             title="删除此项"
                             class="delete"
                             size="18"
                             color="#555"
                             @click.stop="delApp(item.app_service_id)"
-                    />
-                    <Icon type="ios-create" size="18" color="#555" title="编辑" class="edit" @click="editModel(item)" />
+                    />-->
+                    <!--<Icon type="ios-create" size="18" color="#555" title="编辑" class="edit" @click.stop="editModel(item)" />-->
+                    <Icon type="md-more" size="20" color="#000" title="编辑" class="menu" @click.stop="editModel(item)"/>
                 </div>
             </div>
             <div class="aside-list-wrap" style="text-align: center" v-if="!filterAside.length">
@@ -58,6 +59,35 @@
                     <FormItem label="APP命名" prop="app_service_name">
                         <Input v-model="appForm.app_service_name"></Input>
                     </FormItem>
+                    <div class="label">服务器地址</div>
+                    <div class="scroll-warp">
+                        <FormItem
+                                v-for="(item, index) in appForm.appDefaultPublishConfList"
+                                :key="index"
+                                label=""
+                                :prop="'appDefaultPublishConfList.' + index + '.upstream_server'"
+                                :rules="{ validator: ipPort}">
+
+                            <Row>
+                                <Col span="18">
+                                    <Input type="text" v-model="item.upstream_server" placeholder="IP | IP:PORT | PORT"></Input>
+                                </Col>
+                                <Col span="4" style="text-align: right">
+                                    <Icon type="ios-trash" class="remove-icon" @click="handleRemove(index)" size="20"/>
+
+                                </Col>
+                            </Row>
+
+
+
+                        </FormItem>
+                    </div>
+
+                    <FormItem>
+
+                        <Button type="dashed" @click="handleAdd" icon="md-add">新增</Button>
+
+                    </FormItem>
                     <FormItem label="简介" prop="description">
                         <Input v-model="appForm.description"></Input>
                     </FormItem>
@@ -68,6 +98,9 @@
                 </Form>
             </div>
             <div slot="footer">
+                <Button class="fl" v-if="edit" ghost type="error"
+                        @click.stop="delApp(appForm.app_service_id)"
+                >删除</Button>
                 <Button
                         @click="appModal = false"
                 >取消</Button>
@@ -101,6 +134,23 @@
                     callback();
                 }
             };
+             this.ipPort = (rule, value, callback) =>{
+
+                if (value){
+                    let ip = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/
+                    let port = /^[1-9]$|(^[1-9][0-9]$)|(^[1-9][0-9][0-9]$)|(^[1-9][0-9][0-9][0-9]$)|(^[1-6][0-5][0-5][0-3][0-5]$)/
+                    let ipAndPort = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/
+                    if(ip.test(value) || port.test(value) || ipAndPort.test(value) ){
+                        callback()
+                    }else {
+                        callback(new Error('格式错误'))
+                    }
+                }else if (!value && this.appForm.appDefaultPublishConfList.length>1){
+                    callback(new Error('不能为空'))
+                }else {
+                    callback()
+                }
+            }
             return {
                 appModal: false,
                 appForm: {
@@ -108,12 +158,13 @@
                 },
                 ruleValidate: {
                     app_service_name: [
-                        { required: true, validator: validateName, trigger: 'blur'}
+                        { required: true, message: '不能为空', trigger: 'blur'}
                     ]
                 },
                 modal_loading: false,
                 edit: false,
-                searchString: ''
+                searchString: '',
+                activeItem: {}
             };
         },
         watch: {
@@ -158,6 +209,11 @@
                     app_service_name: "",
                     description: "",
                     tags: "",
+                    appDefaultPublishConfList: [
+                        {
+                            upstream_server: ''
+                        }
+                    ]
                 }
                 this.appModal = true
             },
@@ -208,6 +264,7 @@
                     onOk: async () => {
                         let res = await delAppInfo({ app_server_id: id });
                         this.$Modal.remove();
+                        this.appModal = false
                         if (this.asyncOk(res)) {
                             this.$Message.success("删除成功！");
                             this.getAppAsideList().then(res => {
@@ -248,8 +305,18 @@
                         this.$Message.error("请检查输入是否正确!");
                     }
                 });
+            },
+            /* 新增服务器表单项 */
+            handleAdd () {
+                this.appForm.appDefaultPublishConfList.push(
+                        {
+                            upstream_server: ''
+                        }
+                )
+            },
+            handleRemove (index) {
+                this.appForm.appDefaultPublishConfList.splice(index, 1)
             }
-
 
         },
         created() {
@@ -273,4 +340,5 @@
 </script>
 <style lang="less" scoped>
     @import "aside";
+    //@import "../../components/common/configuration/modal-form";
 </style>

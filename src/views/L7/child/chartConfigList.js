@@ -177,11 +177,9 @@ const configList = [
         },
         loading: false,
         yFormatter: function (value, index) {
-
-            return  numerify(value,'0%' )
+            return  value + '%'
         },
         tooltipFormatter: (item) =>{
-            //console.log(item)
             let str = []
             let value = formatTime(item[0].axisValue,'YMDHMS')
             str.push(value)
@@ -189,7 +187,7 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push(data.value[1] ? numerify(data.value[1], '0%') : '无数据')
+                str.push(data.value[1] ? data.value[1] + '%': '无数据' )
                 str.push('<br />')
             })
 

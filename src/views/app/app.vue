@@ -29,13 +29,43 @@
                                 <div class="row-item"  v-show="collapsed" v-if="detailInfo.l7ServerInfoList">
                                     <div class="info-list">
                                          <div class="list-item no-item" v-if="!detailInfo.l7ServerInfoList.length">
-                                        暂无数据， 点击发布按钮关联实例
+                                        暂无数据
                                     </div>
                                     <div class="list-item" :key="item.l7ServerId" v-for="item in detailInfo.l7ServerInfoList">
                                         <router-link :to="`/L7/${item.l7ServerId}/chart`">
                                             <Icon type="ios-color-filter-outline" />
                                             {{item.l7ServerName}}
                                         </router-link>
+
+                                    </div>
+                                    </div>
+
+                                </div>
+                                <div class="row-item" @click="server = !server">
+                                    <div class="title" :class="collapsed? 'collapsed': ''" >
+                                        <span>应用服务器</span>
+                                        <Icon type="ios-arrow-forward" size="20" class="icon"/>
+                                    </div>
+
+                                </div>
+                                <div class="row-item"  v-show="server" v-if="detailInfo.appDefaultPublishConfList">
+                                    <div class="info-list">
+                                         <div class="list-item no-item" v-if="!detailInfo.appDefaultPublishConfList.length">
+                                        暂无数据
+                                    </div>
+                                    <div class="list-item" v-else :key="item.l7ServerId" v-for="item in detailInfo.appDefaultPublishConfList">
+                                       <!-- <router-link :to="`/L7/${item.l7ServerId}/chart`">
+                                            <Icon type="ios-color-filter-outline" />
+                                            {{item.l7ServerName}}
+                                        </router-link>-->
+                                        <Row>
+                                            <Col span="18">
+                                                <span>地址： {{item.upstream_server}}</span>
+                                            </Col>
+                                            <Col span="6">
+                                                <span>权重： {{item.weight}}</span>
+                                            </Col>
+                                        </Row>
 
                                     </div>
                                     </div>
@@ -51,7 +81,7 @@
                                 <div class="row-item">
                                     <div class="info-list">
                                          <div class="list-item no-item" v-if="!detailInfo.nginxConf">
-                                        暂无数据， 点击发布按钮关联配置
+                                        暂无数据
                                         </div>
                                         <div class="list-item" v-if="detailInfo.nginxConf">
                                             <router-link :to="{name: 'nginxConfig',
@@ -76,7 +106,10 @@
                                     <span>状态</span>: {{activeAside.is_sync ? '已同步': '未同步'}}
                         </span>
                         <span class="publish">
-                            <Button type="primary" @click="publicApp">发布</Button>
+                            <Button type="primary" >
+                                一键发布
+                            </Button>
+                            <Button style="margin-left: 20px" @click="publicApp">手动发布</Button>
                             <Modal v-model="appModal" width="480">
                                 <p slot="header" style="color:#333;text-align:center">
                                     <span>发布APP</span>
@@ -204,7 +237,7 @@
                 L7List: [],
                 detailInfo: {},
                 collapsed: false,
-
+                server: false
             };
         },
         components: {
