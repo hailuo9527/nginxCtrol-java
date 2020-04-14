@@ -87,7 +87,7 @@ export default {
           });
           res.data.result.appdata.forEach(function(e, i) {
             this.$set(this.chartData.rows, this.chartData.rows.length, {
-              页面: e.l7ServerName,
+              页面: e.l7ServerName + "(" + e.ctime + ")",
               访问量: e.stub_requests
             });
             this.$set(
@@ -95,39 +95,36 @@ export default {
               this.chartSettings.links.length,
               {
                 source: res.data.result.applicationInfo.app_service_name,
-                target: e.l7ServerName
+                target: e.l7ServerName + "(" + e.ctime + ")"
               }
             );
           }, this);
-          for (let i = 0; i < res.data.result.appdata.length; i++) {
+
+          if (res.data.result.appdata[0].nginx_app_list !== []) {
             for (
-              let x = 0;
-              x < res.data.result.appdata[i].nginx_app_list.length;
-              x++
+              let i = 0;
+              i < res.data.result.appdata[0].nginx_app_list.length;
+              i++
             ) {
-              if (
-                res.data.result.appdata[i].nginx_app_list[x]
-                  .upstream_request !== "0"
-              ) {
-                this.$set(this.chartData.rows, this.chartData.rows.length, {
-                  页面:
-                    res.data.result.appdata[i].nginx_app_list[x]
-                      .upstream_server,
-                  访问量:
-                    res.data.result.appdata[i].nginx_app_list[x]
-                      .upstream_request
-                });
-                this.$set(
-                  this.chartSettings.links,
-                  this.chartSettings.links.length,
-                  {
-                    source: res.data.result.appdata[i].l7ServerName,
-                    target:
-                      res.data.result.appdata[i].nginx_app_list[x]
-                        .upstream_server
-                  }
-                );
-              }
+              this.$set(this.chartData.rows, this.chartData.rows.length, {
+                页面:
+                  res.data.result.appdata[i].nginx_app_list[i].upstream_server,
+                访问量:
+                  res.data.result.appdata[i].nginx_app_list[i].upstream_request
+              });
+              this.$set(
+                this.chartSettings.links,
+                this.chartSettings.links.length,
+                {
+                  source:
+                    res.data.result.appdata[i].l7ServerName +
+                    "(" +
+                    res.data.result.appdata[i].ctime +
+                    ")",
+                  target:
+                    res.data.result.appdata[i].nginx_app_list[i].upstream_server
+                }
+              );
             }
           }
         }
