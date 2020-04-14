@@ -31,7 +31,6 @@ export default {
         focusNodeAdjacency: true,
         label: {
           backgroundColor: {
-
             // 这里可以是图片的 URL，
             // 或者图片的 dataURI，
             // 或者 HTMLImageElement 对象，
@@ -40,17 +39,17 @@ export default {
         }
       }
     };
-    let self = this
+    let self = this;
     this.chartEvents = {
-      click: function (e) {
-        self.name = e.name
-        console.log(e)
-        let target = e.event.target.dataType
-        if (target === 'node'){
-          console.log(target)
+      click: function(e) {
+        self.name = e.name;
+        console.log(e);
+        let target = e.event.target.dataType;
+        if (target === "node") {
+          console.log(target);
         }
       }
-    }
+    };
     return {
       chartData: {
         columns: ["页面", "访问量"],
@@ -58,7 +57,7 @@ export default {
       },
       loading: false,
       dataEmpty: false,
-      name: ''
+      name: ""
     };
   },
   watch: {
@@ -78,51 +77,64 @@ export default {
       let res = await appViewData({ app_service_id: this.$route.params.app });
       if (res.data.code === "success") {
         // console.log(res.data.result);
-        this.$set(this.chartData.rows, this.chartData.rows.length, {
-          页面: res.data.result.applicationInfo.app_service_name,
-          访问量: res.data.result.requests_total
-        });
-        res.data.result.appdata.forEach(function(e, i) {
+        if (res.data.result.requests_total === "0") {
+          this.dataEmpty = true;
+        } else {
+          this.dataEmpty = false;
           this.$set(this.chartData.rows, this.chartData.rows.length, {
-            页面: e.l7ServerName,
-            访问量: e.stub_requests
+            页面: res.data.result.applicationInfo.app_service_name,
+            访问量: res.data.result.requests_total
           });
-          this.$set(this.chartSettings.links, this.chartSettings.links.length, {
-            source: res.data.result.applicationInfo.app_service_name,
-            target: e.l7ServerName,
-          });
-        }, this);
-        for (let i = 0; i < res.data.result.appdata.length; i++) {
-          for (
-            let x = 0;
-            x < res.data.result.appdata[i].nginx_app_list.length;
-            x++
-          ) {
-            if (
-              res.data.result.appdata[i].nginx_app_list[x].upstream_request !==
-              "0"
+          res.data.result.appdata.forEach(function(e, i) {
+            this.$set(this.chartData.rows, this.chartData.rows.length, {
+              页面: e.l7ServerName,
+              访问量: e.stub_requests
+            });
+            this.$set(
+              this.chartSettings.links,
+              this.chartSettings.links.length,
+              {
+                source: res.data.result.applicationInfo.app_service_name,
+                target: e.l7ServerName
+              }
+            );
+          }, this);
+          for (let i = 0; i < res.data.result.appdata.length; i++) {
+            for (
+              let x = 0;
+              x < res.data.result.appdata[i].nginx_app_list.length;
+              x++
             ) {
-              this.$set(this.chartData.rows, this.chartData.rows.length, {
-                页面:
-                  res.data.result.appdata[i].nginx_app_list[x].upstream_server,
-                访问量:
-                  res.data.result.appdata[i].nginx_app_list[x].upstream_request
-              });
-              this.$set(
-                this.chartSettings.links,
-                this.chartSettings.links.length,
-                {
-                  source: res.data.result.appdata[i].l7ServerName,
-                  target:
-                    res.data.result.appdata[i].nginx_app_list[x].upstream_server
-                }
-              );
+              if (
+                res.data.result.appdata[i].nginx_app_list[x]
+                  .upstream_request !== "0"
+              ) {
+                this.$set(this.chartData.rows, this.chartData.rows.length, {
+                  页面:
+                    res.data.result.appdata[i].nginx_app_list[x]
+                      .upstream_server,
+                  访问量:
+                    res.data.result.appdata[i].nginx_app_list[x]
+                      .upstream_request
+                });
+                this.$set(
+                  this.chartSettings.links,
+                  this.chartSettings.links.length,
+                  {
+                    source: res.data.result.appdata[i].l7ServerName,
+                    target:
+                      res.data.result.appdata[i].nginx_app_list[x]
+                        .upstream_server
+                  }
+                );
+              }
             }
           }
         }
         this.loading = false;
       } else {
         this.loading = false;
+        this.dataEmpty = true;
       }
     }
   },
@@ -136,5 +148,8 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 107px 30px 30px 30px !important;
+}
+/deep/ .v-charts-data-empty {
+  background-color: #f8f8f8;
 }
 </style>
