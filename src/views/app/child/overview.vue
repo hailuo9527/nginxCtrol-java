@@ -36,6 +36,9 @@ export default {
             // 或者 HTMLCanvasElement 对象。
           },
         },
+        lineStyle: {
+          curveness: 0.3,
+        },
       },
     };
     /** chart表的点击事件 */
@@ -103,11 +106,13 @@ export default {
             );
           }, this);
 
-          if (res.data.result.upstream_request_total !== []) {
-            for (
-              let i = 0;
-              i < res.data.result.upstream_request_total.length;
-              i++
+          for (
+            let i = 0;
+            i < res.data.result.upstream_request_total.length;
+            i++
+          ) {
+            if (
+              res.data.result.upstream_request_total[i].upstream_request !== 0
             ) {
               //第三列柱子
               this.$set(this.chartData.rows, this.chartData.rows.length, {
@@ -124,7 +129,10 @@ export default {
                   //第二列柱子和第三列柱子之间的连接
                   if (
                     res.data.result.upstream_request_total[i].upstream_server ==
-                    res.data.result.appdata[y].nginx_app_list[x].upstream_server
+                      res.data.result.appdata[y].nginx_app_list[x]
+                        .upstream_server &&
+                    res.data.result.appdata[y].nginx_app_list[x]
+                      .upstream_request != "0"
                   ) {
                     this.$set(
                       this.chartSettings.links,
