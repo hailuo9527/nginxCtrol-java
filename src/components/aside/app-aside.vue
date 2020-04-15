@@ -59,6 +59,29 @@
                     <FormItem label="APP命名" prop="app_service_name">
                         <Input v-model="appForm.app_service_name"></Input>
                     </FormItem>
+                    <FormItem label="是否开启热备份" >
+
+                        <i-switch  v-model="appForm.configure_ha" >
+                            <span slot="open">On</span>
+                            <span slot="close">Off</span>
+                        </i-switch>
+
+                    </FormItem>
+                    <FormItem label="虚拟IP" prop="app_vip">
+                        <popTip content="对外开放的IP地址"></popTip>
+                        <Input v-model="appForm.app_vip" placeholder="IP:PORT | IP | PORT"></Input>
+                    </FormItem>
+                    <FormItem label="选择实例" prop="l7_server_ids" >
+                        <popTip content="实例为部署NGINX代理的服务器，开启热备份时至少选择两台实例"></popTip>
+                        <Select v-model="appForm.l7_server_ids" filterable multiple>
+                            <Option v-for="item in L7List" :value="item.l7ServerId" :key="item.l7ServerId">{{ item.l7ServerName }}</Option>
+                        </Select>
+                        <div v-if="!L7List.length" class="">
+                            暂无实例，
+                            <router-link to="/L7">点击创建</router-link>
+
+                        </div>
+                    </FormItem>
                     <div class="label">服务器地址
                         <PopTip content="添加服务器地址后可以使用一键发布功能" style="margin-left: 5px;" placement="bottom">
                         </PopTip>
@@ -126,6 +149,7 @@
 <script>
     import { mapState, mapMutations, mapActions } from "vuex";
     import { addAppInfo, updAppInfo, delAppInfo } from "../../api/app";
+    import { selUsableL7Server } from "../../api/L7";
     import PopTip from '@/components/common/pop-tip'
     export default {
         name: "MyAside",
@@ -144,10 +168,19 @@
                     }else {
                         callback(new Error('格式错误'))
                     }
-                }else if (!value && this.appForm.appDefaultPublishConfList.length){
+                }else{
                     callback(new Error('不能为空'))
-                }else {
-                    callback()
+                }
+            }
+            const selection = (rule, value, callback) => {
+
+                if (!value) {
+                    if (this.appForm.configure_ha){
+                        return callback(new Error("已开启热备份，至少选择两个实例"));
+                    }
+                    return callback(new Error("至少选择一个实例"));
+                } else {
+                    callback();
                 }
             }
             return {
@@ -158,8 +191,15 @@
                 ruleValidate: {
                     app_service_name: [
                         { required: true, message: '不能为空', trigger: 'blur'}
-                    ]
+                    ],
+                    l7_server_ids: [
+                        {  validator: selection, trigger: 'change' }
+                    ],
+                    app_vip: [
+                        { validator: this.ipPort }
+                    ],
                 },
+                L7List: [],
                 modal_loading: false,
                 edit: false,
                 searchString: '',
@@ -173,7 +213,8 @@
             ...mapState({
                 asideList: state => state.app.asideList,
                 appServerId: state => state.app.activeAside.app_service_id,
-                listLoading: state => state.app.listLoading
+                listLoading: state => state.app.listLoading,
+                activeAside: state => state.app.activeAside
             }),
             // 匹配搜索
             filterAside: function () {
@@ -210,16 +251,21 @@
                     tags: "",
                     appDefaultPublishConfList: [
 
-                    ]
+                    ],
+                    app_vip: 80,
+                    l7_server_ids: []
                 }
+                this.selUsableL7Server()
                 this.appModal = true
             },
             //展示Model框，展示当前L7服务器的数据
             editModel(item) {
-                //console.log(item)
+                console.log(item)
                 this.edit = true
-                this.appForm = item
+                this.appForm = this.copyJson(item)
+                console.log(this.appForm)
                 this.appModal = true
+                this.selUsableL7Server()
             },
             // 新建APP
             //添加L7服务器配置信息
@@ -228,6 +274,10 @@
                 this.$refs[name].validate(valid => {
                     if (valid) {
                         this.modal_loading = true;
+                        let ip = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/
+                        if (ip.test(this.appForm.app_vip)){
+                            this.appForm.app_vip += ':80'
+                        }
                         addAppInfo(this.appForm)
                             .then(res => {
                                 // console.log(res);
@@ -290,6 +340,7 @@
                                 this.modal_loading = false;
                                 if (res.data.code === 'success') {
                                     this.appModal = false;
+                                    this.$Message.success('修改成功')
                                     this.getAppAsideList();
                                 } else {
                                     this.$Message.error(`${res.data.result}`)
@@ -313,7 +364,19 @@
             },
             handleRemove (index) {
                 this.appForm.appDefaultPublishConfList.splice(index, 1)
-            }
+            },
+            /* 获取L7实例 */
+            async selUsableL7Server() {
+                let res = await selUsableL7Server({ app_service_id: this.$route.params.app})
+                if (this.asyncOk(res)) {
+                    this.L7List = res.data.result || []
+                    if (!this.appForm.l7_server_ids.length){ // 没有选中的实例时默认选择第一个实例
+                       // console.log(this.L7List)
+                        this.appForm.l7_server_ids.push(this.L7List[0].l7ServerId)
+                        //console.log(this.appForm.l7_server_ids)
+                    }
+                }
+            },
 
         },
         created() {

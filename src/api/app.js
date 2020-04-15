@@ -43,6 +43,17 @@ export const delAppInfo = ({app_server_id }) => {
 *   app 发布
 *
 * */
+export const pushAppDefault = (applicationInfo) => {
+    return axios.request({
+        url: '/pushAPP/default',
+        method: 'post',
+        data: applicationInfo
+    })
+}
+/*
+*   app 一键发布
+*
+* */
 export const pushApp = (applicationInfo) => {
     return axios.request({
         url: '/pushAPP',

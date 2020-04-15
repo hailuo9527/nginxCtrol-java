@@ -106,7 +106,7 @@
                                     <span>状态</span>: {{activeAside.is_sync ? '已同步': '未同步'}}
                         </span>
                         <span class="publish">
-                            <Button type="primary" :disabled="!activeAside.appDefaultPublishConfList.length">
+                            <Button type="primary" :loading="pushAppLoading"  @click="publicAppAuto" :disabled="!activeAside.appDefaultPublishConfList.length">
                                 一键发布
                             </Button>
                             <Button style="margin-left: 20px" @click="publicApp">手动发布</Button>
@@ -116,7 +116,7 @@
                                 </p>
                                 <div>
                                     <Form ref="formValidate" :model="appForm" :rules="ruleValidate">
-                                        <FormItem label="是否开启热备份" v-if="L7List.length>1">
+                                        <FormItem label="是否开启热备份">
 
                                             <i-switch  v-model="appForm.configure_ha" >
                                                 <span slot="open">On</span>
@@ -188,8 +188,8 @@
     import Aside from "@/components/aside/app-aside.vue";
     import popTip from "@/components/common/pop-tip";
     import { mapState, mapMutations, mapActions } from "vuex";
-    import { pushApp, selAppDetails } from "../../api/app";
-    import { getNginxConfALL, selL7ServerInfoAll, selUsableL7Server } from "../../api/L7";
+    import { pushApp, selAppDetails, pushAppDefault } from "../../api/app";
+    import { getNginxConfALL, selUsableL7Server } from "../../api/L7";
 
 
     export default {
@@ -213,20 +213,20 @@
                     callback();
                 }
             }
-            const Ip = (rule, value, callback) => {
-                if (!value) {
-                    if(this.appForm.configure_ha){
-                        return callback(new Error("IP不能为空"));
-                    }else {
+            this.ipPort = (rule, value, callback) =>{
+                if (value){
+                    let ip = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/
+                    let port = /^[1-9]$|(^[1-9][0-9]$)|(^[1-9][0-9][0-9]$)|(^[1-9][0-9][0-9][0-9]$)|(^[1-6][0-5][0-5][0-3][0-5]$)/
+                    let ipAndPort = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/
+                    if(ip.test(value) || port.test(value) || ipAndPort.test(value) ){
                         callback()
+                    }else {
+                        callback(new Error('格式错误'))
                     }
-
-                } else if (!/^(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/.test(value)) {
-                    callback("IP格式不正确");
-                } else {
-                    callback();
+                }else{
+                    callback(new Error('不能为空'))
                 }
-            };
+            }
             return {
                 openDrawer: false,
                 appModal: false,
@@ -238,7 +238,7 @@
                         {  validator: selection, trigger: 'change' }
                     ],
                     app_vip: [
-                        { validator: Ip }
+                        { validator: this.ipPort }
                     ],
                     nginx_conf_id: [
                         {  validator: config }
@@ -249,7 +249,8 @@
                 L7List: [],
                 detailInfo: {},
                 collapsed: false,
-                server: false
+                server: false,
+                pushAppLoading: false
             };
         },
         components: {
@@ -260,9 +261,9 @@
             ...mapActions(['getAppAsideList']),
             publicApp() {
                 this.appModal = true
-                this.appForm = Object.assign({},this.activeAside)
 
-
+                this.appForm = this.copyJson(this.activeAside)
+                //console.log(this.appForm)
                 this.getAllConfigInfo()
                 this.selUsableL7Server()
             },
@@ -291,6 +292,17 @@
                     }
                 });
             },
+            /* 一键发布 */
+            async publicAppAuto() {
+                this.pushAppLoading = true
+                let res = await  pushAppDefault(this.activeAside)
+                this.pushAppLoading = false
+                if (this.asyncOk(res)) {
+                    this.$Message.success('发布成功')
+                } else{
+                    this.$Message.error(res.data.result)
+                }
+            },
             /* 获取配置 */
             async getAllConfigInfo () {
                 let res = await getNginxConfALL()
@@ -303,10 +315,10 @@
                 let res = await selUsableL7Server({ app_service_id: this.$route.params.app})
                 if (this.asyncOk(res)) {
                     this.L7List = res.data.result || []
-                    if (!this.appForm.l7_server_ids.length && this.L7List.length){ // 没有选中的实例时默认选择第一个实例
-                        console.log(this.L7List)
+                    if (!this.activeAside.l7_server_ids.length){ // 没有选中的实例时默认选择第一个实例
+                        //console.log(this.L7List)
                        this.appForm.l7_server_ids.push(this.L7List[0].l7ServerId)
-                        console.log(this.appForm.l7_server_ids)
+                        //console.log(this.appForm.l7_server_ids)
                     }
                 }
             },
@@ -330,7 +342,10 @@
                     //console.log(this.activeAside.app_service_id)
                     this.selAppDetails()
                 }
-            }
+            },
+           /* '$route'(val, ov){
+                this.appForm = Object.assign({},this.activeAside)
+            }*/
         },
         computed: {
             ...mapState({
