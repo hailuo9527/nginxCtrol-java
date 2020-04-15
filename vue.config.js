@@ -1,4 +1,5 @@
 const path = require('path');
+const CompressionPlugin = require('compression-webpack-plugin')
 // 配置文件
 
 const TEST_URL = process.env.NODE_ENV === 'production'
@@ -16,14 +17,6 @@ module.exports = {
     pluginOptions: {
         dll: {
            entry: ['vue', 'axios','vue-router', 'view-design','vuex']
-           /* entry: {
-                vue: ['vue'],
-                axios: ['axios'],
-                vueRouter: ['vue-router'],
-                viewDesign: ['view-design'],
-                vuex: ['vuex']
-
-            }*/
         },
         'style-resources-loader': {
             preProcessor: 'less',
@@ -31,26 +24,22 @@ module.exports = {
         }
     },
     /*chainWebpack: config => {
-        if (process.env.NODE_ENV === 'production') {
-            config
-                .plugin('uglify')
-                .tap(([options]) =>{
-                    // 去除 console.log
-                    return [Object.assign(options, {
-                        uglifyOptions: { compress: {
-                                drop_console : true,
-                                pure_funcs: ['console.log']
-                            }}
-                    })]
-                })
-        }
-    },*/
-    /*chainWebpack: config => {
        /!* config
             .plugin('webpack-bundle-analyzer')
             .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
             .delete('prefetch')*!/
     },*/
+    configureWebpack: config => {
+      if (process.env.NODE_ENV === 'production'){
+          return {
+              plugins: [new CompressionPlugin({
+                  test: /\.js$|\.html$|\.css/,
+                  threshold: 10240, // 超过10kb压缩
+                  deleteOriginalAssets: false // 是否删除原文件
+              })]
+          }
+      }
+    },
     productionSourceMap: false,
     devServer: {
         open: true,
