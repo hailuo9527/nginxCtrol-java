@@ -8,7 +8,6 @@
       :loading="loading"
       :data-empty="dataEmpty"
       :extend="chartExtend"
-      :events="chartEvents"
     ></ve-sankey>
   </div>
 </template>
@@ -39,6 +38,7 @@ export default {
         },
       },
     };
+    /** chart表的点击事件 */
     let self = this;
     this.chartEvents = {
       click: function(e) {
@@ -81,15 +81,18 @@ export default {
           this.dataEmpty = true;
         } else {
           this.dataEmpty = false;
+          // 第一列的柱子
           this.$set(this.chartData.rows, this.chartData.rows.length, {
             页面: res.data.result.applicationInfo.app_service_name,
             访问量: res.data.result.requests_total,
           });
           res.data.result.appdata.forEach(function(e, i) {
+            //第二列的柱子
             this.$set(this.chartData.rows, this.chartData.rows.length, {
               页面: e.l7ServerName + "(" + e.ctime + ")",
               访问量: e.stub_requests,
             });
+            //第一列柱子和第二列柱子之间的连接
             this.$set(
               this.chartSettings.links,
               this.chartSettings.links.length,
@@ -106,28 +109,42 @@ export default {
               i < res.data.result.upstream_request_total.length;
               i++
             ) {
+              //第三列柱子
               this.$set(this.chartData.rows, this.chartData.rows.length, {
                 页面: res.data.result.upstream_request_total[i].upstream_server,
                 访问量:
                   res.data.result.upstream_request_total[i].upstream_request,
               });
-              for (let x = 0; x < res.data.result.appdata.length; x++) {
-                this.$set(
-                  this.chartSettings.links,
-                  this.chartSettings.links.length,
-                  {
-                    source:
-                      res.data.result.appdata[x].l7ServerName +
-                      "(" +
-                      res.data.result.appdata[x].ctime +
-                      ")",
-                    target:
-                      res.data.result.upstream_request_total[i].upstream_server,
-                    value:
-                      res.data.result.appdata[x].nginx_app_list[i]
-                        .upstream_request,
+              for (let y = 0; y < res.data.result.appdata.length; y++) {
+                for (
+                  let x = 0;
+                  x < res.data.result.appdata[y].nginx_app_list.length;
+                  x++
+                ) {
+                  //第二列柱子和第三列柱子之间的连接
+                  if (
+                    res.data.result.upstream_request_total[i].upstream_server ==
+                    res.data.result.appdata[y].nginx_app_list[x].upstream_server
+                  ) {
+                    this.$set(
+                      this.chartSettings.links,
+                      this.chartSettings.links.length,
+                      {
+                        source:
+                          res.data.result.appdata[y].l7ServerName +
+                          "(" +
+                          res.data.result.appdata[y].ctime +
+                          ")",
+                        target:
+                          res.data.result.upstream_request_total[i]
+                            .upstream_server,
+                        value:
+                          res.data.result.appdata[y].nginx_app_list[x]
+                            .upstream_request,
+                      }
+                    );
                   }
-                );
+                }
               }
             }
           }
@@ -141,17 +158,18 @@ export default {
   },
   mounted() {
     this.getChartData();
+
+    // 每分钟刷新页面
     if (this.timer) {
       clearInterval(this.timer);
     } else {
       this.timer = setInterval(() => {
         this.getChartData();
       }, 60000);
-      console.log(this.timer)
     }
   },
   destroyed() {
-    clearInterval(this.timer);
+    clearInterval(this.timer); //在destroyed周期清除定时器
   },
 };
 </script>
