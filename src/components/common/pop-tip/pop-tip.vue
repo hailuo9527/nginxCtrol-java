@@ -1,6 +1,6 @@
 <template>
 
-  <Tooltip :content="content" :placement="placement" max-width="400" :transfer="true" theme="light" >
+  <Tooltip :content="content" :placement="placement" :max-width="maxWidth" :transfer="true" theme="light" >
     <Icon class="handle" :size="size"  type="md-information-circle" :color="color"/>
 
   </Tooltip>
@@ -24,6 +24,10 @@ export default {
     size: {
       type: Number,
       default: 20
+    },
+    maxWidth: {
+      type: Number,
+      default: 400
     }
   }
 }
