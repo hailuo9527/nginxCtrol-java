@@ -59,7 +59,10 @@
                     <FormItem label="APP命名" prop="app_service_name">
                         <Input v-model="appForm.app_service_name"></Input>
                     </FormItem>
-                    <div class="label">服务器地址</div>
+                    <div class="label">服务器地址
+                        <PopTip content="添加服务器地址后可以使用一键发布功能" style="margin-left: 5px;" placement="bottom">
+                        </PopTip>
+                    </div>
                     <div class="scroll-warp">
                         <FormItem
                                 v-for="(item, index) in appForm.appDefaultPublishConfList"
@@ -85,7 +88,7 @@
 
                     <FormItem>
 
-                        <Button type="dashed" @click="handleAdd" icon="md-add">新增</Button>
+                        <Button type="dashed" @click="handleAdd" icon="md-add">添加</Button>
 
                     </FormItem>
                     <FormItem label="简介" prop="description">
@@ -123,17 +126,13 @@
 <script>
     import { mapState, mapMutations, mapActions } from "vuex";
     import { addAppInfo, updAppInfo, delAppInfo } from "../../api/app";
+    import PopTip from '@/components/common/pop-tip'
     export default {
         name: "MyAside",
-
+        components: {
+            PopTip
+        },
         data() {
-            const validateName = (rule, value, callback) => {
-                if (!value) {
-                    return callback(new Error("不能为空"));
-                } else {
-                    callback();
-                }
-            };
              this.ipPort = (rule, value, callback) =>{
 
                 if (value){
@@ -145,7 +144,7 @@
                     }else {
                         callback(new Error('格式错误'))
                     }
-                }else if (!value && this.appForm.appDefaultPublishConfList.length>1){
+                }else if (!value && this.appForm.appDefaultPublishConfList.length){
                     callback(new Error('不能为空'))
                 }else {
                     callback()
@@ -210,9 +209,7 @@
                     description: "",
                     tags: "",
                     appDefaultPublishConfList: [
-                        {
-                            upstream_server: ''
-                        }
+
                     ]
                 }
                 this.appModal = true

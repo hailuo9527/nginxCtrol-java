@@ -42,7 +42,7 @@
 
                                 </div>
                                 <div class="row-item" @click="server = !server">
-                                    <div class="title" :class="collapsed? 'collapsed': ''" >
+                                    <div class="title" :class="server? 'collapsed': ''" >
                                         <span>应用服务器</span>
                                         <Icon type="ios-arrow-forward" size="20" class="icon"/>
                                     </div>
@@ -106,7 +106,7 @@
                                     <span>状态</span>: {{activeAside.is_sync ? '已同步': '未同步'}}
                         </span>
                         <span class="publish">
-                            <Button type="primary" >
+                            <Button type="primary" :disabled="!activeAside.appDefaultPublishConfList.length">
                                 一键发布
                             </Button>
                             <Button style="margin-left: 20px" @click="publicApp">手动发布</Button>
@@ -116,12 +116,20 @@
                                 </p>
                                 <div>
                                     <Form ref="formValidate" :model="appForm" :rules="ruleValidate">
+                                        <FormItem label="是否开启热备份" v-if="L7List.length>1">
+
+                                            <i-switch  v-model="appForm.configure_ha" >
+                                                <span slot="open">On</span>
+                                                <span slot="close">Off</span>
+                                            </i-switch>
+
+                                        </FormItem>
                                         <FormItem label="虚拟IP" prop="app_vip">
                                             <popTip content="对外开放的IP地址,开启热备份时必填"></popTip>
                                              <Input v-model="appForm.app_vip"></Input>
                                         </FormItem>
-                                        <FormItem label="选择实例" prop="l7_server_ids">
-                                            <popTip content="将APP发布到目标服务器实例"></popTip>
+                                        <FormItem label="选择实例" prop="l7_server_ids" >
+                                            <popTip content="实例为部署NGINX代理的服务器，开启热备份时至少选择两台实例"></popTip>
                                             <Select v-model="appForm.l7_server_ids" filterable multiple @on-select="selectL7">
                                                 <Option v-for="item in L7List" :value="item.l7ServerId" :key="item.l7ServerId">{{ item.l7ServerName }}</Option>
                                             </Select>
@@ -131,7 +139,7 @@
 
                                             </div>
                                         </FormItem>
-                                        <FormItem label="选择配置" prop="nginx_conf_id">
+                                        <FormItem label="选择配置" prop="nginx_conf_id" v-if="configList">
                                             <popTip content="选择一个配置并发布到当前APP"></popTip>
                                             <Select v-model="appForm.nginx_conf_id" filterable >
                                                  <Option v-for="item in configList" :value="item.nginx_conf_id" >{{item.config_name}}</Option>
@@ -143,14 +151,7 @@
                                             </div>
                                         </FormItem>
 
-                                        <FormItem label="是否开启热备份" v-if="L7List.length>1">
 
-                                            <i-switch  v-model="appForm.configure_ha" >
-                                                <span slot="open">On</span>
-                                                <span slot="close">Off</span>
-                                            </i-switch>
-
-                                        </FormItem>
                                     </Form>
                                 </div>
                                 <div slot="footer">
@@ -195,8 +196,19 @@
 
         data() {
             const selection = (rule, value, callback) => {
+
                 if (!value) {
+                    if (this.appForm.configure_ha){
+                        return callback(new Error("已开启热备份，至少选择两个实例"));
+                    }
                     return callback(new Error("至少选择一个实例"));
+                } else {
+                    callback();
+                }
+            }
+            const config = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error("必须选择一个配置文件"));
                 } else {
                     callback();
                 }
@@ -223,17 +235,17 @@
                 },
                 ruleValidate: {
                     l7_server_ids: [
-                        { required: true, validator: selection, trigger: 'change' }
+                        {  validator: selection, trigger: 'change' }
                     ],
                     app_vip: [
                         { validator: Ip }
                     ],
                     nginx_conf_id: [
-                        { required: true, message: '必须选择一个配置', trigger: 'change' }
+                        {  validator: config }
                     ]
                 },
                 modal_loading: false,
-                configList: [],
+                configList: null,
                 L7List: [],
                 detailInfo: {},
                 collapsed: false,
@@ -247,9 +259,11 @@
             ...mapMutations(["appSetActiveAside"]),
             ...mapActions(['getAppAsideList']),
             publicApp() {
-              this.appModal = true
-                this.appForm = this.activeAside
-              this.getAllConfigInfo()
+                this.appModal = true
+                this.appForm = Object.assign({},this.activeAside)
+
+
+                this.getAllConfigInfo()
                 this.selUsableL7Server()
             },
             /* 发布APP */
@@ -289,11 +303,16 @@
                 let res = await selUsableL7Server({ app_service_id: this.$route.params.app})
                 if (this.asyncOk(res)) {
                     this.L7List = res.data.result || []
+                    if (!this.appForm.l7_server_ids.length && this.L7List.length){ // 没有选中的实例时默认选择第一个实例
+                        console.log(this.L7List)
+                       this.appForm.l7_server_ids.push(this.L7List[0].l7ServerId)
+                        console.log(this.appForm.l7_server_ids)
+                    }
                 }
             },
             /* 选择L7实例 */
             selectL7(item) {
-                //console.log(item)
+                console.log(item)
 
             },
             /* 侧栏获取app详细信息 */
