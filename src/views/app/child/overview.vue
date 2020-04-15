@@ -19,11 +19,11 @@ import "v-charts/lib/style.css";
 export default {
   name: "overView",
   components: {
-    veSankey
+    veSankey,
   },
   data() {
     this.chartSettings = {
-      links: []
+      links: [],
     };
     this.chartExtend = {
       series: {
@@ -35,9 +35,9 @@ export default {
             // 或者图片的 dataURI，
             // 或者 HTMLImageElement 对象，
             // 或者 HTMLCanvasElement 对象。
-          }
-        }
-      }
+          },
+        },
+      },
     };
     let self = this;
     this.chartEvents = {
@@ -48,32 +48,32 @@ export default {
         if (target === "node") {
           console.log(target);
         }
-      }
+      },
     };
     return {
       chartData: {
         columns: ["页面", "访问量"],
-        rows: []
+        rows: [],
       },
       loading: false,
       dataEmpty: false,
-      name: ""
+      name: "",
     };
   },
   watch: {
     // 监听路由参数app的变化
     "$route.params.app": {
       handler: function(val, oldVal) {
-        this.chartData.rows = [];
-        this.chartSettings.links = [];
         this.getChartData();
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   methods: {
     async getChartData() {
       this.loading = true;
+      this.chartData.rows = [];
+      this.chartSettings.links = [];
       let res = await appViewData({ app_service_id: this.$route.params.app });
       if (res.data.code === "success") {
         // console.log(res.data.result);
@@ -83,48 +83,52 @@ export default {
           this.dataEmpty = false;
           this.$set(this.chartData.rows, this.chartData.rows.length, {
             页面: res.data.result.applicationInfo.app_service_name,
-            访问量: res.data.result.requests_total
+            访问量: res.data.result.requests_total,
           });
           res.data.result.appdata.forEach(function(e, i) {
             this.$set(this.chartData.rows, this.chartData.rows.length, {
               页面: e.l7ServerName + "(" + e.ctime + ")",
-              访问量: e.stub_requests
+              访问量: e.stub_requests,
             });
             this.$set(
               this.chartSettings.links,
               this.chartSettings.links.length,
               {
                 source: res.data.result.applicationInfo.app_service_name,
-                target: e.l7ServerName + "(" + e.ctime + ")"
+                target: e.l7ServerName + "(" + e.ctime + ")",
               }
             );
           }, this);
 
-          if (res.data.result.appdata[0].nginx_app_list !== []) {
+          if (res.data.result.upstream_request_total !== []) {
             for (
               let i = 0;
-              i < res.data.result.appdata[0].nginx_app_list.length;
+              i < res.data.result.upstream_request_total.length;
               i++
             ) {
               this.$set(this.chartData.rows, this.chartData.rows.length, {
-                页面:
-                  res.data.result.appdata[i].nginx_app_list[i].upstream_server,
+                页面: res.data.result.upstream_request_total[i].upstream_server,
                 访问量:
-                  res.data.result.appdata[i].nginx_app_list[i].upstream_request
+                  res.data.result.upstream_request_total[i].upstream_request,
               });
-              this.$set(
-                this.chartSettings.links,
-                this.chartSettings.links.length,
-                {
-                  source:
-                    res.data.result.appdata[i].l7ServerName +
-                    "(" +
-                    res.data.result.appdata[i].ctime +
-                    ")",
-                  target:
-                    res.data.result.appdata[i].nginx_app_list[i].upstream_server
-                }
-              );
+              for (let x = 0; x < res.data.result.appdata.length; x++) {
+                this.$set(
+                  this.chartSettings.links,
+                  this.chartSettings.links.length,
+                  {
+                    source:
+                      res.data.result.appdata[x].l7ServerName +
+                      "(" +
+                      res.data.result.appdata[x].ctime +
+                      ")",
+                    target:
+                      res.data.result.upstream_request_total[i].upstream_server,
+                    value:
+                      res.data.result.appdata[x].nginx_app_list[i]
+                        .upstream_request,
+                  }
+                );
+              }
             }
           }
         }
@@ -133,11 +137,22 @@ export default {
         this.loading = false;
         this.dataEmpty = true;
       }
-    }
+    },
   },
   mounted() {
     this.getChartData();
-  }
+    if (this.timer) {
+      clearInterval(this.timer);
+    } else {
+      this.timer = setInterval(() => {
+        this.getChartData();
+      }, 60000);
+      console.log(this.timer)
+    }
+  },
+  destroyed() {
+    clearInterval(this.timer);
+  },
 };
 </script>
 <style lang="less" scoped>
