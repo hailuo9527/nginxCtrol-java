@@ -8,6 +8,7 @@
       :loading="loading"
       :data-empty="dataEmpty"
       :extend="chartExtend"
+      :events="chartEvents"
     ></ve-sankey>
   </div>
 </template>
@@ -27,7 +28,7 @@ export default {
     this.chartExtend = {
       series: {
         type: "sankey",
-        focusNodeAdjacency: true,
+        focusNodeAdjacency: false,
         label: {
           backgroundColor: {
             // 这里可以是图片的 URL，
@@ -44,12 +45,20 @@ export default {
     /** chart表的点击事件 */
     let self = this;
     this.chartEvents = {
-      click: function(e) {
+      mouseover: function(e) {
         self.name = e.name;
         console.log(e);
-        let target = e.event.target.dataType;
-        if (target === "node") {
-          console.log(target);
+        for (let i = 0; i < self.chartSettings.links.length; i++) {
+          self.$forceUpdate();
+          if (e.data.target === self.chartSettings.links[i].source) {
+            Object.assign(self.chartSettings.links[i], {
+              lineStyle: { color: '#fff' },
+            });
+            // self.chartSettings.links[i].lineStyle.opacity = 1;
+            // self.chartSettings.links[i].lineStyle.color = '#314656';
+            console.log(self.chartSettings.links[i]);
+
+          }
         }
       },
     };
@@ -150,7 +159,7 @@ export default {
                             .upstream_server,
                         value:
                           res.data.result.appdata[y].nginx_app_list[x]
-                            .upstream_request,
+                            .upstream_request
                       }
                     );
                   }
