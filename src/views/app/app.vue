@@ -265,7 +265,14 @@
                 this.appForm = this.copyJson(this.activeAside)
                 //console.log(this.appForm)
                 this.getAllConfigInfo()
-                this.selUsableL7Server()
+                this.selUsableL7Server().then(()=> {
+                    this.$set(this.appForm, 'l7_server_ids',this.activeAside.l7_server_ids)
+                    if (!this.appForm.l7_server_ids.length){
+                        let arr = []
+                        arr.push(this.L7List[0].l7ServerId)
+                        this.$set(this.appForm, 'l7_server_ids',arr)
+                    }
+                })
             },
             /* 发布APP */
             pushApp(name) {
@@ -299,6 +306,7 @@
                 this.pushAppLoading = false
                 if (this.asyncOk(res)) {
                     this.$Message.success('发布成功')
+                    this.getAppAsideList()
                 } else{
                     this.$Message.error(res.data.result)
                 }
@@ -315,11 +323,6 @@
                 let res = await selUsableL7Server({ app_service_id: this.$route.params.app})
                 if (this.asyncOk(res)) {
                     this.L7List = res.data.result || []
-                    if (!this.activeAside.l7_server_ids.length){ // 没有选中的实例时默认选择第一个实例
-                        //console.log(this.L7List)
-                       this.appForm.l7_server_ids.push(this.L7List[0].l7ServerId)
-                        //console.log(this.appForm.l7_server_ids)
-                    }
                 }
             },
             /* 选择L7实例 */
@@ -342,10 +345,7 @@
                     //console.log(this.activeAside.app_service_id)
                     this.selAppDetails()
                 }
-            },
-           /* '$route'(val, ov){
-                this.appForm = Object.assign({},this.activeAside)
-            }*/
+            }
         },
         computed: {
             ...mapState({
