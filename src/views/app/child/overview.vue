@@ -90,20 +90,22 @@ export default {
             访问量: res.data.result.requests_total,
           });
           res.data.result.appdata.forEach(function(e, i) {
-            //第二列的柱子
-            this.$set(this.chartData.rows, this.chartData.rows.length, {
-              页面: e.l7ServerName + "(" + e.ctime + ")",
-              访问量: e.stub_requests,
-            });
-            //第一列柱子和第二列柱子之间的连接
-            this.$set(
-              this.chartSettings.links,
-              this.chartSettings.links.length,
-              {
-                source: res.data.result.applicationInfo.app_service_name,
-                target: e.l7ServerName + "(" + e.ctime + ")",
-              }
-            );
+            if (e.stub_requests !== "0") {
+              //第二列的柱子
+              this.$set(this.chartData.rows, this.chartData.rows.length, {
+                页面: e.l7ServerName + "(" + e.ctime + ")",
+                访问量: e.stub_requests,
+              });
+              //第一列柱子和第二列柱子之间的连接
+              this.$set(
+                this.chartSettings.links,
+                this.chartSettings.links.length,
+                {
+                  source: res.data.result.applicationInfo.app_service_name,
+                  target: e.l7ServerName + "(" + e.ctime + ")",
+                }
+              );
+            }
           }, this);
 
           for (

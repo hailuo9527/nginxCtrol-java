@@ -36,6 +36,9 @@
                     <Icon type="ios-arrow-down"></Icon>
                 </a>
                 <DropdownMenu slot="list">
+                    <DropdownItem name="Account" >
+                        <span style="font-size: 14px" @click="RouteToAccount">用户</span>
+                    </DropdownItem>
                     <DropdownItem name="logout" >
                         <span style="font-size: 14px">退出</span>
                     </DropdownItem>
@@ -56,6 +59,9 @@
         methods: {
             dropEvent (data) {
                 //console.log(data)
+            },
+            RouteToAccount () {
+                this.$router.push({name: 'account'})
             },
         },
         watch: {

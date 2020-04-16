@@ -48,6 +48,14 @@ let defaultRoutes = [
                 ]
             },
             {
+                path: '/account',
+                name: 'account',
+                meta: {
+                    title: 'account'
+                },
+                component: () => import('@/views/Account/Account.vue'),
+            },
+            {
                 path: '/L4',
                 // name: 'L4',
                 meta: {
