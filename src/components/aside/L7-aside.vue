@@ -25,7 +25,7 @@
             {{item.l7ServerName}}
           </div>
           <div class="info">{{item.nginxVersion || 'NGINX安装失败或未安装'}}</div>
-          <Icon
+          <!--<Icon
             type="md-close"
             title="删除此项"
             class="delete"
@@ -33,7 +33,8 @@
             color="#555"
             @click.stop="delL7ServerInfo(item.l7ServerId)"
           />
-          <Icon type="ios-create" size="18" color="#555" title="编辑" class="edit" @click="editModel(item)" />
+          <Icon type="ios-create" size="18" color="#555" title="编辑" class="edit" @click.stop="editModel(item)" />-->
+          <Icon type="md-more" size="20" color="#000" title="编辑" class="menu" @click.stop="editModel(item)"/>
         </div>
       </div>
       <div class="aside-list-wrap" style="text-align: center" v-if="!filterAside.length">
@@ -75,8 +76,11 @@
         </Form>
       </div>
       <div slot="footer">
+        <Button class="fl" v-if="!addMoment" ghost type="error"
+                @click.stop="delL7ServerInfo(add_l7_form.l7ServerId)"
+        >删除</Button>
         <Button
-                @click="appModal = false"
+                @click="l7_model_add = false"
         >取消</Button>
         <Button
           type="primary"
@@ -269,6 +273,7 @@
         onOk: async () => {
           let res = await delL7ServerInfo({ l7ServerId: code });
           this.$Modal.remove();
+          this.l7_model_add = false
           if (this.asyncOk(res)) {
             this.$Message.success("删除成功！");
             this.getL7AsideList().then(res => {

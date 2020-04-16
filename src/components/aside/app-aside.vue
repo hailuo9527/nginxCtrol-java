@@ -35,7 +35,7 @@
                             @click.stop="delApp(item.app_service_id)"
                     />-->
                     <!--<Icon type="ios-create" size="18" color="#555" title="编辑" class="edit" @click.stop="editModel(item)" />-->
-                    <Icon type="md-more" size="20" color="#000" title="编辑" class="menu" @click.stop="editModel(item)"/>
+                    <Icon type="md-more" size="20" color="#000" title="编辑" class="menu" @click.stop="editModel(item, index)"/>
                 </div>
             </div>
             <div class="aside-list-wrap" style="text-align: center" v-if="!filterAside.length">
@@ -71,7 +71,7 @@
                         <popTip content="对外开放的IP地址"></popTip>
                         <Input v-model="appForm.app_vip" placeholder="IP:PORT | IP | PORT"></Input>
                     </FormItem>
-                    <FormItem label="选择实例" prop="l7_server_ids" >
+                    <FormItem label="选择实例" prop="l7_server_ids" v-if="L7List">
                         <popTip content="实例为部署NGINX代理的服务器，开启热备份时至少选择两台实例"></popTip>
                         <Select v-model="appForm.l7_server_ids" filterable multiple>
                             <Option v-for="item in L7List" :value="item.l7ServerId" :key="item.l7ServerId">{{ item.l7ServerName }}</Option>
@@ -82,7 +82,7 @@
 
                         </div>
                     </FormItem>
-                    <div class="label">服务器地址
+                    <div class="label"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              >服务器地址
                         <PopTip content="添加服务器地址后可以使用一键发布功能" style="margin-left: 5px;" placement="bottom">
                         </PopTip>
                     </div>
@@ -147,10 +147,11 @@
     </div>
 </template>
 <script>
-    import { mapState, mapMutations, mapActions } from "vuex";
-    import { addAppInfo, updAppInfo, delAppInfo } from "../../api/app";
-    import { selUsableL7Server } from "../../api/L7";
+    import {mapActions, mapMutations, mapState} from "vuex";
+    import {addAppInfo, delAppInfo, updAppInfo, selAppDetails} from "../../api/app";
+    import {selUsableL7Server,} from "../../api/L7";
     import PopTip from '@/components/common/pop-tip'
+
     export default {
         name: "MyAside",
         components: {
@@ -175,18 +176,20 @@
             const selection = (rule, value, callback) => {
 
                 if (!value) {
-                    if (this.appForm.configure_ha){
-                        return callback(new Error("已开启热备份，至少选择两个实例"));
-                    }
                     return callback(new Error("至少选择一个实例"));
                 } else {
+                    if (this.appForm.configure_ha && value.length<2){
+                        return callback(new Error("已开启热备份，至少选择两个实例"));
+                    }
                     callback();
                 }
             }
             return {
                 appModal: false,
                 appForm: {
-
+                    app_vip: 80,
+                    appDefaultPublishConfList: [],
+                    l7_server_ids: []
                 },
                 ruleValidate: {
                     app_service_name: [
@@ -238,34 +241,40 @@
             ...mapActions(["getAppAsideList"]),
             ...mapMutations(["appSetActiveAside"]),
             changeAside(item) {
-                //if (item.app_service_id === this.appServerId) return;
+                if (item.app_service_id === this.appServerId) return;
                 this.appSetActiveAside(item);
+
                 this.$router.replace(`/app/${item.app_service_id}/overview`);
             },
             //展示Model框，数据重置
             addModel() {
                 this.edit = false
                 this.appForm = {
-                    app_service_name: "",
-                    description: "",
-                    tags: "",
-                    appDefaultPublishConfList: [
-
-                    ],
                     app_vip: 80,
+                    appDefaultPublishConfList: [],
                     l7_server_ids: []
-                }
-                this.selUsableL7Server()
+                },
+                this.selUsableL7Server(this.appForm).then(()=> {
+                    let arr = []
+                    arr.push(this.L7List[0].l7ServerId)
+                    this.$set(this.appForm, 'l7_server_ids',arr)
+                })
+
                 this.appModal = true
             },
             //展示Model框，展示当前L7服务器的数据
-            editModel(item) {
-                console.log(item)
+            editModel(item, index) {
                 this.edit = true
                 this.appForm = this.copyJson(item)
-                console.log(this.appForm)
                 this.appModal = true
-                this.selUsableL7Server()
+                this.selUsableL7Server(item).then(()=> {
+                    this.$set(this.appForm, 'l7_server_ids',item.l7_server_ids)
+                    if (!item.l7_server_ids.length){
+                        let arr = []
+                        arr.push(this.L7List[0].l7ServerId)
+                        this.$set(this.appForm, 'l7_server_ids',arr)
+                    }
+                })
             },
             // 新建APP
             //添加L7服务器配置信息
@@ -366,18 +375,13 @@
                 this.appForm.appDefaultPublishConfList.splice(index, 1)
             },
             /* 获取L7实例 */
-            async selUsableL7Server() {
-                let res = await selUsableL7Server({ app_service_id: this.$route.params.app})
+            async selUsableL7Server(item) {
+                let res = await selUsableL7Server({ app_service_id: this.edit ? item.app_service_id : null })
                 if (this.asyncOk(res)) {
                     this.L7List = res.data.result || []
-                    if (!this.appForm.l7_server_ids.length){ // 没有选中的实例时默认选择第一个实例
-                       // console.log(this.L7List)
-                        this.appForm.l7_server_ids.push(this.L7List[0].l7ServerId)
-                        //console.log(this.appForm.l7_server_ids)
-                    }
                 }
             },
-
+            /* 更新组件 */
         },
         created() {
             this.getAppAsideList().then(res => {
