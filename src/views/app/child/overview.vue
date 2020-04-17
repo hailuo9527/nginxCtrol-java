@@ -28,7 +28,7 @@ export default {
     this.chartExtend = {
       series: {
         type: "sankey",
-        focusNodeAdjacency: false,
+        focusNodeAdjacency: true,
         label: {
           backgroundColor: {
             // 这里可以是图片的 URL，
@@ -40,6 +40,7 @@ export default {
         lineStyle: {
           curveness: 0.3,
         },
+        nodeAlign: 'left',
       },
     };
     /** chart表的点击事件 */
@@ -49,17 +50,15 @@ export default {
         self.name = e.name;
         console.log(e);
         for (let i = 0; i < self.chartSettings.links.length; i++) {
-          self.$forceUpdate();
           if (e.data.target === self.chartSettings.links[i].source) {
-            Object.assign(self.chartSettings.links[i], {
-              lineStyle: { color: '#fff' },
-            });
+            // Object.assign(self.chartSettings.links[i], {lineStyle: {opacity: 1}})
+            self.$set(self.chartSettings.links[i], "lineStyle", { opacity: 1 });
             // self.chartSettings.links[i].lineStyle.opacity = 1;
             // self.chartSettings.links[i].lineStyle.color = '#314656';
-            console.log(self.chartSettings.links[i]);
-
+            // console.log(self.chartSettings.links[i]);
           }
         }
+        // self.$forceUpdate();
       },
     };
     return {
@@ -159,7 +158,7 @@ export default {
                             .upstream_server,
                         value:
                           res.data.result.appdata[y].nginx_app_list[x]
-                            .upstream_request
+                            .upstream_request,
                       }
                     );
                   }
