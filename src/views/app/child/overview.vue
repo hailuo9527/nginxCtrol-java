@@ -9,6 +9,7 @@
       :data-empty="dataEmpty"
       :extend="chartExtend"
       :events="chartEvents"
+      ref="echart"
     ></ve-sankey>
   </div>
 </template>
@@ -16,6 +17,7 @@
 import veSankey from "v-charts/lib/sankey.common";
 import { appViewData } from "../../../api/app";
 import "v-charts/lib/style.css";
+import {copyJson} from "../../../libs/vue-expand";
 export default {
   name: "overView",
   components: {
@@ -45,22 +47,24 @@ export default {
     /** chart表的点击事件 */
     let self = this;
     this.chartEvents = {
-      mouseover: function(e) {
-        self.name = e.name;
-        console.log(e);
-        for (let i = 0; i < self.chartSettings.links.length; i++) {
-          self.$forceUpdate();
-          if (e.data.target === self.chartSettings.links[i].source) {
-            Object.assign(self.chartSettings.links[i], {
-              lineStyle: { color: '#fff' },
-            });
-            // self.chartSettings.links[i].lineStyle.opacity = 1;
-            // self.chartSettings.links[i].lineStyle.color = '#314656';
-            console.log(self.chartSettings.links[i]);
-
+      mouseover: (e)=> {
+        this.name = e.name;
+        let option = this.$refs['echart'].echarts.getOption()
+        this.option = this.copyJson(option)
+        //let oldOption = copyJson(option)
+        let link = option.series[0].links
+        for (let i = 0; i < this.chartSettings.links.length; i++) {
+          if (e.data.target === this.chartSettings.links[i].source) {
+            link[i].lineStyle = {
+              opacity: 1
+            }
           }
         }
+        this.$refs['echart'].echarts.setOption(option)
       },
+      mouseout: (e)=>{
+        this.$refs['echart'].echarts.setOption(this.option)
+      }
     };
     return {
       chartData: {
@@ -70,6 +74,7 @@ export default {
       loading: false,
       dataEmpty: false,
       name: "",
+      option: {}
     };
   },
   watch: {
@@ -177,6 +182,7 @@ export default {
   },
   mounted() {
     this.getChartData();
+
 
     // 每分钟刷新页面
     if (this.timer) {

@@ -392,7 +392,7 @@ const configList = [
         loading: false,
         yFormatter: function (value, index) {
 
-            return  value + 'ms'
+            return  value + 's'
         },
         tooltipFormatter: (item) =>{
             //console.log(item)
@@ -403,7 +403,7 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push( data.value[1] ? data.value[1] + 'ms' : '无数据')
+                str.push( data.value[1] ? data.value[1] + 's' : '无数据')
                 str.push('<br />')
             })
 
@@ -428,7 +428,7 @@ const configList = [
         loading: false,
         yFormatter: function (value, index) {
 
-            return  value + 'ms'
+            return  value + 's'
         },
         tooltipFormatter: (item) =>{
             //console.log(item)
@@ -439,7 +439,7 @@ const configList = [
             item.map(data => {
                 str.push(data.marker)
                 str.push(data.seriesName)
-                str.push( data.value[1] ? data.value[1] +'ms' : '无数据')
+                str.push( data.value[1] ? data.value[1] +'s' : '无数据')
                 str.push('<br />')
             })
 
