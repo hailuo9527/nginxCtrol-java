@@ -30,7 +30,7 @@ export default {
     this.chartExtend = {
       series: {
         type: "sankey",
-        focusNodeAdjacency: true,
+        focusNodeAdjacency: false,
         label: {
           backgroundColor: {
             // 这里可以是图片的 URL，
@@ -53,12 +53,13 @@ export default {
         if (e.dataType === "edge") {
           let option = this.$refs["echart"].echarts.getOption();
           this.option = this.copyJson(option);
-          // console.log(this.option);
-          // console.log(e);
+          console.log(this.option);
+          console.log(e);
           //let oldOption = copyJson(option)
           let link = option.series[0].links;
           for (let x = 0; x < link.length; x++) {
             if (e.data.target === link[x].target) {
+              console.log(111)
               for (let i = 0; i < this.chartSettings.links.length; i++) {
                 if (
                   e.data.target === this.chartSettings.links[i].source ||
@@ -69,12 +70,13 @@ export default {
                   };
                 } else {
                   link[i].lineStyle = {
-                    opacity: 0.01,
+                    opacity: 0.02,
                   };
                 }
               }
               this.$refs["echart"].echarts.setOption(option);
             } else if (e.data.source === link[x].target) {
+              console.log(222)
               for (let y = 0; y < this.chartSettings.links.length; y++) {
                 if (
                   e.data.source === link[y].target ||
@@ -85,7 +87,7 @@ export default {
                   };
                 } else {
                   link[y].lineStyle = {
-                    opacity: 0.01,
+                    opacity: 0.02,
                   };
                 }
               }

@@ -1,27 +1,26 @@
 <template>
   <Form
-    ref="formCustom"
     :model="formCustom"
     :rules="ruleCustom"
     :label-width="80"
   >
-    <FormItem label="Username" prop="username">
-      <Input type="username"></Input>
+    <FormItem label="Username" >
+      <Input ></Input>
     </FormItem>
-    <FormItem label="Email" prop="email">
-      <Input type="email"></Input>
+    <FormItem label="Email" >
+      <Input ></Input>
     </FormItem>
     <FormItem label="Password" prop="passwd">
       <Input type="password" v-model="formCustom.passwd"></Input>
     </FormItem>
-    <FormItem label="Confirm" prop="passwdCheck">
+    <FormItem label="Confirm" prop="password">
       <Input type="password" v-model="formCustom.passwdCheck"></Input>
     </FormItem>
-    <FormItem label="Tags" prop="tags">
-      <Input type="tags"></Input>
+    <FormItem label="Tags" >
+      <Input ></Input>
     </FormItem>
-    <FormItem label="Roles" prop="roles">
-      <Input type="roles"></Input>
+    <FormItem label="Roles" >
+      <Input ></Input>
     </FormItem>
   </Form>
 </template>
@@ -61,16 +60,6 @@ export default {
     };
   },
   methods: {
-    handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.$Message.success("Success!");
-        } else {
-          this.ModelStatus = true;
-          this.$Message.error("Fail!");
-        }
-      });
-    },
   },
 };
 </script>

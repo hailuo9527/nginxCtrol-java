@@ -34,13 +34,13 @@
         </Content>
       </Layout>
     </Layout>
-    <Modal v-model="AddModel" :mask-closable="false">
+    <Modal v-model="AddModel" :mask-closable="false" ref="formCustom">
       <p slot="header" style="color:#333;text-align:center">
         <span>添加</span>
       </p>
       <account-form></account-form>
       <div slot="footer">
-        <Button type="primary" :long="true" @click="handleSubmit('formCustom')"
+        <Button type="primary" :long="true" @click="handleSubmit()"
           >确认添加</Button
         >
       </div>
@@ -65,14 +65,15 @@ export default {
   },
   methods: {
     handleSubmit(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.$Message.success("Success!");
-        } else {
-          this.ModelStatus = true;
-          this.$Message.error("Fail!");
-        }
-      });
+      console.log(this.$ref.formCustom)
+      // this.$refs[name].validate((valid) => {
+      //   if (valid) {
+      //     this.$Message.success("Success!");
+      //   } else {
+      //     this.ModelStatus = true;
+      //     this.$Message.error("Fail!");
+      //   }
+      // });
     },
   },
 };
