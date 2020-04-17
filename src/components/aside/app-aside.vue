@@ -95,8 +95,11 @@
                                 :rules="{ validator: ipPort}">
 
                             <Row>
-                                <Col span="18">
+                                <Col span="12">
                                     <Input type="text" v-model="item.upstream_server" placeholder="IP | IP:PORT | PORT"></Input>
+                                </Col>
+                                <Col span="6" :offset="1">
+                                  <Input type="text" v-model="item.weight" placeholder="权重"></Input>
                                 </Col>
                                 <Col span="4" style="text-align: right">
                                     <Icon type="ios-trash" class="remove-icon" @click="handleRemove(index)" size="20"/>
@@ -206,7 +209,8 @@
                 modal_loading: false,
                 edit: false,
                 searchString: '',
-                activeItem: {}
+                activeItem: {},
+                timer: null
             };
         },
         watch: {
@@ -367,7 +371,8 @@
             handleAdd () {
                 this.appForm.appDefaultPublishConfList.push(
                         {
-                            upstream_server: ''
+                            upstream_server: '',
+                            weight: 1,
                         }
                 )
             },
@@ -399,6 +404,14 @@
                 }
             })
 
+        },
+        mounted() {
+            this.timer = setInterval(() => {
+                this.getAppAsideList();
+            }, 1000* 60)
+        },
+        beforeDestroy() {
+            clearInterval(this.timer)
         }
     };
 </script>

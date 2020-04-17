@@ -9,6 +9,7 @@
       :data-empty="dataEmpty"
       :extend="chartExtend"
       :events="chartEvents"
+      ref="echart"
     ></ve-sankey>
   </div>
 </template>
@@ -16,6 +17,7 @@
 import veSankey from "v-charts/lib/sankey.common";
 import { appViewData } from "../../../api/app";
 import "v-charts/lib/style.css";
+import { copyJson } from "../../../libs/vue-expand";
 export default {
   name: "overView",
   components: {
@@ -40,25 +42,60 @@ export default {
         lineStyle: {
           curveness: 0.3,
         },
-        nodeAlign: 'left',
+        nodeAlign: "left",
       },
     };
     /** chart表的点击事件 */
     let self = this;
     this.chartEvents = {
-      mouseover: function(e) {
-        self.name = e.name;
-        console.log(e);
-        for (let i = 0; i < self.chartSettings.links.length; i++) {
-          if (e.data.target === self.chartSettings.links[i].source) {
-            // Object.assign(self.chartSettings.links[i], {lineStyle: {opacity: 1}})
-            self.$set(self.chartSettings.links[i], "lineStyle", { opacity: 1 });
-            // self.chartSettings.links[i].lineStyle.opacity = 1;
-            // self.chartSettings.links[i].lineStyle.color = '#314656';
-            // console.log(self.chartSettings.links[i]);
+      mouseover: (e) => {
+        this.name = e.name;
+        if (e.dataType === "edge") {
+          let option = this.$refs["echart"].echarts.getOption();
+          this.option = this.copyJson(option);
+          // console.log(this.option);
+          // console.log(e);
+          //let oldOption = copyJson(option)
+          let link = option.series[0].links;
+          for (let x = 0; x < link.length; x++) {
+            if (e.data.target === link[x].target) {
+              for (let i = 0; i < this.chartSettings.links.length; i++) {
+                if (
+                  e.data.target === this.chartSettings.links[i].source ||
+                  e.data.target === link[i].target
+                ) {
+                  link[i].lineStyle = {
+                    opacity: 0.2,
+                  };
+                } else {
+                  link[i].lineStyle = {
+                    opacity: 0.01,
+                  };
+                }
+              }
+              this.$refs["echart"].echarts.setOption(option);
+            } else if (e.data.source === link[x].target) {
+              for (let y = 0; y < this.chartSettings.links.length; y++) {
+                if (
+                  e.data.source === link[y].target ||
+                  e.data.source === link[y].source
+                ) {
+                  link[y].lineStyle = {
+                    opacity: 0.2,
+                  };
+                } else {
+                  link[y].lineStyle = {
+                    opacity: 0.01,
+                  };
+                }
+              }
+              this.$refs["echart"].echarts.setOption(option);
+            }
           }
         }
-        // self.$forceUpdate();
+      },
+      mouseout: (e) => {
+        this.$refs["echart"].echarts.setOption(this.option);
       },
     };
     return {
@@ -69,6 +106,7 @@ export default {
       loading: false,
       dataEmpty: false,
       name: "",
+      option: {},
     };
   },
   watch: {

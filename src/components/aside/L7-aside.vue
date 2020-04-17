@@ -178,7 +178,8 @@
       },
       modal_loading: false,
       edit: false,
-      searchString: ''
+      searchString: '',
+      timer: null
     };
   },
   watch: {
@@ -352,8 +353,17 @@
       }
     })
 
-  }
-};
+  },
+    mounted() {
+      this.timer = setInterval(() => {
+        console.log('l7List')
+        this.getL7AsideList();
+      }, 1000* 60)
+    },
+    beforeDestroy() {
+      clearInterval(this.timer)
+    }
+  };
 </script>
 <style lang="less" scoped>
 @import "aside";
