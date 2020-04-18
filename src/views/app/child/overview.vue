@@ -53,47 +53,30 @@ export default {
         if (e.dataType === "edge") {
           let option = this.$refs["echart"].echarts.getOption();
           this.option = this.copyJson(option);
-          console.log(this.option);
-          console.log(e);
           //let oldOption = copyJson(option)
           let link = option.series[0].links;
-          for (let x = 0; x < link.length; x++) {
-            if (e.data.target === link[x].target) {
-              console.log(111)
-              for (let i = 0; i < this.chartSettings.links.length; i++) {
-                if (
-                  e.data.target === this.chartSettings.links[i].source ||
-                  e.data.target === link[i].target
-                ) {
-                  link[i].lineStyle = {
-                    opacity: 0.2,
-                  };
-                } else {
-                  link[i].lineStyle = {
-                    opacity: 0.02,
-                  };
-                }
-              }
-              this.$refs["echart"].echarts.setOption(option);
-            } else if (e.data.source === link[x].target) {
-              console.log(222)
-              for (let y = 0; y < this.chartSettings.links.length; y++) {
-                if (
-                  e.data.source === link[y].target ||
-                  e.data.source === link[y].source
-                ) {
-                  link[y].lineStyle = {
-                    opacity: 0.2,
-                  };
-                } else {
-                  link[y].lineStyle = {
-                    opacity: 0.02,
-                  };
-                }
-              }
-              this.$refs["echart"].echarts.setOption(option);
+          for (let i = 0; i < this.chartSettings.links.length; i++) {
+            if (
+              e.data.target === this.chartSettings.links[i].source ||
+              e.data.target === link[i].target
+            ) {
+              link[i].lineStyle = {
+                opacity: 0.2,
+              };
+            } else if (
+              e.data.source === link[i].target ||
+              e.data.source === link[i].source
+            ) {
+              link[i].lineStyle = {
+                opacity: 0.2,
+              };
+            } else {
+              link[i].lineStyle = {
+                opacity: 0.02,
+              };
             }
           }
+          this.$refs["echart"].echarts.setOption(option);
         }
       },
       mouseout: (e) => {
