@@ -16,7 +16,7 @@ module.exports = {
     publicPath: TEST_URL,
     pluginOptions: {
         dll: {
-           entry: ['vue', 'axios','vue-router', 'view-design','vuex']
+           entry: ['vue', 'axios','vue-router', 'view-design','vuex','v-charts','echarts']
         },
         'style-resources-loader': {
             preProcessor: 'less',
