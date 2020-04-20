@@ -21,7 +21,10 @@
       <Layout>
         <Content :style="{ padding: '0 32px' }">
           <div class="add-button">
-            <Button type="primary" icon="md-add" @click="AddModel = true"
+            <Button
+              type="primary"
+              icon="md-add"
+              @click="AddModel = true "
               >添加</Button
             >
           </div>
@@ -29,19 +32,111 @@
             <BreadcrumbItem>用户</BreadcrumbItem>
           </Breadcrumb>
           <Card>
-            <div>Content</div>
+            <div>
+              <Table
+                :columns="TableColumns"
+                :data="TableData"
+                :loading="loading"
+                :max-height="400"
+              >
+                <template slot-scope="{ row }" slot="tag">
+                  <Tag color="#292932">{{ row.tag }}</Tag>
+                </template>
+                <template slot-scope="{ row }" slot="role_id">
+                  <Tag color="#292932">{{ row.role_id }}</Tag>
+                </template>
+
+                <template slot-scope="{ row, index }" slot="operation">
+                  <div class="operation">
+                    <Icon
+                      type="ios-trash"
+                      style="margin-right: 5px"
+                      size="22"
+                      title="删除"
+                      @click="DeleteUser(row.id)"
+                    />
+                    <Icon
+                      type="ios-create"
+                      size="22"
+                      title="编辑"
+                      @click="edit_user(row)"
+                    />
+                  </div>
+                </template>
+              </Table>
+              <div class="under-table">
+                目前有
+                <span>{{ userlength }}</span>
+                个用户
+              </div>
+            </div>
           </Card>
         </Content>
       </Layout>
     </Layout>
-    <Modal v-model="AddModel" :mask-closable="false" ref="formCustom">
+    <!-- 添加用户信息的Modal -->
+    <Modal v-model="AddModel" :mask-closable="false">
       <p slot="header" style="color:#333;text-align:center">
         <span>添加</span>
       </p>
-      <account-form></account-form>
+      <Form
+        :model="formCustom"
+        :rules="ruleCustom"
+        :label-width="90"
+        ref="formCustom"
+      >
+        <FormItem label="Username" prop="username">
+          <Input type="text" v-model="formCustom.username"></Input>
+        </FormItem>
+        <FormItem label="Email" prop="email">
+          <Input type="text" v-model="formCustom.email"></Input>
+        </FormItem>
+        <FormItem label="Password" prop="passwd">
+          <Input type="password" v-model="formCustom.passwd"></Input>
+        </FormItem>
+        <FormItem label="Confirm" prop="passwdCheck">
+          <Input type="password" v-model="formCustom.passwdCheck"></Input>
+        </FormItem>
+        <FormItem label="Tags">
+          <Input></Input>
+        </FormItem>
+        <FormItem label="Roles">
+          <Input></Input>
+        </FormItem>
+      </Form>
       <div slot="footer">
-        <Button type="primary" :long="true" @click="handleSubmit()"
+        <Button type="primary" :long="true" @click="handleSubmit('formCustom')"
           >确认添加</Button
+        >
+      </div>
+    </Modal>
+    <!-- 修改用户的Modal -->
+    <Modal v-model="EditModel" :mask-closable="false">
+      <p slot="header" style="color:#333;text-align:center">
+        <span>修改</span>
+      </p>
+      <Form
+        :model="formCustom"
+        :rules="ruleCustom"
+        :label-width="90"
+        ref="formCustom"
+      >
+        <FormItem label="Username" prop="username">
+          <Input type="text" v-model="formCustom.username"></Input>
+        </FormItem>
+        <FormItem label="Tags">
+          <Input v-model="formCustom.tag"></Input>
+        </FormItem>
+        <FormItem label="Roles">
+          <Input v-model="formCustom.role"></Input>
+        </FormItem>
+        <FormItem label="Email" prop="email">
+          <Input type="text" v-model="formCustom.email" disabled></Input>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button type="primary" :long="true" @click="handleSubmit('formCustom')"
+          >确认修改</Button
         >
       </div>
     </Modal>
@@ -49,13 +144,96 @@
 </template>
 
 <script>
-import AccountForm from "./AccountForm";
+import {
+  insSysUersInso,
+  selSysUersInfoAll,
+  delSysUersInso,
+} from "@/api/account";
 export default {
-  components: { AccountForm },
   data() {
+    const validatePass = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入密码"));
+      } else {
+        if (this.formCustom.passwdCheck !== "") {
+          // 对第二个密码框单独验证
+          this.$refs.formCustom.validateField("passwdCheck");
+        }
+        callback();
+      }
+    };
+    const validatePassCheck = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请再次输入密码"));
+      } else if (value !== this.formCustom.passwd) {
+        callback(new Error("两次输入的密码不相同"));
+      } else {
+        callback();
+      }
+    };
+    const validateEmail = (rule, value, callback) => {
+      const regexp = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      if (value === "") {
+        callback(new Error("请输入邮箱"));
+      } else {
+        if (regexp.test(value)) {
+          callback();
+        } else {
+          callback(new Error("邮箱地址不正确"));
+        }
+      }
+    };
     return {
       isCollapsed: false,
       AddModel: false,
+      EditModel: false,
+      formCustom: {
+        username: "",
+        email: "",
+        tag: "",
+        role: "",
+        passwd: "",
+        passwdCheck: "",
+      },
+      ruleCustom: {
+        username: [
+          { required: true, message: "名称不能为空", trigger: "blur" },
+        ],
+        email: [{ required: true, validator: validateEmail, trigger: "blur" }],
+        passwd: [{ validator: validatePass, trigger: "blur" }],
+        passwdCheck: [
+          { required: true, validator: validatePassCheck, trigger: "blur" },
+        ],
+      },
+      TableColumns: [
+        {
+          title: "用户名称",
+          key: "user_name",
+        },
+        {
+          title: "标签",
+          slot: "tag",
+        },
+        {
+          title: "角色",
+          slot: "role_id",
+        },
+        {
+          title: "创建时间",
+          key: "ctime",
+        },
+        // {
+        //   title: "最后一次登录时间",
+        //   key: "last_login",
+        // },
+        {
+          slot: "operation",
+        },
+      ],
+      TableData: [],
+      loading: false,
+      userlength: "",
+      num: "",
     };
   },
   computed: {
@@ -65,16 +243,95 @@ export default {
   },
   methods: {
     handleSubmit(name) {
-      console.log(this.$ref.formCustom)
-      // this.$refs[name].validate((valid) => {
-      //   if (valid) {
-      //     this.$Message.success("Success!");
-      //   } else {
-      //     this.ModelStatus = true;
-      //     this.$Message.error("Fail!");
-      //   }
-      // });
+      if (this.num == 1) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.AddModel = false;
+            this.$Message.success("Success!");
+            this.AddUesr();
+          } else {
+            this.ModelStatus = true;
+            this.$Message.error("Fail!");
+          }
+        });
+      } else {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.EditModel = false;
+            this.$Message.success("Success!");
+            this.EditUser();
+          } else {
+            this.ModelStatus = true;
+            this.$Message.error("Fail!");
+          }
+        });
+      }
     },
+    //添加用户信息
+    async AddUesr() {
+      let json = {
+        user_name: this.formCustom.username,
+        user_no: "111",
+        password: "123456",
+        tag: "1",
+        role_id: 1,
+      };
+      let res = await insSysUersInso(json);
+      if (res.data.code === "success") {
+        this.GetAllUser();
+      }
+    },
+    //查询所有用户信息
+    async GetAllUser() {
+      this.loading = true;
+      let res = await selSysUersInfoAll();
+      console.log(res);
+      this.loading = false;
+      this.userlength = res.data.result.length;
+      this.TableData = res.data.result;
+    },
+    //删除用户信息
+    async DeleteUser(id) {
+      this.$Modal.confirm({
+        title: "警告",
+        content: "确定删除该条信息？",
+        onOk: async () => {
+          let res = await delSysUersInso(id);
+          if (res.data.code === "success") {
+            this.$Message.info(`${res.data.result}`);
+            this.$Modal.remove();
+            this.GetAllUser();
+          } else {
+            this.$Message.error(`${res.data.result}`);
+          }
+        },
+      });
+    },
+    //修改用户信息
+    async EditUser() {
+      let json = {
+        user_name: this.formCustom.username,
+        user_no: "111",
+        password: "123456",
+        tag: "1",
+        role_id: 1,
+        id: ''
+      };
+      let res = await uptSysUersInso(json);
+      console.log(res)
+    },
+    edit_user(row) {
+      this.EditModel = true;
+      this.num = 2;
+      this.formCustom.username = row.user_name;
+      this.formCustom.tag = row.tag;
+      this.formCustom.role = row.role_id;
+      this.formCustom.email = row.email;
+      console.log(row);
+    },
+  },
+  mounted() {
+    this.GetAllUser();
   },
 };
 </script>
@@ -124,5 +381,29 @@ export default {
   position: absolute;
   right: 26px;
   top: 96px;
+}
+// .operation:hover {
+//   visibility: visible;
+//   cursor: pointer;
+// }
+/deep/ .ivu-table-row:hover {
+  cursor: pointer;
+  visibility: visible;
+}
+.under-table {
+  margin: 10px 0 0 20px;
+}
+.under-table > span {
+  color: red;
+  font-weight: bolder;
+}
+/deep/.ivu-table-row {
+  height: 80px;
+}
+/deep/.ivu-table-header th:nth-child(5) {
+  color: #f8f8f9;
+}
+/deep/.ivu-table-header th {
+  height: 60px;
 }
 </style>
