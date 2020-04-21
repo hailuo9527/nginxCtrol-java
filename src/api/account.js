@@ -45,3 +45,13 @@ export const uptSysUersInso = ({user_name, user_no, password, tag, role_id, id})
         data: {user_name, user_no, password, tag, role_id, id}
     })
 }
+
+
+/** 获取角色信息 */
+
+export const selRoleInfo = () => {
+    return axios.request({
+        url: '/selRoleInfo',
+        method: 'post'
+    })
+}

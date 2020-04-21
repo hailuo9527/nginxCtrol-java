@@ -1,43 +1,54 @@
 <template>
   <div class="content">
     <Layout :style="{ minHeight: '100vh' }">
+      <!-- 侧边栏 -->
       <Sider
         collapsible
         :collapsed-width="78"
         v-model="isCollapsed"
         :width="245"
-      >
-        <Menu active-name="1-1" width="auto" :class="menuitemClasses">
-          <MenuItem name="1-1">
+       >
+        <Menu
+          active-name="user"
+          width="auto"
+          :class="menuitemClasses"
+          @on-select="GetMenuValue"
+        >
+          <MenuItem name="user">
             <Icon type="md-contacts" size="22" />
             <span>用戶</span>
           </MenuItem>
-          <MenuItem name="1-2">
+          <MenuItem name="role">
             <Icon type="md-person" size="22" />
             <span>角色</span>
           </MenuItem>
         </Menu>
       </Sider>
       <Layout>
+        <!-- 主体内容 -->
         <Content :style="{ padding: '0 32px' }">
           <div class="add-button">
             <Button
               type="primary"
               icon="md-add"
-              @click="AddModel = true "
+              @click="add_user()"
+              v-if="status === 1"
               >添加</Button
             >
           </div>
           <Breadcrumb :style="{ margin: '32px 0' }">
-            <BreadcrumbItem>用户</BreadcrumbItem>
+            <BreadcrumbItem v-if="status === 1">用户</BreadcrumbItem>
+            <BreadcrumbItem v-if="status === 2">角色</BreadcrumbItem>
           </Breadcrumb>
           <Card>
             <div>
+              <!-- 用户的表格 -->
               <Table
-                :columns="TableColumns"
-                :data="TableData"
+                :columns="UserTableColumns"
+                :data="UserTableData"
                 :loading="loading"
                 :max-height="400"
+                v-if="status === 1"
               >
                 <template slot-scope="{ row }" slot="tag">
                   <Tag color="#292932">{{ row.tag }}</Tag>
@@ -64,10 +75,23 @@
                   </div>
                 </template>
               </Table>
-              <div class="under-table">
+              <!-- 角色的表格 -->
+              <Table
+                :columns="RoleTableColumns"
+                :data="RoleTableData"
+                :loading="loading"
+                :max-height="400"
+                v-if="status === 2"
+              ></Table>
+              <div class="under-table" v-if="status === 1">
                 目前有
-                <span>{{ userlength }}</span>
+                <span>{{ user_length }}</span>
                 个用户
+              </div>
+              <div class="under-table" v-if="status === 2">
+                目前有
+                <span>{{ role_length }}</span>
+                个角色
               </div>
             </div>
           </Card>
@@ -130,9 +154,9 @@
         <FormItem label="Roles">
           <Input v-model="formCustom.role"></Input>
         </FormItem>
-        <FormItem label="Email" prop="email">
+        <!-- <FormItem label="Email" prop="email">
           <Input type="text" v-model="formCustom.email" disabled></Input>
-        </FormItem>
+        </FormItem> -->
       </Form>
       <div slot="footer">
         <Button type="primary" :long="true" @click="handleSubmit('formCustom')"
@@ -148,6 +172,8 @@ import {
   insSysUersInso,
   selSysUersInfoAll,
   delSysUersInso,
+  uptSysUersInso,
+  selRoleInfo,
 } from "@/api/account";
 export default {
   data() {
@@ -205,7 +231,7 @@ export default {
           { required: true, validator: validatePassCheck, trigger: "blur" },
         ],
       },
-      TableColumns: [
+      UserTableColumns: [
         {
           title: "用户名称",
           key: "user_name",
@@ -230,10 +256,28 @@ export default {
           slot: "operation",
         },
       ],
-      TableData: [],
+      UserTableData: [],
       loading: false,
-      userlength: "",
+      user_length: "",
       num: "",
+      user_id: "",
+      status: 1,
+      role_length: "",
+      RoleTableColumns: [
+        {
+          title: "角色名称",
+          key: "role_name",
+        },
+        {
+          title: "角色ID",
+          key: "id",
+        },
+        {
+          title: "备注",
+          key: "remark",
+        },
+      ],
+      RoleTableData: [],
     };
   },
   computed: {
@@ -242,29 +286,47 @@ export default {
     },
   },
   methods: {
+    //判断添加Model或者修改Model输入的内容是否正确
     handleSubmit(name) {
       if (this.num == 1) {
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.AddModel = false;
-            this.$Message.success("Success!");
             this.AddUesr();
-          } else {
-            this.ModelStatus = true;
-            this.$Message.error("Fail!");
           }
         });
       } else {
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.EditModel = false;
-            this.$Message.success("Success!");
             this.EditUser();
-          } else {
-            this.ModelStatus = true;
-            this.$Message.error("Fail!");
           }
         });
+      }
+    },
+    //弹出添加Model
+    add_user() {
+      this.AddModel = true;
+      this.num = 1;
+    },
+    //弹出修改Model
+    edit_user(row) {
+      this.EditModel = true;
+      this.num = 2;
+      this.formCustom.username = row.user_name;
+      this.formCustom.tag = row.tag;
+      this.formCustom.role = row.role_id;
+      this.formCustom.email = row.email;
+      this.user_id = row.id;
+    },
+    //侧边栏切换更换相应内容
+    GetMenuValue(name) {
+      if (name === "user") {
+        this.status = 1;
+        this.GetAllUser();
+      } else {
+        this.status = 2;
+        this.GetRole();
       }
     },
     //添加用户信息
@@ -278,17 +340,19 @@ export default {
       };
       let res = await insSysUersInso(json);
       if (res.data.code === "success") {
+        this.$Message.info("添加成功");
         this.GetAllUser();
+      } else {
+        this.$Message.error(`${res.data.result}`);
       }
     },
     //查询所有用户信息
     async GetAllUser() {
       this.loading = true;
       let res = await selSysUersInfoAll();
-      console.log(res);
       this.loading = false;
-      this.userlength = res.data.result.length;
-      this.TableData = res.data.result;
+      this.user_length = res.data.result.length;
+      this.UserTableData = res.data.result;
     },
     //删除用户信息
     async DeleteUser(id) {
@@ -299,7 +363,7 @@ export default {
           let res = await delSysUersInso(id);
           if (res.data.code === "success") {
             this.$Message.info(`${res.data.result}`);
-            this.$Modal.remove();
+            // this.$Modal.remove();
             this.GetAllUser();
           } else {
             this.$Message.error(`${res.data.result}`);
@@ -315,19 +379,23 @@ export default {
         password: "123456",
         tag: "1",
         role_id: 1,
-        id: ''
+        id: this.user_id,
       };
       let res = await uptSysUersInso(json);
-      console.log(res)
+      if (res.data.code === "success") {
+        this.$Message.info("修改成功");
+        this.GetAllUser();
+      } else {
+        this.$Message.error(`${res.data.result}`);
+      }
     },
-    edit_user(row) {
-      this.EditModel = true;
-      this.num = 2;
-      this.formCustom.username = row.user_name;
-      this.formCustom.tag = row.tag;
-      this.formCustom.role = row.role_id;
-      this.formCustom.email = row.email;
-      console.log(row);
+    //获取角色信息
+    async GetRole() {
+      this.loading = true;
+      let res = await selRoleInfo();
+      this.loading = false;
+      this.role_length = res.data.result.length;
+      this.RoleTableData = res.data.result;
     },
   },
   mounted() {
@@ -382,13 +450,14 @@ export default {
   right: 26px;
   top: 96px;
 }
-// .operation:hover {
-//   visibility: visible;
-//   cursor: pointer;
+// .operation {
+//   display: none;
+// }
+// /deep/ .ivu-table-row td:nth-child(5):hover {
+//   display: block;
 // }
 /deep/ .ivu-table-row:hover {
   cursor: pointer;
-  visibility: visible;
 }
 .under-table {
   margin: 10px 0 0 20px;
