@@ -153,6 +153,7 @@
     import {mapActions, mapMutations, mapState} from "vuex";
     import {addAppInfo, delAppInfo, updAppInfo, selAppDetails} from "../../api/app";
     import {selUsableL7Server,} from "../../api/L7";
+    import { selAppInfoList } from "../../api/app";
     import PopTip from '@/components/common/pop-tip'
 
     export default {
@@ -243,7 +244,7 @@
         },
         methods: {
             ...mapActions(["getAppAsideList"]),
-            ...mapMutations(["appSetActiveAside"]),
+            ...mapMutations(["appSetActiveAside",'appSetAsideList']),
             changeAside(item) {
                 if (item.app_service_id === this.appServerId) return;
                 this.appSetActiveAside(item);
@@ -407,8 +408,12 @@
         },
         mounted() {
             this.timer = setInterval(() => {
-                this.getAppAsideList();
-            }, 1000* 60)
+                selAppInfoList().then(res => {
+                    if (this.asyncOk(res)){
+                        this.appSetAsideList(res.data.result || [])
+                    }
+                })
+            }, 1000* 10)
         },
         beforeDestroy() {
             clearInterval(this.timer)

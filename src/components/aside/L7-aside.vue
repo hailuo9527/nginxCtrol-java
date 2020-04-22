@@ -101,6 +101,7 @@
 <script>
   import {mapActions, mapMutations, mapState} from "vuex";
   import {addL7ServerInfo, delL7ServerInfo, updL7ServerInfo} from "../../api/L7";
+  import { selL7ServerInfoAll } from "../../api/L7";
 
   export default {
   name: "MyAside",
@@ -218,7 +219,7 @@
   },
   methods: {
     ...mapActions(["getL7AsideList"]),
-    ...mapMutations(["L7setActiveAside"]),
+    ...mapMutations(["L7setActiveAside",'L7setAsideList']),
     changeAside(item) {
       if (item.l7ServerId === this.l7ServerId) return;
       this.L7setActiveAside(item);
@@ -356,8 +357,13 @@
   },
     mounted() {
       this.timer = setInterval(() => {
-        console.log('l7List')
-        this.getL7AsideList();
+        selL7ServerInfoAll().then(res => {
+          if (this.asyncOk(res)){
+            this.L7setAsideList(res.data.result || [])
+          }
+        }).catch(err => {
+          throw new Error(err)
+        })
       }, 1000* 60)
     },
     beforeDestroy() {
