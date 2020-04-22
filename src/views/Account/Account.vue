@@ -7,7 +7,7 @@
         :collapsed-width="78"
         v-model="isCollapsed"
         :width="245"
-       >
+      >
         <Menu
           active-name="user"
           width="auto"
@@ -58,21 +58,19 @@
                 </template>
 
                 <template slot-scope="{ row, index }" slot="operation">
-                  <div class="operation">
-                    <Icon
-                      type="ios-trash"
-                      style="margin-right: 5px"
-                      size="22"
-                      title="删除"
-                      @click="DeleteUser(row.id)"
-                    />
-                    <Icon
-                      type="ios-create"
-                      size="22"
-                      title="编辑"
-                      @click="edit_user(row)"
-                    />
-                  </div>
+                  <Icon
+                    type="ios-trash"
+                    style="margin-right: 5px"
+                    size="22"
+                    title="删除"
+                    @click="DeleteUser(row.id)"
+                  />
+                  <Icon
+                    type="ios-create"
+                    size="22"
+                    title="编辑"
+                    @click="edit_user(row)"
+                  />
                 </template>
               </Table>
               <!-- 角色的表格 -->
@@ -286,7 +284,7 @@ export default {
     },
   },
   methods: {
-    //判断添加Model或者修改Model输入的内容是否正确
+    //判断'添加Model'或者'修改Model'输入的内容是否正确
     handleSubmit(name) {
       if (this.num == 1) {
         this.$refs[name].validate((valid) => {
@@ -450,12 +448,6 @@ export default {
   right: 26px;
   top: 96px;
 }
-// .operation {
-//   display: none;
-// }
-// /deep/ .ivu-table-row td:nth-child(5):hover {
-//   display: block;
-// }
 /deep/ .ivu-table-row:hover {
   cursor: pointer;
 }
