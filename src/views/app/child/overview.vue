@@ -30,7 +30,7 @@ export default {
     this.chartExtend = {
       series: {
         type: "sankey",
-        focusNodeAdjacency: false,
+        focusNodeAdjacency: true,
         label: {
           backgroundColor: {
             // 这里可以是图片的 URL，
@@ -48,40 +48,42 @@ export default {
     /** chart表的点击事件 */
     let self = this;
     this.chartEvents = {
-      mouseover: (e) => {
-        this.name = e.name;
-        if (e.dataType === "edge") {
-          let option = this.$refs["echart"].echarts.getOption();
-          this.option = this.copyJson(option);
-          //let oldOption = copyJson(option)
-          let link = option.series[0].links;
-          for (let i = 0; i < this.chartSettings.links.length; i++) {
-            if (
-              e.data.target === this.chartSettings.links[i].source ||
-              e.data.target === link[i].target
-            ) {
-              link[i].lineStyle = {
-                opacity: 0.2,
-              };
-            } else if (
-              e.data.source === link[i].target ||
-              e.data.source === link[i].source
-            ) {
-              link[i].lineStyle = {
-                opacity: 0.2,
-              };
-            } else {
-              link[i].lineStyle = {
-                opacity: 0.02,
-              };
-            }
-          }
-          this.$refs["echart"].echarts.setOption(option);
-        }
-      },
-      mouseout: (e) => {
-        this.$refs["echart"].echarts.setOption(this.option);
-      },
+      // mouseover: (e) => {
+      //   this.name = e.name;
+      //   if (e.dataType === "edge") {
+      //     let option = this.$refs["echart"].echarts.getOption();
+      //     this.option = this.copyJson(option);
+      //     //let oldOption = copyJson(option)
+      //     console.log(e)
+      //     console.log(option)
+      //     let link = option.series[0].links;
+      //     for (let i = 0; i < this.chartSettings.links.length; i++) {
+      //       if (
+      //         e.data.target === this.chartSettings.links[i].source
+      //       ) {
+      //         link[i].lineStyle = {
+      //           opacity: 0.2,
+      //         };
+      //       }
+      //        else if (
+      //         e.data.source === link[i].target
+      //       ) {
+      //         link[i].lineStyle = {
+      //           opacity: 0.2,
+      //         };
+      //       } 
+      //       else {
+      //         link[i].lineStyle = {
+      //           opacity: 0.02,
+      //         };
+      //       }
+      //     }
+      //     this.$refs["echart"].echarts.setOption(option);
+      //   }
+      // },
+      // mouseout: (e) => {
+      //   this.$refs["echart"].echarts.setOption(this.option);
+      // },
     };
     return {
       chartData: {
