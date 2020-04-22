@@ -412,8 +412,10 @@
                     if (this.asyncOk(res)){
                         this.appSetAsideList(res.data.result || [])
                     }
+                }).catch(err => {
+                    throw new Error(err)
                 })
-            }, 1000* 10)
+            }, 1000* 60)
         },
         beforeDestroy() {
             clearInterval(this.timer)
