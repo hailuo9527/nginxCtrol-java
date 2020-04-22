@@ -55,7 +55,7 @@ export default {
           this.option = this.copyJson(option);
           //let oldOption = copyJson(option)
           // console.log(e);
-          console.log(option);
+          // console.log(option);
           let link = option.series[0].links;
           if (e.data.source === option.series[0].data[0].name) {
             for (let i = 0; i < this.chartSettings.links.length; i++) {
@@ -93,6 +93,7 @@ export default {
       },
       mouseout: (e) => {
         let option = this.$refs["echart"].echarts.getOption();
+        // console.log(option)
         let link = option.series[0].links;
         link.forEach(function(i) {
           i.lineStyle = { opacity: 0.2 };
