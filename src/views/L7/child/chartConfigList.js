@@ -339,7 +339,7 @@ const configList = [
         },
     },
     {
-        title: 'NGINX 负载均衡错误响应',
+        title: 'NGINX 后端错误响应',
         color: ['#5BA9FF','#333333'],
         url: '/selNginxUpstreamErrors',
         chartData: {
