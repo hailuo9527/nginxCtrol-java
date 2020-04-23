@@ -5,15 +5,15 @@
                 <div class="login_form_inner" v-if="!forgotPanel">
                     <div class="login_form_title">登录</div>
                     <Form ref="loginForm" :model="loginForm" :rules="loginFormRules" >
-                        <FormItem  prop="mail">
-                            <Input v-model="loginForm.mail" placeholder="Enter your name"></Input>
+                        <FormItem  prop="usernumber">
+                            <Input v-model="loginForm.usernumber" placeholder="Enter your usernumber"></Input>
                         </FormItem>
                         <FormItem  prop="password" class="password">
-                            <Input v-model="loginForm.password" placeholder="Enter your e-mail"></Input>
+                            <Input v-model="loginForm.password" placeholder="Enter your password" type="password"></Input>
                         </FormItem>
                     </Form>
                     <div class="forgot" @click="forgotPanel = true">忘记密码？</div>
-                    <Button type="primary" class="submit" :loading="loading" long size="large" @click="toLogin">
+                    <Button type="primary" class="submit" :loading="loading" long size="large" @click="toLogin('loginForm')">
                         <span v-if="!loading">登录</span>
                         <span v-else>登陆中...</span>
                     </Button>
@@ -27,8 +27,8 @@
                         输入您的邮箱账号，我们将会发送重置密码的链接到您的邮箱！
                     </div>
                     <Form ref="forgotForm" :model="forgotForm" :rules="forgotFormRules" >
-                        <FormItem  prop="mail">
-                            <Input v-model="forgotForm.mail" placeholder="Enter your e-mail"></Input>
+                        <FormItem  prop="usernumber">
+                            <Input v-model="forgotForm.usernumber" placeholder="Enter your usernumber"></Input>
                         </FormItem>
                     </Form>
                     <Button type="primary" class="submit" :loading="resetLoading" long size="large" @click="toReset">
@@ -42,6 +42,8 @@
     </div>
 </template>
 <script>
+import { loginInfo } from '@/api/login'
+import { mapMutations } from 'vuex'
     export default {
         name: 'login',
         data () {
@@ -58,11 +60,14 @@
                 forgotPanel: false, // 忘记密码
                 loading: false,
                 resetLoading: false,
-                loginForm: {},
+                loginForm: {
+                    usernumber: '',
+                    password: '',
+                },
                 loginFormRules: {
-                    mail: [
-                        { required: true, message: '邮箱不能为空', trigger: 'blur' },
-                        { type: 'email', message: '邮箱账号不合法', trigger: 'blur' }
+                    usernumber: [
+                        { required: true, message: '账号不能为空', trigger: 'blur' },
+                        // { type: 'email', message: '邮箱账号不合法', trigger: 'blur' }
                     ],
                     password: [
                         { required: true, validator: validatePassCheck, trigger: 'blur' },
@@ -70,27 +75,25 @@
                 },
                 forgotForm: {},
                 forgotFormRules: {
-                    mail: [
-                        { required: true, message: '邮箱不能为空', trigger: 'blur' },
-                        { type: 'email', message: '邮箱账号不合法', trigger: 'blur' }
+                    usernumber: [
+                        { required: true, message: '账号不能为空', trigger: 'blur' },
+                        // { type: 'email', message: '邮箱账号不合法', trigger: 'blur' }
                     ],
                 }
             }
         },
         methods: {
+            ...mapMutations(["setToken", "setUserInfo"]),
             toLogin () {
-                /*this.$refs['loginForm'].validate((valid) => {
-                    if (valid) {
-                        this.$Message.success('Success!');
-                        this.loading = true
-                        setTimeout(() => {
-                            this.loading = false
-                            this.$router.push('/home')
-                        }, 1000)
-                    } else {
-                        this.$Message.error('Fail!');
-                    }
-                })*/
+            //     this.$refs['loginForm'].validate((valid) => {
+            //         if (valid) {
+            //             this.login_to()
+            //         } else {
+            //             this.$Message.error('Fail!');
+            //         }
+            //     })
+
+
                 this.loading = true
                 setTimeout(() => {
                     this.loading = false
@@ -111,6 +114,19 @@
                     }
                 })
 
+            },
+            async login_to() {
+                this.loading = true
+                let res = await loginInfo({user_no: this.loginForm.usernumber, password: this.loginForm.password})
+                if (res.data.code === 'success') {
+                    this.loading = false
+                    this.setToken(res.data.result.token)
+                    this.setUserInfo(res.data.result)
+                    this.$router.push('/home')
+                } else {
+                    this.loading = false
+                    this.$Message.error(`${res.data.result}`)
+                }
             }
         }
     }

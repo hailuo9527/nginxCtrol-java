@@ -2,15 +2,12 @@ import axios from '@/libs/api.request'
 /*
 *  示例
 * */
-export const demo = ({ data }) => {
+export const loginInfo = ({ user_no, password }) => {
     return axios.request({
-        url: '/url',
+        url: '/loginInfo',
         method: 'post',
-        data: { // body
-            data
-        },
         params: { // query
-            data
+            user_no, password
         }
     })
 }

@@ -1,10 +1,18 @@
 
+import { setToken } from '@/libs/util'
 export default {
     state: {
         userInfo: '',
         token: ''
     },
     mutations: {
+        setToken(state, token) {
+            state.token = token
+            setToken(token)
+        },
+        setUserInfo(state, userInfo) {
+            state.userInfo = userInfo
+        }
     },
     actions: {
         // 登录

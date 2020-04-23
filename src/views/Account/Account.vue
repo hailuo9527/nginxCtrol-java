@@ -104,26 +104,26 @@
       <Form
         :model="formCustom"
         :rules="ruleCustom"
-        :label-width="90"
+        :label-width="102"
         ref="formCustom"
       >
         <FormItem label="Username" prop="username">
           <Input type="text" v-model="formCustom.username"></Input>
         </FormItem>
-        <FormItem label="Email" prop="email">
-          <Input type="text" v-model="formCustom.email"></Input>
+        <FormItem label="Usernumber" prop="usernumber">
+          <Input type="text" v-model="formCustom.usernumber"></Input>
         </FormItem>
-        <FormItem label="Password" prop="passwd">
-          <Input type="password" v-model="formCustom.passwd"></Input>
+        <FormItem label="Password" prop="password">
+          <Input type="password" v-model="formCustom.password"></Input>
         </FormItem>
-        <FormItem label="Confirm" prop="passwdCheck">
-          <Input type="password" v-model="formCustom.passwdCheck"></Input>
+        <FormItem label="Confirm" prop="passwordCheck">
+          <Input type="password" v-model="formCustom.passwordCheck"></Input>
         </FormItem>
         <FormItem label="Tags">
-          <Input></Input>
+          <Input type="text" v-model="formCustom.tag"></Input>
         </FormItem>
         <FormItem label="Roles">
-          <Input></Input>
+          <Input type="text" v-model="formCustom.role"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -147,10 +147,10 @@
           <Input type="text" v-model="formCustom.username"></Input>
         </FormItem>
         <FormItem label="Tags">
-          <Input v-model="formCustom.tag"></Input>
+          <Input type="text" v-model="formCustom.tag"></Input>
         </FormItem>
         <FormItem label="Roles">
-          <Input v-model="formCustom.role"></Input>
+          <Input type="text" v-model="formCustom.role"></Input>
         </FormItem>
         <!-- <FormItem label="Email" prop="email">
           <Input type="text" v-model="formCustom.email" disabled></Input>
@@ -179,7 +179,7 @@ export default {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
-        if (this.formCustom.passwdCheck !== "") {
+        if (this.formCustom.passwordCheck !== "") {
           // 对第二个密码框单独验证
           this.$refs.formCustom.validateField("passwdCheck");
         }
@@ -189,43 +189,45 @@ export default {
     const validatePassCheck = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次输入密码"));
-      } else if (value !== this.formCustom.passwd) {
+      } else if (value !== this.formCustom.password) {
         callback(new Error("两次输入的密码不相同"));
       } else {
         callback();
       }
     };
-    const validateEmail = (rule, value, callback) => {
-      const regexp = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-      if (value === "") {
-        callback(new Error("请输入邮箱"));
-      } else {
-        if (regexp.test(value)) {
-          callback();
-        } else {
-          callback(new Error("邮箱地址不正确"));
-        }
-      }
-    };
+    // const validateEmail = (rule, value, callback) => {
+    //   const regexp = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+    //   if (value === "") {
+    //     callback(new Error("请输入邮箱"));
+    //   } else {
+    //     if (regexp.test(value)) {
+    //       callback();
+    //     } else {
+    //       callback(new Error("邮箱地址不正确"));
+    //     }
+    //   }
+    // };
     return {
       isCollapsed: false,
       AddModel: false,
       EditModel: false,
       formCustom: {
         username: "",
-        email: "",
+        usernumber: "",
         tag: "",
         role: "",
-        passwd: "",
-        passwdCheck: "",
+        password: "",
+        passwordCheck: "",
       },
       ruleCustom: {
         username: [
           { required: true, message: "名称不能为空", trigger: "blur" },
         ],
-        email: [{ required: true, validator: validateEmail, trigger: "blur" }],
-        passwd: [{ validator: validatePass, trigger: "blur" }],
-        passwdCheck: [
+        usernumber: [
+          { required: true, message: "账号不能为空", trigger: "blur" },
+        ],
+        password: [{ validator: validatePass, trigger: "blur" }],
+        passwordCheck: [
           { required: true, validator: validatePassCheck, trigger: "blur" },
         ],
       },
@@ -291,6 +293,8 @@ export default {
           if (valid) {
             this.AddModel = false;
             this.AddUesr();
+          } else {
+            this.$Message.error("Fail!");
           }
         });
       } else {
@@ -298,6 +302,8 @@ export default {
           if (valid) {
             this.EditModel = false;
             this.EditUser();
+          } else {
+            this.$Message.error("Fail!");
           }
         });
       }
@@ -331,14 +337,14 @@ export default {
     async AddUesr() {
       let json = {
         user_name: this.formCustom.username,
-        user_no: "111",
-        password: "123456",
-        tag: "1",
-        role_id: 1,
+        user_no: this.formCustom.usernumber,
+        password: this.formCustom.password,
+        tag: this.formCustom.tag,
+        role_id: this.formCustom.role,
       };
       let res = await insSysUersInso(json);
       if (res.data.code === "success") {
-        this.$Message.info("添加成功");
+        this.$Message.info(`${res.data.result}`);
         this.GetAllUser();
       } else {
         this.$Message.error(`${res.data.result}`);
@@ -373,10 +379,10 @@ export default {
     async EditUser() {
       let json = {
         user_name: this.formCustom.username,
-        user_no: "111",
-        password: "123456",
-        tag: "1",
-        role_id: 1,
+        user_no: this.formCustom.number,
+        password: this.formCustom.password,
+        tag: this.formCustom.tag,
+        role_id: this.formCustom.role,
         id: this.user_id,
       };
       let res = await uptSysUersInso(json);

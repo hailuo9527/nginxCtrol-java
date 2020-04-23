@@ -19,6 +19,7 @@ let defaultRoutes = [
     {
 
         path: '/',
+        name: 'login',
         redirect: '/login',
         component: () => import(/* webpackChunkName: "layout" */'@/components/layout/default.vue'),
         children: [
