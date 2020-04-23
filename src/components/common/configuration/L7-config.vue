@@ -309,7 +309,10 @@ export default {
     watch:{
         config(newVal, old){
            // console.log(...arguments)
-        }
+        },
+      '$route'(){
+          this.initConfig()
+      }
     },
     computed: {
         ...mapState({
@@ -559,6 +562,8 @@ export default {
                         content: '配置已更新成功',
                         duration: 3
                     });
+                    /* 更新配置 */
+                    this.getConfig()
                 }else {
                     this.$Message.success({
                         content: '配置保存成功',
