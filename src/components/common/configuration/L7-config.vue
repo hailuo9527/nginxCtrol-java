@@ -559,6 +559,8 @@ export default {
                         content: '配置已更新成功',
                         duration: 3
                     });
+                    /* 更新配置 */
+                    this.config.version_no ++
                 }else {
                     this.$Message.success({
                         content: '配置保存成功',
