@@ -68,7 +68,7 @@ export default {
                 };
               } else {
                 link[i].lineStyle = {
-                  opacity: 0.02,
+                  opacity: 0.04,
                 };
               }
             }
@@ -83,7 +83,7 @@ export default {
                 };
               } else {
                 link[i].lineStyle = {
-                  opacity: 0.02,
+                  opacity: 0.04,
                 };
               }
             }

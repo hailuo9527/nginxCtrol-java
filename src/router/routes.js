@@ -57,6 +57,14 @@ let defaultRoutes = [
                 component: () => import('@/views/Account/Account.vue'),
             },
             {
+                path: '/logfile',
+                name: 'logfile',
+                meta: {
+                    title: 'logfile'
+                },
+                component: () => import('@/views/LogFile/LogFile.vue'),
+            },
+            {
                 path: '/L4',
                 // name: 'L4',
                 meta: {

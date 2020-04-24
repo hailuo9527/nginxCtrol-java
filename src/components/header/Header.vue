@@ -37,9 +37,12 @@
                 </a>
                 <DropdownMenu slot="list">
                     <DropdownItem name="Account" >
-                        <span style="font-size: 14px" @click="RouteToAccount">用户</span>
+                        <span style="font-size: 14px">用户</span>
                     </DropdownItem>
-                    <DropdownItem name="logout" >
+                    <DropdownItem name="LogFile" >
+                        <span style="font-size: 14px">日志</span>
+                    </DropdownItem>
+                    <DropdownItem name="LogOut" >
                         <span style="font-size: 14px">退出</span>
                     </DropdownItem>
                 </DropdownMenu>
@@ -58,10 +61,15 @@
         },
         methods: {
             dropEvent (data) {
-                //console.log(data)
-            },
-            RouteToAccount () {
-                this.$router.push({name: 'account'})
+                switch (data) {
+                    case 'Account':
+                        this.$router.push({name: 'account'})
+                        break;
+                    case 'LogFile':
+                        this.$router.push({name: 'logfile'})
+                    case 'LogOut':
+                        break;
+                }
             },
         },
         watch: {

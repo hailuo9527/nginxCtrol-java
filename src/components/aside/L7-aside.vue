@@ -191,6 +191,14 @@
         if (this.l7_model_add === false) {
             this.addMoment = true
         }
+    },
+    '$route.params.L7': {
+      handler(newVal, oldVal) {
+        if (newVal === undefined) {
+          this.$router.replace(`/L7/${oldVal}/chart`)
+        }
+      },
+      deep: true
     }
   },
   computed: {

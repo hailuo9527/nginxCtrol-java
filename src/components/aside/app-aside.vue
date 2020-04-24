@@ -215,7 +215,14 @@
             };
         },
         watch: {
-
+            '$route.params.app': {
+                handler(newVal, oldVal) {
+                    if (newVal === undefined) {
+                        this.$router.replace(`/app/${oldVal}/overview`)
+                    }
+                },
+                deep: true
+            }
         },
         computed: {
             ...mapState({
