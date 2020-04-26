@@ -19,7 +19,7 @@ const configList = [
         loading: false,
         yFormatter: function (value, index) {
 
-            return  value
+            return  numerify(value, '0 a')
         },
 
     },
@@ -42,7 +42,7 @@ const configList = [
         loading: false,
         yFormatter: function (value, index) {
 
-            return  value
+            return  numerify(value, '0 a')
         },
     },
     {
@@ -65,7 +65,7 @@ const configList = [
         loading: false,
         yFormatter: function (value, index) {
 
-            return  value
+            return  numerify(value, '0 a')
         },
     },
     {
@@ -88,7 +88,7 @@ const configList = [
         loading: false,
         yFormatter: function (value, index) {
 
-            return  value
+            return  numerify(value, '0 a')
         },
     },
     {
@@ -108,7 +108,7 @@ const configList = [
         loading: false,
         yFormatter: function (value, index) {
 
-            return  value
+            return  numerify(value, '0 a')
         },
         tooltipFormatter: (item) =>{
             //console.log(item)
@@ -143,7 +143,7 @@ const configList = [
         loading: false,
         yFormatter: function (value, index) {
 
-            return  value
+            return  numerify(value, '0 a')
         },
         tooltipFormatter: (item) =>{
             //console.log(item)
@@ -283,7 +283,7 @@ const configList = [
         loading: false,
         yFormatter: function (value, index) {
 
-            return  value
+            return  numerify(value, '0 a')
         },
         tooltipFormatter: (item) =>{
             //console.log(item)
@@ -320,7 +320,7 @@ const configList = [
         loading: false,
         yFormatter: function (value, index) {
 
-            return  value
+            return  numerify(value, '0 a')
         },
         tooltipFormatter: (item) =>{
             //console.log(item)
@@ -339,24 +339,26 @@ const configList = [
         },
     },
     {
-        title: 'NGINX 后端错误响应',
-        color: ['#5BA9FF','#333333'],
+        title: 'NGINX 后端连接错误',
+        color: ['#5BA9FF','#63d8d3','#f94a46','#333'],
         url: '/selNginxUpstreamErrors',
         chartData: {
             rows: []
         },
         chartSettings: {
-            metrics: ['upstream_request_failed', 'upstream_response_failed'],
+            metrics: ['upstream_request_failed', 'upstream_response_failed', 'upstream_unusable', 'not_FD'],
             dimension: ['ctime'],
             labelMap: {
-                'upstream_request_failed': '请求',
-                'upstream_response_failed': '响应'
+                'upstream_request_failed': '超时',
+                'upstream_response_failed': '重置',
+                'upstream_unusable': '不可用',
+                'not_FD': '无FD'
             },
         },
         loading: false,
         yFormatter: function (value, index) {
 
-            return  value
+            return  numerify(value, '0 a')
         },
         tooltipFormatter: (item) =>{
             //console.log(item)
