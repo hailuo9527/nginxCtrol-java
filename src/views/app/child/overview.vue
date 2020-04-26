@@ -10,6 +10,7 @@
       :extend="chartExtend"
       :events="chartEvents"
       ref="echart"
+      :colors="colors"
     ></ve-sankey>
   </div>
 </template>
@@ -24,8 +25,9 @@ export default {
     veSankey,
   },
   data() {
+    this.colors = ['#91c7ae', '#996699', '#CC9999', '#CC9966', '#CC9999', '#993333', '#99CC00', '#33CC33', '#339933', '#9933CC']
     this.chartSettings = {
-      links: [],
+        links: [],
     };
     this.chartExtend = {
       series: {
@@ -55,7 +57,7 @@ export default {
           this.option = this.copyJson(option);
           //let oldOption = copyJson(option)
           // console.log(e);
-          // console.log(option);
+        //   console.log(option);
           let link = option.series[0].links;
           if (e.data.source === option.series[0].data[0].name) {
             for (let i = 0; i < this.chartSettings.links.length; i++) {
