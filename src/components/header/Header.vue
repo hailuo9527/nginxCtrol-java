@@ -27,6 +27,9 @@
           </DropdownMenu>
         </Dropdown>
       </div>
+      <div class="header_nav_item">
+        <router-link class="header_nav_item_label" to="/prewarn">预警</router-link>
+      </div>
     </div>
 
     <div class="profile">

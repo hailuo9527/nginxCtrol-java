@@ -451,7 +451,7 @@ export default {
 }
 .add-button {
   position: absolute;
-  right: 26px;
+  right: 32px;
   top: 96px;
 }
 /deep/ .ivu-table-row:hover {

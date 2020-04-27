@@ -31,19 +31,19 @@ LoadingBar.config({
   height: 3
 });
 router.beforeEach((to, from, next) => {
-  // const login = getToken()
-  // LoadingBar.start();
-  //   if (!login && to.path !== '/login') {  // 判断是否已经登录且前往的页面不是登录页
-  //     next({
-  //       name: 'login'
-  //     })
-  //   } else if (login && to.path === '/login') {  // 判断是否已经登录且前往的是登录页
-  //     next({
-  //       name: 'home'
-  //     })
-  //   } else {
-  //     next()
-  //   }
+  const login = getToken()
+  LoadingBar.start();
+    if (!login && to.path !== '/login') {  // 判断是否已经登录且前往的页面不是登录页
+      next({
+        name: 'login'
+      })
+    } else if (login && to.path === '/login') {  // 判断是否已经登录且前往的是登录页
+      next({
+        name: 'home'
+      })
+    } else {
+      next()
+    }
   next();
 });
 

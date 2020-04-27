@@ -19,7 +19,6 @@ let defaultRoutes = [
     {
 
         path: '/',
-        name: 'login',
         redirect: '/login',
         component: () => import(/* webpackChunkName: "layout" */'@/components/layout/default.vue'),
         children: [
@@ -45,6 +44,21 @@ let defaultRoutes = [
                         path: ':app/overview',
                         title: 'app-overview',
                         component: () => import('@/views/app/child/overview.vue'),
+                    }
+                ]
+            },
+            {
+                path: '/prewarn',
+                meta: {
+                    title: 'prewarn'
+                },
+                component: () => import('@/views/PreWarn/PreWarn.vue'),
+                children: [
+                    {
+                        path: ':prewarn/overview',
+                        name: 'prewarn-overview',
+                        title: 'prewarn-overview',
+                        component: () => import('@/views/PreWarn/child/overview.vue')
                     }
                 ]
             },
@@ -202,11 +216,11 @@ let defaultRoutes = [
 
                 component: () => import(/* webpackChunkName: "nginxConfigs" */ '@/views/configs/L7/config.vue')
             },
-
         ]
     },
     {
         path: '/login',
+        name: 'login',
         component: () => import('@/components/layout/layoutNoHeader.vue'),
         children: [
             {

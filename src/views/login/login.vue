@@ -108,19 +108,19 @@ export default {
   methods: {
     ...mapActions(["handleLogin"]),
     toLogin() {
-    //   this.$refs["loginForm"].validate((valid) => {
-    //     if (valid) {
-    //       this.login_to();
-    //     } else {
-    //       this.$Message.error("Fail!");
-    //     }
-    //   });
+      this.$refs["loginForm"].validate((valid) => {
+        if (valid) {
+          this.login_to();
+        } else {
+          this.$Message.error("Fail!");
+        }
+      });
 
-      this.loading = true
-      setTimeout(() => {
-          this.loading = false
-          this.$router.push('/home')
-      }, 1000)
+    //   this.loading = true
+    //   setTimeout(() => {
+    //       this.loading = false
+    //       this.$router.push('/home')
+    //   }, 1000)
     },
     toReset() {
       this.$refs["forgotForm"].validate((valid) => {

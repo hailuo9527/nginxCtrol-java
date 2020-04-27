@@ -169,12 +169,12 @@
                         </span>
 
                     </div>
-                    <div class="header_tab">
+                    <!-- <div class="header_tab">
                         <div class="tab">
 
                             <router-link :to="`/app/${$route.params.app}/overview`" class="tab_item">overview</router-link>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <router-view class="content_main"></router-view>
             </div>
