@@ -81,19 +81,19 @@
       </p>
       <div style="text-align:center">
         <Form ref="formValidate" :model="add_l7_form" :rules="ruleValidate">
-          <FormItem label="L7服务器别名" prop="l7ServerName">
+          <FormItem label="实例别名" prop="l7ServerName">
             <Input v-model="add_l7_form.l7ServerName"></Input>
           </FormItem>
-          <FormItem label="ssh连接L7服务器的IP" prop="l7ServerSSHIp">
+          <FormItem label="ssh连接实例的IP" prop="l7ServerSSHIp">
             <Input v-model="add_l7_form.l7ServerSSHIp"></Input>
           </FormItem>
-          <FormItem label="ssh连接L7服务器的用户" prop="l7ServerSSHName">
+          <FormItem label="ssh连接实例的用户" prop="l7ServerSSHName">
             <Input v-model="add_l7_form.l7ServerSSHName"></Input>
           </FormItem>
-          <FormItem label="ssh连接L7服务器的密码" prop="l7ServerSSHPwd">
+          <FormItem label="ssh连接实例的密码" prop="l7ServerSSHPwd">
             <Input v-model="add_l7_form.l7ServerSSHPwd"></Input>
           </FormItem>
-          <FormItem label="ssh连接L7服务器的端口" prop="l7ServerSSHPort">
+          <FormItem label="ssh连接实例的端口" prop="l7ServerSSHPort">
             <Input v-model="add_l7_form.l7ServerSSHPort"></Input>
           </FormItem>
           <FormItem label="备注" v-if="addMoment">
@@ -300,7 +300,7 @@ export default {
       // console.log(this.add_l7_form)
       this.l7_model_add = true;
     },
-    //添加L7服务器配置信息
+    //添加实例配置信息
     addL7(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
@@ -331,7 +331,7 @@ export default {
         }
       });
     },
-    //删除L7服务器配置信息
+    //删除实例配置信息
     async delL7ServerInfo(code) {
       this.$Modal.confirm({
         title: "提示",
@@ -357,7 +357,7 @@ export default {
         },
       });
     },
-    //修改L7服务器配置信息
+    //修改实例配置信息
     async updL7ServerInfo(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
@@ -388,7 +388,7 @@ export default {
         }
       });
     },
-    //展示Model框，展示当前L7服务器的数据
+    //展示Model框，展示当前实例的数据
     editModel(item) {
       console.log(item);
       this.edit = true;

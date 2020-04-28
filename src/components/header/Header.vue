@@ -14,22 +14,23 @@
         <router-link class="header_nav_item_label" to="/L7">实例</router-link>
       </div>
       <div class="header_nav_item">
-        <Dropdown trigger="click" class="black-dropdown">
-          <a class="header_nav_item_label" href="javascript:void(0)">
-            配置
-            <Icon type="ios-arrow-down"></Icon>
-          </a>
-          <DropdownMenu slot="list">
-            <!-- <DropdownItem >四层配置</DropdownItem>-->
-            <DropdownItem name="nginxConfig">
-              <router-link to="/nginxConfigs">七层配置</router-link>
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+        <router-link class="header_nav_item_label" to="/nginxConfigs">配置</router-link>
+          <!-- <Dropdown trigger="click" class="black-dropdown">
+            <a class="header_nav_item_label" href="javascript:void(0)">
+              配置
+              <Icon type="ios-arrow-down"></Icon>
+            </a>
+            <DropdownMenu slot="list">
+
+              <DropdownItem name="nginxConfig">
+                <router-link to="/nginxConfigs">七层配置</router-link>
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown> -->
       </div>
-      <div class="header_nav_item">
-        <router-link class="header_nav_item_label" to="/prewarn">预警</router-link>
-      </div>
+<!--      <div class="header_nav_item">-->
+<!--        <router-link class="header_nav_item_label" to="/prewarn">预警</router-link>-->
+<!--      </div>-->
     </div>
 
     <div class="profile">
@@ -44,7 +45,7 @@
           tao
           <Icon type="ios-arrow-down"></Icon>
         </a>
-        <DropdownMenu slot="list">
+        <DropdownMenu slot="list" >
           <DropdownItem name="Account">
             <span style="font-size: 14px">用户</span>
           </DropdownItem>

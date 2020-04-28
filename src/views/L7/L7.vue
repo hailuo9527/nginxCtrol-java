@@ -1,7 +1,7 @@
 <template>
   <div class="content_wrap">
     <Aside />
-    <div class="content_right" v-if="asideList.length">
+    <div class="content_right" v-if="!isEmptyObject(asideList)">
       <div class="content_right_scroll">
         <div class="content_header">
           <div class="header_title">
@@ -159,7 +159,7 @@ export default {
   beforeRouteLeave(to, from, next) {
     // 导航离开该组件的对应路由时调用
     // 可以访问组件实例 `this`
-    this.L7setActiveAside(this.asideList[0]);
+    this.L7setActiveAside(this.asideList[Object.keys(this.asideList)[0]][0]);
     next();
   }
 };
