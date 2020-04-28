@@ -25,7 +25,7 @@ export default {
     veSankey,
   },
   data() {
-    this.colors = ['#91c7ae', '#996699', '#CC9999', '#CC9966', '#CC9999', '#993333', '#99CC00', '#33CC33', '#339933', '#9933CC']
+    this.colors = ['#ff2800', '#f60018', '#ff5300', '#ff6f00', '#ff9400', '#ffce00', '#ffff00', '#8bea00', '#01939a', '#090974', '#8805a8']
     this.chartSettings = {
         links: [],
     };

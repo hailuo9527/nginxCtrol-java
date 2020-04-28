@@ -72,7 +72,7 @@ export default {
   data() {
     const validatePassCheck = (rule, value, callback) => {
       if (value === "") {
-        return callback(new Error("请再次输入密码"));
+        return callback(new Error("请输入密码"));
       } else if (value !== this.loginForm.password) {
         return callback(new Error("两次密码不一致"));
       } else {

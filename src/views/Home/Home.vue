@@ -2,7 +2,7 @@
   <div class="content" style="margin-top: 0px;">
     <div class="overview-container overview-container_css-grid">
       <div class="overview-container__header">
-        <div class="timewindow-chooser">
+        <!-- <div class="timewindow-chooser">
           <ul class="timewindow-chooser__list">
             <li
               :class="number === index ? 'timewindow-chooser__list-item_selected timewindow-chooser__list-item' : 'timewindow-chooser__list-item' "
@@ -10,66 +10,79 @@
               @click="change(index)"
             >{{item}}</li>
           </ul>
-        </div>
+        </div> -->
         <h1 class="overview-container__h1">Overview</h1>
       </div>
       <div class="overview-container__content">
         <div class="overview-score-box overview-score-box_semi-healthy">
-          <div :class="active ? 'transition-before' : 'transition-after' ">
-            <Icon type="md-settings" class="overview-score-box__settings" @click="config=true" />
-            <h2 class="overview-score-box__score">74.5%</h2>
-            <div class="overview-score-box__title">Application Health Score</div>
+          <div :class="active ? 'transition-before' : 'transition-after'">
+            <!-- <h3 class="overview-box__title">实例</h3> -->
+            <!-- <Icon type="md-settings" class="overview-score-box__settings" @click="config=true" /> -->
+            <h2 class="overview-score-box__score">{{ instancePercent }}%</h2>
+            <div class="overview-score-box__title">实例情状态</div>
             <table class="overview-score-box__stats">
               <tr>
-                <td>Successful requests</td>
-                <td>7k</td>
+                <td>在线实例</td>
+                <td>{{ instanceOn }}</td>
               </tr>
               <tr>
-                <td>Request time (P95)</td>
-                <td>0 s</td>
+                <td>离线实例</td>
+                <td>{{ instanceOff }}</td>
               </tr>
               <tr>
-                <td>Agent availability</td>
-                <td>75 %</td>
+                <td>在线实例占比</td>
+                <td>{{ instancePercent }}%</td>
               </tr>
             </table>
           </div>
         </div>
         <div class="overview-box">
-          <div :class="active ? 'transition-before' : 'transition-after' ">
-            <h3 class="overview-box__title">Total requests</h3>
+          <div :class="active ? 'transition-before' : 'transition-after'">
+            <h3 class="overview-box__title">预警</h3>
             <div class="overview-box__l">
-              <h4 class="overview-box__value-title">Past {{items[number]}}</h4>
+              <h4 class="overview-box__value-title">CPU预警线</h4>
               <span class="overview-box__l__content">
-                <span class="overview-box__l__val">7K</span>
-                <span class="overview-box__l__delta">+1 %</span>
-                <span class="overview-box__l__unit"></span>
+                <span class="overview-box__l__val">{{ cpuWarningCount }}</span>
+                <!-- <span class="overview-box__l__delta">+1 %</span>
+                <span class="overview-box__l__unit"></span> -->
               </span>
             </div>
             <div class="overview-box__r">
-              <h4 class="overview-box__value-title">Previous</h4>
-              <span class="overview-box__r__val">7K</span>
+              <h4 class="overview-box__value-title">磁盘预警线</h4>
+              <span class="overview-box__r__val">{{ diskWarningCount }}</span>
             </div>
-            <canvas id="canvas" class="overview-box__chart" width="320" height="100"></canvas>
+            <!-- <canvas id="canvas" class="overview-box__chart" width="320" height="100"></canvas> -->
           </div>
         </div>
         <div class="overview-box">
-          <div :class="active ? 'transition-before' : 'transition-after' ">
-            <h3 class="overview-box__title">HTTP 5xx errors</h3>
+          <div :class="active ? 'transition-before' : 'transition-after'">
+            <h3 class="overview-box__title">APP</h3>
             <div class="overview-box__l">
-              <h4 class="overview-box__value-title">Past {{items[number]}}</h4>
+              <h4 class="overview-box__value-title">Past 1H</h4>
               <span class="overview-box__l__content">
-                <span class="overview-box__l__val">0</span>
+                <span class="overview-box__l__val">{{ requestCountPast }}</span>
                 <span class="overview-box__l__unit"></span>
               </span>
             </div>
             <div class="overview-box__r">
               <h4 class="overview-box__value-title">Previous</h4>
-              <span class="overview-box__r__val">0</span>
+              <span class="overview-box__r__val">{{
+                requestCountCurrent
+              }}</span>
             </div>
-            <canvas id class="overview-box__chart" width="320" height="100"></canvas>
+            <div class="x-chart">
+              <ve-line
+                width="320px"
+                height="100px"
+                :data="chartData"
+                :extend="chartExtend"
+                :settings="chartSettings"
+                :colors="colors"
+              ></ve-line>
+            </div>
           </div>
         </div>
+        <!--
         <div class="overview-box">
           <div :class="active ? 'transition-before' : 'transition-after' ">
             <h3 class="overview-box__title">Request time (P95)</h3>
@@ -121,196 +134,138 @@
             </div>
             <canvas id="canvas3" class="overview-box__chart" width="320" height="100"></canvas>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="footer">
         <div class="footer__inner">Copyright © 2018-2020 WingsBro</div>
       </div>
     </div>
-    <Modal v-model="config" title="Common Modal dialog box title">
-      <p>Content of dialog</p>
-      <p>Content of dialog</p>
-      <p>Content of dialog</p>
-    </Modal>
   </div>
 </template>
 
 <script>
+import { selOverViewInfo } from "@/api/home";
+import VeLine from "v-charts/lib/line.common";
+import "v-charts/lib/style.css";
 export default {
+  components: { VeLine },
   data() {
+    this.colors = ['#ff2800', '#888888']
+    this.chartExtend = {
+      legend: {
+        show: false,
+        left: 30,
+        bottom: 10,
+        icon: "circle",
+      },
+      grid: {
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      },
+      series: {
+        type: "line",
+        smooth: false,
+        symbol: "circle",
+        symbolSize: 2,
+        showSymbol: false,
+        lineStyle: {
+          width: 1.5,
+        },
+        markPoint: {
+          symbol: "circle",
+        },
+        markArea: {
+          silent: true,
+          itemStyle: {
+            color: "#eeeeee",
+          },
+        },
+      },
+      xAxis: {
+        show: false,
+      },
+      yAxis: {
+        show: false,
+      },
+    };
     return {
       active: "",
-      number: 0,
-      config: false,
-      items: ["1H", "4H", "1D", "2D", "1W"],
-      arr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      cpuWarningCount: "",
+      diskWarningCount: "",
+      instanceOff: "",
+      instanceOn: "",
+      instancePercent: "",
+      requestCountCurrent: "",
+      requestCountPast: "",
+      chartSettings: {
+        metrics: ["requestCountCurrent", "requestCountPast"],
+        dimension: ["ctime"],
+        labelMap: {
+          requestCountCurrent: "当前请求数",
+          requestCountPast: "1小时前请求数",
+        },
+      },
+      chartData: {
+        rows: [
+          { ctime: "1/1", requestCountCurrent: 10, requestCountPast: 13 },
+          { ctime: "1/2", requestCountCurrent: 12, requestCountPast: 17 },
+          { ctime: "1/3", requestCountCurrent: 14, requestCountPast: 21 },
+          { ctime: "1/4", requestCountCurrent: 16, requestCountPast: 25 },
+          { ctime: "1/5", requestCountCurrent: 18, requestCountPast: 29 },
+          { ctime: "1/6", requestCountCurrent: 20, requestCountPast: 33 },
+        ],
+      },
     };
   },
   methods: {
-    change(index) {
-      this.number = index;
-      this.active = true;
-      // var active = this.active;
-      setTimeout(this.changeAfter, 1000);
+    //查询首页信息
+    async GetHomeInfo() {
+      let res = await selOverViewInfo();
+      //   console.log(res);
+      if (res.data.code === "success") {
+        const data = res.data.result;
+        this.cpuWarningCount = data.cpuWarningCount;
+        this.diskWarningCount = data.diskWarningCount;
+        this.instanceOff = data.instanceOff;
+        this.instanceOn = data.instanceOn;
+        this.instancePercent = data.instancePercent * 100;
+        if (data.requestCountCurrent / 1000 < 1000) {
+          this.requestCountCurrent =
+            parseInt(data.requestCountCurrent / 1000) + "K";
+        } else if (data.requestCountCurrent / 1000000 < 1000000) {
+          this.requestCountCurrent =
+            parseInt(data.requestCountCurrent / 1000000) + "M";
+        } else if (data.requestCountCurrent / 1000000000 < 1000000000) {
+          this.requestCountCurrent =
+            parseInt(data.requestCountCurrent / 1000000000) + "B";
+        }
+        if (data.requestCountPast / 1000 < 1000) {
+          this.requestCountPast = parseInt(data.requestCountPast / 1000) + "K";
+        } else if (data.requestCountPast / 1000000 < 1000000) {
+          this.requestCountPast =
+            parseInt(data.requestCountPast / 1000000) + "M";
+        } else if (data.requestCountPast / 1000000000 < 1000000000) {
+          this.requestCountPast =
+            parseInt(data.requestCountPast / 1000000000) + "B";
+        }
+      }
     },
-    changeAfter() {
-      if (this.active) {
-        this.active = false;
-      }
-    },
-    //画布一
-    canvasOne() {
-      var canvas = document.getElementById("canvas");
-      var ctx = canvas.getContext("2d");
-      ctx.beginPath();
-      ctx.lineWidth = "3";
-      ctx.strokeStyle = "#01c864";
-      ctx.moveTo(0, 10);
-      var x = 0;
-      for (var y = 0; y < 14; y++) {
-        x += 30;
-        ctx.lineTo(x, Math.random() * this.arr.length);
-      }
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.lineWidth = "3";
-      ctx.strokeStyle = "grey";
-      ctx.moveTo(0, 10);
-      var x = 0;
-      for (var y = 0; y < 14; y++) {
-        x += 30;
-        ctx.lineTo(x, Math.random() * this.arr.length);
-      }
-      ctx.stroke();
-      setInterval(() => {
-        canvas.setAttribute("height", 100);
-        ctx.beginPath();
-        ctx.lineWidth = "3";
-        ctx.strokeStyle = "#01c864";
-        ctx.moveTo(0, 10);
-        var a = 0;
-        for (var y = 0; y < 14; y++) {
-          a += 30;
-          ctx.lineTo(a, Math.random() * this.arr.length);
-        }
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.lineWidth = "3";
-        ctx.strokeStyle = "grey";
-        ctx.moveTo(0, 10);
-        var a = 0;
-        for (var y = 0; y < 14; y++) {
-          a += 30;
-          ctx.lineTo(a, Math.random() * this.arr.length);
-        }
-        ctx.stroke();
-      }, 5000);
-    },
-    //画布二
-    canvasTwo() {
-      var canvas = document.getElementById("canvas2");
-      var ctx = canvas.getContext("2d");
-      ctx.beginPath();
-      ctx.lineWidth = "3";
-      ctx.strokeStyle = "#01c864";
-      ctx.moveTo(0, 10);
-      var x = 0;
-      for (var y = 0; y < 14; y++) {
-        x += 30;
-        ctx.lineTo(x, Math.random() * this.arr.length);
-      }
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.lineWidth = "3";
-      ctx.strokeStyle = "grey";
-      ctx.moveTo(0, 10);
-      var x = 0;
-      for (var y = 0; y < 14; y++) {
-        x += 30;
-        ctx.lineTo(x, Math.random() * this.arr.length);
-      }
-      ctx.stroke();
-      setInterval(() => {
-        canvas.setAttribute("height", 100);
-        ctx.beginPath();
-        ctx.lineWidth = "3";
-        ctx.strokeStyle = "#01c864";
-        ctx.moveTo(0, 10);
-        var a = 0;
-        for (var y = 0; y < 14; y++) {
-          a += 30;
-          ctx.lineTo(a, Math.random() * this.arr.length);
-        }
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.lineWidth = "3";
-        ctx.strokeStyle = "grey";
-        ctx.moveTo(0, 10);
-        var a = 0;
-        for (var y = 0; y < 14; y++) {
-          a += 30;
-          ctx.lineTo(a, Math.random() * this.arr.length);
-        }
-        ctx.stroke();
-      }, 5000);
-    },
-    //画布三
-    canvasThree() {
-      var canvas = document.getElementById("canvas3");
-      var ctx = canvas.getContext("2d");
-      ctx.beginPath();
-      ctx.lineWidth = "3";
-      ctx.strokeStyle = "#01c864";
-      ctx.moveTo(0, 10);
-      var x = 0;
-      for (var y = 0; y < 14; y++) {
-        x += 30;
-        ctx.lineTo(x, Math.random() * 10);
-      }
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.lineWidth = "3";
-      ctx.strokeStyle = "grey";
-      ctx.moveTo(0, 10);
-      var x = 0;
-      for (var y = 0; y < 14; y++) {
-        x += 30;
-        ctx.lineTo(x, Math.random() * 10);
-      }
-      ctx.stroke();
-      setInterval(() => {
-        canvas.setAttribute("height", 100);
-        ctx.beginPath();
-        ctx.lineWidth = "3";
-        ctx.strokeStyle = "#01c864";
-        ctx.moveTo(0, 10);
-        var a = 0;
-        for (var y = 0; y < 14; y++) {
-          a += 30;
-          ctx.lineTo(a, Math.random() * 10);
-        }
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.lineWidth = "3";
-        ctx.strokeStyle = "grey";
-        ctx.moveTo(0, 10);
-        var a = 0;
-        for (var y = 0; y < 14; y++) {
-          a += 30;
-          ctx.lineTo(a, Math.random() * 10);
-        }
-        ctx.stroke();
-      }, 5000);
-    }
   },
   mounted() {
-    this.canvasOne();
-    this.canvasTwo();
-    this.canvasThree();
-  }
+    this.GetHomeInfo();
+  },
 };
 </script>
 
 <style lang="less" scoped>
 @import "Home";
+.x-chart {
+  width: 320px;
+  height: 100px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
 </style>
