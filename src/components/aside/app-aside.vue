@@ -21,7 +21,7 @@
                         :key="item.app_service_id"
                 >
                     <div class="title">
-                        <span class="online" v-if="item.is_sync"></span>
+                        <span class="online" v-if="item.push_status"></span>
                         <span class="offline" v-else></span>
                         {{item.app_service_name}}
                     </div>
@@ -274,7 +274,7 @@
 
                 this.appModal = true
             },
-            //展示Model框，展示当前L7服务器的数据
+            //展示Model框，展示当前实例的数据
             editModel(item, index) {
                 this.edit = true
                 this.appForm = this.copyJson(item)
@@ -289,7 +289,7 @@
                 })
             },
             // 新建APP
-            //添加L7服务器配置信息
+            //添加实例配置信息
 
             addApp(name) {
                 this.$refs[name].validate(valid => {

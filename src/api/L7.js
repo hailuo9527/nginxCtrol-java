@@ -1,7 +1,7 @@
 import axios from '@/libs/api.request'
 
 
-/* 查询所有L7服务器配置信息 */
+/* 查询所有实例配置信息 */
 export const selL7ServerInfoAll = (  ) => {
     return axios.request({
         url: '/L7/selL7ServerInfoAll',
@@ -9,7 +9,7 @@ export const selL7ServerInfoAll = (  ) => {
     })
 }
 
-/* 添加L7服务器配置信息 */
+/* 添加实例配置信息 */
 export const addL7ServerInfo = ({l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort, remark}) => {
     return axios.request({
         url: '/L7/addL7ServerInfo',
@@ -20,7 +20,7 @@ export const addL7ServerInfo = ({l7ServerName, l7ServerSSHIp, l7ServerSSHName, l
     })
 }
 
-/* 删除L7服务器信息接口 */
+/* 删除实例信息接口 */
 export const delL7ServerInfo = ({l7ServerId}) => {
     return axios.request({
         url: '/L7/delL7ServerInfo',
@@ -31,7 +31,7 @@ export const delL7ServerInfo = ({l7ServerId}) => {
     })
 }
 
-/* 修改L7服务器信息接口 */
+/* 修改实例信息接口 */
 export const updL7ServerInfo = ({l7ServerId, l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort }) => {
     return axios.request({
         url: '/L7/updL7ServerInfo',
@@ -53,7 +53,7 @@ export const getConfigInfoByConfigName = () => {
 
 
 
-/* 查询所有L7服务器配置信息 */
+/* 查询所有实例配置信息 */
 export const getNginxConfALL = (  ) => {
     return axios.request({
         url: '/getNginxConfALL',
@@ -185,7 +185,7 @@ export const getL7RelevanceConfig = ({l7ServerId}) => {
 }
 
 
-/* 根据主键询L7服务器配置明细信息*/
+/* 根据主键询实例配置明细信息*/
 export const selL7ServerInfo = ({l7ServerId}) => {
     return axios.request({
         url: '/L7/selL7ServerInfo',
