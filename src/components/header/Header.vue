@@ -21,16 +21,16 @@
               <Icon type="ios-arrow-down"></Icon>
             </a>
             <DropdownMenu slot="list">
-             
+
               <DropdownItem name="nginxConfig">
                 <router-link to="/nginxConfigs">七层配置</router-link>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown> -->
       </div>
-      <div class="header_nav_item">
-        <router-link class="header_nav_item_label" to="/prewarn">预警</router-link>
-      </div>
+<!--      <div class="header_nav_item">-->
+<!--        <router-link class="header_nav_item_label" to="/prewarn">预警</router-link>-->
+<!--      </div>-->
     </div>
 
     <div class="profile">
