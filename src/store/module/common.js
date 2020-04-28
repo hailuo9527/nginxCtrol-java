@@ -1,10 +1,9 @@
 
 export default {
     state: {
-
         chartFilter: {
-            key: 1,
-            value: 4
+            key: 0,
+            value: 1
         }
     },
     mutations: {
