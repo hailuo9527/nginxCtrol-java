@@ -22,3 +22,13 @@ export const addOverViewInfo = ({user_id, app_id}) => {
         params: {user_id, app_id}
     })
 }
+
+/**  添加首页APP信息 */
+
+export const removeOverViewInfo = ({user_id, app_id}) => {
+    return axios.request({
+        url: 'delOverViewInfo',
+        method: 'post',
+        params: {user_id, app_id}
+    })
+}

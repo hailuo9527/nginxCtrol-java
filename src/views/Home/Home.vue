@@ -43,41 +43,11 @@
             <!-- <canvas id="canvas" class="overview-box__chart" width="320" height="100"></canvas> -->
           </div>
         </div>
-        <chart-box data=""></chart-box>
-
-       <!-- <div class="overview-box" v-for="(item, index) in appOverViews">
-          <div :class="active ? 'transition-before' : 'transition-after'">
-            <h3 class="overview-box__title">{{ item.appName }}</h3>
-            <div class="overview-box__l">
-              <h4 class="overview-box__value-title">Past 1H</h4>
-              <span class="overview-box__l__content">
-                <span class="overview-box__l__val">{{
-                  item.requestCountCurrent
-                }}</span>
-                <span class="overview-box__l__delta"
-                  >{{ item.requestRatio }}%</span
-                >
-                <span class="overview-box__l__unit"></span>
-              </span>
-            </div>
-            <div class="overview-box__r">
-              <h4 class="overview-box__value-title">Previous</h4>
-              <span class="overview-box__r__val">{{
-                item.requestCountPast
-              }}</span>
-            </div>
-            <div class="x-chart">
-              <ve-line
-                width="320px"
-                height="100px"
-                :data="chartDatas[index]"
-                :extend="chartExtend"
-                :settings="chartSettings"
-                :colors="colors"
-              ></ve-line>
-            </div>
-          </div>
-        </div>-->
+        <chart-box :data="item"
+                   :index="index"
+                   v-if="chartData.length"
+                   :key="index"
+                   v-for="(item, index) in chartData"></chart-box>
         <div class="overview-box">
           <div class="add-button" @click="DisplayModel()">
             <!-- <Icon type="ios-add-circle-outline" size="140" /> -->+
@@ -112,7 +82,7 @@
 </template>
 
 <script>
-import { selOverViewInfo, addOverViewInfo } from "@/api/home";
+import { selOverViewInfo, addOverViewInfo, removeOverViewInfo} from "@/api/home";
 
 import ChartBox from './chart-box'
 import { mapState, mapActions } from "vuex";
@@ -129,14 +99,7 @@ export default {
       instancePercent: "",
       requestCountCurrent: "",
       requestCountPast: "",
-      chartSettings: {
-        metrics: ["requestCountCurrent", "requestCountPast"],
-        dimension: ["ctime"],
-        labelMap: {
-          requestCountCurrent: "当前请求数",
-          requestCountPast: "1小时前请求数",
-        },
-      },
+
       requestRatio: "",
       AddModel: false,
       SelectModel: "",
@@ -147,13 +110,23 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["getAppAsideList"]),
     //查询首页信息
     async GetHomeInfo() {
       let res = await selOverViewInfo();
       console.log(res);
       if (res.data.code === "success") {
         const data = res.data.result;
-        this.chartData = data
+        let appData = {
+          requestCountCurrent: data.requestCountCurrent,
+          requestCountPast: data.requestCountPast,
+          requestCurrent: data.requestCurrent,
+          requestPast: data.requestPast,
+          requestRatio: data.requestRatio
+        }
+        this.chartData.push(appData,...data.appOverViews)
+
+        console.log(this.chartData)
         this.cpuWarningCount = data.cpuWarningCount;
         this.diskWarningCount = data.diskWarningCount;
         this.instanceOff = data.instanceOff;
@@ -164,6 +137,7 @@ export default {
     },
     DisplayModel() {
       this.AddModel = true;
+      this.getAppAsideList()
     },
     async handleSubmit() {
       let res = await addOverViewInfo({
@@ -193,13 +167,7 @@ export default {
 
 <style lang="less" scoped>
 @import "Home";
-.x-chart {
-  width: 320px;
-  height: 100px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-}
+
 .add-button {
   width: 140px;
   height: 140px;
