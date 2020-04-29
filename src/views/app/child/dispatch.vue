@@ -2,7 +2,7 @@
   <div class="dispatch">
     <div class="table-wrap">
       <div class="table">
-        <Table :loading="loading" :columns="columns1" :data="data1">
+        <Table :loading="loading" :columns="columns1" :data="data">
           <template slot-scope="{ row, index }" slot="action">
             <Button type="info" size="small" style="margin-right: 5px" @click="modify(row,index)">修改</Button>
           </template>
@@ -16,7 +16,11 @@
             @on-ok="submit"
             :loading="loading">
       <div class="modal_content">
-
+        <Form ref="formValidate" :model="form" :rules="ruleValidate" @submit.native.prevent :label-width="80">
+          <FormItem label="权重" prop="">
+            <Input v-model="form.name" placeholder="权重，数值越大权重越大"></Input>
+          </FormItem>
+        </Form>
       </div>
     </Modal>
   </div>
@@ -47,34 +51,12 @@
             align: 'center'
           }
         ],
-        data1: [
-          {
-            name: 'John Brown',
-            age: 18,
-            address: '1',
-            date: '2016-10-03'
-          },
-          {
-            name: 'Jim Green',
-            age: 24,
-            address: '1',
-            date: '2016-10-01'
-          },
-          {
-            name: 'Joe Black',
-            age: 30,
-            address: '1',
-            date: '2016-10-02'
-          },
-          {
-            name: 'Jon Snow',
-            age: 26,
-            address: '1',
-            date: '2016-10-04'
-          }
-        ],
+        data: [],
         modal: false,
+        form: {},
+        ruleValidate: {
 
+        }
 
       }
     },
