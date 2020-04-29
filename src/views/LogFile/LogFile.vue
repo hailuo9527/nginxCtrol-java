@@ -13,6 +13,7 @@
 <script>
 import { selSystemLogInfo } from "@/api/logfile";
 export default {
+    components: { VeLine },
   data() {
     return {
       TableColumns: [
@@ -39,7 +40,7 @@ export default {
         },
       ],
       TableData: [],
-      loading: false
+      loading: false,
     };
   },
   methods: {
