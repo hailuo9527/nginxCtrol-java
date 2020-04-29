@@ -11,3 +11,14 @@ export const selOverViewInfo = () => {
         method: 'post'
     })
 }
+
+
+/**  添加首页APP信息 */
+
+export const addOverViewInfo = ({user_id, app_id}) => {
+    return axios.request({
+        url: 'addOverViewInfo',
+        method: 'post',
+        params: {user_id, app_id}
+    })
+}
