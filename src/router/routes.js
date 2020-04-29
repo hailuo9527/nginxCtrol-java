@@ -19,6 +19,7 @@ let defaultRoutes = [
     {
 
         path: '/',
+        name: 'login',
         redirect: '/login',
         component: () => import(/* webpackChunkName: "layout" */'@/components/layout/default.vue'),
         children: [
@@ -226,7 +227,6 @@ let defaultRoutes = [
     },
     {
         path: '/login',
-        name: 'login',
         component: () => import('@/components/layout/layoutNoHeader.vue'),
         children: [
             {
