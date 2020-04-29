@@ -268,8 +268,6 @@ export default {
       Data: {
         rows: [],
       },
-      app_requestCountCurrent: "",
-      app_requestCountPast: "",
     };
   },
   methods: {
@@ -347,7 +345,6 @@ export default {
                 y < this.appOverViews[i].requestCurrent.length;
                 y++
               ) {
-                this.chartDatas.push(
                   this.$set(this.Data.rows, this.Data.rows.length, {
                     ctime: this.appOverViews[i].requestCurrent[y].ctime,
                     requestCountCurrent:
@@ -362,12 +359,11 @@ export default {
                         ? 0
                         : this.appOverViews[i].requestPast[y]
                             .http_request_count,
-                  })
+                  }
                 );
               }
             } else {
               for (let y = 0; y < 60; y++) {
-                this.chartDatas.push(
                   this.$set(this.Data.rows, this.Data.rows.length, {
                     ctime: this.appOverViews[i].requestCurrent[y].ctime,
                     requestCountCurrent:
@@ -382,10 +378,11 @@ export default {
                         ? 0
                         : this.appOverViews[i].requestPast[y]
                             .http_request_count,
-                  })
+                  }
                 );
               }
             }
+            this.chartDatas.push(this.Data.rows)
           }
         }
       }

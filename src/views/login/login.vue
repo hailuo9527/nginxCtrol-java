@@ -16,7 +16,7 @@
                 v-model="loginForm.password"
                 placeholder="Enter your password"
                 type="password"
-                @keyup.enter="toLogin"
+                @on-enter="toLogin"
               ></Input>
             </FormItem>
           </Form>
