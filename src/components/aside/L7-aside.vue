@@ -250,13 +250,10 @@ export default {
         this.addMoment = true;
       }
     },
-    "$route.params.L7": {
-      handler(newVal, oldVal) {
-        if (newVal === undefined) {
-          this.$router.replace(`/L7/${oldVal}/chart`);
-        }
-      },
-      deep: true
+    '$route'(nv, ov){
+      if(nv.path === '/L7'){
+        this.$router.replace(ov)
+      }
     }
   },
   computed: {
@@ -322,6 +319,8 @@ export default {
                 this.getL7AsideList().then(res => {
                   /* 第一次添加 */
                   if (this.asyncOk(res) && !this.$route.params.L7) {
+                    let item = res.data.result[Object.keys(res.data.result)[0][0]]
+                    this.L7setActiveAside(item);
                     this.$router.replace(`/L7/${this.l7ServerId}/chart`);
                   }
                 });
@@ -349,7 +348,7 @@ export default {
           this.l7_model_add = false;
           if (this.asyncOk(res)) {
             this.$Message.success("删除成功！");
-            this.getL7AsideList().then(res => {
+            this.getL7AsideList(true).then(res => {
               if (this.asyncOk(res) && !res.data.result.length) {
                 this.$router.push(`/L7`);
               }
@@ -375,13 +374,7 @@ export default {
               if (res.data.code === "success") {
                 this.l7_model_add = false;
                 this.$Message.success("修改成功");
-                this.getL7AsideList().then(res => {
-                  if (res.data.code === "success") {
-                    /* if (this.asideList.length){
-                      this.$router.replace(`/L7/${this.asideList[0].app_service_name}`);
-                    }*/
-                  }
-                });
+                this.getL7AsideList()
               } else {
                 this.$Message.error(`${res.data.result}`);
               }
@@ -409,7 +402,7 @@ export default {
     }
   },
   created() {
-    this.getL7AsideList().then(res => {
+    this.getL7AsideList(true).then(res => {
       if (this.asyncOk(res)) {
         if (!this.$route.params.L7) {
           this.$router.replace(`/L7/${this.l7ServerId}/chart`);
@@ -431,16 +424,8 @@ export default {
   },
   mounted() {
     this.timer = setInterval(() => {
-      selL7ServerInfoAll()
-        .then(res => {
-          if (this.asyncOk(res)) {
-            this.L7setAsideList(res.data.result || []);
-          }
-        })
-        .catch(err => {
-          throw new Error(err);
-        });
-    }, 1000 * 60);
+      this.getL7AsideList()
+    }, 1000 * 10);
   },
   beforeDestroy() {
     clearInterval(this.timer);

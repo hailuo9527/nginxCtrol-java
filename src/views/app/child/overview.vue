@@ -25,7 +25,7 @@ export default {
     veSankey,
   },
   data() {
-    this.colors = ['#91c7ae', '#996699', '#CC9999', '#CC9966', '#CC9999', '#993333', '#99CC00', '#33CC33', '#339933', '#9933CC']
+    this.colors = ['#e4b5fe', '#8085ee', '#add4ff','#add4ff', '#f5e483', '#6ab1fe','#fa80bc','#5BA9FF','#F967B0']
     this.chartSettings = {
         links: [],
     };
@@ -45,6 +45,10 @@ export default {
           curveness: 0.3,
         },
         nodeAlign: "left",
+        itemStyle: {
+          borderType: 'dashed',
+          borderColor: '#eee',
+        }
       },
     };
     /** chart表的点击事件 */

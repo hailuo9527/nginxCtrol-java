@@ -20,14 +20,16 @@ export default {
 
     },
     actions: {
-        getAppAsideList({ commit }) {
+        getAppAsideList({ commit },shouldUpdateActiveAside) { // shouldUpdateActiveAside为true时更新 appSetActiveAside
             return new Promise((resolve, reject) => {
                 commit('appChangeLoadingStatus', true)
                 selAppInfoList().then(res => {
                     if (res.data.code === 'success'){
                         // console.log(res)
                         commit('appSetAsideList', res.data.result || [])
-                        commit('appSetActiveAside', res.data.result[0])
+                        if (shouldUpdateActiveAside){
+                            commit('appSetActiveAside', res.data.result[0])
+                        }
                         commit('appChangeLoadingStatus', false)
                     }
                     resolve(res)

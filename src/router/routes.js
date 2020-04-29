@@ -44,7 +44,13 @@ let defaultRoutes = [
                         path: ':app/overview',
                         title: 'app-overview',
                         component: () => import('@/views/app/child/overview.vue'),
-                    }
+                    },
+                    {
+                        name: 'app-dispatch',
+                        path: ':app/dispatch',
+                        title: 'app-dispatch',
+                        component: () => import('@/views/app/child/dispatch.vue'),
+                    },
                 ]
             },
             {
