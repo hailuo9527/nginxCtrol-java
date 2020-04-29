@@ -354,9 +354,13 @@ export default {
     async GetAllUser() {
       this.loading = true;
       let res = await selSysUersInfoAll();
+      if (res.data.code === 'success') {
       this.loading = false;
       this.user_length = res.data.result.length;
       this.UserTableData = res.data.result;
+      }else {
+          this.loading = false;
+      }
     },
     //删除用户信息
     async DeleteUser(id) {

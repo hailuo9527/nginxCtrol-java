@@ -99,3 +99,24 @@ export const appViewData = ({app_service_id}) => {
         }
     })
 }
+
+
+/** 根据app主键查询流量调度明细 */
+
+export const selAppDispatch = ({app_server_id}) => {
+    return axios.request({
+        url: '/selAppDispatch',
+        method: 'post',
+        params: {app_server_id}
+    })
+}
+
+/** 修改应用权重 */
+
+export const updAppWeight = ({app_server_id, upstream_server, weight, upstream_request}) => {
+    return axios.request({
+        url: '/updAppWeight',
+        method: 'post',
+        data: {app_server_id, upstream_server, weight, upstream_request}
+    })
+}

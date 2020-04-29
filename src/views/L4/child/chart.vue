@@ -94,7 +94,11 @@
                       let res = await getSupData(this.list[data.index].supUrl, json)
                       this.list[data.index].loading = false
                       if(res.data.code === 'success') {
-                          this.supData = res.data.result
+                          this.supData = res.data.result || []
+                          this.supData = this.supData.filter((item)=>{
+                            // 数组去空值
+                            return item && item.trim()
+                          })
                           //console.log(this.supData)
                           this.$set(this.list[data.index], 'supData', this.supData)
                           this.$set(this.list[data.index], 'supParams', this.supData[0] ? this.supData[0]: null)

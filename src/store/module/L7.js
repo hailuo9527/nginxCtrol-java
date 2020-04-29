@@ -32,7 +32,7 @@ export default {
 
     },
     actions: {
-        getL7AsideList({ commit }) {
+        getL7AsideList({ commit }, shouldUpdateActiveAside) {
             return new Promise((resolve, reject) => {
                 commit('L7changeLoadingStatus', true)
                 selL7ServerInfoAll().then(res => {
@@ -40,9 +40,11 @@ export default {
                         let keys = Object.keys(res.data.result)
                         console.log(res.data.result[keys[0]][0])
                         commit('L7setAsideList', res.data.result || [])
-                    
+
                         //commit('L7setActiveAside', res.data.result[0])
-                        commit('L7setActiveAside', res.data.result[keys[0]][0])
+                        if (shouldUpdateActiveAside) {
+                            commit('L7setActiveAside', res.data.result[keys[0]][0])
+                        }
                         commit('L7changeLoadingStatus', false)
                     }
                     resolve(res)

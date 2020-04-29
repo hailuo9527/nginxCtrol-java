@@ -11,7 +11,6 @@
           </a>
           <DropdownMenu slot="list">
             <DropdownItem v-for="(item, index) in data.supData" :name="item" :key="index">{{item}}</DropdownItem>
-
           </DropdownMenu>
         </Dropdown>
       </div>

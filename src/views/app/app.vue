@@ -1,13 +1,13 @@
 <template>
-    <div class="content_wrap">
-        <Aside />
-        <div class="content_right" v-if="asideList.length">
-            <div class="content_right_scroll">
-                <div class="content_header">
-                    <div class="header_title">
+  <div class="content_wrap">
+    <Aside/>
+    <div class="content_right" v-if="asideList.length">
+      <div class="content_right_scroll">
+        <div class="content_header">
+          <div class="header_title">
                         <span>
                           {{activeAside.app_service_name}}
-                          <Icon class="icon" @click="openDrawer = true" type="md-settings" />
+                          <Icon class="icon" @click="openDrawer = true" type="md-settings"/>
                             <Drawer :title="activeAside.app_service_name"
                                     width="420"
                                     placement="left" class="left-drawer" :closable="false" v-model="openDrawer">
@@ -20,20 +20,21 @@
                                 </div>
 
                                 <div class="row-item" @click="collapsed = !collapsed">
-                                    <div class="title" :class="collapsed? 'collapsed': ''" >
+                                    <div class="title" :class="collapsed? 'collapsed': ''">
                                         <span>关联的实例</span>
                                         <Icon type="ios-arrow-forward" size="20" class="icon"/>
                                     </div>
 
                                 </div>
-                                <div class="row-item"  v-show="collapsed" v-if="detailInfo.l7ServerInfoList">
+                                <div class="row-item" v-show="collapsed" v-if="detailInfo.l7ServerInfoList">
                                     <div class="info-list">
                                          <div class="list-item no-item" v-if="!detailInfo.l7ServerInfoList.length">
                                         暂无数据
                                     </div>
-                                    <div class="list-item" :key="item.l7ServerId" v-for="item in detailInfo.l7ServerInfoList">
+                                    <div class="list-item" :key="item.l7ServerId"
+                                         v-for="item in detailInfo.l7ServerInfoList">
                                         <router-link :to="`/L7/${item.l7ServerId}/chart`">
-                                            <Icon type="ios-color-filter-outline" />
+                                            <Icon type="ios-color-filter-outline"/>
                                             {{item.l7ServerName}}
                                         </router-link>
 
@@ -42,18 +43,20 @@
 
                                 </div>
                                 <div class="row-item" @click="server = !server">
-                                    <div class="title" :class="server? 'collapsed': ''" >
+                                    <div class="title" :class="server? 'collapsed': ''">
                                         <span>应用服务器</span>
                                         <Icon type="ios-arrow-forward" size="20" class="icon"/>
                                     </div>
 
                                 </div>
-                                <div class="row-item"  v-show="server" v-if="detailInfo.appDefaultPublishConfList">
+                                <div class="row-item" v-show="server" v-if="detailInfo.appDefaultPublishConfList">
                                     <div class="info-list">
-                                         <div class="list-item no-item" v-if="!detailInfo.appDefaultPublishConfList.length">
+                                         <div class="list-item no-item"
+                                              v-if="!detailInfo.appDefaultPublishConfList.length">
                                         暂无数据
                                     </div>
-                                    <div class="list-item" v-else :key="item.l7ServerId" v-for="item in detailInfo.appDefaultPublishConfList">
+                                    <div class="list-item" v-else :key="item.l7ServerId"
+                                         v-for="item in detailInfo.appDefaultPublishConfList">
                                        <!-- <router-link :to="`/L7/${item.l7ServerId}/chart`">
                                             <Icon type="ios-color-filter-outline" />
                                             {{item.l7ServerName}}
@@ -71,8 +74,8 @@
                                     </div>
 
                                 </div>
-                                <div class="row-item" >
-                                    <div class="title"  >
+                                <div class="row-item">
+                                    <div class="title">
                                         <span>关联的配置</span>
 
                                     </div>
@@ -88,7 +91,7 @@
                                             params:{configName: detailInfo.nginxConf.config_name,},
                                             query: {nginx_conf_id: detailInfo.nginxConf.nginx_conf_id}}">
 
-                                                <Icon type="ios-color-filter-outline" />
+                                                <Icon type="ios-color-filter-outline"/>
                                                 {{detailInfo.nginxConf.config_name}}
                                             </router-link>
 
@@ -101,12 +104,13 @@
 
                         </Drawer>
                         </span>
-                        <span class="status">
+            <span class="status">
                               <Icon type="md-happy" size="20" color="#21a37a"/>
                                     <span>状态</span>: {{activeAside.is_sync ? '已同步': '未同步'}}
                         </span>
-                        <span class="publish">
-                            <Button type="primary" :loading="pushAppLoading"  @click="publicAppAuto" :disabled="!activeAside.appDefaultPublishConfList.length">
+            <span class="publish">
+                            <Button type="primary" :loading="pushAppLoading" @click="publicAppAuto"
+                                    :disabled="!activeAside.appDefaultPublishConfList.length">
                                 一键发布
                             </Button>
                             <Button style="margin-left: 20px" @click="publicApp">手动发布</Button>
@@ -118,7 +122,7 @@
                                     <Form ref="formValidate" :model="appForm" :rules="ruleValidate">
                                         <FormItem label="是否开启热备份">
 
-                                            <i-switch  v-model="appForm.configure_ha" >
+                                            <i-switch v-model="appForm.configure_ha">
                                                 <span slot="open">On</span>
                                                 <span slot="close">Off</span>
                                             </i-switch>
@@ -128,10 +132,12 @@
                                             <popTip content="对外开放的IP地址,开启热备份时必填"></popTip>
                                              <Input v-model="appForm.app_vip"></Input>
                                         </FormItem>
-                                        <FormItem label="选择实例" prop="l7_server_ids" >
+                                        <FormItem label="选择实例" prop="l7_server_ids">
                                             <popTip content="实例为部署NGINX代理的服务器，开启热备份时至少选择两台实例"></popTip>
-                                            <Select v-model="appForm.l7_server_ids" filterable multiple @on-select="selectL7">
-                                                <Option v-for="item in L7List" :value="item.l7ServerId" :key="item.l7ServerId">{{ item.l7ServerName }}</Option>
+                                            <Select v-model="appForm.l7_server_ids" filterable multiple
+                                                    @on-select="selectL7">
+                                                <Option v-for="item in L7List" :value="item.l7ServerId"
+                                                        :key="item.l7ServerId">{{ item.l7ServerName }}</Option>
                                             </Select>
                                              <div v-if="!L7List.length" class="">
                                                 暂无实例，
@@ -141,8 +147,8 @@
                                         </FormItem>
                                         <FormItem label="选择配置" prop="nginx_conf_id" v-if="configList">
                                             <popTip content="选择一个配置并发布到当前APP"></popTip>
-                                            <Select v-model="appForm.nginx_conf_id" filterable >
-                                                 <Option v-for="item in configList" :value="item.nginx_conf_id" >{{item.config_name}}</Option>
+                                            <Select v-model="appForm.nginx_conf_id" filterable>
+                                                 <Option v-for="item in configList" :value="item.nginx_conf_id">{{item.config_name}}</Option>
                                             </Select>
                                              <div v-if="!configList.length" class="">
                                                 暂无配置，
@@ -168,204 +174,205 @@
                             </Modal>
                         </span>
 
-                    </div>
-                    <div class="header_tab">
-                        <div class="tab">
-
-                            <router-link :to="`/app/${$route.params.app}/overview`" class="tab_item">overview</router-link>
-                        </div>
-                    </div>
-                </div>
-                <router-view class="content_main"></router-view>
+          </div>
+          <div class="header_tab">
+            <div class="tab">
+              <router-link :to="`/app/${$route.params.app}/overview`" class="tab_item">概览</router-link>
+              <router-link :to="`/app/${$route.params.app}/dispatch`" class="tab_item">基础调度</router-link>
             </div>
+
+          </div>
+
         </div>
-        <div class="content_right" v-else>
-            <div class="no-data">暂无数据，点击左侧“+”创建APP</div>
-        </div>
+        <router-view class="content_main"></router-view>
+      </div>
     </div>
+    <div class="content_right" v-else>
+      <div class="no-data">暂无数据，点击左侧“+”创建APP</div>
+    </div>
+  </div>
 </template>
 <script>
-    import Aside from "@/components/aside/app-aside.vue";
-    import popTip from "@/components/common/pop-tip";
-    import { mapState, mapMutations, mapActions } from "vuex";
-    import { pushApp, selAppDetails, pushAppDefault } from "../../api/app";
-    import { getNginxConfALL, selUsableL7Server } from "../../api/L7";
+  import Aside from "@/components/aside/app-aside.vue";
+  import popTip from "@/components/common/pop-tip";
+  import {mapState, mapMutations, mapActions} from "vuex";
+  import {pushApp, selAppDetails, pushAppDefault} from "../../api/app";
+  import {getNginxConfALL, selUsableL7Server} from "../../api/L7";
 
 
-    export default {
+  export default {
 
-        data() {
-            const selection = (rule, value, callback) => {
+    data() {
+      const selection = (rule, value, callback) => {
 
-                if (!value) {
-                    if (this.appForm.configure_ha){
-                        return callback(new Error("已开启热备份，至少选择两个实例"));
-                    }
-                    return callback(new Error("至少选择一个实例"));
-                } else {
-                    callback();
-                }
-            }
-            const config = (rule, value, callback) => {
-                if (!value) {
-                    return callback(new Error("必须选择一个配置文件"));
-                } else {
-                    callback();
-                }
-            }
-            this.ipPort = (rule, value, callback) =>{
-                if (value){
-                    let ip = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/
-                    let port = /^[1-9]$|(^[1-9][0-9]$)|(^[1-9][0-9][0-9]$)|(^[1-9][0-9][0-9][0-9]$)|(^[1-6][0-5][0-5][0-3][0-5]$)/
-                    let ipAndPort = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/
-                    if(ip.test(value) || port.test(value) || ipAndPort.test(value) ){
-                        callback()
-                    }else {
-                        callback(new Error('格式错误'))
-                    }
-                }else{
-                    callback(new Error('不能为空'))
-                }
-            }
-            return {
-                openDrawer: false,
-                appModal: false,
-                appForm: {
-
-                },
-                ruleValidate: {
-                    l7_server_ids: [
-                        {  validator: selection, trigger: 'change' }
-                    ],
-                    app_vip: [
-                        { validator: this.ipPort }
-                    ],
-                    nginx_conf_id: [
-                        {  validator: config }
-                    ]
-                },
-                modal_loading: false,
-                configList: null,
-                L7List: [],
-                detailInfo: {},
-                collapsed: false,
-                server: false,
-                pushAppLoading: false
-            };
-        },
-        components: {
-            Aside,popTip
-        },
-        methods: {
-            ...mapMutations(["appSetActiveAside"]),
-            ...mapActions(['getAppAsideList']),
-            publicApp() {
-                this.appModal = true
-
-                this.appForm = this.copyJson(this.activeAside)
-                //console.log(this.appForm)
-                this.getAllConfigInfo()
-                this.selUsableL7Server().then(()=> {
-                    this.$set(this.appForm, 'l7_server_ids',this.activeAside.l7_server_ids)
-                    if (!this.appForm.l7_server_ids.length){
-                        let arr = []
-                        arr.push(this.L7List[0].l7ServerId)
-                        this.$set(this.appForm, 'l7_server_ids',arr)
-                    }
-                })
-            },
-            /* 发布APP */
-            pushApp(name) {
-                this.$refs[name].validate(valid => {
-                    if (valid) {
-                        this.modal_loading = true;
-                        pushApp(this.appForm)
-                            .then(res => {
-                                // console.log(res);
-                                this.modal_loading = false;
-                                if (res.data.code === 'success') {
-                                    this.appModal = false;
-                                    this.$Message.success('发布成功')
-                                    this.getAppAsideList()
-                                } else {
-                                    this.$Message.error(res.data.result)
-                                }
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            });
-                    } else {
-                        this.$Message.error("请检查输入是否正确!");
-                    }
-                });
-            },
-            /* 一键发布 */
-            async publicAppAuto() {
-                this.pushAppLoading = true
-                let res = await  pushAppDefault(this.activeAside)
-                this.pushAppLoading = false
-                if (this.asyncOk(res)) {
-                    this.$Message.success('发布成功')
-                    this.getAppAsideList()
-                } else{
-                    this.$Message.error(res.data.result)
-                }
-            },
-            /* 获取配置 */
-            async getAllConfigInfo () {
-                let res = await getNginxConfALL()
-                if (this.asyncOk(res)) {
-                    this.configList = res.data.result || []
-                }
-            },
-            /* 获取L7实例 */
-            async selUsableL7Server() {
-                let res = await selUsableL7Server({ app_service_id: this.$route.params.app})
-                if (this.asyncOk(res)) {
-                    this.L7List = res.data.result || []
-                }
-            },
-            /* 选择L7实例 */
-            selectL7(item) {
-                console.log(item)
-
-            },
-            /* 侧栏获取app详细信息 */
-            async selAppDetails(id) {
-                let res = await selAppDetails({app_server_id: this.activeAside.app_service_id})
-                //console.log(res)
-                if (this.asyncOk(res)) {
-                    this.detailInfo = res.data.result || {}
-                }
-            }
-        },
-        watch: {
-            openDrawer(val, oldVal) {
-                if (val) {
-                    //console.log(this.activeAside.app_service_id)
-                    this.selAppDetails()
-                }
-            }
-        },
-        computed: {
-            ...mapState({
-                asideList: state => state.app.asideList,
-                activeAside: state => state.app.activeAside
-            })
-        },
-        beforeRouteLeave(to, from, next) {
-            // 导航离开该组件的对应路由时调用
-            // 可以访问组件实例 `this`
-            this.appSetActiveAside(this.asideList[0]);
-            next();
+        if (!value) {
+          if (this.appForm.configure_ha) {
+            return callback(new Error("已开启热备份，至少选择两个实例"));
+          }
+          return callback(new Error("至少选择一个实例"));
+        } else {
+          callback();
         }
-    };
+      }
+      const config = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error("必须选择一个配置文件"));
+        } else {
+          callback();
+        }
+      }
+      this.ipPort = (rule, value, callback) => {
+        if (value) {
+          let ip = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/
+          let port = /^[1-9]$|(^[1-9][0-9]$)|(^[1-9][0-9][0-9]$)|(^[1-9][0-9][0-9][0-9]$)|(^[1-6][0-5][0-5][0-3][0-5]$)/
+          let ipAndPort = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/
+          if (ip.test(value) || port.test(value) || ipAndPort.test(value)) {
+            callback()
+          } else {
+            callback(new Error('格式错误'))
+          }
+        } else {
+          callback(new Error('不能为空'))
+        }
+      }
+      return {
+        openDrawer: false,
+        appModal: false,
+        appForm: {},
+        ruleValidate: {
+          l7_server_ids: [
+            {validator: selection, trigger: 'change'}
+          ],
+          app_vip: [
+            {validator: this.ipPort}
+          ],
+          nginx_conf_id: [
+            {validator: config}
+          ]
+        },
+        modal_loading: false,
+        configList: null,
+        L7List: [],
+        detailInfo: {},
+        collapsed: false,
+        server: false,
+        pushAppLoading: false
+      };
+    },
+    components: {
+      Aside, popTip
+    },
+    methods: {
+      ...mapMutations(["appSetActiveAside"]),
+      ...mapActions(['getAppAsideList']),
+      publicApp() {
+        this.appModal = true
+
+        this.appForm = this.copyJson(this.activeAside)
+        //console.log(this.appForm)
+        this.getAllConfigInfo()
+        this.selUsableL7Server().then(() => {
+          this.$set(this.appForm, 'l7_server_ids', this.activeAside.l7_server_ids)
+          if (!this.appForm.l7_server_ids.length) {
+            let arr = []
+            arr.push(this.L7List[0].l7ServerId)
+            this.$set(this.appForm, 'l7_server_ids', arr)
+          }
+        })
+      },
+      /* 发布APP */
+      pushApp(name) {
+        this.$refs[name].validate(valid => {
+          if (valid) {
+            this.modal_loading = true;
+            pushApp(this.appForm)
+              .then(res => {
+                // console.log(res);
+                this.modal_loading = false;
+                if (res.data.code === 'success') {
+                  this.appModal = false;
+                  this.$Message.success('发布成功')
+                  this.getAppAsideList()
+                } else {
+                  this.$Message.error(res.data.result)
+                }
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          } else {
+            this.$Message.error("请检查输入是否正确!");
+          }
+        });
+      },
+      /* 一键发布 */
+      async publicAppAuto() {
+        this.pushAppLoading = true
+        let res = await pushAppDefault(this.activeAside)
+        this.pushAppLoading = false
+        if (this.asyncOk(res)) {
+          this.$Message.success('发布成功')
+          this.getAppAsideList()
+        } else {
+          this.$Message.error(res.data.result)
+        }
+      },
+      /* 获取配置 */
+      async getAllConfigInfo() {
+        let res = await getNginxConfALL()
+        if (this.asyncOk(res)) {
+          this.configList = res.data.result || []
+        }
+      },
+      /* 获取L7实例 */
+      async selUsableL7Server() {
+        let res = await selUsableL7Server({app_service_id: this.$route.params.app})
+        if (this.asyncOk(res)) {
+          this.L7List = res.data.result || []
+        }
+      },
+      /* 选择L7实例 */
+      selectL7(item) {
+        console.log(item)
+
+      },
+      /* 侧栏获取app详细信息 */
+      async selAppDetails(id) {
+        let res = await selAppDetails({app_server_id: this.activeAside.app_service_id})
+        //console.log(res)
+        if (this.asyncOk(res)) {
+          this.detailInfo = res.data.result || {}
+        }
+      }
+    },
+    watch: {
+      openDrawer(val, oldVal) {
+        if (val) {
+          //console.log(this.activeAside.app_service_id)
+          this.selAppDetails()
+        }
+      }
+    },
+    computed: {
+      ...mapState({
+        asideList: state => state.app.asideList,
+        activeAside: state => state.app.activeAside
+      })
+    },
+    beforeRouteLeave(to, from, next) {
+      // 导航离开该组件的对应路由时调用
+      // 可以访问组件实例 `this`
+      this.appSetActiveAside(this.asideList[0]);
+      next();
+    }
+  };
 </script>
 <style lang="less" scoped>
-    @import "../L4/L4";
-    .content_main {
-        height: calc(100%);
-        padding: 98px 10px 0 10px;
-        //box-sizing: border-box;
-    }
+  @import "../L4/L4";
+
+  .content_main {
+    height: calc(100%);
+    padding: 98px 10px 0 10px;
+    //box-sizing: border-box;
+  }
 </style>

@@ -43,37 +43,9 @@
             <!-- <canvas id="canvas" class="overview-box__chart" width="320" height="100"></canvas> -->
           </div>
         </div>
-        <div class="overview-box">
-          <div :class="active ? 'transition-before' : 'transition-after'">
-            <h3 class="overview-box__title">APP</h3>
-            <div class="overview-box__l">
-              <h4 class="overview-box__value-title">Past 1H</h4>
-              <span class="overview-box__l__content">
-                <span class="overview-box__l__val">{{
-                  requestCountCurrent
-                }}</span>
-                <span class="overview-box__l__delta">{{ requestRatio }}%</span>
-                <span class="overview-box__l__unit"></span>
-              </span>
-            </div>
-            <div class="overview-box__r">
-              <h4 class="overview-box__value-title">Previous</h4>
-              <span class="overview-box__r__val">{{ requestCountPast }}</span>
-            </div>
-            <div class="x-chart">
-              <ve-line
-                width="320px"
-                height="100px"
-                :data="chartData"
-                :extend="chartExtend"
-                :settings="chartSettings"
-                :colors="colors"
-              ></ve-line>
-            </div>
-          </div>
-        </div>
+        <chart-box data=""></chart-box>
 
-        <div class="overview-box" v-for="(item, index) in appOverViews">
+       <!-- <div class="overview-box" v-for="(item, index) in appOverViews">
           <div :class="active ? 'transition-before' : 'transition-after'">
             <h3 class="overview-box__title">{{ item.appName }}</h3>
             <div class="overview-box__l">
@@ -105,7 +77,7 @@
               ></ve-line>
             </div>
           </div>
-        </div>
+        </div>-->
         <div class="overview-box">
           <div class="add-button" @click="DisplayModel()">
             <!-- <Icon type="ios-add-circle-outline" size="140" /> -->+
@@ -130,59 +102,7 @@
             >
           </div>
         </Modal>
-        <!--
-        <div class="overview-box">
-          <div :class="active ? 'transition-before' : 'transition-after' ">
-            <h3 class="overview-box__title">Request time (P95)</h3>
-            <div class="overview-box__l">
-              <h4 class="overview-box__value-title">Past {{items[number]}}</h4>
-              <span class="overview-box__l__content">
-                <span class="overview-box__l__val">0.000</span>
-                <span class="overview-box__l__unit">s</span>
-              </span>
-            </div>
-            <div class="overview-box__r">
-              <h4 class="overview-box__value-title">Previous</h4>
-              <span class="overview-box__r__val">0.000</span>
-            </div>
-            <canvas id class="overview-box__chart" width="320" height="100"></canvas>
-          </div>
-        </div>
-        <div class="overview-box">
-          <div :class="active ? 'transition-before' : 'transition-after' ">
-            <h3 class="overview-box__title">Traffic</h3>
-            <div class="overview-box__l">
-              <h4 class="overview-box__value-title">Past {{items[number]}}</h4>
-              <span class="overview-box__l__content">
-                <span class="overview-box__l__val">0</span>
-                <span class="overview-box__l__delta">+2 %</span>
-                <span class="overview-box__l__unit">bps</span>
-              </span>
-            </div>
-            <div class="overview-box__r">
-              <h4 class="overview-box__value-title">Previous</h4>
-              <span class="overview-box__r__val">0</span>
-            </div>
-            <canvas id="canvas2" class="overview-box__chart" width="320" height="100"></canvas>
-          </div>
-        </div>
-        <div class="overview-box">
-          <div :class="active ? 'transition-before' : 'transition-after' ">
-            <h3 class="overview-box__title">Request time (P95)</h3>
-            <div class="overview-box__l">
-              <h4 class="overview-box__value-title">Past {{items[number]}}</h4>
-              <span class="overview-box__l__content">
-                <span class="overview-box__l__val">0.000</span>
-                <span class="overview-box__l__unit">%</span>
-              </span>
-            </div>
-            <div class="overview-box__r">
-              <h4 class="overview-box__value-title">Previous</h4>
-              <span class="overview-box__r__val">0.000</span>
-            </div>
-            <canvas id="canvas3" class="overview-box__chart" width="320" height="100"></canvas>
-          </div>
-        </div> -->
+
       </div>
       <div class="footer">
         <div class="footer__inner">Copyright © 2018-2020 WingsBro</div>
@@ -193,53 +113,13 @@
 
 <script>
 import { selOverViewInfo, addOverViewInfo } from "@/api/home";
-import VeLine from "v-charts/lib/line.common";
-import "v-charts/lib/style.css";
-import { mapState } from "vuex";
+
+import ChartBox from './chart-box'
+import { mapState, mapActions } from "vuex";
 export default {
-  components: { VeLine },
+  components: { ChartBox },
   data() {
-    this.colors = ["#05316d", "#888888"];
-    this.chartExtend = {
-      legend: {
-        show: false,
-        left: 30,
-        bottom: 10,
-        icon: "circle",
-      },
-      grid: {
-        top: 0,
-        left: -30,
-        right: 0,
-        bottom: 0,
-      },
-      series: {
-        type: "line",
-        smooth: false,
-        symbol: "circle",
-        symbolSize: 2,
-        showSymbol: false,
-        lineStyle: {
-          width: 1.5,
-        },
-        markPoint: {
-          symbol: "circle",
-        },
-        markArea: {
-          silent: true,
-          itemStyle: {
-            color: "#eeeeee",
-          },
-        },
-      },
-      xAxis: {
-        show: false,
-        position: "bottom",
-      },
-      yAxis: {
-        show: false,
-      },
-    };
+
     return {
       active: "",
       cpuWarningCount: "",
@@ -257,134 +137,29 @@ export default {
           requestCountPast: "1小时前请求数",
         },
       },
-      chartData: {
-        rows: [],
-      },
       requestRatio: "",
       AddModel: false,
       SelectModel: "",
       appOverViews: [],
-      chartDatas: [],
-      Data: {
-        rows: [],
-      },
+      app_requestCountCurrent: "",
+      app_requestCountPast: "",
+      chartData: []
     };
   },
   methods: {
     //查询首页信息
     async GetHomeInfo() {
       let res = await selOverViewInfo();
-      this.chartData.rows = [];
       console.log(res);
       if (res.data.code === "success") {
         const data = res.data.result;
+        this.chartData = data
         this.cpuWarningCount = data.cpuWarningCount;
         this.diskWarningCount = data.diskWarningCount;
         this.instanceOff = data.instanceOff;
         this.instanceOn = data.instanceOn;
         this.instancePercent = data.instancePercent * 100;
         this.appOverViews = data.appOverViews;
-        if (data.requestRatio > 0) {
-          this.requestRatio = "+" + parseInt(data.requestRatio * 100);
-        } else {
-          this.requestRatio = parseInt(data.requestRatio * 100);
-        }
-        if (data.requestCountCurrent / 1000 < 1000) {
-          this.requestCountCurrent =
-            parseInt(data.requestCountCurrent / 1000) + "K";
-        } else if (data.requestCountCurrent / 1000000 < 1000000) {
-          this.requestCountCurrent =
-            parseInt(data.requestCountCurrent / 1000000) + "M";
-        } else if (data.requestCountCurrent / 1000000000 < 1000000000) {
-          this.requestCountCurrent =
-            parseInt(data.requestCountCurrent / 1000000000) + "B";
-        }
-        if (data.requestCountPast / 1000 < 1000) {
-          this.requestCountPast = parseInt(data.requestCountPast / 1000) + "K";
-        } else if (data.requestCountPast / 1000000 < 1000000) {
-          this.requestCountPast =
-            parseInt(data.requestCountPast / 1000000) + "M";
-        } else if (data.requestCountPast / 1000000000 < 1000000000) {
-          this.requestCountPast =
-            parseInt(data.requestCountPast / 1000000000) + "B";
-        }
-        if (data.requestCurrent.length < 61) {
-          for (let i = 0; i < data.requestCurrent.length; i++) {
-            this.$set(this.chartData.rows, this.chartData.rows.length, {
-              ctime: data.requestCurrent[i].ctime,
-              requestCountCurrent:
-                data.requestCurrent[i].http_request_count == null
-                  ? 0
-                  : data.requestCurrent[i].http_request_count,
-              requestCountPast:
-                data.requestPast[i].http_request_count == null
-                  ? 0
-                  : data.requestPast[i].http_request_count,
-            });
-          }
-        } else {
-          for (let i = 0; i < 60; i++) {
-            this.$set(this.chartData.rows, this.chartData.rows.length, {
-              ctime: data.requestCurrent[i].ctime,
-              requestCountCurrent:
-                data.requestCurrent[i].http_request_count == null
-                  ? 0
-                  : data.requestCurrent[i].http_request_count,
-              requestCountPast:
-                data.requestPast[i].http_request_count == null
-                  ? 0
-                  : data.requestPast[i].http_request_count,
-            });
-          }
-        }
-        if (this.appOverViews !== []) {
-          for (let i = 0; i < this.appOverViews.length; i++) {
-            if (this.appOverViews[i].requestCurrent.length < 61) {
-              for (
-                let y = 0;
-                y < this.appOverViews[i].requestCurrent.length;
-                y++
-              ) {
-                  this.$set(this.Data.rows, this.Data.rows.length, {
-                    ctime: this.appOverViews[i].requestCurrent[y].ctime,
-                    requestCountCurrent:
-                      this.appOverViews[i].requestCurrent[y]
-                        .http_request_count == null
-                        ? 0
-                        : this.appOverViews[i].requestCurrent[y]
-                            .http_request_count,
-                    requestCountPast:
-                      this.appOverViews[i].requestPast[y].http_request_count ==
-                      null
-                        ? 0
-                        : this.appOverViews[i].requestPast[y]
-                            .http_request_count,
-                  }
-                );
-              }
-            } else {
-              for (let y = 0; y < 60; y++) {
-                  this.$set(this.Data.rows, this.Data.rows.length, {
-                    ctime: this.appOverViews[i].requestCurrent[y].ctime,
-                    requestCountCurrent:
-                      this.appOverViews[i].requestCurrent[y]
-                        .http_request_count == null
-                        ? 0
-                        : this.appOverViews[i].requestCurrent[y]
-                            .http_request_count,
-                    requestCountPast:
-                      this.appOverViews[i].requestPast[y].http_request_count ==
-                      null
-                        ? 0
-                        : this.appOverViews[i].requestPast[y]
-                            .http_request_count,
-                  }
-                );
-              }
-            }
-            this.chartDatas.push(this.Data.rows)
-          }
-        }
       }
     },
     DisplayModel() {
@@ -412,8 +187,6 @@ export default {
   },
   mounted() {
     this.GetHomeInfo();
-    console.log(this.asideList);
-    console.log(this.userInfo);
   },
 };
 </script>
@@ -442,6 +215,6 @@ export default {
   line-height: 140px;
 }
 .add-button:hover {
-  box-shadow: 10px 0px 10px rgba(0, 0, 0, 0.9);
+  //box-shadow: 10px 0px 10px rgba(0, 0, 0, 0.9);
 }
 </style>

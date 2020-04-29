@@ -35,7 +35,7 @@
                             @click.stop="delApp(item.app_service_id)"
                     />-->
                     <!--<Icon type="ios-create" size="18" color="#555" title="编辑" class="edit" @click.stop="editModel(item)" />-->
-                    <Icon type="md-more" size="20" color="#000" title="编辑" class="menu" @click.stop="editModel(item, index)"/>
+                    <Icon type="md-more" size="20" color="#000" title="编辑" class="menu" @click="editModel(item, index)"/>
                 </div>
             </div>
             <div class="aside-list-wrap" style="text-align: center" v-if="!filterAside.length">
@@ -215,13 +215,10 @@
             };
         },
         watch: {
-            '$route.params.app': {
-                handler(newVal, oldVal) {
-                    if (newVal === undefined) {
-                        this.$router.replace(`/app/${oldVal}/overview`)
-                    }
-                },
-                deep: true
+            '$route'(nv, ov){
+                if(nv.path === '/app'){
+                    this.$router.replace(ov)
+                }
             }
         },
         computed: {
@@ -308,6 +305,7 @@
                                     this.getAppAsideList().then(res => {
                                         /* 第一次添加 */
                                         if (this.asyncOk(res) && !this.$route.params.app){
+                                            this.appSetActiveAside(res.data.result[0] || {});
                                             this.$router.replace(`/app/${this.appServerId}/overview`)
                                         }
                                     });
@@ -335,7 +333,7 @@
                         this.appModal = false
                         if (this.asyncOk(res)) {
                             this.$Message.success("删除成功！");
-                            this.getAppAsideList().then(res => {
+                            this.getAppAsideList(true).then(res => {
                                 if (this.asyncOk(res) && !res.data.result.length){
                                     this.$router.push(`/app`)
                                 }
@@ -397,7 +395,7 @@
             /* 更新组件 */
         },
         created() {
-            this.getAppAsideList().then(res => {
+            this.getAppAsideList(true).then(res => {
                 if (this.asyncOk(res) && res.data.result.length) {
                     if(!this.$route.params.app){
                         this.$router.replace(`/app/${this.appServerId}/overview`)
@@ -415,13 +413,7 @@
         },
         mounted() {
             this.timer = setInterval(() => {
-                selAppInfoList().then(res => {
-                    if (this.asyncOk(res)){
-                        this.appSetAsideList(res.data.result || [])
-                    }
-                }).catch(err => {
-                    throw new Error(err)
-                })
+                this.getAppAsideList()
             }, 1000* 60)
         },
         beforeDestroy() {
