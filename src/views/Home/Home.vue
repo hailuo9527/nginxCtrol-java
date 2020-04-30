@@ -72,7 +72,7 @@
           <!-- 添加app的Modal -->
           <Modal v-model="AddModel" :mask-closable="false">
             <p slot="header" style="color:#333;text-align:center">
-              <span>添加</span>
+              <span>添加APP</span>
             </p>
             <Select v-model="SelectModel" style="width:100%">
               <Option
