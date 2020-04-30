@@ -51,7 +51,7 @@
               </div>
               <div class="overview-box__r">
                 <h4 class="overview-box__value-title">磁盘预警线</h4>
-                <span class="overview-box__r__val">{{ diskWarningCount }}</span>
+                <span class="overview-box__r__value">{{ diskWarningCount }}</span>
               </div>
               <!-- <canvas id="canvas" class="overview-box__chart" width="320" height="100"></canvas> -->
             </div>
@@ -134,9 +134,9 @@ export default {
     //查询首页信息
     async GetHomeInfo() {
       this.home_loading = true;
-      this.chartData = []
+      this.chartData = [];
       let res = await selOverViewInfo();
-      console.log(res);
+      //   console.log(res);
       if (res.data.code === "success") {
         const data = res.data.result;
         let appData = {
@@ -148,7 +148,7 @@ export default {
         };
         this.chartData.push(appData, ...data.appOverViews);
 
-        console.log(this.chartData);
+        // console.log(this.chartData);
         this.cpuWarningCount = data.cpuWarningCount;
         this.diskWarningCount = data.diskWarningCount;
         this.instanceOff = data.instanceOff;
@@ -175,6 +175,7 @@ export default {
       this.AddModel = true;
       this.getAppAsideList();
     },
+    //添加app
     async handleSubmit() {
       let res = await addOverViewInfo({
         user_id: this.userInfo.id,
@@ -188,6 +189,7 @@ export default {
         this.$Message.error(`${res.data.result}`);
       }
     },
+    //删除app
     async RemoveApp(appId) {
       this.$Modal.confirm({
         title: "警告",
@@ -198,9 +200,9 @@ export default {
             user_id: this.userInfo.id,
             app_id: appId,
           });
-          console.log(res);
+          //   console.log(res);
           if (res.data.code === "success") {
-            this.$Modal.remove()
+            this.$Modal.remove();
             this.$Message.info(`删除成功`);
             this.GetHomeInfo();
           } else {
@@ -218,6 +220,17 @@ export default {
   },
   mounted() {
     this.GetHomeInfo();
+    // 每分钟刷新页面
+    if (this.timer) {
+      clearInterval(this.timer);
+    } else {
+      this.timer = setInterval(() => {
+        this.GetHomeInfo();
+      }, 60000);
+    }
+  },
+  beforeDestroy() {
+    clearInterval(this.timer); //在beforeDestroy周期清除定时器
   },
 };
 </script>

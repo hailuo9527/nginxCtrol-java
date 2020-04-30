@@ -2,13 +2,14 @@
   <div class="overview-box">
     <div>
       <h3 class="overview-box__title">
-        APP
+        {{ data.appName ? data.appName : "APP" }}
         <Icon
           class="remove-icon"
           @click="remove"
           type="md-close"
           size="20"
           color="#333"
+          v-if="index !== 0"
         />
       </h3>
       <div class="overview-box__l">
@@ -17,7 +18,10 @@
           <span class="overview-box__l__val">{{
             numerify(data.requestCountCurrent, "0 a")
           }}</span>
-          <span class="overview-box__l__delta">{{ data.requestRatio }}%</span>
+          <span class="overview-box__l__delta"
+            ><span v-if="data.requestRatio > 0">+</span
+            >{{ parseInt(data.requestRatio * 100) }}%</span
+          >
           <span class="overview-box__l__unit"></span>
         </span>
       </div>
