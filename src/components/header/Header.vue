@@ -61,14 +61,17 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
+import { removeToken } from '@/libs/util'
 export default {
   name: "Header",
   data() {
     return {
+        userInfo: {}
     };
   },
   methods: {
+    ...mapMutations(['setUserInfo']),
     dropEvent(data) {
       switch (data) {
         case "Account":
@@ -77,6 +80,9 @@ export default {
         case "LogFile":
           this.$router.push({ name: "logfile" });
         case "LogOut":
+            removeToken()
+            this.setUserInfo(this.userInfo)
+            this.$router.replace({name: "login"})
           break;
       }
     },

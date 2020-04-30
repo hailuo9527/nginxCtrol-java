@@ -3,7 +3,7 @@ import { setToken } from '@/libs/util'
 import { loginInfo } from '@/api/login'
 export default {
     state: {
-        userInfo: '',
+        userInfo: {},
         token: ''
     },
     mutations: {
