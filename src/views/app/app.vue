@@ -178,7 +178,7 @@
           <div class="header_tab">
             <div class="tab">
               <router-link :to="`/app/${$route.params.app}/overview`" class="tab_item">概览</router-link>
-              <router-link :to="`/app/${$route.params.app}/dispatch`" class="tab_item">基础调度</router-link>
+              <router-link :to="`/app/${$route.params.app}/dispatch`" class="tab_item">调度</router-link>
             </div>
 
           </div>

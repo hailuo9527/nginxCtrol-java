@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import createPersistedState from 'vuex-persistedstate'
+import createPersistedState from 'vuex-persistedstate'
 import login from './module/login'
 import app from './module/app'
 import L4 from './module/L4'
@@ -19,5 +19,14 @@ export default new Vuex.Store({
   modules: {
     login, L4, L7, common, app
   },
-  // plugins: [createPersistedState()]
+  plugins: [createPersistedState({
+   /* reducer(val) {
+      return {
+        // 只储存state中的assessmentData
+        userInfo: val.userInfo
+      }
+    }*/
+
+    })]
+
 })

@@ -51,7 +51,7 @@
               </div>
               <div class="overview-box__r">
                 <h4 class="overview-box__value-title">磁盘预警线</h4>
-                <span class="overview-box__r__value">{{ diskWarningCount }}</span>
+                <span class="overview-box__r__val">{{ diskWarningCount }}</span>
               </div>
               <!-- <canvas id="canvas" class="overview-box__chart" width="320" height="100"></canvas> -->
             </div>
@@ -70,18 +70,22 @@
             </div>
           </div>
           <!-- 添加app的Modal -->
-          <Modal v-model="AddModel" :mask-closable="false">
+          <Modal v-model="AddModel" width="400"  :mask-closable="false">
             <p slot="header" style="color:#333;text-align:center">
               <span>添加</span>
             </p>
-            <Select v-model="SelectModel" style="width:100%">
-              <Option
-                v-for="item in asideList"
-                :value="item.app_service_id"
-                :key="item.app_service_id"
+            <div style="padding: 20px 0">
+              <div style="color: #aaa; margin-bottom: 20px">请选择想要添加到首页的APP</div>
+              <Select v-model="SelectModel" style="width:100%">
+                <Option
+                        v-for="item in asideList"
+                        :value="item.app_service_id"
+                        :key="item.app_service_id"
                 >{{ item.app_service_name }}</Option
-              >
-            </Select>
+                >
+              </Select>
+            </div>
+
             <div slot="footer">
               <Button type="primary" :long="true" @click="handleSubmit()"
                 >确认添加</Button
@@ -134,9 +138,9 @@ export default {
     //查询首页信息
     async GetHomeInfo() {
       this.home_loading = true;
-      this.chartData = [];
+      this.chartData = []
       let res = await selOverViewInfo();
-      //   console.log(res);
+      console.log(res);
       if (res.data.code === "success") {
         const data = res.data.result;
         let appData = {
@@ -146,9 +150,30 @@ export default {
           requestPast: data.requestPast,
           requestRatio: data.requestRatio,
         };
-        this.chartData.push(appData, ...data.appOverViews);
+        let arr = []
+        let obj = {}
+        arr.push(appData, ...data.appOverViews)
+        arr.map((item, index) => {
+          item.requestPast.map((i)=>{
+            i.ctime = i.ctime.substring(i.ctime.length-4)
+          })
+          item.requestCurrent.map((i,index)=> {
+            i = Object.assign(i, item.requestPast[index])
+            i.ctime = i.ctime.substring(i.ctime.length-4)
+          })
+          /* 去重 */
+          item.requestCurrent = item.requestCurrent.reduce((cur,next) => {
+            obj[next.ctime] ? "" : obj[next.ctime] = true && cur.push(next);
+            return cur;
+          },[])
+        })
 
-        // console.log(this.chartData);
+
+
+        console.log(arr)
+        this.chartData = arr
+
+
         this.cpuWarningCount = data.cpuWarningCount;
         this.diskWarningCount = data.diskWarningCount;
         this.instanceOff = data.instanceOff;
@@ -175,8 +200,8 @@ export default {
       this.AddModel = true;
       this.getAppAsideList();
     },
-    //添加app
     async handleSubmit() {
+      //console.log(this.userInfo)
       let res = await addOverViewInfo({
         user_id: this.userInfo.id,
         app_id: this.SelectModel,
@@ -189,7 +214,6 @@ export default {
         this.$Message.error(`${res.data.result}`);
       }
     },
-    //删除app
     async RemoveApp(appId) {
       this.$Modal.confirm({
         title: "警告",
@@ -200,9 +224,9 @@ export default {
             user_id: this.userInfo.id,
             app_id: appId,
           });
-          //   console.log(res);
+          console.log(res);
           if (res.data.code === "success") {
-            this.$Modal.remove();
+            this.$Modal.remove()
             this.$Message.info(`删除成功`);
             this.GetHomeInfo();
           } else {
@@ -219,18 +243,8 @@ export default {
     }),
   },
   mounted() {
+    console.log(this.userInfo)
     this.GetHomeInfo();
-    // 每分钟刷新页面
-    if (this.timer) {
-      clearInterval(this.timer);
-    } else {
-      this.timer = setInterval(() => {
-        this.GetHomeInfo();
-      }, 60000);
-    }
-  },
-  beforeDestroy() {
-    clearInterval(this.timer); //在beforeDestroy周期清除定时器
   },
 };
 </script>

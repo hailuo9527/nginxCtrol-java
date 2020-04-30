@@ -16,27 +16,20 @@
       </div>
     </div>
     <Modal v-model="modal" title="修改权重" @on-ok="submit" :loading="loading">
-      <div class="modal_content">
-        <Form
-          ref="formValidate"
-          :model="form"
-          :rules="ruleValidate"
-          @submit.native.prevent
-          :label-width="80"
-        >
-          <FormItem label="权重" prop="">
+      <div class="modal_content" v-if="modal">
+
             <Input
-              v-model="form.name"
+              v-model="data[index].weight"
               placeholder="权重，数值越大权重越大"
             ></Input>
-          </FormItem>
-        </Form>
+
       </div>
     </Modal>
   </div>
 </template>
 <script>
 import { selAppDispatch, updAppWeight } from "@/api/app";
+import { mapState, mapActions, mapMutations } from "vuex";
 export default {
   name: "dispatch",
   data() {
@@ -69,28 +62,40 @@ export default {
       upstream_server: "",
       weight: "",
       upstream_request: "",
+      index: 0,
     };
   },
+  computed: {
+    ...mapState({
+      activeAside: state => state.app.activeAside
+    }),
+  },
   methods: {
+    ...mapActions(["getAppAsideList"]),
+    ...mapMutations(["appSetActiveAside",'appSetAsideList']),
     modify(row, index) {
       console.log(row);
+      this.index = index
       this.modal = true;
       this.upstream_server = row.upstream_server;
       this.upstream_request = row.upstream_request;
     },
     async submit() {
-      let json = {
-        app_server_id: this.$route.params.app,
-        upstream_server: this.upstream_server,
-        weight: parseInt(this.form.name),
-        upstream_request: this.upstream_request,
-      };
-      let res = await updAppWeight(json);
+      this.data.map((item) =>{
+        item.app_service_id = this.$route.params.app
+      })
+      console.log(this.data)
+      let res = await updAppWeight(this.data);
       console.log(res);
       if (res.data.code === 'success') {
           this.$Message.info(`${res.data.result}`)
           this.modal = false;
+          let json = this.activeAside
+          json.appDefaultPublishConfList = this.data
+          this.getAppAsideList()
+          this.appSetActiveAside(json)
           this.GetselAppDispatch()
+        /* 修改app*/
       } else {
           this.modal = false;
           this.$Message.error(`${res.data.result}`)

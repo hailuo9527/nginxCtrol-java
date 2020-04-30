@@ -4,7 +4,7 @@ export default {
     baseUrl: {
         dev: `/api`,
         //pro: 'https://nc.naccenter.cn:8085'
-        pro: '//192.168.1.49:8085'
+        pro: `${window.location.protocol}//${window.location.hostname}:8085`
     },
 
 }
