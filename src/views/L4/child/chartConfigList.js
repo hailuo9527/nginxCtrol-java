@@ -4,18 +4,18 @@ import { formatTime, formatFileSize, formatByteSize, formatBpsSize, formatBps } 
 const configList = [
     {
         title: 'CPU 使用率%',
-        color: ['#333333','#5BA9FF','#F967B0'],
+        color: ['#333333','#01c864','#F967B0'],
         url: '/selSysCpuUsage',
         chartData: {
             rows: []
         },
         chartSettings: {
             digit: 3,
-            metrics: ['cpu_system', 'cpu_stolen', 'cpu_user'],
+            metrics: ['cpu_system', 'cpu_idle', 'cpu_user'],
             dimension: ['ctime'],
             labelMap: {
                 'cpu_system': 'cpu.system',
-                'cpu_stolen': 'cpu.stolen',
+                'cpu_idle': 'cpu.idle',
                 'cpu_user': 'cpu.user',
             },
             yAxisType: ['0,0a']
@@ -59,7 +59,7 @@ const configList = [
     },
     {
         title: '内存',
-        color: ['#5a5a5a','#4447e3'],
+        color: ['#4447e3','#01c864'],
         url: '/selSysMemory',
         chartData: {
             rows: []
@@ -133,7 +133,7 @@ const configList = [
     },
      {
          title: '磁盘使用',
-         color: ['#fb9fcc','#a2e7e5'],
+         color: ['#4447e3','#01c864'],
          url: '/selSysDiskUsage',
          supUrl:'/selSysDiskUseDataType',
          chartData: {
@@ -170,7 +170,7 @@ const configList = [
      },
      {
          title: '磁盘读写',
-         color: ['#5e83fe','#69d9d5'],
+         color: ['#4447e3','#ff7575'],
          url: '/selSysDiskIO',
          supUrl: '/selSysDiskIODataType',
          chartData: {
@@ -207,7 +207,7 @@ const configList = [
      },
      {
          title: '磁盘延迟',
-         color: ['#3a49fe','#69d9d5'],
+         color: ['#4447e3','#ff7575'],
          url: '/selSysDiskLatency',
          supUrl: '/selSysDiskIODataType',
          chartData: {
@@ -278,7 +278,7 @@ const configList = [
      },
      {
          title: '磁盘性能指标(IOPS)',
-         color: ['#3a49fe','#69d9d5'],
+         color: ['#4447e3','#ff7575'],
          url: '/selSysDiskIOPS',
          supUrl: '/selSysDiskIODataType',
          chartData: {
@@ -296,7 +296,7 @@ const configList = [
      },
      {
          title: '交换分区',
-         color: ['#dea4fd','#292ddf'],
+         color: ['#4447e3','#01c864'],
          url: '/selSysSwap',
          chartData: {
              rows: []

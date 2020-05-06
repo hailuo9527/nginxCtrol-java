@@ -47,7 +47,7 @@ const configList = [
     },
     {
         title: 'NGINX 当前连接数',
-        color: ['#d2bd4b','#333333','#87bffd'],
+        color: ['#4447e3','#ff7575','#01c864'],
         url: '/selNginxCurrentConnections',
         chartData: {
             rows: []
@@ -70,7 +70,7 @@ const configList = [
     },
     {
         title: 'NGINX 当前请求数',
-        color: ['#333333','#d2bd4b','#F967B0'],
+        color: ['#4447e3','#d2bd4b','#ff7575'],
         url: '/selNginxCurrentRequests',
         chartData: {
             rows: []
@@ -93,7 +93,7 @@ const configList = [
     },
     {
         title: 'NGINX 进程',
-        color: ['#333333','#5BA9FF','#F967B0'],
+        color: ['#4447e3','#5BA9FF','#F967B0'],
         url: '/selNginxWorkers',
         chartData: {
             rows: []
@@ -266,7 +266,7 @@ const configList = [
     },
     {
         title: 'NGINX 错误响应码',
-        color: ['#add4ff', '#f5e483', '#6ab1fe'],
+        color: ['#ff7575', '#f5e483', '#333333'],
         url: '/selNginxHttpErrors',
         chartData: {
             rows: []
@@ -340,7 +340,7 @@ const configList = [
     },
     {
         title: 'NGINX 后端连接错误',
-        color: ['#5BA9FF','#63d8d3','#f94a46','#333'],
+        color: ['#f5e483','#ff9100','#f94a46','#333'],
         url: '/selNginxUpstreamErrors',
         chartData: {
             rows: []

@@ -24,6 +24,11 @@
                                 </div>
                                 <div class="row-item">
                                     <div class="status">
+                                        <span>操作系统版本</span>: {{appInfo.system_name || '无'}}
+                                    </div>
+                                </div>
+                                <div class="row-item">
+                                    <div class="status">
                                         <span>NGINX是否启用</span>: {{appInfo.run_status ? '已启用' : '未启用'}}
                                     </div>
                                 </div>

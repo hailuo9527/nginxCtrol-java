@@ -78,7 +78,8 @@ export default {
           this.$router.push({ name: "account" });
           break;
         case "LogFile":
-          this.$router.push({ name: "logfile" });
+          this.$router.push({ path: "/logfile" });
+          break;
         case "LogOut":
             removeToken()
             this.setUserInfo(this.userInfo)

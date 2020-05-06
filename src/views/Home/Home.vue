@@ -40,9 +40,9 @@
             <div :class="active ? 'transition-before' : 'transition-after'">
               <h3 class="overview-box__title">预警</h3>
               <div class="overview-box__l">
-                <h4 class="overview-box__value-title">CPU预警线</h4>
+                <h4 class="overview-box__value-title">CPU预警数量</h4>
                 <span class="overview-box__l__content">
-                  <span class="overview-box__l__val">{{
+                  <span class="overview-box__l__value">{{
                     cpuWarningCount
                   }}</span>
                   <!-- <span class="overview-box__l__delta">+1 %</span>
@@ -50,10 +50,22 @@
                 </span>
               </div>
               <div class="overview-box__r">
-                <h4 class="overview-box__value-title">磁盘预警线</h4>
-                <span class="overview-box__r__val">{{ diskWarningCount }}</span>
+                <h4 class="overview-box__value-title">磁盘预警数量</h4>
+                <span class="overview-box__r__value">{{
+                  diskWarningCount
+                }}</span>
               </div>
               <!-- <canvas id="canvas" class="overview-box__chart" width="320" height="100"></canvas> -->
+            </div>
+            <!-- <div class="overview-box-l-bottom-line"></div>
+            <div class="overview-box-r-bottom-line"></div> -->
+            <div class="prewarn-footer-l">
+                <h4 v-if="cpuWarning.length == 0">暂无CPU预警</h4>
+                <h4 v-else v-for="item in cpuWarning">{{item}}</h4>
+            </div>
+            <div class="prewarn-footer-r">
+                <h4 v-if="diskWarning.length == 0">暂无磁盘预警</h4>
+                <h4 v-else v-for="item in diskWarning">{{item}}</h4>
             </div>
           </div>
           <chart-box
@@ -70,18 +82,20 @@
             </div>
           </div>
           <!-- 添加app的Modal -->
-          <Modal v-model="AddModel" width="400"  :mask-closable="false">
+          <Modal v-model="AddModel" width="400" :mask-closable="false">
             <p slot="header" style="color:#333;text-align:center">
               <span>添加APP</span>
             </p>
             <div style="padding: 20px 0">
-              <div style="color: #aaa; margin-bottom: 20px">请选择想要添加到首页的APP</div>
+              <div style="color: #aaa; margin-bottom: 20px">
+                请选择想要添加到首页的APP
+              </div>
               <Select v-model="SelectModel" style="width:100%">
                 <Option
-                        v-for="item in asideList"
-                        :value="item.app_service_id"
-                        :key="item.app_service_id"
-                >{{ item.app_service_name }}</Option
+                  v-for="item in asideList"
+                  :value="item.app_service_id"
+                  :key="item.app_service_id"
+                  >{{ item.app_service_name }}</Option
                 >
               </Select>
             </div>
@@ -92,6 +106,9 @@
               >
             </div>
           </Modal>
+        </div>
+        <div class="home-spin">
+          <Loading v-if="refresh_loading" />
         </div>
         <div class="footer">
           <div class="footer__inner">Copyright © 2018-2020 WingsBro</div>
@@ -108,7 +125,7 @@ import ChartBox from "./chart-box";
 import { mapState, mapActions } from "vuex";
 import Loading from "@/components/common/loading.vue";
 export default {
-  components: { ChartBox },
+  components: { ChartBox, Loading },
   data() {
     return {
       active: "",
@@ -131,16 +148,18 @@ export default {
       issubhealthy: false,
       unhealthy: false,
       home_loading: true,
+      refresh_loading: false,
+      diskWarning: [],
+      cpuWarning: [],
     };
   },
   methods: {
     ...mapActions(["getAppAsideList"]),
     //查询首页信息
     async GetHomeInfo() {
-      this.home_loading = true;
-      this.chartData = []
+      this.chartData = [];
       let res = await selOverViewInfo();
-      console.log(res);
+        console.log(res);
       if (res.data.code === "success") {
         const data = res.data.result;
         let appData = {
@@ -150,34 +169,33 @@ export default {
           requestPast: data.requestPast,
           requestRatio: data.requestRatio,
         };
-        let arr = []
-        let obj = {}
-        arr.push(appData, ...data.appOverViews)
+        let arr = [];
+        let obj = {};
+        arr.push(appData, ...data.appOverViews);
         arr.map((item, index) => {
-          item.requestPast.map((i)=>{
-            i.ctime = i.ctime.substring(i.ctime.length-4)
-          })
-          item.requestCurrent.map((i,index)=> {
-            i = Object.assign(i, item.requestPast[index])
-            i.ctime = i.ctime.substring(i.ctime.length-4)
-          })
+          item.requestPast.map((i) => {
+            i.ctime = i.ctime.substring(i.ctime.length - 4);
+          });
+          item.requestCurrent.map((i, index) => {
+            i = Object.assign(i, item.requestPast[index]);
+            i.ctime = i.ctime.substring(i.ctime.length - 4);
+          });
           /* 去重 */
-          item.requestCurrent = item.requestCurrent.reduce((cur,next) => {
-            obj[next.ctime] ? "" : obj[next.ctime] = true && cur.push(next);
+          item.requestCurrent = item.requestCurrent.reduce((cur, next) => {
+            obj[next.ctime] ? "" : (obj[next.ctime] = true && cur.push(next));
             return cur;
-          },[])
-        })
+          }, []);
+        });
 
-
-
-        console.log(arr)
-        this.chartData = arr
-
+        // console.log(arr)
+        this.chartData = arr;
 
         this.cpuWarningCount = data.cpuWarningCount;
         this.diskWarningCount = data.diskWarningCount;
         this.instanceOff = data.instanceOff;
         this.instanceOn = data.instanceOn;
+        this.cpuWarning = data.cpuWarning
+        this.diskWarning = data.diskWarning
         this.instancePercent = data.instancePercent * 100;
         if (data.instancePercent == 1) {
           this.ishealthy = true;
@@ -194,6 +212,7 @@ export default {
         }
         this.appOverViews = data.appOverViews;
         this.home_loading = false;
+        this.refresh_loading = false
       }
     },
     DisplayModel() {
@@ -209,6 +228,7 @@ export default {
       if (res.data.code === "success") {
         this.$Message.info(`${res.data.result}`);
         this.AddModel = false;
+        this.refresh_loading = true
         this.GetHomeInfo();
       } else {
         this.$Message.error(`${res.data.result}`);
@@ -224,10 +244,11 @@ export default {
             user_id: this.userInfo.id,
             app_id: appId,
           });
-          console.log(res);
+          //   console.log(res);
           if (res.data.code === "success") {
-            this.$Modal.remove()
+            this.$Modal.remove();
             this.$Message.info(`删除成功`);
+            this.refresh_loading = true
             this.GetHomeInfo();
           } else {
             this.$Message.error(`${res.data.result}`);
@@ -243,8 +264,21 @@ export default {
     }),
   },
   mounted() {
-    console.log(this.userInfo)
+    // console.log(this.userInfo)
+    this.home_loading = true
     this.GetHomeInfo();
+    // 每分钟刷新页面
+    if (this.timer) {
+      clearInterval(this.timer);
+    } else {
+      this.timer = setInterval(() => {
+        this.refresh_loading = true
+        this.GetHomeInfo();
+      }, 60000);
+    }
+  },
+  beforeDestroy() {
+    clearInterval(this.timer); //在beforeDestroy周期清除定时器
   },
 };
 </script>

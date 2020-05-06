@@ -96,7 +96,7 @@ export default {
     };
 
     return {
-      colors: ["#05316d", "#888888"],
+      colors: ["#41db00", "#888888"],
       chartData: {
         rows: [],
       },
@@ -111,7 +111,7 @@ export default {
   },
   methods: {
     beforeConfig(data) {
-      console.log(data);
+    //   console.log(data);
     },
     remove() {
       this.$emit("remove", this.data.appId);
