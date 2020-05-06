@@ -96,7 +96,7 @@ export default {
     };
 
     return {
-      colors: ["#41db00", "#888888"],
+      colors: ["#01c864", "#888888"],
       chartData: {
         rows: [],
       },

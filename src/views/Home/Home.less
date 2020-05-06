@@ -1,4 +1,4 @@
-.content{
+.content {
   height: 100%;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -24,9 +24,9 @@
   margin-left: auto;
 }
 .overview-container__h1 {
-  font: 24px/36px 'RobotoRegular', Arial, sans-serif;
+  font: 24px/36px "RobotoRegular", Arial, sans-serif;
   font-weight: normal;
-  color: #FFFFFF;
+  color: #ffffff;
   letter-spacing: 0;
   margin: 0px;
 }
@@ -47,7 +47,7 @@ h1 {
   margin: 0px;
   padding: 0px;
   list-style-type: none;
-  font: 12px/43px 'RobotoRegular', Arial, sans-serif;
+  font: 12px/43px "RobotoRegular", Arial, sans-serif;
   font-weight: normal;
   text-transform: uppercase;
   -webkit-user-select: none;
@@ -78,7 +78,7 @@ ul {
 }
 .timewindow-chooser__list-item_selected {
   cursor: default;
-  border-bottom: #01c864 2px solid;
+  border-bottom: @green 2px solid;
 }
 li {
   cursor: pointer;
@@ -106,15 +106,15 @@ li {
   background-color: #fff;
 }
 .overview-score-box_semi-healthy {
-  background-color: #41db00;
-//   background-color: #00c618;    
+  background-color: @green;
+  //   background-color: #00c618;
 }
 .overview-score-box_unhealthy {
   background-color: #db1a1a;
 }
 .overview-score-box_sub_healthy {
-    background-color: #ff9100;
-  }
+  background-color: #ff9100;
+}
 .overview-score-box {
   position: relative;
   color: #fff;
@@ -189,6 +189,16 @@ table {
 td {
   padding: 0px;
 }
+.overview-box_unhealthy {
+  background-color: #db1a1a;
+  width: 320px;
+  height: 260px;
+  position: relative;
+  padding: 11px 18px 0 18px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: "#fff";
+}
 .overview-box {
   width: 320px;
   height: 260px;
@@ -199,23 +209,31 @@ td {
   background: #fff;
 }
 .overview-box__title {
-  font: 16px 'RobotoBold', Arial, sans-serif;
+  font: 16px "RobotoBold", Arial, sans-serif;
   font-weight: bold;
   color: #333333;
   letter-spacing: 0;
   margin: 0;
   position: relative;
 
-  .remove-icon{
+  .remove-icon {
     position: absolute;
     right: 0;
     cursor: pointer;
-    opacity: .5;
-    transition: all .3s;
-    &:hover{
+    opacity: 0.5;
+    transition: all 0.3s;
+    &:hover {
       opacity: 1;
     }
   }
+}
+.overview-box__title_box_unhealthy {
+    font: 16px "RobotoBold", Arial, sans-serif;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 0;
+    margin: 0;
+    position: relative;
 }
 h3 {
   display: block;
@@ -226,7 +244,8 @@ h3 {
   margin-inline-end: 0px;
   font-weight: bold;
 }
-.overview-box__l, .overview-box__r {
+.overview-box__l,
+.overview-box__r {
   top: 46px;
 }
 .overview-box__l {
@@ -240,11 +259,27 @@ h3 {
 .overview-box__value-title {
   margin: 0px;
   text-transform: uppercase;
-  font: 10px 'RobotoBold', Arial, sans-serif;
+  font: 10px "RobotoBold", Arial, sans-serif;
   font-weight: bold;
   color: #888888;
   letter-spacing: 1.82px;
 }
+.overview-box__value-title {
+    margin: 0px;
+    text-transform: uppercase;
+    font: 10px "RobotoBold", Arial, sans-serif;
+    font-weight: bold;
+    color: #888888;
+    letter-spacing: 1.82px;
+  }
+  .overview-box__value-title_unhealthy {
+    margin: 0px;
+    text-transform: uppercase;
+    font: 10px "RobotoBold", Arial, sans-serif;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 1.82px;
+  }
 h4 {
   display: block;
   margin-block-start: 1.33em;
@@ -254,19 +289,19 @@ h4 {
   font-weight: bold;
 }
 .overview-box-l-bottom-line {
-    width: 140px;
-    height: 1px;
-    background-color: #888;
-    position: absolute;
-    bottom: 100px;
+  width: 140px;
+  height: 1px;
+  background-color: #888;
+  position: absolute;
+  bottom: 100px;
 }
 .overview-box-r-bottom-line {
-    width: 140px;
-    height: 1px;
-    background-color: #888;
-    position: absolute;
-    bottom: 100px;
-    right: 18px;
+  width: 140px;
+  height: 1px;
+  background-color: #888;
+  position: absolute;
+  bottom: 100px;
+  right: 18px;
 }
 .overview-box__l__content {
   position: absolute;
@@ -275,20 +310,26 @@ h4 {
   white-space: nowrap;
 }
 .overview-box__l__val {
-  font: 56px/50px 'RobotoRegular', Arial, sans-serif;
+  font: 56px/50px "RobotoRegular", Arial, sans-serif;
   font-weight: normal;
-  color: #41db00;
+  color: @green;
   letter-spacing: -2px;
 }
 .overview-box__l__value {
-    font: 56px/50px 'RobotoRegular', Arial, sans-serif;
+  font: 56px/50px "RobotoRegular", Arial, sans-serif;
+  font-weight: normal;
+  color: #333;
+  letter-spacing: -2px;
+}
+.overview-box__l__value_unhealthy {
+    font: 56px/50px "RobotoRegular", Arial, sans-serif;
     font-weight: normal;
-    color: #333;
+    color: #fff;
     letter-spacing: -2px;
   }
 .overview-box__l__delta {
   vertical-align: top;
-  font: 14px 'RobotoBold', Arial, sans-serif;
+  font: 14px "RobotoBold", Arial, sans-serif;
   font-weight: normal;
   color: #0061ce;
   position: absolute;
@@ -312,7 +353,7 @@ h4 {
   text-align: right;
 }
 .overview-box__r__val {
-  font: 28px/28px 'RobotoRegular', Arial, sans-serif;
+  font: 28px/28px "RobotoRegular", Arial, sans-serif;
   font-weight: normal;
   color: #888888;
   letter-spacing: -1.17px;
@@ -321,9 +362,18 @@ h4 {
   right: 2px;
 }
 .overview-box__r__value {
-    font: 56px/28px 'RobotoRegular', Arial, sans-serif;
+  font: 56px/28px "RobotoRegular", Arial, sans-serif;
+  font-weight: normal;
+  // color: #888888;
+  letter-spacing: -1.17px;
+  position: absolute;
+  bottom: 12px;
+  right: 2px;
+}
+.overview-box__r__value_unhealthy {
+    font: 56px/28px "RobotoRegular", Arial, sans-serif;
     font-weight: normal;
-    // color: #888888;
+    color: #fff;
     letter-spacing: -1.17px;
     position: absolute;
     bottom: 12px;
@@ -365,24 +415,27 @@ h4 {
   transition: opacity 0.5s;
 }
 .prewarn-footer-l {
-    position: absolute;
-    bottom: 0;
-    width: 100px;
-    height: 100px;
-    overflow-y: scroll;
+  position: absolute;
+  bottom: 0;
+  width: 100px;
+  height: 100px;
+  overflow-y: scroll;
 }
 .prewarn-footer-r {
-    position: absolute;
-    bottom: 0;
-    right: 18px;
-    width: 100px;
-    height: 100px;
-    overflow-y: scroll;
+  position: absolute;
+  bottom: 0;
+  right: 18px;
+  width: 100px;
+  height: 100px;
+  overflow-y: scroll;
 }
 .prewarn-footer-r h4 {
-    text-align: right;
+  text-align: right;
 }
-.prewarn-footer-l::-webkit-scrollbar,.prewarn-footer-r::-webkit-scrollbar { 
-    width: 0 !important 
+.prewarn-footer-l::-webkit-scrollbar,
+.prewarn-footer-r::-webkit-scrollbar {
+  width: 0 !important;
 }
-
+.prewarn-footer_unhealthy {
+    color: #fff;
+}

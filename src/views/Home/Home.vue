@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="home-spin">
-      <Loading v-if="home_loading" />
+      <Loading color="#01c864" v-if="home_loading" />
     </div>
     <div class="content" style="margin-top: 0px;" v-if="!home_loading">
       <div class="overview-container overview-container_css-grid">
@@ -36,13 +36,13 @@
               </table>
             </div>
           </div>
-          <div class="overview-box">
+          <div :class="diskWarningCount>0||cpuWarningCount>0?'overview-box_unhealthy': 'overview-box'">
             <div :class="active ? 'transition-before' : 'transition-after'">
-              <h3 class="overview-box__title">预警</h3>
+              <h3 :class="diskWarningCount>0||cpuWarningCount>0?'overview-box__title_box_unhealthy': 'overview-box__title'">预警</h3>
               <div class="overview-box__l">
-                <h4 class="overview-box__value-title">CPU预警数量</h4>
+                <h4 :class="diskWarningCount>0||cpuWarningCount>0?'overview-box__value-title_unhealthy':'overview-box__value-title'">CPU预警数量</h4>
                 <span class="overview-box__l__content">
-                  <span class="overview-box__l__value">{{
+                  <span :class="diskWarningCount>0||cpuWarningCount>0?'overview-box__l__value_unhealthy':'overview-box__l__value'">{{
                     cpuWarningCount
                   }}</span>
                   <!-- <span class="overview-box__l__delta">+1 %</span>
@@ -50,8 +50,8 @@
                 </span>
               </div>
               <div class="overview-box__r">
-                <h4 class="overview-box__value-title">磁盘预警数量</h4>
-                <span class="overview-box__r__value">{{
+                <h4 :class="diskWarningCount>0||cpuWarningCount>0?'overview-box__value-title_unhealthy':'overview-box__value-title'">磁盘预警数量</h4>
+                <span :class="diskWarningCount>0||cpuWarningCount>0?'overview-box__r__value_unhealthy':'overview-box__r__value'">{{
                   diskWarningCount
                 }}</span>
               </div>
@@ -59,11 +59,11 @@
             </div>
             <!-- <div class="overview-box-l-bottom-line"></div>
             <div class="overview-box-r-bottom-line"></div> -->
-            <div class="prewarn-footer-l">
+            <div class="prewarn-footer-l" :class="diskWarningCount>0||cpuWarningCount>0?'prewarn-footer_unhealthy': ''">
               <h4 v-if="cpuWarning.length == 0">暂无CPU预警</h4>
               <h4 v-else v-for="item in cpuWarning">{{ item }}</h4>
             </div>
-            <div class="prewarn-footer-r">
+            <div class="prewarn-footer-r" :class="diskWarningCount>0||cpuWarningCount>0?'prewarn-footer_unhealthy': ''">
               <h4 v-if="diskWarning.length == 0">暂无磁盘预警</h4>
               <h4 v-else v-for="item in diskWarning">{{ item }}</h4>
             </div>
@@ -108,7 +108,7 @@
           </Modal>
         </div>
         <div class="home-spin">
-          <Loading v-if="refresh_loading" />
+          <Loading color="#01c864" v-if="refresh_loading" />
         </div>
         <div class="footer">
           <div class="footer__inner">Copyright © 2018-2020 WingsBro</div>
@@ -157,7 +157,7 @@ export default {
     ...mapActions(["getAppAsideList"]),
     //查询首页信息
     async GetHomeInfo() {
-      //   this.chartData = [];
+      // this.chartData = [];
       let res = await selOverViewInfo();
       console.log(res);
       if (res.data.code === "success") {
@@ -180,11 +180,6 @@ export default {
             i = Object.assign(i, item.requestPast[index]);
             i.ctime = i.ctime.substring(i.ctime.length - 4);
           });
-          /* 去重 */
-        //   item.requestCurrent = item.requestCurrent.reduce((cur, next) => {
-        //     obj[next.ctime] ? "" : (obj[next.ctime] = true && cur.push(next));
-        //     return cur;
-        //   }, []);
         });
 
         console.log(arr);
@@ -276,7 +271,7 @@ export default {
       this.timer = setInterval(() => {
         this.refresh_loading = true;
         this.GetHomeInfo();
-      }, 60000);
+      }, 60 * 1000);
     }
   },
   beforeDestroy() {

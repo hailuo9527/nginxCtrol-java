@@ -256,7 +256,8 @@
         detailInfo: {},
         collapsed: false,
         server: false,
-        pushAppLoading: false
+        pushAppLoading: false,
+        is_sync: ''
       };
     },
     components: {
@@ -269,7 +270,7 @@
         this.appModal = true
 
         this.appForm = this.copyJson(this.activeAside)
-        //console.log(this.appForm)
+        console.log(this.appForm)
         this.getAllConfigInfo()
         this.selUsableL7Server().then(() => {
           this.$set(this.appForm, 'l7_server_ids', this.activeAside.l7_server_ids)
@@ -351,20 +352,20 @@
           //console.log(this.activeAside.app_service_id)
           this.selAppDetails()
         }
-      }
+      },
     },
     computed: {
       ...mapState({
         asideList: state => state.app.asideList,
         activeAside: state => state.app.activeAside
-      })
+      }),
     },
     beforeRouteLeave(to, from, next) {
       // 导航离开该组件的对应路由时调用
       // 可以访问组件实例 `this`
       this.appSetActiveAside(this.asideList[0]);
       next();
-    }
+    },
   };
 </script>
 <style lang="less" scoped>

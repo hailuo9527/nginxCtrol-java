@@ -11,11 +11,11 @@ const configList = [
         },
         chartSettings: {
             digit: 3,
-            metrics: ['cpu_system', 'cpu_idle', 'cpu_user'],
+            metrics: ['cpu_system', 'cpu_stolen', 'cpu_user'],
             dimension: ['ctime'],
             labelMap: {
                 'cpu_system': 'cpu.system',
-                'cpu_idle': 'cpu.idle',
+                'cpu_stolen': 'cpu.idle',
                 'cpu_user': 'cpu.user',
             },
             yAxisType: ['0,0a']
@@ -244,7 +244,7 @@ const configList = [
      },
      {
          title: 'CPU Usage, I/O%',
-         color: ['#ff8484'],
+         color: ['#4447e3'],
          url: '/selSysCpuUsageIO',
          chartData: {
              rows: []

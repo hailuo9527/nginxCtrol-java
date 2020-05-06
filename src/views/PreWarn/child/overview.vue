@@ -27,7 +27,7 @@ export default {
         },
         {
           title: "虚拟机CPU使用率",
-          key: "cpu_idle",
+          key: "cpu_stolen",
         },
         {
           title: "用户CPU使用率",
