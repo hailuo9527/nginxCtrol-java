@@ -293,7 +293,16 @@
                 if (res.data.code === 'success') {
                   this.appModal = false;
                   this.$Message.success('发布成功')
-                  this.getAppAsideList()
+                  /* 同步当前侧栏选中项状态 */
+                  this.getAppAsideList().then((res) => {
+                    if (res.data.code === 'success'){
+                      let target = res.data.result.filter((item)=>{
+                        return item.app_service_id === this.activeAside.app_service_id
+                      })
+                      this.appSetActiveAside(target[0] || {})
+                    }
+                  })
+                  //this.appSetActiveAside(item);
                 } else {
                   this.$Message.error(res.data.result)
                 }
@@ -313,8 +322,17 @@
         this.pushAppLoading = false
         if (this.asyncOk(res)) {
           this.$Message.success('发布成功')
-          this.getAppAsideList()
+          /* 同步当前侧栏选中项状态 */
+          this.getAppAsideList().then((res) => {
+            if (res.data.code === 'success'){
+              let target = res.data.result.filter((item)=>{
+                return item.app_service_id === this.activeAside.app_service_id
+              })
+              this.appSetActiveAside(target[0]||{})
+            }
+          })
         } else {
+
           this.$Message.error(res.data.result)
         }
       },
