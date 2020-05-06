@@ -60,12 +60,12 @@
             <!-- <div class="overview-box-l-bottom-line"></div>
             <div class="overview-box-r-bottom-line"></div> -->
             <div class="prewarn-footer-l">
-                <h4 v-if="cpuWarning.length == 0">暂无CPU预警</h4>
-                <h4 v-else v-for="item in cpuWarning">{{item}}</h4>
+              <h4 v-if="cpuWarning.length == 0">暂无CPU预警</h4>
+              <h4 v-else v-for="item in cpuWarning">{{ item }}</h4>
             </div>
             <div class="prewarn-footer-r">
-                <h4 v-if="diskWarning.length == 0">暂无磁盘预警</h4>
-                <h4 v-else v-for="item in diskWarning">{{item}}</h4>
+              <h4 v-if="diskWarning.length == 0">暂无磁盘预警</h4>
+              <h4 v-else v-for="item in diskWarning">{{ item }}</h4>
             </div>
           </div>
           <chart-box
@@ -157,9 +157,9 @@ export default {
     ...mapActions(["getAppAsideList"]),
     //查询首页信息
     async GetHomeInfo() {
-      this.chartData = [];
+      //   this.chartData = [];
       let res = await selOverViewInfo();
-        console.log(res);
+      console.log(res);
       if (res.data.code === "success") {
         const data = res.data.result;
         let appData = {
@@ -181,21 +181,21 @@ export default {
             i.ctime = i.ctime.substring(i.ctime.length - 4);
           });
           /* 去重 */
-          item.requestCurrent = item.requestCurrent.reduce((cur, next) => {
-            obj[next.ctime] ? "" : (obj[next.ctime] = true && cur.push(next));
-            return cur;
-          }, []);
+        //   item.requestCurrent = item.requestCurrent.reduce((cur, next) => {
+        //     obj[next.ctime] ? "" : (obj[next.ctime] = true && cur.push(next));
+        //     return cur;
+        //   }, []);
         });
 
-        // console.log(arr)
+        console.log(arr);
         this.chartData = arr;
 
         this.cpuWarningCount = data.cpuWarningCount;
         this.diskWarningCount = data.diskWarningCount;
         this.instanceOff = data.instanceOff;
         this.instanceOn = data.instanceOn;
-        this.cpuWarning = data.cpuWarning
-        this.diskWarning = data.diskWarning
+        this.cpuWarning = data.cpuWarning;
+        this.diskWarning = data.diskWarning;
         this.instancePercent = data.instancePercent * 100;
         if (data.instancePercent == 1) {
           this.ishealthy = true;
@@ -212,7 +212,7 @@ export default {
         }
         this.appOverViews = data.appOverViews;
         this.home_loading = false;
-        this.refresh_loading = false
+        this.refresh_loading = false;
       }
     },
     DisplayModel() {
@@ -221,17 +221,19 @@ export default {
     },
     async handleSubmit() {
       //console.log(this.userInfo)
-      let res = await addOverViewInfo({
-        user_id: this.userInfo.id,
-        app_id: this.SelectModel,
-      });
-      if (res.data.code === "success") {
-        this.$Message.info(`${res.data.result}`);
-        this.AddModel = false;
-        this.refresh_loading = true
-        this.GetHomeInfo();
-      } else {
-        this.$Message.error(`${res.data.result}`);
+      if (this.SelectModel !== "") {
+        let res = await addOverViewInfo({
+          user_id: this.userInfo.id,
+          app_id: this.SelectModel,
+        });
+        if (res.data.code === "success") {
+          this.$Message.info(`${res.data.result}`);
+          this.AddModel = false;
+          this.refresh_loading = true;
+          this.GetHomeInfo();
+        } else {
+          this.$Message.error(`${res.data.result}`);
+        }
       }
     },
     async RemoveApp(appId) {
@@ -248,7 +250,7 @@ export default {
           if (res.data.code === "success") {
             this.$Modal.remove();
             this.$Message.info(`删除成功`);
-            this.refresh_loading = true
+            this.refresh_loading = true;
             this.GetHomeInfo();
           } else {
             this.$Message.error(`${res.data.result}`);
@@ -265,14 +267,14 @@ export default {
   },
   mounted() {
     // console.log(this.userInfo)
-    this.home_loading = true
+    this.home_loading = true;
     this.GetHomeInfo();
     // 每分钟刷新页面
     if (this.timer) {
       clearInterval(this.timer);
     } else {
       this.timer = setInterval(() => {
-        this.refresh_loading = true
+        this.refresh_loading = true;
         this.GetHomeInfo();
       }, 60000);
     }
