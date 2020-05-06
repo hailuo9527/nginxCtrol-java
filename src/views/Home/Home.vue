@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="home-spin">
-      <Loading v-if="home_loading" />
+      <Loading color="#01c864" v-if="home_loading" />
     </div>
     <div class="content" style="margin-top: 0px;" v-if="!home_loading">
       <div class="overview-container overview-container_css-grid">
@@ -108,7 +108,7 @@
           </Modal>
         </div>
         <div class="home-spin">
-          <Loading v-if="refresh_loading" />
+          <Loading color="#01c864" v-if="refresh_loading" />
         </div>
         <div class="footer">
           <div class="footer__inner">Copyright © 2018-2020 WingsBro</div>
@@ -157,7 +157,7 @@ export default {
     ...mapActions(["getAppAsideList"]),
     //查询首页信息
     async GetHomeInfo() {
-      this.chartData = [];
+      // this.chartData = [];
       let res = await selOverViewInfo();
         console.log(res);
       if (res.data.code === "success") {
@@ -180,11 +180,6 @@ export default {
             i = Object.assign(i, item.requestPast[index]);
             i.ctime = i.ctime.substring(i.ctime.length - 4);
           });
-          /* 去重 */
-          item.requestCurrent = item.requestCurrent.reduce((cur, next) => {
-            obj[next.ctime] ? "" : (obj[next.ctime] = true && cur.push(next));
-            return cur;
-          }, []);
         });
 
         // console.log(arr)
@@ -274,7 +269,7 @@ export default {
       this.timer = setInterval(() => {
         this.refresh_loading = true
         this.GetHomeInfo();
-      }, 60000);
+      }, 60 * 1000);
     }
   },
   beforeDestroy() {

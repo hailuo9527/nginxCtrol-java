@@ -244,7 +244,7 @@ const configList = [
      },
      {
          title: 'CPU Usage, I/O%',
-         color: ['#ff8484'],
+         color: ['#4447e3'],
          url: '/selSysCpuUsageIO',
          chartData: {
              rows: []
