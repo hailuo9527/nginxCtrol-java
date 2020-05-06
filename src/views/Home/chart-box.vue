@@ -120,8 +120,8 @@ export default {
   mounted() {
     //console.log(this.data.requestCurrent)
     this.chartData = {
-      columns: ["ctime", "http_request_count"],
-      rows: [...this.data.requestCurrent, ...this.data.requestPast],
+      columns: ["ctime", "http_request_count",'http_request_count_past'],
+      rows: [...this.data.requestCurrent],
     };
   },
 };

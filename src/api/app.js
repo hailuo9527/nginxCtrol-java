@@ -113,10 +113,10 @@ export const selAppDispatch = ({app_server_id}) => {
 
 /** 修改应用权重 */
 
-export const updAppWeight = ({app_server_id, upstream_server, weight, upstream_request}) => {
+export const updAppWeight = (data) => {
     return axios.request({
         url: '/updAppWeight',
         method: 'post',
-        data: {app_server_id, upstream_server, weight, upstream_request}
+        data: data
     })
 }

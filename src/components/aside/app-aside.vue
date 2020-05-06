@@ -274,6 +274,7 @@
             //展示Model框，展示当前实例的数据
             editModel(item, index) {
                 this.edit = true
+                console.log(item)
                 this.appForm = this.copyJson(item)
                 this.appModal = true
                 this.selUsableL7Server(item).then(()=> {
@@ -360,7 +361,9 @@
                                 if (res.data.code === 'success') {
                                     this.appModal = false;
                                     this.$Message.success('修改成功')
-                                    this.getAppAsideList();
+                                    /* 重置当前app信息 */
+                                    this.getAppAsideList()
+                                    this.appSetActiveAside(this.appForm)
                                 } else {
                                     this.$Message.error(`${res.data.result}`)
                                 }

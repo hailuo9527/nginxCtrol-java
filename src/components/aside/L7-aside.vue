@@ -203,7 +203,7 @@ export default {
         l7ServerSSHIp: "",
         l7ServerSSHName: "",
         l7ServerSSHPwd: "",
-        l7ServerSSHPort: "",
+        l7ServerSSHPort: 22,
         remark: ""
       },
       ruleValidate: {
@@ -300,7 +300,7 @@ export default {
         (this.add_l7_form.l7ServerSSHIp = ""),
         (this.add_l7_form.l7ServerSSHName = ""),
         (this.add_l7_form.l7ServerSSHPwd = ""),
-        (this.add_l7_form.l7ServerSSHPort = ""),
+        (this.add_l7_form.l7ServerSSHPort = 22),
         (this.add_l7_form.remark = "");
       // console.log(this.add_l7_form)
       this.l7_model_add = true;
@@ -375,6 +375,7 @@ export default {
                 this.l7_model_add = false;
                 this.$Message.success("修改成功");
                 this.getL7AsideList()
+                this.L7setActiveAside(this.add_l7_form)
               } else {
                 this.$Message.error(`${res.data.result}`);
               }
