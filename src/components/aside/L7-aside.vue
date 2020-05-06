@@ -77,7 +77,6 @@
       <div class="aside-list-wrap" style="text-align: center" v-if="filterAside.length">未搜索到匹配的实例</div>
       <div
         class="load-wrap"
-        style="display: flex; justify-content: center;align-items: center;"
         v-if="listLoading"
       >
         <Loading />
@@ -426,7 +425,7 @@ export default {
   mounted() {
     this.timer = setInterval(() => {
       this.getL7AsideList()
-    }, 1000 * 10);
+    }, 1000 * 60);
   },
   beforeDestroy() {
     clearInterval(this.timer);
