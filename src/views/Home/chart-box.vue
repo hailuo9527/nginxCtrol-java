@@ -2,7 +2,7 @@
   <div class="overview-box">
     <div>
       <h3 class="overview-box__title">
-        {{ data.appName ? data.appName : "APP" }}
+        {{ data.appName ? data.appName : "应用汇总" }}
         <Icon
           class="remove-icon"
           @click="remove"

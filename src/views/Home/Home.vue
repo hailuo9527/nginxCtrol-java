@@ -36,36 +36,127 @@
               </table>
             </div>
           </div>
-          <div :class="diskWarningCount>0||cpuWarningCount>0?'overview-box_unhealthy': 'overview-box'">
+          <div
+            class="overview-box_prewarn"
+            :class="{
+              'overview-box_healthy': prewarn_healthy,
+              'overview-box_sub_healthy': prewarn_subhealthy,
+              'overview-box_unhealthy': prewarn_unhealthy,
+            }"
+          >
             <div :class="active ? 'transition-before' : 'transition-after'">
-              <h3 :class="diskWarningCount>0||cpuWarningCount>0?'overview-box__title_box_unhealthy': 'overview-box__title'">预警</h3>
+              <h3
+                class="overview-box__title_prewarn"
+                :class="{
+                  common_color_black: is_black,
+                  common_color_white: is_white,
+                }"
+              >
+                预警
+              </h3>
               <div class="overview-box__l">
-                <h4 :class="diskWarningCount>0||cpuWarningCount>0?'overview-box__value-title_unhealthy':'overview-box__value-title'">CPU预警数量</h4>
+                <h4
+                  class="overview-box__value-title_prewarn"
+                  :class="{
+                    common_color_black: is_black,
+                    common_color_white: is_white,
+                  }"
+                >
+                  CPU预警数量
+                </h4>
                 <span class="overview-box__l__content">
-                  <span :class="diskWarningCount>0||cpuWarningCount>0?'overview-box__l__value_unhealthy':'overview-box__l__value'">{{
-                    cpuWarningCount
-                  }}</span>
+                  <span
+                    class="overview-box__l__value"
+                    :class="{
+                      common_color_black: is_black,
+                      common_color_white: is_white,
+                    }"
+                    >{{ cpuWarningCount }}</span
+                  >
                   <!-- <span class="overview-box__l__delta">+1 %</span>
                 <span class="overview-box__l__unit"></span> -->
                 </span>
               </div>
               <div class="overview-box__r">
-                <h4 :class="diskWarningCount>0||cpuWarningCount>0?'overview-box__value-title_unhealthy':'overview-box__value-title'">磁盘预警数量</h4>
-                <span :class="diskWarningCount>0||cpuWarningCount>0?'overview-box__r__value_unhealthy':'overview-box__r__value'">{{
-                  diskWarningCount
-                }}</span>
+                <h4
+                  class="overview-box__value-title_prewarn"
+                  :class="{
+                    common_color_black: is_black,
+                    common_color_white: is_white,
+                  }"
+                >
+                  磁盘预警数量
+                </h4>
+                <span
+                  class="overview-box__r__value"
+                  :class="{
+                    common_color_black: is_black,
+                    common_color_white: is_white,
+                  }"
+                  >{{ diskWarningCount }}</span
+                >
               </div>
               <!-- <canvas id="canvas" class="overview-box__chart" width="320" height="100"></canvas> -->
             </div>
-            <!-- <div class="overview-box-l-bottom-line"></div>
-            <div class="overview-box-r-bottom-line"></div> -->
-            <div class="prewarn-footer-l" :class="diskWarningCount>0||cpuWarningCount>0?'prewarn-footer_unhealthy': ''">
-              <h4 v-if="cpuWarning.length == 0">暂无CPU预警</h4>
-              <h4 v-else v-for="item in cpuWarning">{{ item }}</h4>
+            <div
+              class="overview-box-l-bottom-line"
+              :class="{
+                'overview-box-r-bottom-line_healthy': bottom_line_healthy,
+                'overview-box-r-bottom-line_sub_healthy': bottom_line_subhealthy,
+                'overview-box-r-bottom-line_unhealthy': bottom_line_unhealthy,
+              }"
+            ></div>
+            <div
+              class="overview-box-r-bottom-line"
+              :class="{
+                'overview-box-r-bottom-line_healthy': bottom_line_healthy,
+                'overview-box-r-bottom-line_sub_healthy': bottom_line_subhealthy,
+                'overview-box-r-bottom-line_unhealthy': bottom_line_unhealthy,
+              }"
+            ></div>
+            <div class="prewarn-footer-l">
+              <span
+                v-if="cpuWarning.length == 0"
+                :class="{
+                  common_color_black: is_black,
+                  common_color_white: is_white,
+                }"
+                >暂无CPU预警</span
+              >
+              <span
+                v-else
+                v-for="item in cpuWarning"
+                :class="item.value <= 2 ? 'high-light' : ''"
+                ><span
+                  :class="{
+                    common_color_black: is_black,
+                    common_color_white: is_white,
+                  }"
+                  >{{ item.name }}</span
+                ></span
+              >
             </div>
-            <div class="prewarn-footer-r" :class="diskWarningCount>0||cpuWarningCount>0?'prewarn-footer_unhealthy': ''">
-              <h4 v-if="diskWarning.length == 0">暂无磁盘预警</h4>
-              <h4 v-else v-for="item in diskWarning">{{ item }}</h4>
+            <div class="prewarn-footer-r">
+              <span
+                v-if="diskWarning.length == 0"
+                :class="{
+                  common_color_black: is_black,
+                  common_color_white: is_white,
+                }"
+                >暂无磁盘预警</span
+              >
+              <span
+                v-else
+                v-for="item in diskWarning"
+                :class="item.value >= 0.9 ? 'high-light' : ''"
+                ><span
+                  :class="{
+                    common_color_black: is_black,
+                    common_color_white: is_white,
+                  }"
+                  >{{ item.name }}</span
+                ></span
+              >
             </div>
           </div>
           <chart-box
@@ -90,7 +181,11 @@
               <div style="color: #aaa; margin-bottom: 20px">
                 请选择想要添加到首页的APP
               </div>
-              <Select v-model="SelectModel" style="width:100%">
+              <Select
+                v-model="SelectModel"
+                style="width:100%"
+                @on-select="select"
+              >
                 <Option
                   v-for="item in asideList"
                   :value="item.app_service_id"
@@ -151,6 +246,18 @@ export default {
       refresh_loading: false,
       diskWarning: [],
       cpuWarning: [],
+      prewarn_healthy: false,
+      prewarn_subhealthy: false,
+      prewarn_unhealthy: false,
+      is_black: false,
+      is_white: false,
+      bottom_line_healthy: false,
+      bottom_line_subhealthy: false,
+      bottom_line_unhealthy: false,
+      status: false,
+      state: false,
+      app_service_name: "",
+      app_service_id: "",
     };
   },
   methods: {
@@ -182,7 +289,7 @@ export default {
           });
         });
 
-        console.log(arr);
+        // console.log(arr);
         this.chartData = arr;
 
         this.cpuWarningCount = data.cpuWarningCount;
@@ -205,6 +312,93 @@ export default {
           this.issubhealthy = false;
           this.unhealthy = true;
         }
+        let cpu_value = data.cpuWarning.map(function(i) {
+          return parseInt(i.value);
+        });
+        let disk_value = data.diskWarning.map(function(i) {
+          return parseInt(i.value);
+        });
+        if (data.cpuWarningCount != []) {
+          this.status = false;
+          for (let i = 0; i < cpu_value.length; i++) {
+            if (cpu_value[i] <= 0.2) {
+              this.prewarn_healthy = false;
+              this.prewarn_subhealthy = false;
+              this.prewarn_unhealthy = true;
+              this.is_black = false;
+              this.is_white = true;
+              this.bottom_line_healthy = false;
+              this.bottom_line_subhealthy = false;
+              this.bottom_line_unhealthy = true;
+              this.status = true;
+              break;
+            }
+          }
+          if (!this.status) {
+            for (let i = 0; i < cpu_value.length; i++) {
+              if (cpu_value[i] > 0.2) {
+                this.prewarn_healthy = false;
+                this.prewarn_subhealthy = true;
+                this.prewarn_unhealthy = false;
+                this.is_black = false;
+                this.is_white = true;
+                this.bottom_line_healthy = false;
+                this.bottom_line_subhealthy = true;
+                this.bottom_line_unhealthy = false;
+                break;
+              }
+            }
+          }
+        } else {
+          this.prewarn_healthy = true;
+          this.prewarn_subhealthy = false;
+          this.prewarn_unhealthy = false;
+          this.is_black = true;
+          this.is_white = false;
+          this.bottom_line_healthy = true;
+          this.bottom_line_subhealthy = false;
+          this.bottom_line_unhealthy = false;
+        }
+        if (data.diskWarningCount != []) {
+          this.state = false;
+          for (let i = 0; disk_value.length; i++) {
+            if (disk_value[i] >= 0.9) {
+              this.prewarn_healthy = false;
+              this.prewarn_subhealthy = false;
+              this.prewarn_unhealthy = true;
+              this.is_black = false;
+              this.is_white = true;
+              this.bottom_line_healthy = false;
+              this.bottom_line_subhealthy = false;
+              this.bottom_line_unhealthy = true;
+              this.state = true;
+              break;
+            }
+          }
+          if (!this.state) {
+            for (let i = 0; disk_value.length; i++) {
+              if (disk_value[i] < 0.9) {
+                this.prewarn_healthy = false;
+                this.prewarn_subhealthy = true;
+                this.prewarn_unhealthy = false;
+                this.is_black = false;
+                this.is_white = true;
+                this.bottom_line_healthy = false;
+                this.bottom_line_subhealthy = true;
+                this.bottom_line_unhealthy = false;
+              }
+            }
+          }
+        } else {
+          this.prewarn_healthy = true;
+          this.prewarn_subhealthy = false;
+          this.prewarn_unhealthy = false;
+          this.is_black = true;
+          this.is_white = false;
+          this.bottom_line_healthy = true;
+          this.bottom_line_subhealthy = false;
+          this.bottom_line_unhealthy = false;
+        }
         this.appOverViews = data.appOverViews;
         this.home_loading = false;
         this.refresh_loading = false;
@@ -218,8 +412,8 @@ export default {
       //console.log(this.userInfo)
       if (this.SelectModel !== "") {
         let res = await addOverViewInfo({
-          user_id: this.userInfo.id,
-          app_id: this.SelectModel,
+          app_name: this.app_service_name,
+          app_id: this.app_service_id,
         });
         if (res.data.code === "success") {
           this.$Message.info(`${res.data.result}`);
@@ -238,7 +432,6 @@ export default {
         loading: true,
         onOk: async () => {
           let res = await delOverViewInfo({
-            user_id: this.userInfo.id,
             app_id: appId,
           });
           //   console.log(res);
@@ -252,6 +445,11 @@ export default {
           }
         },
       });
+    },
+    select(data) {
+    //   console.log(data);
+      this.app_service_name = data.label;
+      this.app_service_id = data.value;
     },
   },
   computed: {

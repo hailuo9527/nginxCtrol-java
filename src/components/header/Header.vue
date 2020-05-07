@@ -42,7 +42,7 @@
         @on-click="dropEvent"
       >
         <a href="javascript:void(0)" class="trigger">
-          tao
+          {{userInfo.user_name}}
           <Icon type="ios-arrow-down"></Icon>
         </a>
         <DropdownMenu slot="list" >
@@ -66,9 +66,7 @@ import { removeToken } from '@/libs/util'
 export default {
   name: "Header",
   data() {
-    return {
-        userInfo: {}
-    };
+    return {};
   },
   methods: {
     ...mapMutations(['setUserInfo']),
@@ -90,7 +88,9 @@ export default {
   },
   watch: {},
 
-  computed: {},
+  computed: {
+      ...mapState({userInfo: (state) => state.login.userInfo,})
+  },
   mounted() {
   },
 };

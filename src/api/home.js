@@ -15,20 +15,20 @@ export const selOverViewInfo = () => {
 
 /**  添加首页APP信息 */
 
-export const addOverViewInfo = ({user_id, app_id}) => {
+export const addOverViewInfo = ({app_name, app_id}) => {
     return axios.request({
         url: 'addOverViewInfo',
         method: 'post',
-        params: {user_id, app_id}
+        params: {app_name, app_id}
     })
 }
 
-/**  添加首页APP信息 */
+/**  删除首页APP信息 */
 
-export const delOverViewInfo = ({user_id, app_id}) => {
+export const delOverViewInfo = ({ app_id}) => {
     return axios.request({
         url: '/delOverViewInfo',
         method: 'post',
-        params: {user_id, app_id}
+        params: { app_id}
     })
 }
