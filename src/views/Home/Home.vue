@@ -3,7 +3,7 @@
     <div class="home-spin">
       <Loading color="#01c864" v-if="home_loading" />
     </div>
-    <div class="content" style="margin-top: 0px;" >
+    <div class="content" style="margin-top: 0px;">
       <div class="overview-container overview-container_css-grid">
         <div class="overview-container__header">
           <h1 class="overview-container__h1">Overview</h1>
@@ -126,7 +126,7 @@
               <span
                 v-else
                 v-for="item in cpuWarning"
-                :class="item.value <= 0.2 ? 'high-light' : ''"
+                :class="item.value <= 20 ? 'high-light' : ''"
                 ><span
                   :class="{
                     common_color_black: is_black,
@@ -149,7 +149,7 @@
               <span
                 v-else
                 v-for="item in diskWarning"
-                :class="item.value >= 0.9 ? 'high-light' : ''"
+                :class="item.value >= 90 ? 'high-light' : ''"
                 ><span
                   :class="{
                     common_color_black: is_black,
@@ -260,7 +260,7 @@ export default {
       state: false,
       app_service_name: "",
       app_service_id: "",
-      unusedApp: []
+      unusedApp: [],
     };
   },
   methods: {
@@ -321,86 +321,101 @@ export default {
         let disk_value = data.diskWarning.map(function(i) {
           return parseInt(i.value);
         });
-        if (data.cpuWarningCount != []) {
-          this.status = false;
-          for (let i = 0; i < cpu_value.length; i++) {
-            if (cpu_value[i] <= 0.2) {
-              this.prewarn_healthy = false;
-              this.prewarn_subhealthy = false;
-              this.prewarn_unhealthy = true;
-              this.is_black = false;
-              this.is_white = true;
-              this.bottom_line_healthy = false;
-              this.bottom_line_subhealthy = false;
-              this.bottom_line_unhealthy = true;
-              this.status = true;
-              break;
-            }
-          }
-          if (!this.status) {
+        if (cpu_value == null || disk_value == null) {
+          this.prewarn_healthy = true;
+          this.prewarn_subhealthy = false;
+          this.prewarn_unhealthy = false;
+          this.is_black = true;
+          this.is_white = false;
+          this.bottom_line_healthy = true;
+          this.bottom_line_subhealthy = false;
+          this.bottom_line_unhealthy = false;
+        } else {
+          if (data.cpuWarningCount != []) {
+            this.status = false;
             for (let i = 0; i < cpu_value.length; i++) {
-              if (cpu_value[i] > 0.2) {
+              if (cpu_value[i] <= 20) {
                 this.prewarn_healthy = false;
-                this.prewarn_subhealthy = true;
-                this.prewarn_unhealthy = false;
+                this.prewarn_subhealthy = false;
+                this.prewarn_unhealthy = true;
                 this.is_black = false;
                 this.is_white = true;
                 this.bottom_line_healthy = false;
-                this.bottom_line_subhealthy = true;
-                this.bottom_line_unhealthy = false;
+                this.bottom_line_subhealthy = false;
+                this.bottom_line_unhealthy = true;
+                this.status = true;
                 break;
               }
             }
-          }
-        } else {
-          this.prewarn_healthy = true;
-          this.prewarn_subhealthy = false;
-          this.prewarn_unhealthy = false;
-          this.is_black = true;
-          this.is_white = false;
-          this.bottom_line_healthy = true;
-          this.bottom_line_subhealthy = false;
-          this.bottom_line_unhealthy = false;
-        }
-        if (data.diskWarningCount != []) {
-          this.state = false;
-          for (let i = 0; disk_value.length; i++) {
-            if (disk_value[i] >= 0.9) {
-              this.prewarn_healthy = false;
-              this.prewarn_subhealthy = false;
-              this.prewarn_unhealthy = true;
-              this.is_black = false;
-              this.is_white = true;
-              this.bottom_line_healthy = false;
-              this.bottom_line_subhealthy = false;
-              this.bottom_line_unhealthy = true;
-              this.state = true;
-              break;
+            if (!this.status) {
+              for (let i = 0; i < cpu_value.length; i++) {
+                if (cpu_value[i] > 20) {
+                  this.prewarn_healthy = false;
+                  this.prewarn_subhealthy = true;
+                  this.prewarn_unhealthy = false;
+                  this.is_black = false;
+                  this.is_white = true;
+                  this.bottom_line_healthy = false;
+                  this.bottom_line_subhealthy = true;
+                  this.bottom_line_unhealthy = false;
+                  this.status = true;
+                  break;
+                }
+              }
             }
+          } else {
+            this.prewarn_healthy = true;
+            this.prewarn_subhealthy = false;
+            this.prewarn_unhealthy = false;
+            this.is_black = true;
+            this.is_white = false;
+            this.bottom_line_healthy = true;
+            this.bottom_line_subhealthy = false;
+            this.bottom_line_unhealthy = false;
           }
-          if (!this.state) {
+          if (!this.status) {
+          if (data.diskWarningCount != []) {
+            this.state = false;
             for (let i = 0; disk_value.length; i++) {
-              if (disk_value[i] < 0.9) {
+              if (disk_value[i] >= 90) {
                 this.prewarn_healthy = false;
-                this.prewarn_subhealthy = true;
-                this.prewarn_unhealthy = false;
+                this.prewarn_subhealthy = false;
+                this.prewarn_unhealthy = true;
                 this.is_black = false;
                 this.is_white = true;
                 this.bottom_line_healthy = false;
-                this.bottom_line_subhealthy = true;
-                this.bottom_line_unhealthy = false;
+                this.bottom_line_subhealthy = false;
+                this.bottom_line_unhealthy = true;
+                this.state = true;
+                break;
               }
             }
+            if (!this.state) {
+              for (let i = 0; disk_value.length; i++) {
+                if (disk_value[i] < 90) {
+                  this.prewarn_healthy = false;
+                  this.prewarn_subhealthy = true;
+                  this.prewarn_unhealthy = false;
+                  this.is_black = false;
+                  this.is_white = true;
+                  this.bottom_line_healthy = false;
+                  this.bottom_line_subhealthy = true;
+                  this.bottom_line_unhealthy = false;
+                }
+              }
+            }
+          } else {
+              console.log(111)
+            this.prewarn_healthy = true;
+            this.prewarn_subhealthy = false;
+            this.prewarn_unhealthy = false;
+            this.is_black = true;
+            this.is_white = false;
+            this.bottom_line_healthy = true;
+            this.bottom_line_subhealthy = false;
+            this.bottom_line_unhealthy = false;
           }
-        } else {
-          this.prewarn_healthy = true;
-          this.prewarn_subhealthy = false;
-          this.prewarn_unhealthy = false;
-          this.is_black = true;
-          this.is_white = false;
-          this.bottom_line_healthy = true;
-          this.bottom_line_subhealthy = false;
-          this.bottom_line_unhealthy = false;
+          }
         }
         this.appOverViews = data.appOverViews;
         this.home_loading = false;
@@ -409,15 +424,15 @@ export default {
     },
     DisplayModel() {
       this.AddModel = true;
-      this.getAppAsideList().then((res)=> {
-        if(this.asyncOk(res)){
-          let allApp = res.data.result
-          let usedApp = this.chartData
+      this.getAppAsideList().then((res) => {
+        if (this.asyncOk(res)) {
+          let allApp = res.data.result;
+          let usedApp = this.chartData;
           this.unusedApp = allApp.filter((item) => {
-            let idList = usedApp.map(i => i.appId)
-            return !idList.includes(item.app_service_id)
-          })
-          this.SelectModel = ''
+            let idList = usedApp.map((i) => i.appId);
+            return !idList.includes(item.app_service_id);
+          });
+          this.SelectModel = "";
           //console.log(this.unusedApp)
         }
       });
@@ -461,7 +476,7 @@ export default {
       });
     },
     select(data) {
-    //   console.log(data);
+      //   console.log(data);
       this.app_service_name = data.label;
       this.app_service_id = data.value;
     },
