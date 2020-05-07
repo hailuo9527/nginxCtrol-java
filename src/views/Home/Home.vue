@@ -3,7 +3,7 @@
     <div class="home-spin">
       <Loading color="#01c864" v-if="home_loading" />
     </div>
-    <div class="content" style="margin-top: 0px;" v-if="!home_loading">
+    <div class="content" style="margin-top: 0px;" >
       <div class="overview-container overview-container_css-grid">
         <div class="overview-container__header">
           <h1 class="overview-container__h1">Overview</h1>
