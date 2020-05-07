@@ -20,42 +20,25 @@
                                 </div>
 
                                 <row-item title="入口URL">
-                                  <div class="row-item" v-if="detailInfo.l7ServerInfoList">
+                                  <div class="row-item" v-if="detailInfo.urls">
                                     <div class="info-list">
-                                         <div class="list-item no-item" v-if="!detailInfo.l7ServerInfoList.length">
+                                         <div class="list-item no-item" v-if="!detailInfo.urls.length">
                                         暂无数据
                                     </div>
                                     <div class="list-item" :key="item.l7ServerId"
-                                         v-for="item in detailInfo.l7ServerInfoList">
-                                        <router-link :to="`/L7/${item.l7ServerId}/chart`">
-                                            <Icon type="ios-color-filter-outline"/>
-                                            {{item.l7ServerName}}
-                                        </router-link>
+                                         v-for="item in detailInfo.urls">
+                                        <Row>
+                                            <Col span="18">
+                                                <span>URL： {{item}}</span>
+                                            </Col>
+                                        </Row>
 
                                     </div>
                                     </div>
 
                                 </div>
                                 </row-item>
-                                <row-item title="关联的实例">
-                                  <div class="row-item"  v-if="detailInfo.l7ServerInfoList">
-                                    <div class="info-list">
-                                         <div class="list-item no-item" v-if="!detailInfo.l7ServerInfoList.length">
-                                        暂无数据
-                                    </div>
-                                    <div class="list-item" :key="item.l7ServerId"
-                                         v-for="item in detailInfo.l7ServerInfoList">
-                                        <router-link :to="`/L7/${item.l7ServerId}/chart`">
-                                            <Icon type="ios-color-filter-outline"/>
-                                            {{item.l7ServerName}}
-                                        </router-link>
-
-                                    </div>
-                                    </div>
-
-                                </div>
-                                </row-item>
-                                <row-item title="后端服务器">
+                              <row-item title="后端服务器">
                                   <div class="row-item" v-if="detailInfo.appDefaultPublishConfList">
                                     <div class="info-list">
                                          <div class="list-item no-item"
@@ -82,6 +65,25 @@
 
                                 </div>
                                 </row-item>
+                                <row-item title="关联的实例">
+                                  <div class="row-item" v-if="detailInfo.l7ServerInfoList">
+                                    <div class="info-list">
+                                         <div class="list-item no-item" v-if="!detailInfo.l7ServerInfoList.length">
+                                        暂无数据
+                                    </div>
+                                    <div class="list-item" :key="item.l7ServerId"
+                                         v-for="item in detailInfo.l7ServerInfoList">
+                                        <router-link :to="`/L7/${item.l7ServerId}/chart`">
+                                            <Icon type="ios-color-filter-outline"/>
+                                            {{item.l7ServerName}}
+                                        </router-link>
+
+                                    </div>
+                                    </div>
+
+                                </div>
+                                </row-item>
+
 
 
 
