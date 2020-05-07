@@ -490,7 +490,12 @@ export default {
             if(!this.modify){
                 this.config.ngcVirtualServers.push(data)
             } else {
+                /* 缓存ngcLocations */
+                let ngcLocations = this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations
+                // 修改ngcVirtualServers
                 this.config.ngcVirtualServers[this.virtualServerIndex] = data
+                // 恢复ngcLocations
+                this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations = ngcLocations
             }
         },
         /* 保存location配置 */
@@ -643,7 +648,10 @@ export default {
     mounted() {
         /* 初始化配置 */
         this.initConfig()
-        this.getL7RelevanceConfig()
+        if(this.$route.params.L7){
+          this.getL7RelevanceConfig()
+        }
+
        // console.log(this.$route.params)
         /* 绘制配置关系图 */
         window.addEventListener('resize' ,this.drawLine)

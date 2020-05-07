@@ -19,14 +19,8 @@
                                     </div>
                                 </div>
 
-                                <div class="row-item" @click="collapsed = !collapsed">
-                                    <div class="title" :class="collapsed? 'collapsed': ''">
-                                        <span>关联的实例</span>
-                                        <Icon type="ios-arrow-forward" size="20" class="icon"/>
-                                    </div>
-
-                                </div>
-                                <div class="row-item" v-show="collapsed" v-if="detailInfo.l7ServerInfoList">
+                                <row-item title="入口URL">
+                                  <div class="row-item" v-if="detailInfo.l7ServerInfoList">
                                     <div class="info-list">
                                          <div class="list-item no-item" v-if="!detailInfo.l7ServerInfoList.length">
                                         暂无数据
@@ -42,14 +36,27 @@
                                     </div>
 
                                 </div>
-                                <div class="row-item" @click="server = !server">
-                                    <div class="title" :class="server? 'collapsed': ''">
-                                        <span>应用服务器</span>
-                                        <Icon type="ios-arrow-forward" size="20" class="icon"/>
+                                </row-item>
+                                <row-item title="关联的实例">
+                                  <div class="row-item"  v-if="detailInfo.l7ServerInfoList">
+                                    <div class="info-list">
+                                         <div class="list-item no-item" v-if="!detailInfo.l7ServerInfoList.length">
+                                        暂无数据
+                                    </div>
+                                    <div class="list-item" :key="item.l7ServerId"
+                                         v-for="item in detailInfo.l7ServerInfoList">
+                                        <router-link :to="`/L7/${item.l7ServerId}/chart`">
+                                            <Icon type="ios-color-filter-outline"/>
+                                            {{item.l7ServerName}}
+                                        </router-link>
+
+                                    </div>
                                     </div>
 
                                 </div>
-                                <div class="row-item" v-show="server" v-if="detailInfo.appDefaultPublishConfList">
+                                </row-item>
+                                <row-item title="后端服务器">
+                                  <div class="row-item" v-if="detailInfo.appDefaultPublishConfList">
                                     <div class="info-list">
                                          <div class="list-item no-item"
                                               v-if="!detailInfo.appDefaultPublishConfList.length">
@@ -74,6 +81,10 @@
                                     </div>
 
                                 </div>
+                                </row-item>
+
+
+
                                 <div class="row-item">
                                     <div class="title">
                                         <span>关联的配置</span>
@@ -194,6 +205,7 @@
 </template>
 <script>
   import Aside from "@/components/aside/app-aside.vue";
+  import rowItem from './rowItem'
   import popTip from "@/components/common/pop-tip";
   import {mapState, mapMutations, mapActions} from "vuex";
   import {pushApp, selAppDetails, pushAppDefault} from "../../api/app";
@@ -261,7 +273,7 @@
       };
     },
     components: {
-      Aside, popTip
+      Aside, popTip, rowItem
     },
     methods: {
       ...mapMutations(["appSetActiveAside"]),
@@ -295,8 +307,8 @@
                   this.$Message.success('发布成功')
                   /* 同步当前侧栏选中项状态 */
                   this.getAppAsideList().then((res) => {
-                    if (res.data.code === 'success'){
-                      let target = res.data.result.filter((item)=>{
+                    if (res.data.code === 'success') {
+                      let target = res.data.result.filter((item) => {
                         return item.app_service_id === this.activeAside.app_service_id
                       })
                       this.appSetActiveAside(target[0] || {})
@@ -324,11 +336,11 @@
           this.$Message.success('发布成功')
           /* 同步当前侧栏选中项状态 */
           this.getAppAsideList().then((res) => {
-            if (res.data.code === 'success'){
-              let target = res.data.result.filter((item)=>{
+            if (res.data.code === 'success') {
+              let target = res.data.result.filter((item) => {
                 return item.app_service_id === this.activeAside.app_service_id
               })
-              this.appSetActiveAside(target[0]||{})
+              this.appSetActiveAside(target[0] || {})
             }
           })
         } else {

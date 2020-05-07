@@ -187,7 +187,7 @@
                 @on-select="select"
               >
                 <Option
-                  v-for="item in asideList"
+                  v-for="item in unusedApp"
                   :value="item.app_service_id"
                   :key="item.app_service_id"
                   >{{ item.app_service_name }}</Option
@@ -258,6 +258,7 @@ export default {
       state: false,
       app_service_name: "",
       app_service_id: "",
+      unusedApp: []
     };
   },
   methods: {
@@ -406,7 +407,18 @@ export default {
     },
     DisplayModel() {
       this.AddModel = true;
-      this.getAppAsideList();
+      this.getAppAsideList().then((res)=> {
+        if(this.asyncOk(res)){
+          let allApp = res.data.result
+          let usedApp = this.chartData
+          this.unusedApp = allApp.filter((item) => {
+            let idList = usedApp.map(i => i.appId)
+            return !idList.includes(item.app_service_id)
+          })
+          this.SelectModel = ''
+          //console.log(this.unusedApp)
+        }
+      });
     },
     async handleSubmit() {
       //console.log(this.userInfo)

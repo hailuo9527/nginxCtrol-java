@@ -22,7 +22,6 @@ const configList = [
         },
         loading: false,
         yFormatter: function (value, index) {
-
             return  value + '%'
         },
         tooltipFormatter: (item) =>{
