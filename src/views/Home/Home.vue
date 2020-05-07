@@ -126,12 +126,13 @@
               <span
                 v-else
                 v-for="item in cpuWarning"
-                :class="item.value <= 2 ? 'high-light' : ''"
+                :class="item.value <= 0.2 ? 'high-light' : ''"
                 ><span
                   :class="{
                     common_color_black: is_black,
                     common_color_white: is_white,
                   }"
+                  class="l-text-position"
                   >{{ item.name }}</span
                 ></span
               >
@@ -154,6 +155,7 @@
                     common_color_black: is_black,
                     common_color_white: is_white,
                   }"
+                  class="r-text-position"
                   >{{ item.name }}</span
                 ></span
               >
