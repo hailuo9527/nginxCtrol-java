@@ -119,19 +119,16 @@
                 }"
                 >暂无CPU预警</span
               >
-              <span
-                v-else
-                v-for="item in cpuWarning"
-                :class="item.value <= 20 ? 'high-light' : ''"
-                ><span
-                  :class="{
-                    common_color_black: is_black,
-                    common_color_white: is_white,
-                  }"
-                  class="l-text-position"
+              <span v-else v-for="item in cpuWarning">
+                <span
+                  class="l-text-position high-light"
+                  v-if="item.value <= 20"
                   >{{ item.name }}</span
-                ></span
-              >
+                >
+                <span class="l-text-position common_color_white" v-else>{{
+                  item.name
+                }}</span>
+              </span>
             </div>
             <div class="prewarn-footer-r">
               <span
@@ -142,19 +139,16 @@
                 }"
                 >暂无磁盘预警</span
               >
-              <span
-                v-else
-                v-for="item in diskWarning"
-                :class="item.value >= 90 ? 'high-light' : ''"
-                ><span
-                  :class="{
-                    common_color_black: is_black,
-                    common_color_white: is_white,
-                  }"
-                  class="r-text-position"
+              <span v-else v-for="item in diskWarning">
+                <span
+                  class="r-text-position high-light"
+                  v-if="item.value >= 90"
                   >{{ item.name }}</span
-                ></span
-              >
+                >
+                <span class="r-text-position common_color_white" v-else>{{
+                  item.name
+                }}</span>
+              </span>
             </div>
           </div>
           <chart-box
