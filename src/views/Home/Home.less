@@ -86,9 +86,15 @@ li {
   text-align: -webkit-match-parent;
 }
 .overview-container_css-grid .overview-container__content {
-  display: grid;
-  grid-gap: 10px;
-  grid-template-columns: repeat(3, 320px);
+  //   display: grid;
+  //   grid-gap: 10px;
+  //   grid-template-columns: repeat(3, 320px);
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  justify-content: space-between;
   width: auto;
 }
 .overview-container__content {
@@ -99,6 +105,7 @@ li {
   -webkit-box-direction: normal;
   -ms-flex-flow: row wrap;
   flex-flow: row wrap;
+  justify-content: space-between;
   width: 980px;
 }
 .overview-score-box {
@@ -122,6 +129,7 @@ li {
   width: 320px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  margin-top: 10px;
 }
 .overview-score-box__settings {
   position: absolute;
@@ -190,6 +198,7 @@ td {
   padding: 0px;
 }
 .overview-box {
+  margin-top: 10px;
   width: 320px;
   height: 260px;
   position: relative;
@@ -199,24 +208,25 @@ td {
   background-color: #fff;
 }
 .overview-box_prewarn {
-    background-color: #fff;
+  background-color: #fff;
 }
 .overview-box_prewarn {
-    width: 320px;
-    height: 260px;
-    position: relative;
-    padding: 11px 18px 0 18px;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-  }
+  margin-top: 10px;
+  width: 320px;
+  height: 260px;
+  position: relative;
+  padding: 11px 18px 0 18px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
 .overview-box_unhealthy {
-    background-color: #db1a1a;
+  background-color: #db1a1a;
 }
 .overview-box_healthy {
-    background-color: #fff;
+  background-color: #fff;
 }
 .overview-box_sub_healthy {
-    background-color: #ff9100;
+  background-color: #ff9100;
 }
 .overview-box__title {
   font: 16px "RobotoBold", Arial, sans-serif;
@@ -238,12 +248,12 @@ td {
   }
 }
 .overview-box__title_prewarn {
-    font: 16px "RobotoBold", Arial, sans-serif;
-    font-weight: bold;
-    letter-spacing: 0;
-    margin: 0;
-    position: relative;
-  }
+  font: 16px "RobotoBold", Arial, sans-serif;
+  font-weight: bold;
+  letter-spacing: 0;
+  margin: 0;
+  position: relative;
+}
 h3 {
   display: block;
   font-size: 1.17em;
@@ -274,12 +284,12 @@ h3 {
   letter-spacing: 1.82px;
 }
 .overview-box__value-title_prewarn {
-    margin: 0px;
-    text-transform: uppercase;
-    font: 10px "RobotoBold", Arial, sans-serif;
-    font-weight: bold;
-    letter-spacing: 1.82px;
-  }
+  margin: 0px;
+  text-transform: uppercase;
+  font: 10px "RobotoBold", Arial, sans-serif;
+  font-weight: bold;
+  letter-spacing: 1.82px;
+}
 h4 {
   display: block;
   margin-block-start: 1.33em;
@@ -302,13 +312,13 @@ h4 {
   right: 18px;
 }
 .overview-box-r-bottom-line_healthy {
-    background-color: #696966;
+  background-color: #696966;
 }
 .overview-box-r-bottom-line_unhealthy {
-    background-color: #f33607;
+  background-color: #f33607;
 }
 .overview-box-r-bottom-line_sub_healthy {
-    background-color: #f6fa22;
+  background-color: #f6fa22;
 }
 .overview-box__l__content {
   position: absolute;
@@ -329,10 +339,10 @@ h4 {
   letter-spacing: -2px;
 }
 .overview-box__l__value_prewarn {
-    font: 56px/50px "RobotoRegular", Arial, sans-serif;
-    font-weight: normal;
-    letter-spacing: -2px;
-  }
+  font: 56px/50px "RobotoRegular", Arial, sans-serif;
+  font-weight: normal;
+  letter-spacing: -2px;
+}
 .overview-box__l__delta {
   vertical-align: top;
   font: 14px "RobotoBold", Arial, sans-serif;
@@ -431,7 +441,8 @@ h4 {
 .prewarn-footer-r span {
   text-align: right;
 }
-.prewarn-footer-l span, .prewarn-footer-r span {
+.prewarn-footer-l span,
+.prewarn-footer-r span {
   display: block;
   margin-top: 2px;
 }
@@ -440,20 +451,20 @@ h4 {
   width: 0 !important;
 }
 .common_color_white {
-    color: #fff;
+  color: #fff;
 }
 .common_color_black {
-    color: #000;
+  color: #000;
 }
 .high-light {
-    // text-shadow: 1px 1px 1px #fff, -1px -1px 1px #000;
-    // background-color: orange;
-    // border-radius: 10px;
-    color: yellow;
+  // text-shadow: 1px 1px 1px #fff, -1px -1px 1px #000;
+  // background-color: orange;
+  // border-radius: 10px;
+  color: yellow;
 }
 .r-text-position {
-    margin-right: 2px;
+  margin-right: 2px;
 }
 .l-text-position {
-    margin-left: 2px;
+  margin-left: 2px;
 }

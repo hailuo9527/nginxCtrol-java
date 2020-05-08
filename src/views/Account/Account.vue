@@ -104,13 +104,13 @@
       <Form
         :model="formCustom"
         :rules="ruleCustom"
-        :label-width="102"
+        :label-width="90"
         ref="formCustom"
       >
         <FormItem label="Username" prop="username">
           <Input type="text" v-model="formCustom.username"></Input>
         </FormItem>
-        <FormItem label="Usernumber" prop="usernumber">
+        <FormItem label="UserNo" prop="usernumber">
           <Input type="text" v-model="formCustom.usernumber"></Input>
         </FormItem>
         <FormItem label="Password" prop="password">
@@ -119,10 +119,10 @@
         <FormItem label="Confirm" prop="passwordCheck">
           <Input type="password" v-model="formCustom.passwordCheck"></Input>
         </FormItem>
-        <FormItem label="Tags">
+        <FormItem label="Tags" >
           <Input type="text" v-model="formCustom.tag"></Input>
         </FormItem>
-        <FormItem label="Roles">
+        <FormItem label="Roles" >
           <Input type="text" v-model="formCustom.role"></Input>
         </FormItem>
       </Form>
@@ -146,10 +146,16 @@
         <FormItem label="Username" prop="username">
           <Input type="text" v-model="formCustom.username"></Input>
         </FormItem>
-        <FormItem label="Tags">
+        <FormItem label="UserNo" prop="usernumber">
+          <Input type="text" v-model="formCustom.usernumber"></Input>
+        </FormItem>
+        <FormItem label="Password" prop="password">
+          <Input type="password" v-model="formCustom.password"></Input>
+        </FormItem>
+        <FormItem label="Tags" >
           <Input type="text" v-model="formCustom.tag"></Input>
         </FormItem>
-        <FormItem label="Roles">
+        <FormItem label="Roles" >
           <Input type="text" v-model="formCustom.role"></Input>
         </FormItem>
         <!-- <FormItem label="Email" prop="email">
@@ -289,8 +295,10 @@ export default {
     //判断'添加Model'或者'修改Model'输入的内容是否正确
     handleSubmit(name) {
       if (this.num == 1) {
+          console.log(111)
         this.$refs[name].validate((valid) => {
           if (valid) {
+              console.log(valid)
             this.AddModel = false;
             this.AddUesr();
           } else {
@@ -315,13 +323,15 @@ export default {
     },
     //弹出修改Model
     edit_user(row) {
+        console.log(row)
       this.EditModel = true;
       this.num = 2;
       this.formCustom.username = row.user_name;
       this.formCustom.tag = row.tag;
       this.formCustom.role = row.role_id;
-      this.formCustom.email = row.email;
+      this.formCustom.usernumber = row.user_no
       this.user_id = row.id;
+      this.formCustom.password = row.password
     },
     //侧边栏切换更换相应内容
     GetMenuValue(name) {
