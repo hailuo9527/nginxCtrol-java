@@ -13,7 +13,6 @@
         <!--<Icon type="md-add" color="#fff" :size="25"/>-->
       </div>
     </div>
-
     <div class="aside-list" >
       <div class="aside-list-wrap" v-if="!isEmptyObject(asideList) && !searchString">
         <Menu :theme="theme2" :open-names="Object.keys(asideList)">
@@ -23,11 +22,11 @@
               {{index}}
             </template>
             <MenuItem
-              name="1-1"
-              class="aside-item"
-              :class="{'active': value.l7ServerId === $route.params.L7 , 'disable': !value.run_status}"
-              v-for="(value, key) in item"
-              :key="value.l7ServerId"
+                    name="1-1"
+                    class="aside-item"
+                    :class="{'active': value.l7ServerId === $route.params.L7 , 'disable': !value.run_status}"
+                    v-for="(value, key) in item"
+                    :key="value.l7ServerId"
             >
               <div @click="changeAside(value)">
                 <div class="title">
@@ -37,12 +36,12 @@
                 <div class="info">{{value.nginxVersion || 'NGINX安装失败或未安装'}}</div>
 
                 <Icon
-                  type="md-more"
-                  size="20"
-                  color="#000"
-                  title="编辑"
-                  class="menu"
-                  @click.stop="editModel(value)"
+                        type="md-more"
+                        size="20"
+                        color="#000"
+                        title="编辑"
+                        class="menu"
+                        @click.stop="editModel(value)"
                 />
               </div>
             </MenuItem>
@@ -52,11 +51,11 @@
 
       <div class="aside-list-wrap" style="padding: 0 10px;" v-if="searchString">
         <div
-          class="aside-item"
-          :class="{'active': item.l7ServerId === $route.params.L7 , 'disable': !item.run_status}"
-          @click="changeAside(item)"
-          v-for="(item, index) in filterAside"
-          :key="item.l7ServerId"
+                class="aside-item"
+                :class="{'active': item.l7ServerId === $route.params.L7 , 'disable': !item.run_status}"
+                @click="changeAside(item)"
+                v-for="(item, index) in filterAside"
+                :key="item.l7ServerId"
         >
           <div class="title">
             <span :class="item.usable_status ? 'online' : 'error'"></span>
@@ -65,23 +64,24 @@
           <div class="info">{{item.nginxVersion || 'NGINX安装失败或未安装'}}</div>
 
           <Icon
-            type="md-more"
-            size="20"
-            color="#000"
-            title="编辑"
-            class="menu"
-            @click.stop="editModel(item)"
+                  type="md-more"
+                  size="20"
+                  color="#000"
+                  title="编辑"
+                  class="menu"
+                  @click.stop="editModel(item)"
           />
         </div>
       </div>
       <div class="aside-list-wrap" style="text-align: center" v-if="filterAside.length">未搜索到匹配的实例</div>
       <div
-        class="load-wrap"
-        v-if="listLoading"
+              class="load-wrap"
+              v-if="listLoading"
       >
         <Loading />
       </div>
     </div>
+
 
     <Modal v-model="l7_model_add" width="480">
       <p slot="header" style="color:#333;text-align:center">

@@ -38,7 +38,7 @@ export default {
                 selL7ServerInfoAll().then(res => {
                     if (res.data.code === 'success'){
                         let keys = Object.keys(res.data.result)
-                        console.log(res.data.result[keys[0]][0])
+
                         commit('L7setAsideList', res.data.result || [])
 
                         //commit('L7setActiveAside', res.data.result[0])

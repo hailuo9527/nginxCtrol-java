@@ -1,13 +1,16 @@
 <template>
     <div class="x-chart" v-if="reload">
         <MyChart
+                v-if="activeAside.nginxVersion"
                 v-for="(item, index) in list"
                 :key ='index'
                 :data ='item'
                 :index = 'index'
                 @firstShowHandle= 'getData'
         />
+
     </div>
+
 </template>
 
 <script>
@@ -108,6 +111,7 @@
         },
         computed:{
             ...mapState({
+                activeAside: state => state.L7.activeAside,
                 chartFilter:  state => state.common.chartFilter
             })
         },
@@ -121,7 +125,7 @@
             }
         },
         mounted() {
-            // console.log(configList)
+             console.log(this.activeAside)
         }
 
     }
