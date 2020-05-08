@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div class="home-spin">
-      <Loading color="#01c864" v-if="home_loading" />
-    </div>
     <div class="content" style="margin-top: 0px;">
       <div class="overview-container overview-container_css-grid">
         <div class="overview-container__header">
@@ -96,7 +93,6 @@
                   >{{ diskWarningCount }}</span
                 >
               </div>
-              <!-- <canvas id="canvas" class="overview-box__chart" width="320" height="100"></canvas> -->
             </div>
             <div
               class="overview-box-l-bottom-line"
@@ -170,9 +166,7 @@
             @remove="RemoveApp"
           ></chart-box>
           <div class="overview-box">
-            <div class="add-button" @click="DisplayModel()">
-              <!-- <Icon type="ios-add-circle-outline" size="140" /> -->+
-            </div>
+            <div class="add-button" @click="DisplayModel()">+</div>
           </div>
           <!-- 添加app的Modal -->
           <Modal v-model="AddModel" width="400" :mask-closable="false">
@@ -268,60 +262,14 @@ export default {
     //查询首页信息
     async GetHomeInfo() {
       // this.chartData = [];
+      this.refresh_loading = true;
       let res = await selOverViewInfo();
-      console.log(res);
+      //   console.log(res);
       if (res.data.code === "success") {
+        // this.home_loading = false;
+        this.refresh_loading = false;
         const data = res.data.result;
-        let appData = {
-          requestCountCurrent: data.requestCountCurrent,
-          requestCountPast: data.requestCountPast,
-          requestCurrent: data.requestCurrent,
-          requestPast: data.requestPast,
-          requestRatio: data.requestRatio,
-        };
-        let arr = [];
-        let obj = {};
-        arr.push(appData, ...data.appOverViews);
-        arr.map((item, index) => {
-          item.requestPast.map((i) => {
-            i.ctime = i.ctime.substring(i.ctime.length - 4);
-          });
-          item.requestCurrent.map((i, index) => {
-            i = Object.assign(i, item.requestPast[index]);
-            i.ctime = i.ctime.substring(i.ctime.length - 4);
-          });
-        });
-
-        // console.log(arr);
-        this.chartData = arr;
-
-        this.cpuWarningCount = data.cpuWarningCount;
-        this.diskWarningCount = data.diskWarningCount;
-        this.instanceOff = data.instanceOff;
-        this.instanceOn = data.instanceOn;
-        this.cpuWarning = data.cpuWarning;
-        this.diskWarning = data.diskWarning;
-        this.instancePercent = data.instancePercent * 100;
-        if (data.instancePercent == 1) {
-          this.ishealthy = true;
-          this.issubhealthy = false;
-          this.unhealthy = false;
-        } else if (data.instancePercent < 1 && data.instancePercent >= 0.4) {
-          this.ishealthy = false;
-          this.issubhealthy = true;
-          this.unhealthy = false;
-        } else {
-          this.ishealthy = false;
-          this.issubhealthy = false;
-          this.unhealthy = true;
-        }
-        let cpu_value = data.cpuWarning.map(function(i) {
-          return parseInt(i.value);
-        });
-        let disk_value = data.diskWarning.map(function(i) {
-          return parseInt(i.value);
-        });
-        if (cpu_value == null || disk_value == null) {
+        if (res.data.result == null) {
           this.prewarn_healthy = true;
           this.prewarn_subhealthy = false;
           this.prewarn_unhealthy = false;
@@ -331,6 +279,55 @@ export default {
           this.bottom_line_subhealthy = false;
           this.bottom_line_unhealthy = false;
         } else {
+          let appData = {
+            requestCountCurrent: data.requestCountCurrent,
+            requestCountPast: data.requestCountPast,
+            requestCurrent: data.requestCurrent,
+            requestPast: data.requestPast,
+            requestRatio: data.requestRatio,
+          };
+          let arr = [];
+          let obj = {};
+          arr.push(appData, ...data.appOverViews);
+          arr.map((item, index) => {
+            item.requestPast.map((i) => {
+              i.ctime = i.ctime.substring(i.ctime.length - 4);
+            });
+            item.requestCurrent.map((i, index) => {
+              i = Object.assign(i, item.requestPast[index]);
+              i.ctime = i.ctime.substring(i.ctime.length - 4);
+            });
+          });
+
+          // console.log(arr);
+          this.chartData = arr;
+
+          this.cpuWarningCount = data.cpuWarningCount;
+          this.diskWarningCount = data.diskWarningCount;
+          this.instanceOff = data.instanceOff;
+          this.instanceOn = data.instanceOn;
+          this.cpuWarning = data.cpuWarning;
+          this.diskWarning = data.diskWarning;
+          this.instancePercent = data.instancePercent * 100;
+          if (data.instancePercent == 1) {
+            this.ishealthy = true;
+            this.issubhealthy = false;
+            this.unhealthy = false;
+          } else if (data.instancePercent < 1 && data.instancePercent >= 0.4) {
+            this.ishealthy = false;
+            this.issubhealthy = true;
+            this.unhealthy = false;
+          } else {
+            this.ishealthy = false;
+            this.issubhealthy = false;
+            this.unhealthy = true;
+          }
+          let cpu_value = data.cpuWarning.map(function(i) {
+            return parseInt(i.value);
+          });
+          let disk_value = data.diskWarning.map(function(i) {
+            return parseInt(i.value);
+          });
           if (data.cpuWarningCount != []) {
             this.status = false;
             for (let i = 0; i < cpu_value.length; i++) {
@@ -374,52 +371,49 @@ export default {
             this.bottom_line_unhealthy = false;
           }
           if (!this.status) {
-          if (data.diskWarningCount != []) {
-            this.state = false;
-            for (let i = 0; disk_value.length; i++) {
-              if (disk_value[i] >= 90) {
-                this.prewarn_healthy = false;
-                this.prewarn_subhealthy = false;
-                this.prewarn_unhealthy = true;
-                this.is_black = false;
-                this.is_white = true;
-                this.bottom_line_healthy = false;
-                this.bottom_line_subhealthy = false;
-                this.bottom_line_unhealthy = true;
-                this.state = true;
-                break;
-              }
-            }
-            if (!this.state) {
-              for (let i = 0; disk_value.length; i++) {
-                if (disk_value[i] < 90) {
+            if (data.diskWarningCount != []) {
+              this.state = false;
+              for (let i = 0; i < disk_value.length; i++) {
+                if (disk_value[i] >= 90) {
                   this.prewarn_healthy = false;
-                  this.prewarn_subhealthy = true;
-                  this.prewarn_unhealthy = false;
+                  this.prewarn_subhealthy = false;
+                  this.prewarn_unhealthy = true;
                   this.is_black = false;
                   this.is_white = true;
                   this.bottom_line_healthy = false;
-                  this.bottom_line_subhealthy = true;
-                  this.bottom_line_unhealthy = false;
+                  this.bottom_line_subhealthy = false;
+                  this.bottom_line_unhealthy = true;
+                  this.state = true;
+                  break;
                 }
               }
+              if (!this.state) {
+                for (let i = 0; i < disk_value.length; i++) {
+                  if (disk_value[i] < 90) {
+                    this.prewarn_healthy = false;
+                    this.prewarn_subhealthy = true;
+                    this.prewarn_unhealthy = false;
+                    this.is_black = false;
+                    this.is_white = true;
+                    this.bottom_line_healthy = false;
+                    this.bottom_line_subhealthy = true;
+                    this.bottom_line_unhealthy = false;
+                  }
+                }
+              }
+            } else {
+              this.prewarn_healthy = true;
+              this.prewarn_subhealthy = false;
+              this.prewarn_unhealthy = false;
+              this.is_black = true;
+              this.is_white = false;
+              this.bottom_line_healthy = true;
+              this.bottom_line_subhealthy = false;
+              this.bottom_line_unhealthy = false;
             }
-          } else {
-              console.log(111)
-            this.prewarn_healthy = true;
-            this.prewarn_subhealthy = false;
-            this.prewarn_unhealthy = false;
-            this.is_black = true;
-            this.is_white = false;
-            this.bottom_line_healthy = true;
-            this.bottom_line_subhealthy = false;
-            this.bottom_line_unhealthy = false;
-          }
           }
         }
         this.appOverViews = data.appOverViews;
-        this.home_loading = false;
-        this.refresh_loading = false;
       }
     },
     DisplayModel() {
@@ -489,14 +483,12 @@ export default {
   },
   mounted() {
     // console.log(this.userInfo)
-    this.home_loading = true;
     this.GetHomeInfo();
     // 每分钟刷新页面
     if (this.timer) {
       clearInterval(this.timer);
     } else {
       this.timer = setInterval(() => {
-        this.refresh_loading = true;
         this.GetHomeInfo();
       }, 60 * 1000);
     }
