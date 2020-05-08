@@ -111,6 +111,7 @@
               }"
             ></div>
             <div class="prewarn-footer-l">
+                <!-- <div class="prewarn-footer-l-in"> -->
               <span
                 v-if="cpuWarning.length == 0"
                 :class="{
@@ -129,6 +130,7 @@
                   item.name
                 }}</span>
               </span>
+                <!-- </div> -->
             </div>
             <div class="prewarn-footer-r">
               <span
