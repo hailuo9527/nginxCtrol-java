@@ -43,10 +43,11 @@ export default {
         },
         lineStyle: {
           curveness: 0.3,
+          color: 'source'
         },
         nodeAlign: "left",
         itemStyle: {
-          borderType: 'dashed',
+          borderType: 'solid',
           borderColor: '#eee',
         }
       },
