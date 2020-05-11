@@ -8,7 +8,29 @@
                 :index = 'index'
                 @firstShowHandle= 'getData'
         />
+        <!--<div class="upload-wrap">
+            <div class="upload">
+                <Upload
+                        multiple
+                        type="drag"
+                        :format="['deb','rpm']"
 
+                        :on-format-error="handleFormatError"
+                        :on-exceeded-size="handleMaxSize"
+                        :on-error="handleError"
+                        :headers="headers"
+                        :action="action">
+                    <div class="upload-content">
+                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                        <p>点击或者拖拽文件上传NGINX安装包，后缀为.deb或.rpm格式文件</p>
+                    </div>
+                </Upload>
+            </div>
+
+        </div>-->
+        <div class="nodata" v-if="!activeAside.nginxVersion">
+            未安装NGINX或自动安装失败，请手动安装NGINX
+        </div>
     </div>
 
 </template>
@@ -18,6 +40,8 @@
     import { getChartData } from "../../../api/nginx";
     import configList from './chartConfigList'
     import { mapState } from 'vuex'
+    import { getToken } from '@/libs/util'
+    import config from '@/config'
     export default {
         name: "chart",
         components: {
@@ -28,7 +52,8 @@
             return {
                 list: configList,
                 loading: false,
-                reload: true
+                reload: true,
+                config: config
             }
         },
 
@@ -108,12 +133,40 @@
 
 
             },
+            /* 文件上传 */
+            handleFormatError(file,fileList) {
+                this.$Notice.warning({
+                    title: '文件格式不正确',
+                    desc: '文件' + file.name + ' 格式不正确, 请选择后缀为.deb或者.rpm的文件'
+                });
+            },
+            handleMaxSize(file,fileList) {
+                this.$Notice.warning({
+                    title: '文件大小不正确',
+                    desc: '文件  ' + file.name + ' 太大了,不能超过2M'
+                });
+            },
+            handleError(error, file, fileList) {
+                this.$Notice.error({
+                    title: '上传失败',
+                    desc: '文件  ' + file.name + '上传失败，'+ '错误信息：' + error
+                });
+            }
         },
         computed:{
             ...mapState({
                 activeAside: state => state.L7.activeAside,
                 chartFilter:  state => state.common.chartFilter
-            })
+            }),
+            headers: function () {
+                return {
+                    AUTHORIZATION: getToken()
+                }
+            },
+            action: function () {
+                let url = process.env.NODE_ENV === 'development' ? config.proxyUrl : config.baseUrl.pro
+                return url + '/uploadFile'
+            }
         },
         watch:{
             '$route'(val,oldVal) {
@@ -138,5 +191,26 @@
         justify-content: space-between;
         padding: 107px 30px 30px 30px!important;
     }
+    .upload-wrap{
+        width: 60%;
+        margin: 0 auto;
+        height: 100%;
+        //align-items: center;
+        display: flex;
+        .upload{
+            flex: 1;
+            .upload-content{
+                padding: 20px;
+            }
+        }
 
+    }
+    .nodata{
+        width: 100%;
+        color: #7b7e81;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 </style>
