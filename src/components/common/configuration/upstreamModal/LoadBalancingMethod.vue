@@ -19,7 +19,7 @@
               <Option value="hash">hash</Option>
               <Option value="ip_hash">ip_hash</Option>
               <Option value="least_conn">least_conn</Option>
-              <Option value="least_time">least_time</Option>
+              <Option value="least_time" style="color: blue;">least_time</Option>
             </Select>
           </FormItem>
          <div v-if="form.load_balancing_method === 'hash'">
@@ -69,7 +69,7 @@ export default {
   mixins: [mixin],
   data() {
     return {
-      title: "LOAD BALANCING METHOD",
+      title: "LOAD BALANCING ALGORITHM",
       info: "这是针对指定upstream group使用的负载平衡方法。",
       formRules: {
         load_balancing_method: [

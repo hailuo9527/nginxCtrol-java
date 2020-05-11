@@ -2,7 +2,7 @@
   <div class="dispatch">
     <div class="table-wrap">
       <div class="table">
-        <Table :loading="loading" :columns="columns" :data="data">
+        <Table :loading="loading" :columns="columns" :data="dispatch.data">
           <template slot-scope="{ row, index }" slot="action">
             <Button
               type="info"
@@ -15,20 +15,35 @@
         </Table>
       </div>
       <div class="save-bottom">
-        <Button
-                type="primary"
-                :loading="saveLoading"
-                @click="save"
-        >保存</Button>
+        <Button type="primary" :loading="saveLoading" @click="save"
+          >保存</Button
+        >
       </div>
     </div>
-    <Modal v-model="modal" title="修改权重" @on-ok="modal = false" >
+    <Modal
+      v-model="modal"
+      title="修改权重"
+      :closable="false"
+      :mask-closable="false"
+    >
       <div class="modal_content" v-if="modal">
+        <Form ref="formDynamic" :model="dispatch">
+          <FormItem
+            :rules="{ validator: validaterule }"
+            :prop="'data.' + index + '.weight'"
+          >
             <Input
-              v-model="data[index].weight"
+              v-model="dispatch.data[index].weight"
               placeholder="权重，数值越大权重越大"
             ></Input>
-
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button @click="cancel('formDynamic')">取消</Button>
+        <Button type="primary" @click="handleSubmit('formDynamic')"
+          >确定</Button
+        >
       </div>
     </Modal>
   </div>
@@ -39,6 +54,16 @@ import { mapState, mapActions, mapMutations } from "vuex";
 export default {
   name: "dispatch",
   data() {
+    this.validaterule = (rule, value, callback) => {
+      let reg = /^\d*[1-9]$/;
+      if (value === "") {
+        callback(new Error("权重不能为空"));
+      } else if (!reg.test(value)) {
+        callback(new Error("请输入大于零的整数"));
+      } else {
+        callback();
+      }
+    };
     return {
       loading: false,
       columns: [
@@ -61,7 +86,9 @@ export default {
           align: "center",
         },
       ],
-      data: [],
+      dispatch: {
+        data: [],
+      },
       modal: false,
       form: {},
       ruleValidate: {},
@@ -74,15 +101,15 @@ export default {
   },
   computed: {
     ...mapState({
-      activeAside: state => state.app.activeAside
+      activeAside: (state) => state.app.activeAside,
     }),
   },
   methods: {
     ...mapActions(["getAppAsideList"]),
-    ...mapMutations(["appSetActiveAside",'appSetAsideList']),
+    ...mapMutations(["appSetActiveAside", "appSetAsideList"]),
     modify(row, index) {
-      console.log(row);
-      this.index = index
+      //   console.log(row);
+      this.index = index;
       this.modal = true;
       this.upstream_server = row.upstream_server;
       this.upstream_request = row.upstream_request;
@@ -93,33 +120,53 @@ export default {
       let res = await selAppDispatch({
         app_server_id: this.$route.params.app,
       });
-      // console.log(res);
+      //   console.log(res);
       if (res.data.code === "success") {
         this.loading = false;
-        this.data = res.data.result;
+        this.dispatch.data = res.data.result;
       } else {
         this.loading = false;
       }
     },
     async save() {
-      this.saveLoading = true
-      this.data.map((item) =>{
-        item.app_service_id = this.$route.params.app
-      })
-      let res = await updAppWeight(this.data);
-      this.saveLoading = false
-      if (res.data.code === 'success') {
-        this.$Message.info(`${res.data.result}`)
-        let json = this.activeAside
-        json.appDefaultPublishConfList = this.data
-        this.getAppAsideList()
-        this.appSetActiveAside(json)
-        this.GetselAppDispatch()
+      this.saveLoading = true;
+      this.dispatch.data.map((item) => {
+        item.app_service_id = this.$route.params.app;
+      });
+      let res = await updAppWeight(this.dispatch.data);
+      this.saveLoading = false;
+      if (res.data.code === "success") {
+        this.$Message.info(`${res.data.result}`);
+        let json = this.activeAside;
+        json.appDefaultPublishConfList = this.dispatch.data;
+        this.getAppAsideList();
+        this.appSetActiveAside(json);
+        this.GetselAppDispatch();
         /* 修改app*/
       } else {
-        this.$Message.error(`${res.data.result}`)
+        this.$Message.error(`${res.data.result}`);
       }
-    }
+    },
+    handleSubmit(name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          this.modal = false;
+        } else {
+          this.modal = true;
+          this.$Message.error("Fail!");
+        }
+      });
+    },
+    cancel(name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          this.modal = false;
+        } else {
+          this.modal = true;
+          this.$Message.error("Fail!");
+        }
+      });
+    },
   },
   watch: {
     //监听路由参数app的变化
@@ -145,7 +192,7 @@ export default {
       height: 100%;
       overflow: scroll;
     }
-    .save-bottom{
+    .save-bottom {
       position: absolute;
       left: -20px;
       bottom: 0;

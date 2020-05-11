@@ -2,7 +2,7 @@
     <div class="expand-panel">
         <div class="expand-panel-title" @click="expand = !expand">
             <Icon type="ios-arrow-down" class="arrow" :class="expand? 'expand': ''" size="22" />
-            <span>Advanced settings</span>
+            <span>高级设置</span>
         </div>
         <slot v-if="expand"></slot>
     </div>

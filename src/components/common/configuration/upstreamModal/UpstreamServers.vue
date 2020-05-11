@@ -43,7 +43,7 @@
                   <FormItem label="BACKUP SERVER" class="aline-center">
                     <i-switch size="small" v-model="item.backup_server_state"></i-switch>
                   </FormItem>
-                  <FormItem label="RESOLVE" class="aline-center">
+                  <FormItem label="RESOLVE" class="aline-center common-color">
                     <i-switch size="small" v-model="item.resolve_state"></i-switch>
                     <PopTip
                       style="margin-left: 10px;margin-top: 2px;"
@@ -123,7 +123,7 @@ export default {
       }
     }
     return {
-      title: "UPSTREAM SERVERS",
+      title: "server",
       info: "指定upstream group中的后端服务器。服务器由IP地址或FQDN标识。可以指定可选端口，默认端口为80。",
       formRules: {
         upstream_servers_name: [

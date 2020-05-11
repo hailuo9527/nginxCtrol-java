@@ -26,7 +26,7 @@ export default {
   name: "NtlnAuthentication",
   data() {
     return {
-      title: "NTLM AUTHENTICATION",
+      title: "ntlm",
       info: "使用特定技术将NTLM身份验证请求代理到upstream servers.。",
       formRules: {}
     };

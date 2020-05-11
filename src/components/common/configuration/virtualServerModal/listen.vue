@@ -35,13 +35,13 @@
                             </i-switch>
                         </FormItem>
                         <expandPanel>
-                            <FormItem label="FIB" class="inline-form-item" prop="fib">
+                            <FormItem label="setfib" class="inline-form-item" prop="fib">
                                 <Input  placeholder="number" v-model.trim="item.fib"></Input>
                             </FormItem>
-                            <FormItem label="TCP FAST OPEN" class="inline-form-item" prop="tcp_fast_open">
+                            <FormItem label="fastopen" class="inline-form-item" prop="tcp_fast_open">
                                 <Input  placeholder="number" v-model.trim="item.tcp_fast_open"></Input>
                             </FormItem>
-                            <FormItem label="BACKLOG" class="inline-form-item" prop="backlog">
+                            <FormItem label="backlog" class="inline-form-item" prop="backlog">
                                 <Input  placeholder="number" v-model.trim="item.backlog"></Input>
                             </FormItem>
                             <FormItem label="RECEIVE BUFFER SIZE" class="inline-form-item" prop="receive_buffer_size">
@@ -162,7 +162,7 @@
                 }
             }
             return {
-                title: 'LISTENING ADDRESS AND PORT',
+                title: 'listen',
                 formRules: {
                     listening_address_port: [
                         { validator: ipPort }

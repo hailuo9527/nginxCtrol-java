@@ -39,7 +39,7 @@ export default {
   name: "UpstreamZone",
   data() {
     return {
-      title: "UPSTREAM ZONE",
+      title: "zone",
       info: "这是要与upstream group一起使用的共享内存区域。Upstream zone保留组的配置、运行时状态和性能度量/计数器。",
       formRules: {
         upstream_zone_name: [

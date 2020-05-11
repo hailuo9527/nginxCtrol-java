@@ -2,7 +2,7 @@
     <div class="form-item" :class="classStatus">
         <div class="form-item-header" >
             <i-switch v-model="expand" :disabled="onlyShowConfig" v-if="!important && !noSwitch" @on-change="expandChange" ></i-switch>
-            <span class="title">{{title}}</span>
+            <span class="title" :class="title == 'USE AS NGINX API LOCATION'||title == 'ACTIVE HEALTHCHECK'||title == 'QUEUEING'||title == 'ntlm'||title == 'PERSISTENT STATE'? 'title-color':''">{{title}}</span>
             <PopTip :content="info"  placement="right"></PopTip>
             <div class="actions" v-if="expand && !actionButton">
                 <Button shape="circle" icon="md-close" @click="cancel" v-if="showEdit"></Button>
@@ -195,6 +195,9 @@
             letter-spacing: 1.2px;
             color: #333;
             font-weight: bold;
+        }
+        .title-color {
+            color: blue;
         }
         .actions{
             flex: 1;

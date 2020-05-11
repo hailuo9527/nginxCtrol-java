@@ -47,7 +47,7 @@
                 callback();
             };
             return {
-                title: 'DOMAIN NAMES',
+                title: 'server name',
                 formRules: {
                     domain_name: [
                         { validator: domain, trigger: 'blur' }

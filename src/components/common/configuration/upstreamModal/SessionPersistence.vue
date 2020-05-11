@@ -14,7 +14,7 @@
   >
     <div slot="edit" class="ctrl-edit-item ctrl-edit-item_edit">
        <Form ref="form" :model="form" :rules="formRules" :hide-required-mark="true" @submit.native.prevent>
-          <FormItem label="METHOD" class="line-form-item full-input">
+          <FormItem label="METHOD" class="line-form-item full-input common-color">
             <Select v-model="form.method">
               <Option value="cookie">cookie</Option>
               <Option value="route">route</Option>
@@ -22,22 +22,22 @@
             </Select>
           </FormItem>
          <div v-if="form.method === 'cookie'">
-           <FormItem label="COOKIE" class="line-form-item full-input" prop="cookie">
+           <FormItem label="COOKIE" class="line-form-item full-input common-color" prop="cookie">
              <Input placeholder="name" v-model.trim="form.cookie"></Input>
            </FormItem>
-           <FormItem label="EXPIRES" class="line-form-item full-input" prop="cookie_expires">
+           <FormItem label="EXPIRES" class="line-form-item full-input common-color" prop="cookie_expires">
              <Input placeholder="time" v-model.trim="form.cookie_expires"></Input>
            </FormItem>
-           <FormItem label="DOMAIN" class="line-form-item full-input">
+           <FormItem label="DOMAIN" class="line-form-item full-input common-color">
              <Input placeholder="domain" v-model.trim="form.cookie_domain"></Input>
            </FormItem>
-           <FormItem label="HTTPONLY" class="aline-center">
+           <FormItem label="HTTPONLY" class="aline-center common-color">
              <i-switch size="small" v-model="form.cookie_httponly_state"></i-switch>
            </FormItem>
-           <FormItem label="SECURE" class="aline-center">
+           <FormItem label="SECURE" class="aline-center common-color">
              <i-switch size="small" v-model="form.cookie_secure_state"></i-switch>
            </FormItem>
-           <FormItem label="PATH" class="line-form-item full-input">
+           <FormItem label="PATH" class="line-form-item full-input common-color">
              <Input placeholder="path" v-model.trim="form.cookie_path"></Input>
            </FormItem>
          </div>

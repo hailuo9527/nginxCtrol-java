@@ -124,7 +124,7 @@
             <span class="publish">
                             <Button type="primary" :loading="pushAppLoading" @click="publicAppAuto"
                                     :disabled="!activeAside.appDefaultPublishConfList.length">
-                                一键发布
+                                快捷发布
                             </Button>
                             <Button style="margin-left: 20px" @click="publicApp">手动发布</Button>
                             <Modal v-model="appModal" width="480">

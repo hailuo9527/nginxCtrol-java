@@ -315,6 +315,12 @@ export default {
     add_user() {
       this.AddModel = true;
       this.num = 1;
+      this.formCustom.username = "";
+      this.formCustom.tag = "";
+      this.formCustom.role = "";
+      this.formCustom.usernumber = "";
+      this.formCustom.passwd = "";
+      this.formCustom.confirm = ""
     },
     //弹出修改Model
     edit_user(row) {
