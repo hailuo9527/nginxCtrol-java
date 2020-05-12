@@ -72,8 +72,11 @@
                   @click.stop="editModel(item)"
           />
         </div>
+        <div v-if="!filterAside.length" style="text-align: center">
+          暂无数据
+        </div>
       </div>
-      <div class="aside-list-wrap" style="text-align: center" v-if="filterAside.length">未搜索到匹配的实例</div>
+      <div class="aside-list-wrap" style="text-align: center" v-if="isEmptyObject(asideList) && !searchString" >暂无数据</div>
       <div
               class="load-wrap"
               v-if="listLoading"
@@ -405,7 +408,11 @@ export default {
     this.getL7AsideList(true).then(res => {
       if (this.asyncOk(res)) {
         if (!this.$route.params.L7) {
-          this.$router.replace(`/L7/${this.l7ServerId}/chart`);
+          if( this.l7ServerId ){
+            this.$router.replace(`/L7/${this.l7ServerId}/chart`);
+          }
+
+
         } else {
           let keys = Object.keys(this.asideList);
           let arr = [];

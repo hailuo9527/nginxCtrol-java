@@ -38,12 +38,12 @@ export default {
                 selL7ServerInfoAll().then(res => {
                     if (res.data.code === 'success'){
                         let keys = Object.keys(res.data.result)
-
+                        console.log(keys)
                         commit('L7setAsideList', res.data.result || [])
 
                         //commit('L7setActiveAside', res.data.result[0])
                         if (shouldUpdateActiveAside) {
-                            commit('L7setActiveAside', res.data.result[keys[0]][0])
+                            commit('L7setActiveAside', keys[0]? res.data.result[keys[0]][0]: {})
                         }
                         commit('L7changeLoadingStatus', false)
                     }

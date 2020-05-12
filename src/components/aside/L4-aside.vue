@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="aside-list-wrap" style="text-align: center" v-if="!filterAside.length">
-                未搜索到匹配的L4设备
+                暂无数据
             </div>
             <div class="load-wrap" style="display: flex; justify-content: center;align-items: center;" v-if="listLoading">
                 <Loading />

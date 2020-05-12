@@ -223,6 +223,11 @@ let defaultRoutes = [
 
                 component: () => import(/* webpackChunkName: "nginxConfigs" */ '@/views/configs/L7/config.vue')
             },
+            {
+                name: 'software',
+                path: '/software',
+                component: () => import(/* webpackChunkName: "software" */ '@/views/software/software.vue')
+            }
         ]
     },
     {

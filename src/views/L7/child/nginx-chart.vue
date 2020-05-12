@@ -40,8 +40,7 @@
     import { getChartData } from "../../../api/nginx";
     import configList from './chartConfigList'
     import { mapState } from 'vuex'
-    import { getToken } from '@/libs/util'
-    import config from '@/config'
+
     export default {
         name: "chart",
         components: {
@@ -53,7 +52,7 @@
                 list: configList,
                 loading: false,
                 reload: true,
-                config: config
+
             }
         },
 
@@ -133,40 +132,13 @@
 
 
             },
-            /* 文件上传 */
-            handleFormatError(file,fileList) {
-                this.$Notice.warning({
-                    title: '文件格式不正确',
-                    desc: '文件' + file.name + ' 格式不正确, 请选择后缀为.deb或者.rpm的文件'
-                });
-            },
-            handleMaxSize(file,fileList) {
-                this.$Notice.warning({
-                    title: '文件大小不正确',
-                    desc: '文件  ' + file.name + ' 太大了,不能超过2M'
-                });
-            },
-            handleError(error, file, fileList) {
-                this.$Notice.error({
-                    title: '上传失败',
-                    desc: '文件  ' + file.name + '上传失败，'+ '错误信息：' + error
-                });
-            }
+
         },
         computed:{
             ...mapState({
                 activeAside: state => state.L7.activeAside,
                 chartFilter:  state => state.common.chartFilter
-            }),
-            headers: function () {
-                return {
-                    AUTHORIZATION: getToken()
-                }
-            },
-            action: function () {
-                let url = process.env.NODE_ENV === 'development' ? config.proxyUrl : config.baseUrl.pro
-                return url + '/uploadFile'
-            }
+            })
         },
         watch:{
             '$route'(val,oldVal) {
