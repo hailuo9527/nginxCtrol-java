@@ -87,29 +87,24 @@
                         </PopTip>
                     </div>
                     <div class="scroll-warp">
-                        <FormItem
-                                v-for="(item, index) in appForm.appDefaultPublishConfList"
-                                :key="index"
+                        <Row v-for="(item, index) in appForm.appDefaultPublishConfList" :key="index">
+                            <Col span="10">
+                                <FormItem                               
                                 label=""
                                 :prop="'appDefaultPublishConfList.' + index + '.upstream_server'"
                                 :rules="{ validator: ipPort}">
-
-                            <Row>
-                                <Col span="12">
                                     <Input type="text" v-model="item.upstream_server" placeholder="IP | IP:PORT | PORT"></Input>
-                                </Col>
-                                <Col span="6" :offset="1">
-                                  <Input type="text" v-model="item.weight" placeholder="权重"></Input>
-                                </Col>
-                                <Col span="4" style="text-align: right">
-                                    <Icon type="ios-trash" class="remove-icon" @click="handleRemove(index)" size="20"/>
-
-                                </Col>
-                            </Row>
-
-
-
-                        </FormItem>
+                                </FormItem>
+                            </Col>                            
+                            <Col span="8" :offset="1">
+                                <FormItem :prop="'appDefaultPublishConfList.' + index + '.weight'" :rules="{ validator: validaterule}">
+                                    <Input type="text" v-model="item.weight" placeholder="权重"></Input>
+                                </FormItem>
+                            </Col>                               
+                            <Col span="4" style="text-align: right">
+                                <Icon type="ios-trash" class="remove-icon" @click="handleRemove(index)" size="20"/>
+                            </Col>
+                        </Row>
                     </div>
 
                     <FormItem>
@@ -188,6 +183,16 @@
                     callback();
                 }
             }
+            this.validaterule = (rule, value, callback) => {
+                let reg = /^\d*[1-9]$/;
+                if (value === "") {
+                    callback(new Error("权重不能为空"));
+                } else if (!reg.test(value)) {
+                    callback(new Error("请输入大于零的整数"));
+                } else {
+                    callback();
+                }
+            };
             return {
                 appModal: false,
                 appForm: {

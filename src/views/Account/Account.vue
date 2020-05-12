@@ -114,10 +114,10 @@
           <Input type="text" v-model="formCustom.usernumber"></Input>
         </FormItem>
         <FormItem label="Password" prop="passwd">
-          <Input type="text" v-model="formCustom.passwd"></Input>
+          <Input type="password" v-model="formCustom.passwd"></Input>
         </FormItem>
         <FormItem label="Confirm" prop="passwordCheck">
-          <Input type="text" v-model="formCustom.passwordCheck"></Input>
+          <Input type="password" v-model="formCustom.passwordCheck"></Input>
         </FormItem>
         <FormItem label="Tags" prop="tag">
           <Input type="text" v-model="formCustom.tag"></Input>

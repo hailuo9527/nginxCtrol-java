@@ -1,5 +1,8 @@
 <template>
   <div class="content">
+    <div class="header">
+      <h3>日志</h3>
+    </div>
     <Table
       :columns="TableColumns"
       :data="TableData"
@@ -75,7 +78,8 @@ export default {
 <style lang="less" scoped>
 .content {
   width: 100%;
-//   position: absolute;
+  height: 100%;
+  position: relative;
   overflow-y: scroll;
 }
 /deep/ .ivu-table-wrapper {
@@ -87,5 +91,14 @@ export default {
 }
 /deep/.ivu-table-row {
   height: 80px;
+}
+.header {
+    width: 1023px;
+    height: 80px;
+    line-height: 80px;
+    margin: 0 auto;
+    h3 {
+        margin-left: 10px;
+    }
 }
 </style>
