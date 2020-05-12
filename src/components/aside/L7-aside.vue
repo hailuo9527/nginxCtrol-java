@@ -412,7 +412,7 @@ export default {
           keys.map(item => {
             arr.push(...this.asideList[item]);
           });
-          console.log(arr);
+        //   console.log(arr);
           arr.map(item => {
             if (item.l7ServerId === this.$route.params.L7) {
               this.L7setActiveAside(item);

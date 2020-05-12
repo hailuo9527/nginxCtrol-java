@@ -6,6 +6,9 @@ const  defaultConfig = {
     instance_count: '',
     upd_time: '',
     upd_name: '',
+    work_rlimit_nofile: 1024,
+    worker_connections: 1024,
+    worker_processes: 'auto',
     ngcVirtualServers: [
         {
             virtual_id: '',

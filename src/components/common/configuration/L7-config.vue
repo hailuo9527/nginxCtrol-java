@@ -4,7 +4,7 @@
             <div class="header_item">
                 main
                 <PopTip content="" style="margin-left: 5px;" placement="bottom"></PopTip>
-                <Icon type="md-add" size="26" color="#333" class="add_handler" v-if="!$route.params.L7" />
+                <!-- <Icon type="md-add" size="26" color="#333" class="add_handler" v-if="!$route.params.L7" @click="editMain(0, false)"/> -->
             </div>
         </div>
        <div class="l7_config_column column_header">
@@ -46,11 +46,20 @@
             </div>
         </div>
         <!--header tab end-->
-        <!--virtual servers-->
+
+        <!-- main -->
         <div class="l7_config_column column_body ">
-            <div class="main"></div>
+            <div class="main">
+                <div class="main_item" >
+                        <Icon type="md-create" class="ctrl-list-item__edit" @click="editMain(0, false)"/>
+                        <div><span>worker_rlimit_nofile:</span>  <span class="main-value">{{config.work_rlimit_nofile ==null?'null':config.work_rlimit_nofile}}</span></div>
+                        <div><span>worker_connections:</span>  <span class="main-value">{{config.worker_connections == null?'null':config.worker_connections}}</span></div>
+                        <div><span>worker_processes:</span>  <span class="main-value">{{config.worker_processes==null?'null':config.worker_processes}}</span></div>
+                </div>
+            </div>
         </div>
 
+        <!--virtual servers-->
         <div  class="l7_config_column column_body column_body_servers">
             <div class="servers">
                     <div class="server_item" @click="selectVirtualServer(index)"
@@ -264,6 +273,8 @@
                 @submit="addUpstream"
                 @change="modalVisibleChange"/>
 
+        <MainModal :modify="modify" :show="mainModal" @change="modalVisibleChange" :data="maindata" @submit="modifyMain"/>
+
 
 
     </div>
@@ -275,6 +286,7 @@ import LoadBalancerModal from './loadBalancerModal'
 import VirtualServerModal from './virtualServerModal'
 import LocationModal from './locationModal'
 import UpstreamModal from './upstreamModal'
+import MainModal from './mainModal'
 import drawLine from '../../../libs/drawLine'
 import { getNginxConf,editNginxConf, previewNginxConf, selNginxConfByL7ID, getL7RelevanceConfig } from "../../../api/L7";
 import defaultConfig from './defaultConfig'
@@ -290,6 +302,7 @@ export default {
             serverModal: false, //
             locationModal: false,
             upstreamModal: false,
+            mainModal: false,
             domainName: '',
             step: 0,
             config: defaultConfig,
@@ -312,7 +325,8 @@ export default {
             copyAndSaveModel: false,
             copyAndSaveModelLoading: false,
             copyConfigName: '',
-            relevanceApp: null // 关联的app
+            relevanceApp: null, // 关联的app
+            maindata: []
         }
 
     },
@@ -334,7 +348,7 @@ export default {
         }),
     },
     components: {
-        PopTip, loading, LoadBalancerModal, VirtualServerModal, LocationModal, UpstreamModal
+        PopTip, loading, LoadBalancerModal, VirtualServerModal, LocationModal, UpstreamModal, MainModal
     },
     methods: {
 
@@ -365,6 +379,9 @@ export default {
                     break
                 case 'upstreamModal':
                     this.upstreamModal = data.data
+                    break
+                case 'mainModal':
+                    this.mainModal = data.data
                     break
             }
 
@@ -441,12 +458,15 @@ export default {
                 res = await selNginxConfByL7ID(json)
             }
             this.loading = false
-            //console.log(res)
+            console.log(res)
             if (this.asyncOk(res) && res.data.result) {
                 this.config = res.data.result || {}
                 if (this.config.ngcVirtualServers[0]){
                     this.virtualServerGroup = this.config.ngcVirtualServers
                     this.ngcLocationsGroup = this.config.ngcVirtualServers[0].ngcLocations || []
+                    this.maindata.push(this.config.work_rlimit_nofile)
+                    this.maindata.push(this.config.worker_connections)
+                    this.maindata.push(this.config.worker_processes)
                 }
 
             }else if (this.asyncOk(res)){
@@ -454,6 +474,9 @@ export default {
                 this.virtualServerGroup = defaultConfig.ngcVirtualServers
                 this.ngcLocationsGroup = defaultConfig.ngcVirtualServers[0].ngcLocations || []
                 this.config = defaultConfig
+                this.maindata.push(this.config.work_rlimit_nofile)
+                this.maindata.push(this.config.worker_connections)
+                this.maindata.push(this.config.worker_processes)
             }
         },
         /* 初始化配置 */
@@ -466,6 +489,11 @@ export default {
                 this.virtualServerGroup = defaultConfig.ngcVirtualServers
                 this.ngcLocationsGroup = defaultConfig.ngcVirtualServers[0].ngcLocations
             }
+        },
+        /* 编辑main配置 */
+        editMain(index, modify) {
+            this.modify = modify
+            this.mainModal = true
         },
         /* 编辑server配置*/
         editVirtualServer(index, modify) {
@@ -495,6 +523,13 @@ export default {
 
         },
 
+        /* 保存main */
+        modifyMain(data) {
+            // console.log(data)
+            this.config.work_rlimit_nofile = data.work_rlimit_nofile
+            this.config.worker_connections = data.worker_connections
+            this.config.worker_processes = data.worker_processes
+        },
         /* 保存virtualServer */
         addVirtualServer(data) {
             //data.ngcLocations = this.ngcLocationsGroup
