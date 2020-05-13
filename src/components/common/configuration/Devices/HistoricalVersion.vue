@@ -24,6 +24,9 @@
       <template slot-scope="{ row }" slot="insync">
         <strong>{{ row.create_time }}</strong>
       </template>
+      <template slot-scope="{ row }" slot="nginx_plus_status">
+        <strong>{{ row.nginx_plus_status }}</strong>
+      </template>
       <template slot-scope="{ row, index }" slot="version_nane">
         <div
           class="version_name_father"
@@ -79,6 +82,7 @@ export default {
         },
         { title: "创建人", slot: "name" },
         { title: "创建时间", slot: "insync" },
+        { title: "PLUS版本配置", slot: 'nginx_plus_status'},
         { title: "版本名称", slot: "version_nane" }
       ],
       TableValue: []
@@ -183,6 +187,10 @@ export default {
   margin-top: 20px;
 }
 /deep/.ivu-table-row td:nth-child(4) .ivu-table-cell {
+  margin-top: 20px;
+  margin-left: 26px;
+}
+/deep/.ivu-table-row td:nth-child(5) .ivu-table-cell {
   margin-top: 0;
 }
 /deep/.ivu-table-header {

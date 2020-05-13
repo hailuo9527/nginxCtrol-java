@@ -114,6 +114,7 @@ export default {
   methods: {
     change(data) {
       this.model = data;
+      this.status = false
       this.$emit("change", { data: data, name: "mainModal" });
     },
     handleMainSubmit(name) {
@@ -121,6 +122,7 @@ export default {
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.change(false);
+            this.status = false
             this.$emit("submit", this.form);
           } else {
             this.model = true;

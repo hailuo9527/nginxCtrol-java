@@ -1,22 +1,21 @@
 <template>
-  
-    <div class="content">
-      <div class="header">
-        <h3>日志</h3>
-      </div>
-      <div class="table-content">
-      <Scroll :on-reach-bottom="handleReachBottom">
-      <Table
-        :columns="TableColumns"
-        :data="TableData"
-        :width="1023"
-        :loading="loading"
-      ></Table>
-       </Scroll>
-      </div>
-      <!-- <BackTop ></BackTop> -->
+  <div class="content">
+    <div class="header">
+      <h3>日志</h3>
     </div>
- 
+    <div class="table-content">
+      <Scroll :on-reach-bottom="handleReachBottom" :height="height">
+        <Table
+          :columns="TableColumns"
+          :data="TableData"
+          :width="1023"
+          :loading="loading"
+          :height="height"
+        ></Table>
+      </Scroll>
+    </div>
+    <!-- <BackTop ></BackTop> -->
+  </div>
 </template>
 
 <script>
@@ -50,8 +49,10 @@ export default {
       TableData: [],
       loading: false,
       page: 1,
-      size: 10,
+      size: 20,
       moudle: "",
+      status: false,
+      height: window.screen.availHeight-220,
     };
   },
   methods: {
@@ -64,6 +65,9 @@ export default {
       });
       if (res.data.code === "success") {
         this.loading = false;
+        if (res.data.result < 20) {
+          this.status = true;
+        }
         this.TableData = res.data.result;
       } else {
         this.loading = false;
@@ -83,22 +87,31 @@ export default {
     },
     handleReachBottom() {
       return new Promise(async (resolve) => {
-        this.page += 1;
-        this.loading = true;
-        let res = await selSystemLogInfo({
-          page: this.page,
-          size: this.size,
-          moudle: this.moudle,
-        });
-        if (res.data.code === "success") {
-          console.log(res.data.result);
-          this.loading = false;
-          this.TableData.push(res.data.result);
+        if (!this.status) {
+          this.page += 1;
+          this.loading = true;
+          let res = await selSystemLogInfo({
+            page: this.page,
+            size: this.size,
+            moudle: this.moudle,
+          });
+          if (res.data.code === "success") {
+            this.loading = false;
+            if (res.data.result.length < 20) {
+              this.status = true;
+            }
+            res.data.result.forEach(function(e) {
+              this.TableData.push(e);
+            }, this);
+          } else {
+            this.loading = false;
+            this.$Message.error(`${res.data.result}`);
+          }
+          resolve();
         } else {
-          this.loading = false;
-          this.$Message.error(`${res.data.result}`);
+          this.$Message.info("到底了");
+          resolve();
         }
-        resolve()
       });
     },
   },
@@ -114,10 +127,11 @@ export default {
   width: 100%;
   height: 100%;
   position: relative;
-  .table-content {
-      position: relative;
-      height: 100%;
-  }
+    // overflow-y: scroll;
+  //   .table-content {
+  //     //   position: relative;
+  //       height: 100%;
+  //   }
 }
 /deep/ .ivu-table-wrapper {
   margin: 0 auto;
@@ -125,7 +139,7 @@ export default {
 }
 /deep/.ivu-table-header th {
   height: 60px;
-  background-color: #e0e1e2;
+  background-color: #f4f5f7;
 }
 /deep/.ivu-table-row {
   height: 80px;
@@ -140,5 +154,8 @@ export default {
     margin-left: 10px;
   }
 }
-
+// /deep/ .ivu-scroll-container {
+//     overflow: hidden;
+//     overflow-y: hidden;
+// }
 </style>
