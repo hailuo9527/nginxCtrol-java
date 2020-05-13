@@ -25,8 +25,8 @@
     </div>
 
     <div slot="show" class="ctrl-edit-item">
-      <span class="ctrl-edit-item__string">number</span>
-      <span class="ctrl-edit-item__string">time</span>
+      <span class="ctrl-edit-item__string">{{form.queueing_number}}</span>
+      <span class="ctrl-edit-item__string">{{form.queueing_time}}</span>
     </div>
   </my-form-item>
 </template>

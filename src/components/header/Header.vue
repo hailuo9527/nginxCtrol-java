@@ -29,7 +29,7 @@
           </Dropdown> -->
       </div>
       <div class="header_nav_item">
-        <router-link class="header_nav_item_label" to="/software">软件管理</router-link>
+        <router-link class="header_nav_item_label" to="/software">软件仓库</router-link>
       </div>
 <!--      <div class="header_nav_item">-->
 <!--        <router-link class="header_nav_item_label" to="/prewarn">预警</router-link>-->

@@ -4,7 +4,7 @@
       <span class="config_title">软件管理</span>
 
       <Button type="primary" size="large" icon="md-add" @click="uploadModal = true">上传文件</Button>
-      <Modal v-model="uploadModal" title="文件上传" loading="submitLoading" @on-ok="upload">
+      <Modal v-model="uploadModal" title="文件上传" >
         <Form>
           <FormItem label='服务器版本'>
             <Select v-model="versionId" >
@@ -12,7 +12,7 @@
             </Select>
           </FormItem>
           <FormItem label="文件上传">
-            <Upload action="/url" multiple :max-size="2048"  :before-upload="handleBeforeUpload" accept=".deb, .rpm">
+            <Upload action="/url"  multiple  :before-upload="handleBeforeUpload" accept=".deb, .rpm">
               <Button
                       icon="ios-cloud-upload-outline"
                       :loading="uploadLoading"
@@ -46,7 +46,10 @@
           </FormItem>
         </Form>
 
-
+        <div slot="footer">
+          <Button @click="uploadModal = false">取消</Button>
+          <Button type="primary"  :loading="submitLoading" @click="upload">确定</Button>
+        </div>
       </Modal>
 
     </div>
@@ -212,13 +215,17 @@
       async installNginx() {
 
         this.installLoading = true
-        let res = await installNginx({ip: this.selectedServer, filePath: this.active.file_path})
+        let res = await installNginx(this.selectedServer,{filePath: this.active.file_path})
         this.installLoading = false
-        this.$Message.success(res.data.result)
+        if (this.asyncOk(res)) {
+          this.$Message.success(res.data.result)
+        }else {
+          this.$Message.error(res.data.result)
+        }
+
       },
       // 选择安装目标服务器
       onSelectionChange(selection) {
-        console.log(selection)
         this.selectedServer = selection.map((item)=>{
           return item.l7ServerSSHIp
         })
@@ -226,8 +233,9 @@
       async upload() {
         if (!this.file.length) {
           this.$Message.error("请选择需要上传的文件文件！");
-          return
+          return false
         }
+        this.submitLoading = true
         let promises = this.file.map((item, index) => {
           let fileFormData = new FormData();
           fileFormData.append("file", item);
@@ -236,11 +244,10 @@
               this.$Message.success("文件 " + item.name + "上传成功！");
 
             } else {
-              this.$Message.error("文件 " + item.name + "上传失败！");
+              this.$Message.error("文件 " + item.name + "上传失败！"+ res.data.result);
             }
           })
         })
-        console.log(promises)
         Promise.all(promises).then(res => {
           this.submitLoading = false
           this.uploadModal = false
@@ -258,19 +265,30 @@
       handleUploadFile() {
         this.initUpload();
       },
-
       handleRemove(index) {
         //this.initUpload();
         console.log(index)
         this.file.splice(index, 1)
         //this.$Message.info("上传的文件已删除！");
       },
+
       handleBeforeUpload(file) {
         const fileExt = file.name
           .split(".")
           .pop()
           .toLocaleLowerCase();
         if (fileExt === "deb" || fileExt === "rpm") {
+          if(file.size > 1024 * 1024 * 2){
+            this.$Notice.warning({
+              title: "文件大小错误",
+              desc:
+                "文件：" +
+                file.name +
+                "大小超过2M"
+            });
+            return
+          }
+
           this.readFile(file);
           this.file.push(file)  ;
         } else {
