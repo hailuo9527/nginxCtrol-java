@@ -226,9 +226,7 @@
       },
       // 选择安装目标服务器
       onSelectionChange(selection) {
-        this.selectedServer = selection.map((item)=>{
-          return item.l7ServerSSHIp
-        })
+        this.selectedServer = selection
       },
       async upload() {
         if (!this.file.length) {

@@ -28,6 +28,7 @@
       <span class="ctrl-edit-item__string">{{form.queueing_number}}</span>
       <span class="ctrl-edit-item__string">{{form.queueing_time}}</span>
     </div>
+
   </my-form-item>
 </template>
 
