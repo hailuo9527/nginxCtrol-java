@@ -49,16 +49,14 @@ export const uploadFile = ({file, operation_system_verion_id}) => {
 /*
 *
 * */
-export const installNginx = ({ip, filePath}) => {
+export const installNginx = ( ip,{ filePath}) => {
   return axios.request({
     url: '/installNginx',
     method: 'post',
     params: {
       filePath
     },
-    data: {
-      ip
-    }
+    data: ip
   })
 }
 

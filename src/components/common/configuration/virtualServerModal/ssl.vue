@@ -33,7 +33,7 @@
             </div>
             <div class="ctrl-edit-properties__row">
                 <span class="label">KEY</span>
-                <span class="value">{{form.ssl_file}}</span>
+                <span class="value">{{form.ssl_key}}</span>
             </div>
         </div>
     </my-form-item>
