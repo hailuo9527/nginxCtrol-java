@@ -123,11 +123,22 @@
           <Input type="text" v-model="formCustom.tag"></Input>
         </FormItem>
         <FormItem label="Roles" prop="role">
-          <Input type="text" v-model="formCustom.role"></Input>
+          <Select v-model="formCustom.role" placeholder="Select your role">
+            <Option
+              v-for="item in RoleTableData"
+              :value="item.id"
+              :key="item.id"
+              >{{ item.role_name }}</Option
+            >
+          </Select>
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="primary" :long="true" @click="handleSubmit('formCustom')" v-if="num==1"
+        <Button
+          type="primary"
+          :long="true"
+          @click="handleSubmit('formCustom')"
+          v-if="num == 1"
           >确认添加</Button
         >
       </div>
@@ -156,14 +167,25 @@
           <Input type="text" v-model="formCustom.tag"></Input>
         </FormItem>
         <FormItem label="Roles" prop="role">
-          <Input type="text" v-model="formCustom.role"></Input>
+          <Select v-model="formCustom.role" placeholder="Select your role">
+            <Option
+              v-for="item in RoleTableData"
+              :value="item.id"
+              :key="item.id"
+              >{{ item.role_name }}</Option
+            >
+          </Select>
         </FormItem>
         <!-- <FormItem label="Email" prop="email">
           <Input type="text" v-model="formCustom.email" disabled></Input>
         </FormItem> -->
       </Form>
       <div slot="footer">
-        <Button type="primary" :long="true" @click="handleSubmit('formCustoms')" v-if="num==2"
+        <Button
+          type="primary"
+          :long="true"
+          @click="handleSubmit('formCustoms')"
+          v-if="num == 2"
           >确认修改</Button
         >
       </div>
@@ -202,11 +224,11 @@ export default {
       }
     };
     const validateRole = (rule, value, callback) => {
-        if (value === "") {
-            callback(new Error("角色不能为空"));
-        } else {
-            callback()
-        }
+      if (value === "") {
+        callback(new Error("角色不能为空"));
+      } else {
+        callback();
+      }
     };
     return {
       isCollapsed: false,
@@ -227,7 +249,7 @@ export default {
         usernumber: [
           { required: true, message: "账号不能为空", trigger: "blur" },
         ],
-        passwd: [{required: true, validator: validatePass, trigger: "blur" }],
+        passwd: [{ required: true, validator: validatePass, trigger: "blur" }],
         passwordCheck: [
           { required: true, validator: validatePassCheck, trigger: "blur" },
         ],
@@ -320,11 +342,12 @@ export default {
       this.formCustom.role = "";
       this.formCustom.usernumber = "";
       this.formCustom.passwd = "";
-      this.formCustom.confirm = ""
+      this.formCustom.confirm = "";
+      this.GetRole();
     },
     //弹出修改Model
     edit_user(row) {
-      console.log(row);
+      // console.log(row);
       this.EditModel = true;
       this.num = 2;
       this.formCustom.username = row.user_name;
@@ -333,6 +356,7 @@ export default {
       this.formCustom.usernumber = row.user_no;
       this.user_id = row.id;
       this.formCustom.passwd = row.password;
+      this.GetRole();
     },
     //侧边栏切换更换相应内容
     GetMenuValue(name) {
@@ -412,6 +436,7 @@ export default {
     async GetRole() {
       this.loading = true;
       let res = await selRoleInfo();
+      //   console.log(res.data.result);
       this.loading = false;
       this.role_length = res.data.result.length;
       this.RoleTableData = res.data.result;
