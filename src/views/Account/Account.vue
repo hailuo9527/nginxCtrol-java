@@ -53,8 +53,8 @@
                 <template slot-scope="{ row }" slot="tag">
                   <Tag color="#292932">{{ row.tag }}</Tag>
                 </template>
-                <template slot-scope="{ row }" slot="role_id">
-                  <Tag color="#292932">{{ row.role_id }}</Tag>
+                <template slot-scope="{ row }" slot="role_name">
+                  <Tag color="#292932">{{ row.role_name }}</Tag>
                 </template>
 
                 <template slot-scope="{ row, index }" slot="operation">
@@ -107,22 +107,22 @@
         :label-width="90"
         ref="formCustom"
       >
-        <FormItem label="Username" prop="username">
+        <FormItem label="用户名称" prop="username">
           <Input type="text" v-model="formCustom.username"></Input>
         </FormItem>
-        <FormItem label="UserNo" prop="usernumber">
+        <FormItem label="账号" prop="usernumber">
           <Input type="text" v-model="formCustom.usernumber"></Input>
         </FormItem>
-        <FormItem label="Password" prop="passwd">
+        <FormItem label="密码" prop="passwd">
           <Input type="password" v-model="formCustom.passwd"></Input>
         </FormItem>
-        <FormItem label="Confirm" prop="passwordCheck">
+        <FormItem label="确认密码" prop="passwordCheck">
           <Input type="password" v-model="formCustom.passwordCheck"></Input>
         </FormItem>
-        <FormItem label="Tags" prop="tag">
+        <FormItem label="标签" prop="tag">
           <Input type="text" v-model="formCustom.tag"></Input>
         </FormItem>
-        <FormItem label="Roles" prop="role">
+        <FormItem label="角色" prop="role">
           <Select v-model="formCustom.role" placeholder="Select your role">
             <Option
               v-for="item in RoleTableData"
@@ -154,19 +154,22 @@
         :label-width="90"
         ref="formCustoms"
       >
-        <FormItem label="Username" prop="username">
+        <FormItem label="用户名称" prop="username">
           <Input type="text" v-model="formCustom.username"></Input>
         </FormItem>
-        <FormItem label="UserNo" prop="usernumber">
+        <FormItem label="账号" prop="usernumber">
           <Input type="text" v-model="formCustom.usernumber"></Input>
         </FormItem>
-        <FormItem label="Password" prop="passwd">
-          <Input type="text" v-model="formCustom.passwd"></Input>
+        <FormItem label="密码" prop="passwd">
+          <Input type="password" v-model="formCustom.passwd"></Input>
         </FormItem>
-        <FormItem label="Tags" prop="tag">
+        <FormItem label="确认密码" prop="passwordCheck">
+          <Input type="password" v-model="formCustom.passwordCheck"></Input>
+        </FormItem>
+        <FormItem label="标签" prop="tag">
           <Input type="text" v-model="formCustom.tag"></Input>
         </FormItem>
-        <FormItem label="Roles" prop="role">
+        <FormItem label="角色" prop="role">
           <Select v-model="formCustom.role" placeholder="Select your role">
             <Option
               v-for="item in RoleTableData"
@@ -176,9 +179,6 @@
             >
           </Select>
         </FormItem>
-        <!-- <FormItem label="Email" prop="email">
-          <Input type="text" v-model="formCustom.email" disabled></Input>
-        </FormItem> -->
       </Form>
       <div slot="footer">
         <Button
@@ -267,7 +267,7 @@ export default {
         },
         {
           title: "角色",
-          slot: "role_id",
+          slot: "role_name",
         },
         {
           title: "创建时间",
@@ -342,12 +342,12 @@ export default {
       this.formCustom.role = "";
       this.formCustom.usernumber = "";
       this.formCustom.passwd = "";
-      this.formCustom.confirm = "";
+      this.formCustom.passwordCheck = "";
       this.GetRole();
     },
     //弹出修改Model
     edit_user(row) {
-      // console.log(row);
+    //   console.log(row);
       this.EditModel = true;
       this.num = 2;
       this.formCustom.username = row.user_name;
@@ -356,6 +356,7 @@ export default {
       this.formCustom.usernumber = row.user_no;
       this.user_id = row.id;
       this.formCustom.passwd = row.password;
+      this.formCustom.passwordCheck = row.password;
       this.GetRole();
     },
     //侧边栏切换更换相应内容

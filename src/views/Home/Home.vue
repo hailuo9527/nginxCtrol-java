@@ -460,6 +460,7 @@ export default {
             this.refresh_loading = true;
             this.GetHomeInfo();
           } else {
+            this.$Modal.remove();
             this.$Message.error(`${res.data.result}`);
           }
         },

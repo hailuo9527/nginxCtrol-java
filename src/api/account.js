@@ -16,11 +16,10 @@ export const insSysUersInso = ({user_name, user_no, password, tag, role_id}) => 
 
 /** 查询所有用户信息 */
 
-export const selSysUersInfoAll = (tag=1) => {
+export const selSysUersInfoAll = () => {
     return axios.request({
         url: '/selSysUersInfoAll',
         method: 'post',
-        params: { tag }
     })
 }
 
