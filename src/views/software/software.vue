@@ -69,10 +69,19 @@
         </template>
       </Table>
     </div>
-    <Modal v-model="installModal" title="软件安装"  @on-ok="installNginx" width="800" :loading="installLoading">
+    <Modal v-model="installModal" title="软件安装" width="800" >
       <Table :columns="serverListTableConfig" @on-selection-change="onSelectionChange" max-height="500" :loading="loading" :data="serverList">
 
       </Table>
+      <div slot="footer">
+        <Button @click="cancel()">取消</Button>
+        <Button type="primary" @click="installNginx()" :loading="installLoading"
+          >
+          <span v-if="!installLoading">确定</span>
+          <span v-else>安装中...</span>
+          </Button
+        >
+      </div>
     </Modal>
   </div>
 </template>
@@ -213,16 +222,23 @@
       },
 
       async installNginx() {
-
-        this.installLoading = true
-        let res = await installNginx(this.selectedServer,{filePath: this.active.file_path})
-        this.installLoading = false
-        if (this.asyncOk(res)) {
-          this.$Message.success(res.data.result)
-        }else {
-          this.$Message.error(res.data.result)
+        if (this.selectedServer.length>0) {
+            this.installLoading = true
+            let res = await installNginx(this.selectedServer,{filePath: this.active.file_path})
+            this.installLoading = false
+            this.installModal = false
+            if (this.asyncOk(res)) {
+                this.$Message.success(res.data.result)
+            }else {
+                this.$Message.error(res.data.result)
+            }
+        } else {
+            this.installModal = false
         }
 
+      },
+      cancel() {
+          this.installModal = false
       },
       // 选择安装目标服务器
       onSelectionChange(selection) {
