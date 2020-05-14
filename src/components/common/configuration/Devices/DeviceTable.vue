@@ -253,7 +253,45 @@ export default {
     },
     //推送全部实例
     async pushAllInstance() {
+      this.$Spin.show({
+        render: (h) => {
+          return h('Spin', [
+            h('div', {
+              'class': 'loader',
+            },[
+              h('svg',{
+                'class': 'circular',
+                attrs: {
+                  viewBox: '25 25 50 50',
+                }
+              },[
+                h('circle',{
+                  'class': 'path',
+                  attrs: {
+                    cx: '50',
+                    cy: '50',
+                    r: '20',
+                    fill: 'none',
+                    'stroke-width': '2',
+                    'stroke-miterlimit': '0'
+                  }
+                })
+              ])
+            ]),
+            h('div', {
+              domProps: {
+                innerHTML: '正在推送'
+              },
+              style: {
+                color: '#333',
+                fontSize: '14px'
+              },
+            })
+          ])
+        }
+      });
       let res = await pushInstance(this.TableValue);
+      this.$Spin.hide()
       if (this.asyncOk(res)) {
         this.$Message.info(`${res.data.result}`);
         this.getNgcInstanceList();
@@ -266,7 +304,46 @@ export default {
       if (this.selectedValue == "") {
         this.$Message.info("请选中要推送的实例");
       } else {
+        this.$Spin.show({
+          render: (h) => {
+            return h('Spin', [
+              h('div', {
+                'class': 'loader',
+              },[
+                h('svg',{
+                  'class': 'circular',
+                  attrs: {
+                    viewBox: '25 25 50 50',
+                  }
+                },[
+                  h('circle',{
+                    'class': 'path',
+                    attrs: {
+                      cx: '50',
+                      cy: '50',
+                      r: '20',
+                      fill: 'none',
+                      'stroke-width': '2',
+                      'stroke-miterlimit': '0'
+                    }
+                  })
+                ])
+              ]),
+              h('div', {
+                domProps: {
+                  innerHTML: '正在推送'
+                },
+                style: {
+                  color: '#333',
+                  fontSize: '14px'
+                },
+              })
+            ])
+          }
+        });
+
         let res = await pushInstance(this.selectedValue);
+        this.$Spin.hide()
         if (this.asyncOk(res)) {
           this.$Message.info(`${res.data.result}`);
           this.getNgcInstanceList();
@@ -338,5 +415,13 @@ export default {
 /deep/.ivu-spin-fix {
   background-color: #f8f8f9;
   border: none;
+}
+@keyframes ani-demo-spin {
+  from { transform: rotate(0deg);}
+  50%  { transform: rotate(180deg);}
+  to   { transform: rotate(360deg);}
+}
+/deep/.demo-spin-icon-load{
+  animation: ani-demo-spin 1s linear infinite;
 }
 </style>

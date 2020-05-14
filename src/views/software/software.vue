@@ -262,7 +262,7 @@
             }
           })
         })
-        Promise.all(promises).then(res => {
+        Promise.allSettled(promises).then(res => {
           this.submitLoading = false
           this.uploadModal = false
           this.selUploadFile();
@@ -292,16 +292,6 @@
           .pop()
           .toLocaleLowerCase();
         if (fileExt === "deb" || fileExt === "rpm") {
-          if(file.size > 1024 * 1024 * 2){
-            this.$Notice.warning({
-              title: "文件大小错误",
-              desc:
-                "文件：" +
-                file.name +
-                "大小超过2M"
-            });
-            return
-          }
 
           this.readFile(file);
           this.file.push(file)  ;

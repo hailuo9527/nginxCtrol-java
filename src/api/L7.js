@@ -206,3 +206,15 @@ export const selUsableL7Server = ({ app_service_id }) => {
         }
     })
 }
+
+/* 发布时检查配置文件是否适用所选实例 */
+export const pushCheck = ({ nginx_conf_id }, l7ServerIds) => {
+    return axios.request({
+        url: '/pushCheck',
+        method: 'post',
+        params: {
+            nginx_conf_id
+        },
+        data: l7ServerIds
+    })
+}

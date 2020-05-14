@@ -180,7 +180,7 @@
                                     <Button
                                             type="primary"
                                             @click="pushApp('formValidate')"
-                                            :loading="modal_loading"
+
                                     >确认</Button>
 
                                 </div>
@@ -203,6 +203,7 @@
     <div class="content_right" v-else>
       <div class="no-data">暂无数据，点击左侧“+”创建APP</div>
     </div>
+
   </div>
 </template>
 <script>
@@ -211,7 +212,7 @@
   import popTip from "@/components/common/pop-tip";
   import {mapState, mapMutations, mapActions} from "vuex";
   import {pushApp, selAppDetails, pushAppDefault} from "../../api/app";
-  import {getNginxConfALL, selUsableL7Server} from "../../api/L7";
+  import {getNginxConfALL, selUsableL7Server, pushCheck} from "../../api/L7";
 
 
   export default {
@@ -284,7 +285,7 @@
         this.appModal = true
 
         this.appForm = this.copyJson(this.activeAside)
-        console.log(this.appForm)
+
         this.getAllConfigInfo()
         this.selUsableL7Server().then(() => {
           this.$set(this.appForm, 'l7_server_ids', this.activeAside.l7_server_ids)
@@ -299,35 +300,115 @@
       pushApp(name) {
         this.$refs[name].validate(valid => {
           if (valid) {
-            this.modal_loading = true;
-            pushApp(this.appForm)
-              .then(res => {
-                // console.log(res);
-                this.modal_loading = false;
-                if (res.data.code === 'success') {
-                  this.appModal = false;
-                  this.$Message.success('发布成功')
-                  /* 同步当前侧栏选中项状态 */
-                  this.getAppAsideList().then((res) => {
-                    if (res.data.code === 'success') {
-                      let target = res.data.result.filter((item) => {
-                        return item.app_service_id === this.activeAside.app_service_id
-                      })
-                      this.appSetActiveAside(target[0] || {})
-                    }
-                  })
-                  //this.appSetActiveAside(item);
-                } else {
-                  this.$Message.error(res.data.result)
-                }
-              })
-              .catch(err => {
-                console.log(err);
-              });
+            //this.modal_loading = true;
+            pushCheck({nginx_conf_id: this.appForm.nginx_conf_id}, this.appForm.l7_server_ids).then(res => {
+              if(this.asyncOk(res) && this.isEmptyObject(res.data.result)) {
+                this.appModal = false;
+                this.pushAppData()
+              }else if (!this.isEmptyObject(res.data.result)){
+                this.$Modal.confirm({
+                  render: (h) => {
+                    return h('div', [
+                      h('p','您当前需要发布的配置文件中包含以下PLUS版本的配置信息：'),
+                      h('p',{
+                        domProps: {
+                          innerHTML: res.data.result.plus_conf_param
+                        },
+                        style: {
+                          color: '#333',
+                          fontSize: '14px'
+                        },
+                      } ),
+                      h('div', [
+                        h('span', '所选实例中'),
+                        res.data.result.l7ServerName.map(item => {
+                          return h('span', {
+                            'class': 'l7ServerName',
+                            domProps: {
+                              innerHTML: item
+                            },
+                          })
+                        }),
+                        h('span', '不支持以上配置。'),
+                      ]),
+                      h('p','继续发布将跳过以上实例发布。是否继续？')
+                    ])
+                  },
+                  onOk: () => {
+                    this.appModal = false;
+                    this.pushAppData()
+                  }
+                })
+              }
+            })
+
           } else {
             this.$Message.error("请检查输入是否正确!");
           }
         });
+      },
+      /* 提交发布数据 */
+      pushAppData(){
+        this.$Spin.show({
+          render: (h) => {
+            return h('Spin', [
+              h('div', {
+                'class': 'loader',
+              },[
+                h('svg',{
+                  'class': 'circular',
+                  attrs: {
+                    viewBox: '25 25 50 50',
+                  }
+                },[
+                  h('circle',{
+                    'class': 'path',
+                    attrs: {
+                      cx: '50',
+                      cy: '50',
+                      r: '20',
+                      fill: 'none',
+                      'stroke-width': '2',
+                      'stroke-miterlimit': '0'
+                    }
+                  })
+                ])
+              ]),
+              h('div', {
+                domProps: {
+                  innerHTML: '正在发布'
+                },
+                style: {
+                  color: '#333',
+                  fontSize: '14px'
+                },
+              })
+            ])
+          }
+        });
+        pushApp(this.appForm)
+          .then(res => {
+            this.$Spin.hide()
+            if (res.data.code === 'success') {
+              this.$Message.success('发布成功')
+              /* 同步当前侧栏选中项状态 */
+              this.getAppAsideList().then((res) => {
+                if (res.data.code === 'success') {
+                  let target = res.data.result.filter((item) => {
+                    return item.app_service_id === this.activeAside.app_service_id
+                  })
+                  this.appSetActiveAside(target[0] || {})
+                }
+              })
+              //this.appSetActiveAside(item);
+            } else {
+              this.$Message.error(res.data.result)
+            }
+          })
+          .catch(err => {
+            this.$Spin.hide()
+            console.log(err);
+          });
       },
       /* 一键发布 */
       async publicAppAuto() {
@@ -400,12 +481,25 @@
     },
   };
 </script>
-<style lang="less" scoped>
+<style lang="less" >
   @import "../L4/L4";
 
   .content_main {
     height: calc(100%);
     padding: 98px 10px 0 10px;
     //box-sizing: border-box;
+  }
+  @keyframes ani-demo-spin {
+    from { transform: rotate(0deg);}
+    50%  { transform: rotate(180deg);}
+    to   { transform: rotate(360deg);}
+  }
+  .demo-spin-icon-load{
+    animation: ani-demo-spin 1s linear infinite;
+  }
+  .l7ServerName{
+    color: @green;
+
+    margin: 0 10px;
   }
 </style>
