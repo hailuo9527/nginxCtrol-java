@@ -102,9 +102,6 @@
 
             }
         },
-        mounted() {
-            console.log(this.chartFilter)
-        }
     }
 </script>
 <style lang="less" scoped>
