@@ -89,18 +89,18 @@
                     <div class="scroll-warp">
                         <Row v-for="(item, index) in appForm.appDefaultPublishConfList" :key="index">
                             <Col span="10">
-                                <FormItem                               
+                                <FormItem
                                 label=""
                                 :prop="'appDefaultPublishConfList.' + index + '.upstream_server'"
                                 :rules="{ validator: ipPort}">
                                     <Input type="text" v-model="item.upstream_server" placeholder="IP | IP:PORT | PORT"></Input>
                                 </FormItem>
-                            </Col>                            
+                            </Col>
                             <Col span="8" :offset="1">
                                 <FormItem :prop="'appDefaultPublishConfList.' + index + '.weight'" :rules="{ validator: validaterule}">
                                     <Input type="text" v-model="item.weight" placeholder="权重"></Input>
                                 </FormItem>
-                            </Col>                               
+                            </Col>
                             <Col span="4" style="text-align: right">
                                 <Icon type="ios-trash" class="remove-icon" @click="handleRemove(index)" size="20"/>
                             </Col>
@@ -279,7 +279,6 @@
             //展示Model框，展示当前实例的数据
             editModel(item, index) {
                 this.edit = true
-                console.log(item)
                 this.appForm = this.copyJson(item)
                 this.appModal = true
                 this.selUsableL7Server(item).then(()=> {
@@ -354,6 +353,17 @@
                     }
                 });
             },
+            /* 重置activeAside */
+            resetAside(){
+                this.getAppAsideList().then((res) => {
+                    if (res.data.code === 'success') {
+                        let target = res.data.result.filter((item) => {
+                            return item.app_service_id === this.activeAside.app_service_id
+                        })
+                        this.appSetActiveAside(target[0] || {})
+                    }
+                })
+            },
             /*修改APP */
             modifyApp (name) {
                 this.$refs[name].validate(valid => {
@@ -367,8 +377,7 @@
                                     this.appModal = false;
                                     this.$Message.success('修改成功')
                                     /* 重置当前app信息 */
-                                    this.getAppAsideList()
-                                    this.appSetActiveAside(this.appForm)
+                                    this.resetAside()
                                 } else {
                                     this.$Message.error(`${res.data.result}`)
                                 }
