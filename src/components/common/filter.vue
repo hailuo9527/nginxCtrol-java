@@ -101,6 +101,9 @@
                 }
 
             }
+        },
+        mounted() {
+            console.log(this.chartFilter)
         }
     }
 </script>
