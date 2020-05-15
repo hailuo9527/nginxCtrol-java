@@ -54,10 +54,10 @@
         size="large"
         class="commonOne"
         :class="changeStyle ? 'change_style' : ''"
-        @click="changeStyle ? pushsSelectedInstance() : ''"
+        @click="changeStyle ? pushCheck(pushsSelectedInstance) : ''"
         >推送选中实例</Button
       >
-      <Button size="large" class="commonTwo" @click="pushAllInstance"
+      <Button size="large" class="commonTwo" @click="pushCheck(pushAllInstance)"
         >推送所有实例</Button
       >
     </div>
@@ -98,7 +98,8 @@ import {
   addInstance,
   delInstance,
   selNgcInstanceList,
-  pushInstance
+  pushInstance,
+  pushCheck
 } from "@/api/L7";
 export default {
   props: {
@@ -251,8 +252,53 @@ export default {
         this.changeStyle = true;
       }
     },
-    //推送全部实例
-    async pushAllInstance() {
+    pushCheck(fn) {
+      let arr = this.selectedValue.map(item => {
+        return item.l7_server_id
+      })
+      console.log(arr)
+      pushCheck({nginx_conf_id: this.$route.query.nginx_conf_id}, arr).then(res => {
+        if(this.asyncOk(res) && this.isEmptyObject(res.data.result)) {
+          fn()
+        }else if (!this.isEmptyObject(res.data.result)){
+          this.$Modal.confirm({
+            render: (h) => {
+              return h('div', [
+                h('p','您当前需要发布的配置文件中包含以下PLUS版本的配置信息：'),
+                h('p',{
+                  domProps: {
+                    innerHTML: res.data.result.plus_conf_param
+                  },
+                  style: {
+                    color: '#333',
+                    fontSize: '14px'
+                  },
+                } ),
+                h('div', [
+                  h('span', '所选实例中'),
+                  res.data.result.l7ServerName.map(item => {
+                    return h('span', {
+                      'class': 'l7ServerName',
+                      domProps: {
+                        innerHTML: item
+                      },
+                    })
+                  }),
+                  h('span', '不支持以上配置。'),
+                ]),
+                h('p','继续发布将跳过以上实例发布。是否继续？')
+              ])
+            },
+            onOk: () => {
+             fn()
+
+            }
+          })
+        }
+      })
+    },
+    /* 显示loading */
+    showSpin(){
       this.$Spin.show({
         render: (h) => {
           return h('Spin', [
@@ -290,6 +336,10 @@ export default {
           ])
         }
       });
+    },
+    //推送全部实例
+    async pushAllInstance() {
+      this.showSpin()
       let res = await pushInstance(this.TableValue);
       this.$Spin.hide()
       if (this.asyncOk(res)) {
@@ -304,43 +354,7 @@ export default {
       if (this.selectedValue == "") {
         this.$Message.info("请选中要推送的实例");
       } else {
-        this.$Spin.show({
-          render: (h) => {
-            return h('Spin', [
-              h('div', {
-                'class': 'loader',
-              },[
-                h('svg',{
-                  'class': 'circular',
-                  attrs: {
-                    viewBox: '25 25 50 50',
-                  }
-                },[
-                  h('circle',{
-                    'class': 'path',
-                    attrs: {
-                      cx: '50',
-                      cy: '50',
-                      r: '20',
-                      fill: 'none',
-                      'stroke-width': '2',
-                      'stroke-miterlimit': '0'
-                    }
-                  })
-                ])
-              ]),
-              h('div', {
-                domProps: {
-                  innerHTML: '正在推送'
-                },
-                style: {
-                  color: '#333',
-                  fontSize: '14px'
-                },
-              })
-            ])
-          }
-        });
+        this.showSpin()
 
         let res = await pushInstance(this.selectedValue);
         this.$Spin.hide()
