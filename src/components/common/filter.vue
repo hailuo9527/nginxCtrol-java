@@ -101,6 +101,9 @@
                 }
 
             }
+        },
+        mounted() {
+            console.log(this.chartFilter)
         }
     }
 </script>
@@ -127,9 +130,9 @@
         transition: color 0.1s linear;
         color: #333;
         &.active{
-            color: @green;
+            color: @green!important;
             &:before{
-                background-color: @green;
+                background-color: @green!important;
             }
         }
         &:before{
