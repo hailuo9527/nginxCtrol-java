@@ -14,6 +14,7 @@
           size="large"
           icon="md-add"
           @click="getL7ServerInfoAll"
+          :disabled="$route.query.nginx_conf_id==undefined?true:false"
           >添加实例</Button
         >
       </div>
