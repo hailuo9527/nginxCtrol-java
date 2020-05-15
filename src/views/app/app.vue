@@ -14,7 +14,8 @@
                             <div class="content">
                                 <div class="row-item">
                                     <div class="status">
-                                        <Icon type="md-happy" size="20" color="#21a37a"/>
+                                        <Icon type="md-happy" size="20" color="#21a37a" v-if="activeAside.is_sync"/>
+                                        <Icon type="md-sad" size="20" color="#fb1010" v-if="!activeAside.is_sync"/>
                                         <span>状态</span>: {{activeAside.is_sync ? '已同步': '未同步'}}
                                     </div>
                                 </div>
@@ -118,11 +119,12 @@
                         </Drawer>
                         </span>
             <span class="status">
-                              <Icon type="md-happy" size="20" color="#21a37a"/>
+                              <Icon type="md-happy" size="20" color="#21a37a" v-if="activeAside.is_sync"/>
+                              <Icon type="md-sad" size="20" color="#fb1010" v-if="!activeAside.is_sync"/>
                                     <span>状态</span>: {{activeAside.is_sync ? '已同步': '未同步'}}
                         </span>
             <span class="publish">
-                            <Button type="primary" :loading="pushAppLoading" @click="publicAppAuto"
+                            <Button type="primary"  @click="publicAppAuto"
                                     :disabled="!activeAside.appDefaultPublishConfList.length">
                                 快捷发布
                             </Button>
@@ -410,11 +412,49 @@
             console.log(err);
           });
       },
-      /* 一键发布 */
+      /* 快捷发布 */
       async publicAppAuto() {
-        this.pushAppLoading = true
+          this.$Spin.show({
+          render: (h) => {
+            return h('Spin', [
+              h('div', {
+                'class': 'loader',
+              },[
+                h('svg',{
+                  'class': 'circular',
+                  attrs: {
+                    viewBox: '25 25 50 50',
+                  }
+                },[
+                  h('circle',{
+                    'class': 'path',
+                    attrs: {
+                      cx: '50',
+                      cy: '50',
+                      r: '20',
+                      fill: 'none',
+                      'stroke-width': '2',
+                      'stroke-miterlimit': '0'
+                    }
+                  })
+                ])
+              ]),
+              h('div', {
+                domProps: {
+                  innerHTML: '正在发布'
+                },
+                style: {
+                  color: '#333',
+                  fontSize: '14px'
+                },
+              })
+            ])
+          }
+        });
+        // this.pushAppLoading = true
         let res = await pushAppDefault(this.activeAside)
-        this.pushAppLoading = false
+        this.$Spin.hide()
+        // this.pushAppLoading = false
         if (this.asyncOk(res)) {
           this.$Message.success('发布成功')
           /* 同步当前侧栏选中项状态 */

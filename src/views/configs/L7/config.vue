@@ -3,7 +3,10 @@
        <div class="config-detail-header">
            <Button  size="large" icon="md-arrow-back" @click="$router.go(-1)">返回</Button>
            <div class="border-bottom-input">
-               <Input type="text" v-model="configName" placeholder="配置名"></Input>
+               <Input type="text" v-model="configName" placeholder="配置名" :autofocus="true" @on-blur="check"></Input>
+               <Alert type="error" class="err-tip" v-if="errorTip" >
+                   <Icon type="md-warning" class="close"/> 配置名不能为空
+                </Alert>
            </div>
 
        </div>
@@ -36,7 +39,8 @@
         data () {
             return{
                 tab: 0,
-                configName: ''
+                configName: '',
+                errorTip: false
             }
         },
         computed: {
@@ -46,6 +50,11 @@
         },
         watch: {
             configName(nv){
+                if (nv==="") {
+                    this.errorTip = true
+                } else {
+                    this.errorTip = false
+                }
                 nv? this.canSaveConfigStatus(true): this.canSaveConfigStatus(false)
                 this.changeConfigName(nv)
             }
@@ -65,6 +74,11 @@
                 // }
 
                 this.tab = tab
+            },
+            check() {
+                if (this.configName==="") {
+                    this.errorTip = true
+                }              
             }
         },
 
@@ -153,4 +167,21 @@
     .configuration-associations__add-new{
         margin-left: 30px;
     }
+    .err-tip{
+  margin-bottom: -36px!important;
+  background: #ff5559;
+  opacity: .95;
+  border: none;
+  border-radius: 0;
+  font-size: 14px;
+  color: #fff;
+  padding: 10px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  .close{
+    font-size: 18px;
+    color: #fff;
+  }
+}
 </style>

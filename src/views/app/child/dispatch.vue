@@ -40,7 +40,7 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button @click="cancel('formDynamic')">取消</Button>
+        <Button @click="cancel()">取消</Button>
         <Button type="primary" @click="handleSubmit('formDynamic')"
           >确定</Button
         >
@@ -97,6 +97,7 @@ export default {
       upstream_request: "",
       index: 0,
       saveLoading: false,
+      weights: ''
     };
   },
   computed: {
@@ -108,8 +109,9 @@ export default {
     ...mapActions(["getAppAsideList"]),
     ...mapMutations(["appSetActiveAside", "appSetAsideList"]),
     modify(row, index) {
-      //   console.log(row);
+        // console.log(row);
       this.index = index;
+      this.weights = row.weight
       this.modal = true;
       this.upstream_server = row.upstream_server;
       this.upstream_request = row.upstream_request;
@@ -157,15 +159,9 @@ export default {
         }
       });
     },
-    cancel(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.modal = false;
-        } else {
-          this.modal = true;
-          this.$Message.error("Fail!");
-        }
-      });
+    cancel() {
+        this.modal = false
+        this.dispatch.data[this.index].weight = this.weights
     },
   },
   watch: {
