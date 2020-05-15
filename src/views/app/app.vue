@@ -285,9 +285,7 @@
       ...mapActions(['getAppAsideList']),
       publicApp() {
         this.appModal = true
-
         this.appForm = this.copyJson(this.activeAside)
-
         this.getAllConfigInfo()
         this.selUsableL7Server().then(() => {
           this.$set(this.appForm, 'l7_server_ids', this.activeAside.l7_server_ids)
@@ -394,15 +392,7 @@
             if (res.data.code === 'success') {
               this.$Message.success('发布成功')
               /* 同步当前侧栏选中项状态 */
-              this.getAppAsideList().then((res) => {
-                if (res.data.code === 'success') {
-                  let target = res.data.result.filter((item) => {
-                    return item.app_service_id === this.activeAside.app_service_id
-                  })
-                  this.appSetActiveAside(target[0] || {})
-                }
-              })
-              //this.appSetActiveAside(item);
+              this.resetAside()
             } else {
               this.$Message.error(res.data.result)
             }
@@ -412,7 +402,18 @@
             console.log(err);
           });
       },
-      /* 快捷发布 */
+      /* 重置activeAside */
+      resetAside(){
+        this.getAppAsideList().then((res) => {
+          if (res.data.code === 'success') {
+            let target = res.data.result.filter((item) => {
+              return item.app_service_id === this.activeAside.app_service_id
+            })
+            this.appSetActiveAside(target[0] || {})
+          }
+        })
+      },
+      /* 一键发布 */
       async publicAppAuto() {
           this.$Spin.show({
           render: (h) => {
@@ -458,14 +459,7 @@
         if (this.asyncOk(res)) {
           this.$Message.success('发布成功')
           /* 同步当前侧栏选中项状态 */
-          this.getAppAsideList().then((res) => {
-            if (res.data.code === 'success') {
-              let target = res.data.result.filter((item) => {
-                return item.app_service_id === this.activeAside.app_service_id
-              })
-              this.appSetActiveAside(target[0] || {})
-            }
-          })
+          this.resetAside()
         } else {
 
           this.$Message.error(res.data.result)

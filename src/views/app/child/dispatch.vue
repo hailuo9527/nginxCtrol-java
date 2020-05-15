@@ -55,7 +55,7 @@ export default {
   name: "dispatch",
   data() {
     this.validaterule = (rule, value, callback) => {
-      let reg = /^\d*[1-9]$/;
+      let reg = /^\+?[1-9][0-9]*$/;
       if (value === "") {
         callback(new Error("权重不能为空"));
       } else if (!reg.test(value)) {
