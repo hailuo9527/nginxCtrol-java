@@ -57,9 +57,9 @@
         @click="changeStyle ? pushCheck(pushsSelectedInstance) : ''"
         >推送选中实例</Button
       >
-      <Button size="large" class="commonTwo" @click="pushCheck(pushAllInstance)"
+     <!-- <Button size="large" class="commonTwo" @click="pushCheck(pushAllInstance)"
         >推送所有实例</Button
-      >
+      >-->
     </div>
     <Modal
       v-model="DeviceModal"
@@ -256,7 +256,6 @@ export default {
       let arr = this.selectedValue.map(item => {
         return item.l7_server_id
       })
-      console.log(arr)
       pushCheck({nginx_conf_id: this.$route.query.nginx_conf_id}, arr).then(res => {
         if(this.asyncOk(res) && this.isEmptyObject(res.data.result)) {
           fn()
@@ -337,9 +336,10 @@ export default {
         }
       });
     },
-    //推送全部实例
+  /*  //推送全部实例
     async pushAllInstance() {
       this.showSpin()
+      this.selectedValue = this.TableValue
       let res = await pushInstance(this.TableValue);
       this.$Spin.hide()
       if (this.asyncOk(res)) {
@@ -348,7 +348,7 @@ export default {
       } else {
         this.$Message.error(`${res.data.result}`);
       }
-    },
+    },*/
     //推送勾选的实例
     async pushsSelectedInstance() {
       if (this.selectedValue == "") {
