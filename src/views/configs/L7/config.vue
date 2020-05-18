@@ -3,7 +3,7 @@
        <div class="config-detail-header">
            <Button  size="large" icon="md-arrow-back" @click="$router.go(-1)">返回</Button>
            <div class="border-bottom-input">
-               <Input type="text" v-model="configName" placeholder="配置名" :autofocus="true" @on-blur="check"></Input>
+               <Input type="text" v-model="configName" placeholder="配置名" @on-blur="check" ref="input"></Input>
                <Alert type="error" class="err-tip" v-if="errorTip" >
                    <Icon type="md-warning" class="close"/> 配置名不能为空
                 </Alert>
@@ -83,6 +83,9 @@
         },
 
         mounted() {
+            this.$nextTick( () => {
+                this.$refs['input'].focus()
+            })
             this.configName = this.$route.params.configName || ''
             this.$route.params.configName ? this.canSaveAndCopyConfigStatus(true): this.canSaveAndCopyConfigStatus(false)
 
