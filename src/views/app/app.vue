@@ -125,7 +125,7 @@
                         </span>
             <span class="publish">
                             <Button type="primary"  @click="publicAppAuto"
-                                    :disabled="!activeAside.appDefaultPublishConfList.length">
+                                    :disabled="activeAside.is_sync">
                                 快捷发布
                             </Button>
                             <Button style="margin-left: 20px" @click="publicApp">手动发布</Button>
