@@ -21,7 +21,8 @@ export default {
     },
     actions: {
         getAppAsideList({ commit },shouldUpdateActiveAside) { // shouldUpdateActiveAside为true时更新 appSetActiveAside
-            shouldUpdateActiveAside = shouldUpdateActiveAside ? 'reset' : ''
+            shouldUpdateActiveAside = shouldUpdateActiveAside === true ? 'reset' : shouldUpdateActiveAside
+            console.log(shouldUpdateActiveAside)
             return new Promise((resolve, reject) => {
                 commit('appChangeLoadingStatus', true)
                 selAppInfoList().then(res => {
@@ -36,6 +37,7 @@ export default {
                                 let target = res.data.result.filter((item) => {
                                     return item.app_service_id === this.state.app.activeAside.app_service_id
                                 })
+                              console.log(target)
                                 commit('appSetActiveAside', target[0] || {})
                             break
                             default: break
