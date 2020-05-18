@@ -404,14 +404,15 @@
       },
       /* 重置activeAside */
       resetAside(){
-        this.getAppAsideList().then((res) => {
+        /*this.getAppAsideList().then((res) => {
           if (res.data.code === 'success') {
             let target = res.data.result.filter((item) => {
               return item.app_service_id === this.activeAside.app_service_id
             })
             this.appSetActiveAside(target[0] || {})
           }
-        })
+        })*/
+        this.getAppAsideList('update')
       },
       /* 一键发布 */
       async publicAppAuto() {

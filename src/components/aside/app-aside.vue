@@ -355,14 +355,7 @@
             },
             /* 重置activeAside */
             resetAside(){
-                this.getAppAsideList().then((res) => {
-                    if (res.data.code === 'success') {
-                        let target = res.data.result.filter((item) => {
-                            return item.app_service_id === this.activeAside.app_service_id
-                        })
-                        this.appSetActiveAside(target[0] || {})
-                    }
-                })
+                this.getAppAsideList('update')
             },
             /*修改APP */
             modifyApp (name) {
@@ -430,7 +423,7 @@
         },
         mounted() {
             this.timer = setInterval(() => {
-                this.getAppAsideList()
+                this.getAppAsideList('update')
             }, 1000* 60)
         },
         beforeDestroy() {

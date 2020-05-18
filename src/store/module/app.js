@@ -21,14 +21,24 @@ export default {
     },
     actions: {
         getAppAsideList({ commit },shouldUpdateActiveAside) { // shouldUpdateActiveAside为true时更新 appSetActiveAside
+            shouldUpdateActiveAside = shouldUpdateActiveAside ? 'reset' : ''
             return new Promise((resolve, reject) => {
                 commit('appChangeLoadingStatus', true)
                 selAppInfoList().then(res => {
                     if (res.data.code === 'success'){
                         // console.log(res)
                         commit('appSetAsideList', res.data.result || [])
-                        if (shouldUpdateActiveAside){
-                            commit('appSetActiveAside', res.data.result[0])
+                        switch (shouldUpdateActiveAside) {
+                            case 'reset':  // 重置侧栏
+                                commit('appSetActiveAside', res.data.result[0])
+                            break
+                            case 'update':  // 更新当前侧栏选中项
+                                let target = res.data.result.filter((item) => {
+                                    return item.app_service_id === this.state.app.activeAside.app_service_id
+                                })
+                                commit('appSetActiveAside', target[0] || {})
+                            break
+                            default: break
                         }
                         commit('appChangeLoadingStatus', false)
                     }

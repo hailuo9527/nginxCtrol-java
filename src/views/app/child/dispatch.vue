@@ -141,7 +141,7 @@ export default {
         this.$Message.info(`${res.data.result}`);
         let json = this.activeAside;
         json.appDefaultPublishConfList = this.dispatch.data;
-        this.getAppAsideList();
+        this.getAppAsideList('update');
         this.appSetActiveAside(json);
         this.GetselAppDispatch();
         /* 修改app*/
