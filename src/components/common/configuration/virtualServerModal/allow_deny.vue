@@ -123,10 +123,8 @@
                 this.form.ngcAllowDenies[evt.oldIndex].allow_deny_sort = evt.oldIndex
             },
             addRule() {
-
                 let json = this.copyJson(emptyConfig.ngcVirtualServers[0].ngcAllowDenies[0])
                 json.allow_deny_sort = this.form.ngcAllowDenies.length
-
                 this.form.ngcAllowDenies.push(json)
             },
             removeList(arr, index) {
@@ -157,7 +155,10 @@
         },
 
         mounted() {
-            //console.log(this.form)
+            // console.log(this.form)
+            if (this.form.ngcAllowDenies[0].allow_deny_sort==null) {
+                this.form.ngcAllowDenies[0].allow_deny_sort = 0
+            }
             /*if (!this.data.allow_deny_state){
                 this.backConfig(this.data,emptyConfig.ngcVirtualServers[0])
             }*/
