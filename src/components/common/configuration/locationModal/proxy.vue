@@ -69,7 +69,7 @@
                 <FormItem label="CONNECT TIMEOUT" class="inline-form-item" prop="connect_timeout">
                     <Input  placeholder="time" v-model.trim="form.connect_timeout"></Input>
                 </FormItem>
-                <FormItem label="CONNECT TIMEOUT" class="inline-form-item">
+                <FormItem label="INTERCEPT ERRORS" class="inline-form-item">
                     <i-switch size="small" v-model="form.intercept_errors_state">
                     </i-switch>
                 </FormItem>
@@ -128,7 +128,7 @@
                 </div>
                 <div class="show-panel-item" v-if="form.intercept_errors_state">
                     <div class="show-panel-item-left">
-                        <span>CONNECT TIMEOUT</span>
+                        <span>INTERCEPT ERRORS</span>
                     </div>
                     <div class="show-panel-item-right">
                         <span>{{form.intercept_errors_state? 'on': 'off'}}</span>

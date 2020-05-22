@@ -319,10 +319,10 @@ export default {
             this.unhealthy = true;
           }
           let cpu_value = data.cpuWarning.map(function(i) {
-            return parseInt(i.value);
+            return i.value
           });
           let disk_value = data.diskWarning.map(function(i) {
-            return parseInt(i.value);
+            return i.value
           });
           if (data.cpuWarningCount != []) {
             this.status = false;
