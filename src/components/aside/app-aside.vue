@@ -170,9 +170,20 @@
 
                 if (value){
                     let ip = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/
-                    // let port = /^[1-9]$|(^[1-9][0-9]$)|(^[1-9][0-9][0-9]$)|(^[1-9][0-9][0-9][0-9]$)|(^[1-6][0-5][0-5][0-3][0-5]$)/
-                    // let ipAndPort = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/
-                    // if(ip.test(value) || port.test(value) || ipAndPort.test(value) ){
+                    let port = /^[1-9]$|(^[1-9][0-9]$)|(^[1-9][0-9][0-9]$)|(^[1-9][0-9][0-9][0-9]$)|(^[1-6][0-5][0-5][0-3][0-5]$)/
+                    let ipAndPort = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/
+                    if(ip.test(value) || port.test(value) || ipAndPort.test(value) ){
+                        callback()
+                    }else {
+                        callback(new Error('格式错误'))
+                    }
+                }else{
+                    callback(new Error('不能为空'))
+                }
+            }
+            const ip = (rule, value, callback) => {
+                if (value){
+                    let ip = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/
                     if(ip.test(value)){
                         callback()
                     }else {
@@ -232,7 +243,7 @@
                         {  validator: selection, trigger: 'change' }
                     ],
                     AppVip: [
-                        { validator: this.ipPort }
+                        { validator: ip }
                     ],
                     listen: [
                         {validator: port, trigger: 'blur'}
