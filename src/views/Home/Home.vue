@@ -324,8 +324,8 @@ export default {
           let disk_value = data.diskWarning.map(function(i) {
             return i.value
           });
+          this.status = false;
           if (data.cpuWarningCount != []) {
-            this.status = false;
             for (let i = 0; i < cpu_value.length; i++) {
               if (cpu_value[i] <= 20) {
                 this.prewarn_healthy = false;
