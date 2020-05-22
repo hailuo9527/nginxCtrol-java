@@ -356,16 +356,17 @@ export default {
                 }
               }
             }
-          } else {
-            this.prewarn_healthy = true;
-            this.prewarn_subhealthy = false;
-            this.prewarn_unhealthy = false;
-            this.is_black = true;
-            this.is_white = false;
-            this.bottom_line_healthy = true;
-            this.bottom_line_subhealthy = false;
-            this.bottom_line_unhealthy = false;
-          }
+          } 
+        //   else {
+        //     this.prewarn_healthy = true;
+        //     this.prewarn_subhealthy = false;
+        //     this.prewarn_unhealthy = false;
+        //     this.is_black = true;
+        //     this.is_white = false;
+        //     this.bottom_line_healthy = true;
+        //     this.bottom_line_subhealthy = false;
+        //     this.bottom_line_unhealthy = false;
+        //   }
           if (!this.status) {
             if (data.diskWarningCount != []) {
               this.state = false;
