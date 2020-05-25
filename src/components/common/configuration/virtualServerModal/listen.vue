@@ -77,7 +77,7 @@
                                 <i-switch v-model="item.tcp_keepalive_state" >
                                 </i-switch>
                                 <div v-if="item.tcp_keepalive_state" class="radio-option">
-                                    <RadioGroup v-model="tcp_keepalive_value">
+                                    <RadioGroup v-model="item.tcp_keepalive_value">
                                         <Radio label="on">
                                             <span>on</span>
                                         </Radio>

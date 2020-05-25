@@ -319,13 +319,13 @@ export default {
             this.unhealthy = true;
           }
           let cpu_value = data.cpuWarning.map(function(i) {
-            return parseInt(i.value);
+            return i.value
           });
           let disk_value = data.diskWarning.map(function(i) {
-            return parseInt(i.value);
+            return i.value
           });
+          this.status = false;
           if (data.cpuWarningCount != []) {
-            this.status = false;
             for (let i = 0; i < cpu_value.length; i++) {
               if (cpu_value[i] <= 20) {
                 this.prewarn_healthy = false;
@@ -356,16 +356,17 @@ export default {
                 }
               }
             }
-          } else {
-            this.prewarn_healthy = true;
-            this.prewarn_subhealthy = false;
-            this.prewarn_unhealthy = false;
-            this.is_black = true;
-            this.is_white = false;
-            this.bottom_line_healthy = true;
-            this.bottom_line_subhealthy = false;
-            this.bottom_line_unhealthy = false;
-          }
+          } 
+        //   else {
+        //     this.prewarn_healthy = true;
+        //     this.prewarn_subhealthy = false;
+        //     this.prewarn_unhealthy = false;
+        //     this.is_black = true;
+        //     this.is_white = false;
+        //     this.bottom_line_healthy = true;
+        //     this.bottom_line_subhealthy = false;
+        //     this.bottom_line_unhealthy = false;
+        //   }
           if (!this.status) {
             if (data.diskWarningCount != []) {
               this.state = false;

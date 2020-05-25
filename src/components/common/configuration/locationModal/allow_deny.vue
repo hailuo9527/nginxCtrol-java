@@ -158,6 +158,9 @@
         },
         mounted() {
            // console.log(this.form)
+           if (this.form.ngcAllowDenies[0].allow_deny_sort==null) {
+                this.form.ngcAllowDenies[0].allow_deny_sort = 0
+            }
         }
     }
 </script>

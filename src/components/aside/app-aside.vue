@@ -67,9 +67,18 @@
                         </i-switch>
 
                     </FormItem>
-                    <FormItem label="虚拟IP" prop="app_vip">
+                    <FormItem label="虚拟ip" prop="AppVip" v-if="appForm.configure_ha" >
                         <popTip content="对外开放的IP地址"></popTip>
-                        <Input v-model="appForm.app_vip" placeholder="IP:PORT | IP | PORT"></Input>
+                        <Button  icon="md-close" class="tag"
+                             :key="index"
+                             v-if="item"
+                             @click="removeTag(item)"
+                             v-for="(item, index) in appForm.app_vip.split(',')">{{item}}</Button>
+                        <Input v-model.trim="appForm.AppVip" @on-enter="addAppVip" @on-blur="addAppVip" placeholder="IP" ></Input>
+                    </FormItem>
+                    <FormItem label="监听端口" prop="listen">
+                        <popTip content="对外开放的端口"></popTip>
+                        <Input v-model="appForm.listen" placeholder="PORT"></Input>
                     </FormItem>
                     <FormItem label="选择实例" prop="l7_server_ids" v-if="L7List">
                         <popTip content="实例为部署NGINX代理的服务器，开启热备份时至少选择两台实例"></popTip>
@@ -172,6 +181,18 @@
                     callback(new Error('不能为空'))
                 }
             }
+            const ip = (rule, value, callback) => {
+                if (value){
+                    let ip = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/
+                    if(ip.test(value)){
+                        callback()
+                    }else {
+                        callback(new Error('格式错误'))
+                    }
+                }else{
+                    callback()
+                }
+            }
             const selection = (rule, value, callback) => {
 
                 if (!value) {
@@ -193,12 +214,26 @@
                     callback();
                 }
             };
+            const port = (rule, value, callback) => {
+                let P = /^[1-9]$|(^[1-9][0-9]$)|(^[1-9][0-9][0-9]$)|(^[1-9][0-9][0-9][0-9]$)|(^[1-6][0-5][0-5][0-3][0-5]$)/
+                if (value) {
+                    if (P.test(value)) {
+                        callback()
+                    } else {
+                        callback(new Error("格式错误"))
+                    }
+                } else {
+                    callback(new Error("不能为空"))
+                }
+            };
             return {
                 appModal: false,
                 appForm: {
-                    app_vip: 80,
+                    app_vip: "",
                     appDefaultPublishConfList: [],
-                    l7_server_ids: []
+                    l7_server_ids: [],
+                    listen: 80,
+                    AppVip: ''
                 },
                 ruleValidate: {
                     app_service_name: [
@@ -207,9 +242,12 @@
                     l7_server_ids: [
                         {  validator: selection, trigger: 'change' }
                     ],
-                    app_vip: [
-                        { validator: this.ipPort }
+                    AppVip: [
+                        { validator: ip }
                     ],
+                    listen: [
+                        {validator: port, trigger: 'blur'}
+                    ]
                 },
                 L7List: [],
                 modal_loading: false,
@@ -264,9 +302,10 @@
             addModel() {
                 this.edit = false
                 this.appForm = {
-                    app_vip: 80,
+                    app_vip: "",
                     appDefaultPublishConfList: [],
-                    l7_server_ids: []
+                    l7_server_ids: [],
+                    listen: 80
                 },
                 this.selUsableL7Server(this.appForm).then(()=> {
                     let arr = []
@@ -297,10 +336,10 @@
                 this.$refs[name].validate(valid => {
                     if (valid) {
                         this.modal_loading = true;
-                        let ip = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/
-                        if (ip.test(this.appForm.app_vip)){
-                            this.appForm.app_vip += ':80'
-                        }
+                        // let ip = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/
+                        // if (ip.test(this.appForm.app_vip)){
+                        //     this.appForm.app_vip += ':80'
+                        // }
                         addAppInfo(this.appForm)
                             .then(res => {
                                 // console.log(res);
@@ -402,8 +441,32 @@
                     this.L7List = res.data.result || []
                 }
             },
-            /* 更新组件 */
+            //添加虚拟ip
+            addAppVip () {
+                if(this.appForm.AppVip === "") return
+                if (this.appForm.AppVip !== "") {
+                    let reg = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/
+                    if (reg.test(this.appForm.AppVip)) {
+                        let arr = this.appForm.app_vip.split(',')
+                        arr.push(this.appForm.AppVip)
+                        arr.map((item, index)=> {
+                            if (!item) arr.splice(index,1)
+                        })
+                        this.appForm.app_vip = arr.join(',')
+                        this.appForm.AppVip = ''
+                    }
+                }
+            },
+            //移除虚拟ip
+            removeTag(str) {
+                let arr = this.appForm.app_vip.split(',')
+                let index = arr.indexOf(str)
+                arr.splice(index, 1)
+                this.appForm.app_vip = arr.join(',')
+                // console.log(this.appForm.app_vip)
+            },
         },
+         /* 更新组件 */
         created() {
             this.getAppAsideList(true).then(res => {
                 if (this.asyncOk(res) && res.data.result.length) {
@@ -434,4 +497,12 @@
 <style lang="less" scoped>
     @import "aside";
     //@import "../../components/common/configuration/modal-form";
+    .tag{
+  margin-right: 10px;
+  display: inline-block;
+  padding: 5px 10px;
+  background: #f3f3f3;
+  color: #333;
+  margin-top: 10px;
+}
 </style>
