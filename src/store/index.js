@@ -20,13 +20,10 @@ export default new Vuex.Store({
     login, L4, L7, common, app
   },
   plugins: [createPersistedState({
-   /* reducer(val) {
+    reducer(val) {
       return {
-        // 只储存state中的assessmentData
-        userInfo: val.userInfo
+        login: val.login
       }
-    }*/
-
+    }
     })]
-
 })
