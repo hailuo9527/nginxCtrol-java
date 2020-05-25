@@ -8,7 +8,6 @@
           :modify="modify"
           :disabled="disabled"
           :open = "form.session_persistence_state"
-
           :valid="valid"
           :info="info"
   >
@@ -220,7 +219,7 @@ export default {
       if (!data){
         this.resetConfig(emptyConfig.ngcUpstreamGroups[0])
       } else{
-        this.form.route_variabless_state = data
+        this.form.session_persistence_state = data
       }
 
 
