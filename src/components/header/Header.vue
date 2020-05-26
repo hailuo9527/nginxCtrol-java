@@ -200,9 +200,10 @@ export default {
   font-size: 18px;
   color: #fff;
   padding: 22px 40px;
-  position: sticky;
-  top: 0;
-  z-index: 9999;
+  position: absolute;
+  top: 70px;
+  z-index: 10;
+  width: 100%;
   .close{
     font-size: 18px;
     color: #fff;
