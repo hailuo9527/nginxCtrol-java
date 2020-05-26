@@ -1,18 +1,27 @@
 <template>
   <div class="dispatch">
     <div class="table-wrap">
+
       <div class="table">
-        <Table :loading="loading" :columns="columns" :data="dispatch.data">
-          <template slot-scope="{ row, index }" slot="action">
-            <Button
-              type="info"
-              size="small"
-              style="margin-right: 5px"
-              @click="modify(row, index)"
+
+        <Card >
+          <Table :loading="loading" :columns="columns" :data="dispatch.data">
+            <template slot-scope="{ row, index }" slot="action">
+              <Button
+                      type="info"
+                      size="small"
+                      style="margin-right: 5px"
+                      @click="modify(row, index)"
               >修改</Button
-            >
-          </template>
-        </Table>
+              >
+            </template>
+          </Table>
+        </Card>
+        <div class="advanced">高级<Icon size="20" type="md-arrow-dropdown" /></div>
+        <Card>
+
+        </Card>
+
       </div>
       <div class="save-bottom">
         <Button type="primary" :loading="saveLoading" @click="save"
@@ -186,7 +195,13 @@ export default {
     .table {
       padding: 0 30px 0 20px;
       height: 100%;
-      overflow: scroll;
+      overflow: auto;
+      margin-top: 15px;
+      .advanced{
+        padding: 15px 0;
+        text-align: center;
+        cursor: pointer;
+      }
     }
     .save-bottom {
       position: absolute;

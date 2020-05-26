@@ -38,6 +38,9 @@ Vue.prototype.$config = config
 Object.keys(vueExpand).forEach(key => {
   Vue.prototype[key] = vueExpand[key]
 })
+global.log = function(log) {
+  console.log(log)
+}
 new Vue({
   router,
   store,
