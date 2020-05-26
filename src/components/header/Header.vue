@@ -55,6 +55,9 @@
           <DropdownItem name="LogFile">
             <span style="font-size: 14px">日志</span>
           </DropdownItem>
+          <DropdownItem name="System">
+            <span style="font-size: 14px">系统</span>
+          </DropdownItem>
           <DropdownItem name="LogOut">
             <span style="font-size: 14px">退出</span>
           </DropdownItem>
@@ -81,6 +84,9 @@ export default {
         case "LogFile":
           this.$router.push({ path: "/logfile" });
           break;
+        case "System":
+            this.$router.push({path: '/system'})
+            break;
         case "LogOut":
             removeToken()
             this.setUserInfo(this.userInfo)

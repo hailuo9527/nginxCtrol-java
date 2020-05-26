@@ -227,6 +227,11 @@ let defaultRoutes = [
                 name: 'software',
                 path: '/software',
                 component: () => import(/* webpackChunkName: "software" */ '@/views/software/software.vue')
+            },
+            {
+                name: 'system',
+                path: '/system',
+                component: () => import('@/views/system/system.vue')
             }
         ]
     },

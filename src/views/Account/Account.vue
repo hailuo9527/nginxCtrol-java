@@ -108,16 +108,16 @@
         ref="formCustom"
       >
         <FormItem label="用户名称" prop="username">
-          <Input type="text" v-model="formCustom.username"></Input>
+          <Input type="text" v-model="formCustom.username" autocomplete></Input>
         </FormItem>
         <FormItem label="账号" prop="usernumber">
-          <Input type="text" v-model="formCustom.usernumber"></Input>
+          <Input type="text" v-model="formCustom.usernumber" autocomplete></Input>
         </FormItem>
         <FormItem label="密码" prop="passwd">
-          <Input type="password" v-model="formCustom.passwd"></Input>
+          <Input type="password" v-model="formCustom.passwd" autocomplete></Input>
         </FormItem>
         <FormItem label="确认密码" prop="passwordCheck">
-          <Input type="password" v-model="formCustom.passwordCheck"></Input>
+          <Input type="password" v-model="formCustom.passwordCheck" autocomplete></Input>
         </FormItem>
         <FormItem label="标签" prop="tag">
           <Input type="text" v-model="formCustom.tag"></Input>
@@ -154,17 +154,17 @@
         :label-width="90"
         ref="formCustoms"
       >
-        <FormItem label="用户名称" prop="username">
-          <Input type="text" v-model="formCustom.username"></Input>
+        <FormItem label="用户名称" prop="username" >
+          <Input type="text" v-model="formCustom.username" autocomplete></Input>
         </FormItem>
         <FormItem label="账号" prop="usernumber">
-          <Input type="text" v-model="formCustom.usernumber"></Input>
+          <Input type="text" v-model="formCustom.usernumber" autocomplete></Input>
         </FormItem>
         <FormItem label="密码" prop="passwd">
-          <Input type="password" v-model="formCustom.passwd"></Input>
+          <Input type="password" v-model="formCustom.passwd" autocomplete></Input>
         </FormItem>
         <FormItem label="确认密码" prop="passwordCheck">
-          <Input type="password" v-model="formCustom.passwordCheck"></Input>
+          <Input type="password" v-model="formCustom.passwordCheck" autocomplete></Input>
         </FormItem>
         <FormItem label="标签" prop="tag">
           <Input type="text" v-model="formCustom.tag"></Input>

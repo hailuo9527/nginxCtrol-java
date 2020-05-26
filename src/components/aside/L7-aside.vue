@@ -99,10 +99,10 @@
             <Input v-model="add_l7_form.l7ServerSSHIp"></Input>
           </FormItem>
           <FormItem label="ssh连接实例的用户" prop="l7ServerSSHName">
-            <Input v-model="add_l7_form.l7ServerSSHName"></Input>
+            <Input v-model="add_l7_form.l7ServerSSHName" autocomplete></Input>
           </FormItem>
           <FormItem label="ssh连接实例的密码" prop="l7ServerSSHPwd">
-            <Input type="password" v-model="add_l7_form.l7ServerSSHPwd"></Input>
+            <Input type="password" v-model="add_l7_form.l7ServerSSHPwd" autocomplete></Input>
           </FormItem>
           <FormItem label="ssh连接实例的端口" prop="l7ServerSSHPort">
             <Input v-model="add_l7_form.l7ServerSSHPort"></Input>

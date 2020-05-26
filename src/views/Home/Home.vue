@@ -1,5 +1,9 @@
 <template>
   <div>
+    <Alert type="error" class="err-tip" v-if="userInfo.check_license !== ''" closable>
+       {{ userInfo.check_license }}
+      <Icon type="md-close" class="close" slot="close" />
+    </Alert>
     <div class="content" style="margin-top: 0px;">
       <div class="overview-container overview-container_css-grid">
         <div class="overview-container__header">
@@ -111,7 +115,7 @@
               }"
             ></div>
             <div class="prewarn-footer-l">
-                <!-- <div class="prewarn-footer-l-in"> -->
+              <!-- <div class="prewarn-footer-l-in"> -->
               <span
                 v-if="cpuWarning.length == 0"
                 :class="{
@@ -130,7 +134,7 @@
                   item.name
                 }}</span>
               </span>
-                <!-- </div> -->
+              <!-- </div> -->
             </div>
             <div class="prewarn-footer-r">
               <span
@@ -319,10 +323,10 @@ export default {
             this.unhealthy = true;
           }
           let cpu_value = data.cpuWarning.map(function(i) {
-            return i.value
+            return i.value;
           });
           let disk_value = data.diskWarning.map(function(i) {
-            return i.value
+            return i.value;
           });
           this.status = false;
           if (data.cpuWarningCount != []) {
@@ -356,17 +360,17 @@ export default {
                 }
               }
             }
-          } 
-        //   else {
-        //     this.prewarn_healthy = true;
-        //     this.prewarn_subhealthy = false;
-        //     this.prewarn_unhealthy = false;
-        //     this.is_black = true;
-        //     this.is_white = false;
-        //     this.bottom_line_healthy = true;
-        //     this.bottom_line_subhealthy = false;
-        //     this.bottom_line_unhealthy = false;
-        //   }
+          }
+          //   else {
+          //     this.prewarn_healthy = true;
+          //     this.prewarn_subhealthy = false;
+          //     this.prewarn_unhealthy = false;
+          //     this.is_black = true;
+          //     this.is_white = false;
+          //     this.bottom_line_healthy = true;
+          //     this.bottom_line_subhealthy = false;
+          //     this.bottom_line_unhealthy = false;
+          //   }
           if (!this.status) {
             if (data.diskWarningCount != []) {
               this.state = false;
@@ -480,7 +484,7 @@ export default {
     }),
   },
   mounted() {
-    // console.log(this.userInfo)
+    // console.log(this.userInfo);
     this.GetHomeInfo();
     // 每分钟刷新页面
     if (this.timer) {
@@ -518,5 +522,24 @@ export default {
   font-size: 140px;
   text-align: center;
   line-height: 140px;
+}
+.err-tip{
+  margin-bottom: 0!important;
+  background: #ff5559;
+  opacity: .95;
+  border: none;
+  border-radius: 0;
+  font-size: 18px;
+  color: #fff;
+  padding: 16px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  .close{
+    font-size: 18px;
+    color: #fff;
+    margin-right: 10px;
+    margin-top: 6px;
+  }
 }
 </style>
