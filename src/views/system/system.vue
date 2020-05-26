@@ -26,7 +26,10 @@
       <Button @click="cancel" style="margin-left: 4px">取消</Button>
     </div>
     <div class="message">
-      {{ message }}
+      <pre>
+        {{ message }}
+      </pre>
+
       <Loading v-if="loading" />
     </div>
   </div>

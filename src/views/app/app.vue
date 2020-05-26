@@ -289,6 +289,12 @@
                 class="tab_item"
                 >调度</router-link
               >
+              <router-link
+                      v-if="activeAside.configure_ha"
+                      :to="`/app/${$route.params.app}/ha`"
+                      class="tab_item"
+              >HA</router-link>
+              <span v-else class="tab_item disabled">HA</span>
             </div>
           </div>
         </div>

@@ -52,6 +52,12 @@ let defaultRoutes = [
                         title: 'app-dispatch',
                         component: () => import('@/views/app/child/dispatch.vue'),
                     },
+                    {
+                        name: 'app-ha',
+                        path: ':app/ha',
+                        title: 'app-HA',
+                        component: () => import('@/views/app/child/ha.vue'),
+                    },
                 ]
             },
             {

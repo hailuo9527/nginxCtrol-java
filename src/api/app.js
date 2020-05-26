@@ -120,3 +120,16 @@ export const updAppWeight = (data) => {
         data: data
     })
 }
+
+/** 展示指定应用HA部署现状
+ *  */
+
+export const selAppHAInfo = ({app_server_id}) => {
+    return axios.request({
+        url: '/selAppHAInfo',
+        method: 'post',
+        params: {
+            app_server_id
+        }
+    })
+}
