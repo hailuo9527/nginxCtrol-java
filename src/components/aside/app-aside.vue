@@ -498,11 +498,11 @@
     @import "aside";
     //@import "../../components/common/configuration/modal-form";
     .tag{
-  margin-right: 10px;
+//   margin-right: 10px;
   display: inline-block;
   padding: 5px 10px;
   background: #f3f3f3;
   color: #333;
-  margin-top: 10px;
+//   margin-top: 10px;
 }
 </style>

@@ -1,9 +1,5 @@
 <template>
   <div>
-    <Alert type="error" class="err-tip" v-if="userInfo.check_license !== ''" closable>
-       {{ userInfo.check_license }}
-      <Icon type="md-close" class="close" slot="close" />
-    </Alert>
     <div class="content" style="margin-top: 0px;">
       <div class="overview-container overview-container_css-grid">
         <div class="overview-container__header">
@@ -522,24 +518,5 @@ export default {
   font-size: 140px;
   text-align: center;
   line-height: 140px;
-}
-.err-tip{
-  margin-bottom: 0!important;
-  background: #ff5559;
-  opacity: .95;
-  border: none;
-  border-radius: 0;
-  font-size: 18px;
-  color: #fff;
-  padding: 16px 40px;
-  position: sticky;
-  top: 0;
-  z-index: 9999;
-  .close{
-    font-size: 18px;
-    color: #fff;
-    margin-right: 10px;
-    margin-top: 6px;
-  }
 }
 </style>

@@ -94,7 +94,8 @@ export default {
 .container {
   max-width: 1080px;
   margin: 0 auto;
-  background: #f8f8f8;
+//   background: #f8f8f8;
+  background: #fff;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -117,5 +118,8 @@ export default {
   height: 160px;
   transform: translateX(-50%);
   left: 50%;
+}
+.message {
+    text-align: center;
 }
 </style>

@@ -1,4 +1,5 @@
 <template>
+  <div>
   <div class="header">
     <div class="header_nav">
       <div class="header_nav_item">
@@ -64,6 +65,11 @@
         </DropdownMenu>
       </Dropdown>
     </div>
+  </div>
+  <Alert type="error" class="err-tip" v-if="userInfo.check_license !== ''" closable>
+       {{ userInfo.check_license }}
+      <Icon type="md-close" class="close" slot="close" />
+    </Alert>
   </div>
 </template>
 <script>
@@ -183,6 +189,25 @@ export default {
         color: #fff;
       }
     }
+  }
+}
+.err-tip{
+  margin-bottom: 0!important;
+  background: #ff5559;
+  opacity: .95;
+  border: none;
+  border-radius: 0;
+  font-size: 18px;
+  color: #fff;
+  padding: 22px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  .close{
+    font-size: 18px;
+    color: #fff;
+    margin-right: 10px;
+    margin-top: 6px;
   }
 }
 </style>
