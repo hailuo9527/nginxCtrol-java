@@ -15,7 +15,7 @@
         </div>
       </div>
     </Upload>
-    <div v-if="file !== null">
+    <div v-if="file !== null" style="text-align: center">
       <span style="font-weight: bold;">Upload file:</span
       ><span style="color: #01c864;font-weight: bold;margin-right: 4px">
         {{ file.name }}</span
