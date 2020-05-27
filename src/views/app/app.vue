@@ -198,34 +198,30 @@
                         <span slot="close">Off</span>
                       </i-switch>
                     </FormItem>
-                    <FormItem
-                      label="虚拟ip"
-                      prop="AppVip"
-                      v-if="appForm.configure_ha"
-                    >
-                      <popTip
-                        content="对外开放的IP地址,开启热备份时必填"
-                      ></popTip>
-                      <Button
-                        icon="md-close"
-                        class="tag"
-                        :key="index"
-                        v-if="item"
-                        @click="removeTag(item)"
-                        v-for="(item, index) in appForm.app_vip.split(',')"
-                        >{{ item }}</Button
-                      >
-                      <Input
-                        v-model.trim="appForm.AppVip"
-                        @on-enter="addAppVip"
-                        @on-blur="addAppVip"
-                        placeholder="IP"
-                      ></Input>
-                    </FormItem>
-                    <!-- <FormItem label="虚拟IP" prop="app_vip">
-                                            <popTip content="对外开放的IP地址,开启热备份时必填"></popTip>
-                                             <Input v-model="appForm.app_vip"></Input>
-                                        </FormItem> -->
+                    <div class="label" v-if="appForm.configure_ha">
+            虚拟ip<popTip content="对外开放的IP地址,开启热备份时必填" style="margin-left: 5px;"></popTip>
+          </div>
+          <Row v-if="appForm.configure_ha" v-for="(item, index) in appForm.vips" :key="index">
+            <Col span="19">
+              <FormItem label="" :prop="'vips.'+index">
+                <Input
+                  v-model.trim="appForm.vips[index]"
+                  placeholder="IP"
+                ></Input>
+              </FormItem>
+            </Col>
+            <Col span="4" style="text-align: right">
+              <Icon
+                type="ios-trash"
+                class="remove-icon"
+                @click="handleRemoveVip(index)"
+                size="20"
+              />
+            </Col>
+          </Row>
+          <FormItem v-if="appForm.configure_ha">
+            <Button type="dashed" @click="handleAddVip" icon="md-add">添加</Button>
+          </FormItem>
                     <FormItem label="选择实例" prop="l7_server_ids">
                       <popTip
                         content="实例为部署NGINX代理的服务器，开启热备份时至少选择两台实例"
@@ -614,29 +610,12 @@ export default {
         this.detailInfo = res.data.result || {};
       }
     },
-    //添加虚拟ip
-    addAppVip() {
-      if (this.appForm.AppVip === "") return;
-      if (this.appForm.AppVip !== "") {
-        let reg = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/;
-        if (reg.test(this.appForm.AppVip)) {
-          let arr = this.appForm.app_vip.split(",");
-          arr.push(this.appForm.AppVip);
-          arr.map((item, index) => {
-            if (!item) arr.splice(index, 1);
-          });
-          this.appForm.app_vip = arr.join(",");
-          this.appForm.AppVip = "";
-        }
-      }
+    /* 新增虚拟ip */
+    handleAddVip() {
+      this.appForm.vips.push('');
     },
-    //移除虚拟ip
-    removeTag(str) {
-      let arr = this.appForm.app_vip.split(",");
-      let index = arr.indexOf(str);
-      arr.splice(index, 1);
-      this.appForm.app_vip = arr.join(",");
-      // console.log(this.appForm.app_vip)
+    handleRemoveVip(index) {
+      this.appForm.vips.splice(index, 1);
     },
   },
   watch: {
@@ -690,5 +669,22 @@ export default {
   color: @green;
 
   margin: 0 10px;
+}
+.remove-icon{
+  cursor: pointer;
+  opacity: .6;
+  transition: all .2s;
+  &:hover{
+    opacity: 1;
+  }
+}
+.label{
+  vertical-align: middle;
+  font-size: 14px;
+  color: #515a6e;
+  line-height: 1;
+  padding: 10px 12px 10px 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 </style>
