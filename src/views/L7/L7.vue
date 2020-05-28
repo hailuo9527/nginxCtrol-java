@@ -108,8 +108,8 @@
           </div>
         </div>
         <div class="contents">
-            <div class="cover" v-if="activeAside.usable_status" :class="$route.name === 'L7Chart'?'coverheight':''||$route.name === 'L7Nginx'?'cover-height':''"></div>
-            <div class="word" v-if="activeAside.usable_status" :class="$route.name === 'L7Config'?'word-display':''">
+            <div class="cover" v-if="!activeAside.usable_status" :class="$route.name === 'L7Chart'?'coverheight':''||$route.name === 'L7Nginx'?'cover-height':''"></div>
+            <div class="word" v-if="!activeAside.usable_status" :class="$route.name === 'L7Config'?'word-display':''">
                 <div class="word-icon"><Icon type="md-warning" size='50' style="color: #fbff05;"/></div>
                 <span class="word-word">实例已离线</span>
             </div>
