@@ -15,11 +15,9 @@
         </Dropdown>
       </div>
     </div>
-    <div class="cover">
-    <div class="ngChart-item" >
+    <div class="ngChart-item">
       <!--:data-empty="!chartData.rows.length"-->
       <ve-line :data="data.chartData"  height="200px" :extend="chartExtend" :after-set-option-once="afterSetOption" :after-config="afterConfig" :before-config="beforeConfig"  :data-empty="!data.chartData.rows.length"  :settings="data.chartSettings" :loading="data.loading"></ve-line>
-    </div>
     </div>
   </div>
 </template>

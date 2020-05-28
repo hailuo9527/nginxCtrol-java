@@ -107,7 +107,14 @@
             <apply-filter v-if="$route.name === 'L7Chart' || $route.name === 'L7Nginx'"  />
           </div>
         </div>
-        <router-view class="content_main"></router-view>
+        <div class="contents">
+            <div class="cover" v-if="activeAside.usable_status" :class="$route.name === 'L7Chart'?'coverheight':''||$route.name === 'L7Nginx'?'cover-height':''"></div>
+            <div class="word" v-if="activeAside.usable_status" :class="$route.name === 'L7Config'?'word-display':''">
+                <div class="word-icon"><Icon type="md-warning" size='50' style="color: #fbff05;"/></div>
+                <span class="word-word">实例已离线</span>
+            </div>
+            <router-view class="content_main"></router-view>    
+        </div>
       </div>
     </div>
     <div class="content_right" v-else>
@@ -178,8 +185,45 @@ export default {
   height: calc(100%);
   padding: 98px 10px 0 10px;
   //box-sizing: border-box;
+//   margin-top: 98px;
 }
 .left-drawer .content .row-item .status{
   padding-top: 15px;
+}
+.cover {
+    position: absolute;
+    width: 100%;
+    background-color: #6b6b6b;
+    opacity: 0.5;
+    z-index: 10;
+    margin-top: 98px;
+}
+.contents {
+    width: 100%;
+    height: calc(100%);
+    position: relative;
+}
+.word {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    z-index: 11;
+}
+.word-icon {
+    width: 200px;
+    height: 50px;
+}
+.cover-height {
+    height: 1944px;
+}
+.coverheight {
+    height: 1390px;
+}
+.word-display {
+    display: none;
 }
 </style>

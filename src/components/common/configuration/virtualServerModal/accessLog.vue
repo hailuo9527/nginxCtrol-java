@@ -85,8 +85,8 @@
         methods: {
             changeStatus(status) {
                 if (status){
-                    this.form.access_log_format = '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for" "$host" sn="$server_name" rt=$request_time ua="$upstream_addr" us="$upstream_status" ut="$upstream_response_time" ul="$upstream_response_length" cs=$upstream_cache_status'
-                    this.form.access_log_name = 'super_log_format_recommended'
+                    this.form.access_log_format = '$time_local|$remote_addr|$request|nrsp=$status|$body_bytes_sent|$host|$request_time|$upstream_addr|ursp=$upstream_status|$upstream_response_time|$upstream_response_length|ucs=$upstream_cache_status|hr=$http_referer|hua=$http_user_agent|xf=$http_x_forwarded_for|sn=$server_name|ru=$remote_user'
+                    this.form.access_log_name = 'controller_recommended_log_format'
                 }else {
                     this.form.access_log_format = ''
                     this.form.access_log_name = ''

@@ -16,7 +16,7 @@
             @on-change="changestatus"
           />
           <span>main</span>
-          <Tooltip content="123" :transfer="true" theme="light">
+          <Tooltip content="" :transfer="true" theme="light">
             <Icon
               class="handle"
               size="20"

@@ -148,9 +148,6 @@
             chartFilter() {
                 this.updateComponent()
             }
-        },
-        mounted() {
-             console.log(this.activeAside)
         }
 
     }
