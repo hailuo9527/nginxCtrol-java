@@ -2,13 +2,61 @@
   <div class="dispatch">
     <div class="table-wrap">
       <div class="table">
-        <Table :row-class-name="rowClassName"  :loading="loading" :columns="tableConfig" :data="newData" border :span-method="handleSpan">
+        <!--<Table :row-class-name="rowClassName"  :loading="loading" :columns="tableConfig" :data="newData" border :span-method="handleSpan">
+
           <template slot-scope="{ row, index }" slot="status">
             <my-icon v-if="row.status" :type="statusHandle(row.status).className" :color="statusHandle(row.status).color"></my-icon>
             <span v-if="row.status" style="margin-left: 10px">{{statusHandle(row.status).info}}</span>
             <span v-else>同步中</span>
           </template>
-        </Table>
+        </Table>-->
+        <vxe-toolbar perfect>
+
+          <template v-slot:buttons>
+            <div style="width: 100%; text-align: center; font-weight: bold; color: #333">
+              {{summary}}
+            </div>
+
+          </template>
+        </vxe-toolbar>
+        <vxe-table
+                stripe
+                border
+                ref="xTable"
+                highlight-hover-row
+                auto-resize
+                align="center"
+                :data="tableData">
+          <vxe-table-column type="seq" fixed="left" width="160">
+            <template v-slot:header>
+              <div class="first-col">
+                <div class="first-col-top">VIP</div>
+                <div class="first-col-bottom">成员</div>
+              </div>
+            </template>
+            <template v-slot="{ row }">
+              {{row.member}}
+            </template>
+          </vxe-table-column>
+          <vxe-table-column field="app_ha_info[index].vip" v-for="(item, index) in tableData[0].app_ha_info" :key="index">
+            <template v-slot:header>
+              {{item.vip}}
+            </template>
+            <template v-slot="{ row, _columnIndex  }">
+              <div>
+                <span>优先级：</span>{{row.app_ha_info[index].priority }}
+              </div>
+              <div>
+                <span>状态：</span>
+                <my-icon v-if="row.app_ha_info[index].status" :type="statusHandle(row.app_ha_info[index].status).className" :color="statusHandle(row.app_ha_info[index].status).color"></my-icon>
+                <span v-if="row.app_ha_info[index].status" style="margin-left: 5px">{{statusHandle(row.app_ha_info[index].status).info}}</span>
+                <span v-else>同步中</span>
+              </div>
+            </template>
+          </vxe-table-column>
+
+        </vxe-table>
+
       </div>
 
     </div>
@@ -16,9 +64,10 @@
   </div>
 </template>
 <script>
-  import { selAppHAInfo } from "../../../api/app";
+  import {selAppHAInfo} from "../../../api/app";
   import myIcon from '@/components/icons'
-  import { mapState } from "vuex";
+  import {mapState} from "vuex";
+
   export default {
     data() {
       return{
@@ -48,6 +97,37 @@
         ],
         newData: [],
         loading: false,
+        tableData: [
+          {
+            member: '192.168.1.109',
+            data: [
+              {
+                app_server_id: "4f7a251c81114082ad21edee84e1ecbb",
+                member: "192.168.1.109",
+                priority: 100,
+                status: "m",
+                vip: "192.168.1.46",
+              },
+              {
+                app_server_id: "4f7a251c81114082ad21edee84e1ecbb",
+                member: "192.168.1.109",
+                priority: 98,
+                status: "s",
+                vip: "192.168.1.45",
+              },
+              {
+                app_server_id: "4f7a251c81114082ad21edee84e1ecbb",
+                member: "192.168.1.109",
+                priority: 98,
+                status: "s",
+                vip: "192.168.1.44"
+              }
+            ]
+          },
+
+        ],
+        summary: '',
+        vipList: []
       }
     },
     components: {
@@ -60,8 +140,9 @@
         let res = await  selAppHAInfo({app_server_id: this.activeAside.app_service_id})
         this.loading = false
         if (this.asyncOk(res)){
-          let data = res.data.result || []
-          this.newData = this.integratedData(data)
+          this.summary = res.data.result.summary
+          this.tableData = res.data.result.data || []
+         // this.tableData = this.integratedData(this.tableData)
         }
       },
 
@@ -80,6 +161,7 @@
             num: 0
           })
         })
+        this.vipList = arrObj
         // 计算每个年龄的可跨行数
         data.forEach(k => {
           arrObj.forEach(l => {
@@ -97,11 +179,10 @@
               }else{
                 m.mergeCol = 0;
               }
-            }else {
-
             }
           })
         })
+        console.log(data)
         return data;
       },
 
@@ -116,6 +197,18 @@
         }
 
       },
+      // 通用单元格合并函数（将指定区域进行合并）
+     /* mergeMethod ({ rowIndex, columnIndex }) {
+        let row = this.tableData[rowIndex]
+        console.log(rowIndex, columnIndex)
+        if (columnIndex > 0){
+          return {
+            rowspan: row.mergeCol === 0 ? 0:row.mergeCol,
+            colspan: row.mergeCol === 0 ? 0:1
+          };
+        }
+
+      },*/
 
       /* 处理状态 */
       statusHandle(status) {
@@ -156,9 +249,11 @@
         activeAside: (state) => state.app.activeAside,
       }),
     },
-
-    mounted() {
+    created() {
       this.selAppHAInfo()
+    },
+    mounted() {
+
     }
   }
 </script>
@@ -166,12 +261,11 @@
   .dispatch {
     .table-wrap {
       width: 100%;
-      height: calc(100% - 60px);
+     // height: calc(100%);
       .table {
-        padding: 0 30px 0 20px;
+        padding: 10px 30px 0 20px;
         height: 100%;
         overflow: auto;
-        margin-top: 15px;
         .advanced{
           padding: 15px 0;
           text-align: center;
@@ -183,5 +277,29 @@
   }
   /deep/.ivu-table .light td{
     background: #f8f8f9;
+  }
+  .first-col {
+    position: relative;
+    height: 20px;
+  }
+  .first-col:before {
+    content: "";
+    position: absolute;
+    left: -15px;
+    top: 10px;
+    width: 170px;
+    height: 1px;
+    transform: rotate(20deg);
+    background-color: #e8eaec;
+  }
+  .first-col .first-col-top {
+    position: absolute;
+    right: 4px;
+    top: -10px;
+  }
+  .first-col .first-col-bottom {
+    position: absolute;
+    left: 4px;
+    bottom: -10px;
   }
 </style>
