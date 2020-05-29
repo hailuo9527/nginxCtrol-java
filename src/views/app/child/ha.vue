@@ -216,7 +216,7 @@
           case 's':
             return {
               className: 'icon-zhunbeizhong',
-              color: '#ff9300',
+              color: '#0008fd',
               info: '待命中'
             };
           case 'm':

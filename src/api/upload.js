@@ -71,3 +71,15 @@ export const selOerationSystemVersion = () => {
 
   })
 }
+
+
+/**  在线安装 */
+
+export const onInstall = ({fileName}, ipList) => {
+    return axios.request({
+        url: '/onInstall',
+        method: 'post',
+        params: { fileName },
+        data: ipList
+    })
+}

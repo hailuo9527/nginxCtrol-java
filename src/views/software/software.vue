@@ -3,7 +3,7 @@
     <div class="config_header">
       <span class="config_title">软件管理</span>
       <div>
-      <Button type="info" size="large" icon="md-flash">在线安装</Button>
+      <Button type="info" size="large" icon="md-flash" @click="onlineInstall()">在线安装</Button>
       <Button type="primary" size="large" icon="md-add" @click="uploadModal = true" style="margin-left: 10px">上传文件</Button>
       </div>
       <Modal v-model="uploadModal" title="文件上传" >
@@ -71,13 +71,43 @@
         </template>
       </Table>
     </div>
-    <Modal v-model="installModal" title="软件安装" width="800" >
+    <Modal v-model="installModal" title="isOnline?'在线安装':'软件安装'" width="800" :closable="false" :mask-closable="false">
+        <div slot='header'>
+            <span v-if="isOnline" style="color: #fff">在线安装</span>
+            <span v-if="!isOnline" style="color: #fff">软件安装</span>
+             <Tooltip content="请输入需要安装的软件名称（譬如：nginx）,再选择需要安装的目标实例。确定即可" :transfer="true" theme="light" v-if="isOnline" max-width='500px' placement='right'>
+            <Icon
+              class="handle"
+              size="20"
+              type="md-information-circle"
+              color="#01c864"
+            />
+          </Tooltip>
+        </div>
+        <div class="input-filename" v-if="isOnline">
+            <div style="width: 66px;line-height: 32px;"><span>软件名称</span></div>
+            <Input v-model="filename" placeholder="请输入软件名" style="width: 300px" />
+            <Alert type="error" class="err-tip" v-if="isFileName" :closable="true" @on-close="closeInputAlert">
+                软件名不能为空
+                <Icon type="md-close" class="close" slot="close" />
+            </Alert>
+        </div>
       <Table :columns="serverListTableConfig" @on-selection-change="onSelectionChange" max-height="500" :loading="loading" :data="serverList">
 
       </Table>
+      <Alert type="error" class="err-tips" v-if="isTableChoose" :closable="true" @on-close="closeTableAlert">
+            请勾选一个或多个实例
+            <Icon type="md-close" class="close" slot="close" />
+      </Alert>
       <div slot="footer">
         <Button @click="cancel()">取消</Button>
-        <Button type="primary" @click="installNginx()" :loading="installLoading"
+        <Button type="primary" @click="installNginx()" :loading="installLoading" v-if="!isOnline"
+          >
+          <span v-if="!installLoading">确定</span>
+          <span v-else>安装中...</span>
+          </Button
+        >
+        <Button type="primary" @click="onlineInstallConfirm()" :loading="installLoading" v-if="isOnline"
           >
           <span v-if="!installLoading">确定</span>
           <span v-else>安装中...</span>
@@ -88,7 +118,7 @@
   </div>
 </template>
 <script>
-  import {installNginx, selOerationSystemVersion, selUploadFile, uploadFile, delFile} from "../../api/upload";
+  import {installNginx, selOerationSystemVersion, selUploadFile, uploadFile, delFile, onInstall} from "../../api/upload";
   import {mapState} from 'vuex'
 
   export default {
@@ -161,7 +191,11 @@
         ],
         installLoading: false,
         selectedServer: [],
-        active: {} //待安装文件
+        active: {}, //待安装文件
+        filename: '',
+        isOnline: false,
+        isFileName: false,
+        isTableChoose: false
       }
     },
     computed: {
@@ -241,6 +275,7 @@
       },
       cancel() {
           this.installModal = false
+          this.isOnline = false
       },
       // 选择安装目标服务器
       onSelectionChange(selection) {
@@ -330,6 +365,62 @@
           this.showRemoveFile = true;
         };
       },
+      //在线安装
+      onlineInstall() {
+          this.isOnline = true
+          this.installModal = true
+          this.filename = ""
+          this.isFileName = false
+          this.isTableChoose = false
+      },
+      //在线安装确认
+      async onlineInstallConfirm() {
+          if (this.filename !== '') {
+              this.isFileName = false
+            if (this.selectedServer.length>0) {
+                this.isTableChoose = false
+                let ipList = this.selectedServer.map(function (item) {
+                    return item.l7ServerSSHIp
+                })
+                this.installLoading = true
+                let res = await onInstall({fileName: this.filename}, ipList)
+                this.installLoading = false
+                this.installModal = false
+                this.isOnline = false
+                if (this.asyncOk(res)) {
+                    this.$Message.success(res.data.result)
+                }else {
+                    this.$Message.error(res.data.result)
+                }
+            } else {
+                this.isTableChoose = true
+            }
+          } else {
+              this.isFileName = true
+          }
+      },
+      closeInputAlert(event) {
+          this.isFileName = false
+      },
+      closeTableAlert(event) {
+          this.isTableChoose = false
+      }
+    },
+    watch: {
+        filename(val, oldVal) {
+            if (val === '') {
+                this.isFileName = true
+            } else {
+                this.isFileName = false
+            }
+        },
+        selectedServer(val, oldVal) {
+            if (val === []) {
+                this.isTableChoose = true
+            } else {
+                this.isTableChoose = false
+            }
+        }
     },
     mounted() {
       this.selUploadFile()
@@ -365,4 +456,57 @@
   .ivu-upload-list-file{
     color: @green
   }
+  .input-filename {
+      margin-bottom: 6px;
+      display: flex;
+      flex-direction: row;
+  }
+   .handle {
+    font-weight: bold;
+    cursor: pointer;
+    // opacity: 0.2;
+    transition: all 0.1s;
+    margin-left: 10px;
+    margin-top: 5px;
+    // &:hover {
+    //   opacity: 1 !important;
+    // }
+  }
+  .err-tip{
+  margin-bottom: 0!important;
+  background: #ff5559;
+  opacity: .95;
+  border: none;
+  border-radius: 0;
+  font-size: 14px;
+  color: #fff;
+  position: absolute;
+  top: 104px;
+  left: 82px;
+  z-index: 10;
+  width: 300px;
+  .close{
+    font-size: 18px;
+    color: #fff;
+  }
+}
+.err-tips{
+  margin-bottom: 0!important;
+  background: #ff5559;
+  opacity: .95;
+  border: none;
+  border-radius: 0;
+  font-size: 14px;
+  color: #fff;
+  padding: 14px 40px;
+  position: absolute;
+  top: 150px;
+  left: 16px;
+  z-index: 10;
+  width: 760px;
+  .close{
+    font-size: 18px;
+    color: #fff;
+  }
+}
 </style>
