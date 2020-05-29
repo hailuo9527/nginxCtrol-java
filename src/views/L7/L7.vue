@@ -205,12 +205,11 @@ export default {
 }
 .word {
     position: fixed;
-    left: 50%;
-    top: 50%;
+    left: 51%;
+    top: 54%;
     text-align: center;
-    color: #fff;
-    font-size: 40px;
-    font-weight: bold;
+    color: #db1a1a;
+    font-size: 20px;
     z-index: 11;
 }
 .word-icon {

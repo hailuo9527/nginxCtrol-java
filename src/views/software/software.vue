@@ -2,8 +2,10 @@
   <div class="config-list">
     <div class="config_header">
       <span class="config_title">软件管理</span>
-
-      <Button type="primary" size="large" icon="md-add" @click="uploadModal = true">上传文件</Button>
+      <div>
+      <Button type="info" size="large" icon="md-flash">在线安装</Button>
+      <Button type="primary" size="large" icon="md-add" @click="uploadModal = true" style="margin-left: 10px">上传文件</Button>
+      </div>
       <Modal v-model="uploadModal" title="文件上传" >
         <Form>
           <FormItem label='服务器版本'>
