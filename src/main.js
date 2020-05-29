@@ -10,6 +10,9 @@ import ViewUI from 'view-design'
 import './theme/index.less'  // 主题样式
 
 import vView from 'vue-view-lazy'
+import 'xe-utils'
+
+import './plugins/table'
 Vue.use(vView,{
   //error:'../../static/images/loading.png',
   loading:'../../static/images/loading.gif',

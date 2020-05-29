@@ -133,3 +133,27 @@ export const selAppHAInfo = ({app_server_id}) => {
         }
     })
 }
+
+/*
+*  高级流量调度
+* */
+export const ngxDispatch = (data) => {
+    return axios.request({
+        url: '/ngxDispatch',
+        method: 'post',
+        data: data
+    })
+}
+
+/*
+*  高级流量调度
+* */
+export const selNgxDispatch = ({app_service_id}) => {
+    return axios.request({
+        url: '/selNgxDispatch',
+        method: 'post',
+        params: {
+            app_service_id
+        }
+    })
+}
