@@ -1,15 +1,7 @@
 <template>
   <div class="dispatch">
     <div class="table-wrap">
-      <div class="table">
-        <!--<Table :row-class-name="rowClassName"  :loading="loading" :columns="tableConfig" :data="newData" border :span-method="handleSpan">
-
-          <template slot-scope="{ row, index }" slot="status">
-            <my-icon v-if="row.status" :type="statusHandle(row.status).className" :color="statusHandle(row.status).color"></my-icon>
-            <span v-if="row.status" style="margin-left: 10px">{{statusHandle(row.status).info}}</span>
-            <span v-else>同步中</span>
-          </template>
-        </Table>-->
+      <div class="table" v-if="tableData.length">
         <vxe-toolbar perfect>
 
           <template v-slot:buttons>
@@ -26,6 +18,7 @@
                 highlight-hover-row
                 auto-resize
                 align="center"
+
                 :data="tableData">
           <vxe-table-column type="seq" fixed="left" width="160">
             <template v-slot:header>
@@ -56,9 +49,10 @@
           </vxe-table-column>
 
         </vxe-table>
-
       </div>
-
+      <div class="table" style="display: flex; align-items: center; justify-content: center; color: #f8f8f8" v-else>
+        暂无数据
+      </div>
     </div>
 
   </div>
@@ -97,35 +91,7 @@
         ],
         newData: [],
         loading: false,
-        tableData: [
-          {
-            member: '192.168.1.109',
-            data: [
-              {
-                app_server_id: "4f7a251c81114082ad21edee84e1ecbb",
-                member: "192.168.1.109",
-                priority: 100,
-                status: "m",
-                vip: "192.168.1.46",
-              },
-              {
-                app_server_id: "4f7a251c81114082ad21edee84e1ecbb",
-                member: "192.168.1.109",
-                priority: 98,
-                status: "s",
-                vip: "192.168.1.45",
-              },
-              {
-                app_server_id: "4f7a251c81114082ad21edee84e1ecbb",
-                member: "192.168.1.109",
-                priority: 98,
-                status: "s",
-                vip: "192.168.1.44"
-              }
-            ]
-          },
-
-        ],
+        tableData: [],
         summary: '',
         vipList: []
       }
@@ -137,7 +103,7 @@
       /* 获取HA列表 */
       async selAppHAInfo() {
         this.loading = true
-        let res = await  selAppHAInfo({app_server_id: this.activeAside.app_service_id})
+        let res = await  selAppHAInfo({app_server_id: this.$route.params.app})
         this.loading = false
         if (this.asyncOk(res)){
           this.summary = res.data.result.summary
