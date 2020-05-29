@@ -262,7 +262,7 @@ export default {
           callback(new Error("格式错误"));
         }
       } else {
-        callback();
+        callback(new Error("不能为空"));
       }
     };
     const selection = (rule, value, callback) => {
