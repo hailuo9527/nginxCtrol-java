@@ -80,17 +80,28 @@
             <Input v-model="appForm.app_service_name"></Input>
           </FormItem>
           <FormItem label="是否开启热备份">
-            <i-switch v-model="appForm.configure_ha">
+            <i-switch v-model="appForm.configure_ha" @on-change="switchChange">
               <span slot="open">On</span>
               <span slot="close">Off</span>
             </i-switch>
           </FormItem>
           <div class="label" v-if="appForm.configure_ha">
-            虚拟ip<popTip content="对外开放的IP地址" style="margin-left: 5px;"></popTip>
+            虚拟ip<popTip
+              content="对外开放的IP地址"
+              style="margin-left: 5px;"
+            ></popTip>
           </div>
-          <Row v-if="appForm.configure_ha" v-for="(item, index) in appForm.vips" :key="index">
+          <Row
+            v-if="appForm.configure_ha"
+            v-for="(item, index) in appForm.vips"
+            :key="index"
+          >
             <Col span="19">
-              <FormItem label="" :prop="'vips.'+index" :rules="{ validator: ip }">
+              <FormItem
+                label=""
+                :prop="'vips.' + index"
+                :rules="{ validator: ip }"
+              >
                 <Input
                   v-model.trim="appForm.vips[index]"
                   placeholder="IP"
@@ -107,7 +118,9 @@
             </Col>
           </Row>
           <FormItem v-if="appForm.configure_ha">
-            <Button type="dashed" @click="handleAddVip" icon="md-add">添加</Button>
+            <Button type="dashed" @click="handleAddVip" icon="md-add"
+              >添加</Button
+            >
           </FormItem>
           <FormItem label="监听端口" prop="listen">
             <popTip content="对外开放的端口"></popTip>
@@ -253,7 +266,7 @@ export default {
         callback(new Error("不能为空"));
       }
     };
-    this. ip = (rule, value, callback) => {
+    this.ip = (rule, value, callback) => {
       if (value) {
         let ip = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/;
         if (ip.test(value)) {
@@ -398,31 +411,35 @@ export default {
     addApp(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.modal_loading = true;
-          // let ip = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/
-          // if (ip.test(this.appForm.vips)){
-          //     this.appForm.vips += ':80'
-          // }
-          addAppInfo(this.appForm)
-            .then((res) => {
-              // console.log(res);
-              this.modal_loading = false;
-              if (res.data.code === "success") {
-                this.appModal = false;
-                this.getAppAsideList().then((res) => {
-                  /* 第一次添加 */
-                  if (this.asyncOk(res) && !this.$route.params.app) {
-                    this.appSetActiveAside(res.data.result[0] || {});
-                    this.$router.replace(`/app/${this.appServerId}/overview`);
-                  }
-                });
-              } else {
-                this.$Message.error(`${res.data.result}`);
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+          if (this.appForm.vips.length <= this.appForm.l7_server_ids.length) {
+            this.modal_loading = true;
+            // let ip = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/
+            // if (ip.test(this.appForm.vips)){
+            //     this.appForm.vips += ':80'
+            // }
+            addAppInfo(this.appForm)
+              .then((res) => {
+                // console.log(res);
+                this.modal_loading = false;
+                if (res.data.code === "success") {
+                  this.appModal = false;
+                  this.getAppAsideList().then((res) => {
+                    /* 第一次添加 */
+                    if (this.asyncOk(res) && !this.$route.params.app) {
+                      this.appSetActiveAside(res.data.result[0] || {});
+                      this.$router.replace(`/app/${this.appServerId}/overview`);
+                    }
+                  });
+                } else {
+                  this.$Message.error(`${res.data.result}`);
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          } else {
+            this.$Message.error({content: "虚拟ip数量不能大于实例数量", duration: 3});
+          }
         } else {
           this.$Message.error("请检查输入是否正确!");
         }
@@ -462,23 +479,27 @@ export default {
     modifyApp(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.modal_loading = true;
-          updAppInfo(this.appForm)
-            .then((res) => {
-              // console.log(res);
-              this.modal_loading = false;
-              if (res.data.code === "success") {
-                this.appModal = false;
-                this.$Message.success("修改成功");
-                /* 重置当前app信息 */
-                this.resetAside();
-              } else {
-                this.$Message.error(`${res.data.result}`);
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+          if (this.appForm.vips.length <= this.appForm.l7_server_ids.length) {
+            this.modal_loading = true;
+            updAppInfo(this.appForm)
+              .then((res) => {
+                // console.log(res);
+                this.modal_loading = false;
+                if (res.data.code === "success") {
+                  this.appModal = false;
+                  this.$Message.success("修改成功");
+                  /* 重置当前app信息 */
+                  this.resetAside();
+                } else {
+                  this.$Message.error(`${res.data.result}`);
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          } else {
+            this.$Message.error({content: "虚拟ip数量不能大于实例数量", duration: 3});
+          }
         } else {
           this.$Message.error("请检查输入是否正确!");
         }
@@ -505,10 +526,21 @@ export default {
     },
     /* 新增虚拟ip */
     handleAddVip() {
-      this.appForm.vips.push('');
+      this.appForm.vips.push("");
     },
+    /* 删除虚拟ip */
     handleRemoveVip(index) {
       this.appForm.vips.splice(index, 1);
+      if (this.appForm.vips.length === 0) {
+        this.appForm.configure_ha = false;
+      }
+    },
+    switchChange(data) {
+      if (data) {
+        if (this.appForm.vips.length === 0) {
+          this.appForm.vips.push("");
+        }
+      }
     },
   },
   /* 更新组件 */

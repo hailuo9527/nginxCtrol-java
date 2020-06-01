@@ -16,7 +16,7 @@
           >
             <div :class="active ? 'transition-before' : 'transition-after'">
               <h2 class="overview-score-box__score">{{ instancePercent }}%</h2>
-              <div class="overview-score-box__title">实例状态</div>
+              <div class="overview-score-box__title" :class="{'overview-score-box-bottom-line-sub_healthy': issubhealthy, 'overview-score-box-bottom-line-unhealthy': unhealthy}">实例状态</div>
               <table class="overview-score-box__stats">
                 <tr>
                   <td>在线实例</td>

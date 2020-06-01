@@ -174,7 +174,8 @@
                 type="primary"
                 @click="publicAppAuto"
                 :disabled="
-                  activeAside.appDefaultPublishConfList.length == 0||activeAside.is_sync
+                  activeAside.appDefaultPublishConfList.length == 0 ||
+                    activeAside.is_sync
                 "
               >
                 快捷发布
@@ -193,35 +194,47 @@
                     :rules="ruleValidate"
                   >
                     <FormItem label="是否开启热备份">
-                      <i-switch v-model="appForm.configure_ha">
+                      <i-switch
+                        v-model="appForm.configure_ha"
+                        @on-change="switchChange"
+                      >
                         <span slot="open">On</span>
                         <span slot="close">Off</span>
                       </i-switch>
                     </FormItem>
                     <div class="label" v-if="appForm.configure_ha">
-            虚拟ip<popTip content="对外开放的IP地址,开启热备份时必填" style="margin-left: 5px;"></popTip>
-          </div>
-          <Row v-if="appForm.configure_ha" v-for="(item, index) in appForm.vips" :key="index">
-            <Col span="19">
-              <FormItem label="" :prop="'vips.'+index">
-                <Input
-                  v-model.trim="appForm.vips[index]"
-                  placeholder="IP"
-                ></Input>
-              </FormItem>
-            </Col>
-            <Col span="4" style="text-align: right">
-              <Icon
-                type="ios-trash"
-                class="remove-icon"
-                @click="handleRemoveVip(index)"
-                size="20"
-              />
-            </Col>
-          </Row>
-          <FormItem v-if="appForm.configure_ha">
-            <Button type="dashed" @click="handleAddVip" icon="md-add">添加</Button>
-          </FormItem>
+                      虚拟ip<popTip
+                        content="对外开放的IP地址,开启热备份时必填"
+                        style="margin-left: 5px;"
+                      ></popTip>
+                    </div>
+                    <Row
+                      v-if="appForm.configure_ha"
+                      v-for="(item, index) in appForm.vips"
+                      :key="index"
+                    >
+                      <Col span="19">
+                        <FormItem label="" :prop="'vips.' + index">
+                          <Input
+                            v-model.trim="appForm.vips[index]"
+                            placeholder="IP"
+                          ></Input>
+                        </FormItem>
+                      </Col>
+                      <Col span="4" style="text-align: right">
+                        <Icon
+                          type="ios-trash"
+                          class="remove-icon"
+                          @click="handleRemoveVip(index)"
+                          size="20"
+                        />
+                      </Col>
+                    </Row>
+                    <FormItem v-if="appForm.configure_ha">
+                      <Button type="dashed" @click="handleAddVip" icon="md-add"
+                        >添加</Button
+                      >
+                    </FormItem>
                     <FormItem label="选择实例" prop="l7_server_ids">
                       <popTip
                         content="实例为部署NGINX代理的服务器，开启热备份时至少选择两台实例"
@@ -286,10 +299,11 @@
                 >调度</router-link
               >
               <router-link
-                      v-if="activeAside.configure_ha"
-                      :to="`/app/${$route.params.app}/ha`"
-                      class="tab_item"
-              >HA</router-link>
+                v-if="activeAside.configure_ha"
+                :to="`/app/${$route.params.app}/ha`"
+                class="tab_item"
+                >HA</router-link
+              >
               <span v-else class="tab_item disabled">HA</span>
             </div>
           </div>
@@ -394,53 +408,60 @@ export default {
     pushApp(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          //this.modal_loading = true;
-          pushCheck(
-            { nginx_conf_id: this.appForm.nginx_conf_id },
-            this.appForm.l7_server_ids
-          ).then((res) => {
-            if (this.asyncOk(res) && this.isEmptyObject(res.data.result)) {
-              this.appModal = false;
-              this.pushAppData();
-            } else if (!this.isEmptyObject(res.data.result)) {
-              this.$Modal.confirm({
-                render: (h) => {
-                  return h("div", [
-                    h(
-                      "p",
-                      "您当前需要发布的配置文件中包含以下PLUS版本的配置信息："
-                    ),
-                    h("p", {
-                      domProps: {
-                        innerHTML: res.data.result.plus_conf_param,
-                      },
-                      style: {
-                        color: "#333",
-                        fontSize: "14px",
-                      },
-                    }),
-                    h("div", [
-                      h("span", "所选实例中"),
-                      res.data.result.l7ServerName.map((item) => {
-                        return h("span", {
-                          class: "l7ServerName",
-                          domProps: {
-                            innerHTML: item,
-                          },
-                        });
+          if (this.appForm.vips.length <= this.appForm.l7_server_ids.length) {
+            //this.modal_loading = true;
+            pushCheck(
+              { nginx_conf_id: this.appForm.nginx_conf_id },
+              this.appForm.l7_server_ids
+            ).then((res) => {
+              if (this.asyncOk(res) && this.isEmptyObject(res.data.result)) {
+                this.appModal = false;
+                this.pushAppData();
+              } else if (!this.isEmptyObject(res.data.result)) {
+                this.$Modal.confirm({
+                  render: (h) => {
+                    return h("div", [
+                      h(
+                        "p",
+                        "您当前需要发布的配置文件中包含以下PLUS版本的配置信息："
+                      ),
+                      h("p", {
+                        domProps: {
+                          innerHTML: res.data.result.plus_conf_param,
+                        },
+                        style: {
+                          color: "#333",
+                          fontSize: "14px",
+                        },
                       }),
-                      h("span", "不支持以上配置。"),
-                    ]),
-                    h("p", "继续发布将跳过以上实例发布。是否继续？"),
-                  ]);
-                },
-                onOk: () => {
-                  this.appModal = false;
-                  this.pushAppData();
-                },
-              });
-            }
-          });
+                      h("div", [
+                        h("span", "所选实例中"),
+                        res.data.result.l7ServerName.map((item) => {
+                          return h("span", {
+                            class: "l7ServerName",
+                            domProps: {
+                              innerHTML: item,
+                            },
+                          });
+                        }),
+                        h("span", "不支持以上配置。"),
+                      ]),
+                      h("p", "继续发布将跳过以上实例发布。是否继续？"),
+                    ]);
+                  },
+                  onOk: () => {
+                    this.appModal = false;
+                    this.pushAppData();
+                  },
+                });
+              }
+            });
+          } else {
+            this.$Message.error({
+              content: "虚拟ip数量不能大于实例数量",
+              duration: 3,
+            });
+          }
         } else {
           this.$Message.error("请检查输入是否正确!");
         }
@@ -612,10 +633,21 @@ export default {
     },
     /* 新增虚拟ip */
     handleAddVip() {
-      this.appForm.vips.push('');
+      this.appForm.vips.push("");
     },
+    /* 删除虚拟ip */
     handleRemoveVip(index) {
       this.appForm.vips.splice(index, 1);
+      if (this.appForm.vips.length === 0) {
+        this.appForm.configure_ha = false;
+      }
+    },
+    switchChange(data) {
+      if (data) {
+        if (this.appForm.vips.length === 0) {
+          this.appForm.vips.push("");
+        }
+      }
     },
   },
   watch: {
@@ -639,8 +671,8 @@ export default {
     next();
   },
   mounted() {
-      console.log(this.activeAside.appDefaultPublishConfList)
-  }
+    console.log(this.activeAside.appDefaultPublishConfList);
+  },
 };
 </script>
 <style lang="less">
@@ -670,15 +702,15 @@ export default {
 
   margin: 0 10px;
 }
-.remove-icon{
+.remove-icon {
   cursor: pointer;
-  opacity: .6;
-  transition: all .2s;
-  &:hover{
+  opacity: 0.6;
+  transition: all 0.2s;
+  &:hover {
     opacity: 1;
   }
 }
-.label{
+.label {
   vertical-align: middle;
   font-size: 14px;
   color: #515a6e;

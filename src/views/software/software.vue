@@ -95,7 +95,7 @@
       <Table :columns="serverListTableConfig" @on-selection-change="onSelectionChange" max-height="500" :loading="loading" :data="serverList">
 
       </Table>
-      <Alert type="error" class="err-tips" v-if="isTableChoose" :closable="true" @on-close="closeTableAlert">
+      <Alert type="error" class="err-tips" v-if="isTableChoose" :closable="true" @on-close="closeTableAlert" :class="isOnline?'on-line':'not-online'">
             请勾选一个或多个实例
             <Icon type="md-close" class="close" slot="close" />
       </Alert>
@@ -259,6 +259,7 @@
 
       async installNginx() {
         if (this.selectedServer.length>0) {
+            this.isTableChoose = false
             this.installLoading = true
             let res = await installNginx(this.selectedServer,{filePath: this.active.file_path})
             this.installLoading = false
@@ -269,7 +270,7 @@
                 this.$Message.error(res.data.result)
             }
         } else {
-            this.installModal = false
+            this.isTableChoose = true
         }
 
       },
@@ -500,7 +501,6 @@
   color: #fff;
   padding: 14px 40px;
   position: absolute;
-  top: 150px;
   left: 16px;
   z-index: 10;
   width: 760px;
@@ -508,5 +508,11 @@
     font-size: 18px;
     color: #fff;
   }
+}
+.on-line {
+  top: 150px;
+}
+.not-online {
+    top: 100px
 }
 </style>
