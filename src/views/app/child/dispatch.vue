@@ -4,7 +4,7 @@
 
       <div class="table">
 
-        <Card >
+        <Card :dis-hover="true">
           <Table :loading="loading" :columns="columns" :data="dispatch.data">
             <template slot-scope="{ row, index }" slot="action">
               <Button
@@ -21,8 +21,8 @@
         <transition name="fade">
 
           <Card v-if="showAdvance" :dis-hover="true">
-            <Row>
-              <Col span="10" offset="7" style="text-align: left">
+            <Row class="advance-card">
+              <Col span="12" offset="6" style="text-align: left">
                 <Form hide-required-mark ref="formValidate" :model="advanceForm" :rules="advanceValidate" >
                   <Card class="card" :dis-hover="true">
                     <p slot="title">类型</p>
@@ -52,7 +52,7 @@
                                   label="URL"
                                   :prop="'dispatchParams.' + index + '.url'"
                                     :rules="{required: true, message: '不能为空', trigger: 'blur'}">
-                            <Input v-model="item.param">
+                            <Input v-model="item.url">
                               <Select v-model="item.urlPrepend" slot="prepend" style="width: 100px">
                                 <Option value="^~">prefix</Option>
                                 <Option value="=">exact</Option>
@@ -64,13 +64,16 @@
                           <FormItem
                                   label="服务器名"
                                   :prop="'dispatchParams.' + index + '.upstream_name'"
-                                    :rules="{required: true, message: '不能为空', trigger: 'blur'}">
-                            <Input v-model="item.upstream_name"></Input>
+                                  >
+                            <!--<Input v-model="item.upstream_name"></Input>-->
+                            <Select v-model="item.upstream_name">
+                              <Option  v-for="i in advanceForm.upstreaParams" :value="i.upstream_server_name" :key="i.upstream_server_name">{{ i.upstream_server_name }}</Option>
+                            </Select>
                           </FormItem>
                         </Row>
                       </Col>
                       <Col span="2" offset="2">
-                        <Icon type="ios-trash" size="20" v-if="advanceForm.dispatchParams.length>1" @click="handleRemove(index, advanceForm.upstreaParams)">Delete</Icon>
+                        <Icon type="ios-trash" class="remove-icon" size="20" v-if="advanceForm.dispatchParams.length>1" @click="handleRemove(index, advanceForm.dispatchParams)">Delete</Icon>
                       </Col>
 
                     </Row>
@@ -91,7 +94,7 @@
                             <Col span="11">
                               <FormItem label="起始IP"
                                         :prop="'dispatchParams.' + index + '.startIp'"
-                                        :rules="{required: true, message: '不能为空', trigger: 'blur'}">
+                                        :rules="{validator: ipRule}">
                                 <Input v-model.trim="item.startIp" placeholder="起始IP"></Input>
                               </FormItem>
                             </Col>
@@ -99,7 +102,7 @@
                             <Col span="11">
                               <FormItem label="结束IP"
                                         :prop="'dispatchParams.' + index + '.endIp'"
-                                        :rules="{required: true, message: '不能为空', trigger: 'blur'}">
+                                        :rules="{validator: ipRule}">
                                 <Input v-model.trim="item.endIp" placeholder="结束IP"></Input>
                               </FormItem>
                             </Col>
@@ -107,12 +110,21 @@
                           <FormItem
                                   label="服务器名"
                                   :prop="'dispatchParams.' + index + '.upstream_name'"
+                                  >
+                            <!--<Input v-model="item.upstream_name"></Input>-->
+                            <Select v-model="item.upstream_name">
+                              <Option  v-for="i in advanceForm.upstreaParams" :value="i.upstream_server_name" :key="i.upstream_server_name">{{ i.upstream_server_name }}</Option>
+                            </Select>
+                          </FormItem>
+                         <!-- <FormItem
+                                  label="服务器名"
+                                  :prop="'dispatchParams.' + index + '.upstream_name'"
                                   :rules="{required: true, message: '不能为空', trigger: 'blur'}">
                             <Input v-model="item.upstream_name"></Input>
-                          </FormItem>
+                          </FormItem>-->
                         </Col>
                         <Col span="2" offset="2">
-                          <Icon type="ios-trash" size="20" v-if="advanceForm.dispatchParams.length>1" @click="handleRemove(index,advanceForm.dispatchParams )">Delete</Icon>
+                          <Icon type="ios-trash" class="remove-icon" size="20" v-if="advanceForm.dispatchParams.length>1" @click="handleRemove(index,advanceForm.dispatchParams )">Delete</Icon>
                         </Col>
                       </Row>
                     </div>
@@ -155,13 +167,16 @@
                             <FormItem
                                     label="服务器名"
                                     :prop="'dispatchParams.' + index + '.upstream_name'"
-                                    :rules="{required: true, message: '不能为空', trigger: 'blur'}">
-                              <Input v-model="item.upstream_name"></Input>
+                                    >
+                              <!--<Input v-model="item.upstream_name"></Input>-->
+                              <Select v-model="item.upstream_name">
+                                <Option  v-for="i in advanceForm.upstreaParams" :value="i.upstream_server_name" :key="i.upstream_server_name">{{ i.upstream_server_name }}</Option>
+                              </Select>
                             </FormItem>
                           </Row>
                         </Col>
                         <Col span="2" offset="2">
-                          <Icon type="ios-trash" size="20" v-if="advanceForm.dispatchParams.length>1" @click="handleRemove(index, advanceForm.upstreaParams)">Delete</Icon>
+                          <Icon type="ios-trash" class="remove-icon" size="20" v-if="advanceForm.dispatchParams.length>1" @click="handleRemove(index, advanceForm.upstreaParams)">Delete</Icon>
                         </Col>
                       </Row>
                     </div>
@@ -169,7 +184,7 @@
                   </Card>
                   <Card class="card" :dis-hover="true" v-if="advanceForm.type === 'request'">
                     <p slot="title">REQUEST</p>
-                    <div  v-if="advanceForm.type === 'request'">
+                    <div>
                       <Row v-for="(item, index) in advanceForm.dispatchParams"
                            :key="index"
                            style="margin-bottom: 10px">
@@ -184,14 +199,17 @@
                             <FormItem
                                     label="服务器名"
                                     :prop="'dispatchParams.' + index + '.upstream_name'"
-                                    :rules="{required: true, message: '不能为空', trigger: 'blur'}">
-                              <Input v-model="item.upstream_name"></Input>
+                                    >
+                              <!--<Input v-model="item.upstream_name"></Input>-->
+                              <Select v-model="item.upstream_name">
+                                <Option  v-for="i in advanceForm.upstreaParams" :value="i.upstream_server_name" :key="i.upstream_server_name">{{ i.upstream_server_name }}</Option>
+                              </Select>
                             </FormItem>
 
                           </Row>
                         </Col>
                         <Col span="2" offset="2">
-                          <Icon type="ios-trash" size="20" v-if="advanceForm.dispatchParams.length>1" @click="handleRemove(index, advanceForm.upstreaParams)">Delete</Icon>
+                          <Icon type="ios-trash" class="remove-icon" size="20" v-if="advanceForm.dispatchParams.length>1" @click="handleRemove(index, advanceForm.upstreaParams)">Delete</Icon>
                         </Col>
                       </Row>
                     </div>
@@ -207,39 +225,35 @@
 
                       <Row class="flex-box bg-gray">
                         <Col span="20" :class=" advanceForm.upstreaParams.length>1 ? 'dispatch-form-main': ''">
-                          <div style="margin-bottom: 20px">
+                          <Row style="margin-bottom: 20px">
                             <FormItem label="命名" :prop="'upstreaParams.' + index + '.upstream_server_name'"
                                       :rules="{required: true, message: '不能为空', trigger: 'blur'}">
                               <Input type="text" v-model.trim="item.upstream_server_name" placeholder="命名" ></Input>
                             </FormItem>
-                          </div>
+                          </Row>
 
-                          <div>
-                            <Button  icon="md-close" class="tag"
-                                     :key="i"
-                                     v-if="item"
-                                     @click="removeTag(index, i)"
-                                     v-for="(item, i) in advanceForm.upstreaParams[index].upstream_server_address">{{item}}</Button>
-                          </div>
-
-
-                          <div style="flex: 1; flex-basis: 30%">
+                          <Row style="flex: 1; flex-basis: 30%">
                             <FormItem label="地址" :prop="'upstreaParams.' + index + '.upstream_server_address_input'"
-
                                       :rules="{validator: address}">
                               <Input type="text"
-
                                      @on-blur="addDomainName(index, item.upstream_server_address_input)"
                                      @on-enter="addDomainName(index, item.upstream_server_address_input)"
                                      v-model.trim="item.upstream_server_address_input" placeholder="服务器地址">
                               </Input>
                             </FormItem>
 
-                          </div>
+                          </Row>
+                          <Row>
+                            <Button  icon="md-close" class="tag"
+                                     :key="i"
+                                     v-if="item"
+                                     @click="removeTag(index, i)"
+                                     v-for="(item, i) in advanceForm.upstreaParams[index].upstream_server_address">{{item}}</Button>
+                          </Row>
 
                         </Col>
                         <Col span="2" offset="2">
-                          <Icon type="ios-trash" size="20" v-if="advanceForm.upstreaParams.length>1" @click="handleRemove(index, advanceForm.upstreaParams)">Delete</Icon>
+                          <Icon type="ios-trash" class="remove-icon" size="20" v-if="advanceForm.upstreaParams.length>1" @click="handleRemove(index, advanceForm.upstreaParams)">Delete</Icon>
                         </Col>
                       </Row>
                     </Row>
@@ -296,9 +310,10 @@
   </div>
 </template>
 <script>
-import { selAppDispatch, updAppWeight, ngxDispatch, selNgxDispatch} from "@/api/app";
-import { mapState, mapActions, mapMutations } from "vuex";
-export default {
+  import {selAppDispatch, selNgxDispatch, updAppWeight, ngxDispatch} from "@/api/app";
+  import {mapActions, mapMutations, mapState} from "vuex";
+
+  export default {
   name: "dispatch",
   data() {
     this.validaterule = (rule, value, callback) => {
@@ -314,15 +329,41 @@ export default {
     this.ipAndPort = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/
 
     this.address = (rule, value, callback) => {
+      let index = rule.field.split('.')[1]
       if(!value){
+        if(!this.advanceForm.upstreaParams[index].upstream_server_address.length){
+          callback(new Error('至少添加一条服务器地址'))
+        }
         callback()
       }else {
         if ( !this.ipAndPort.test(value)){
           callback(new Error("地址格式错误"));
+        }else{
+          callback()
         }
       }
+    }
+    this.ipRule = (rule, value, callback) => {
 
+      if (value){
+        let ip = /^((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}$/
+        if(ip.test(value)){
+          callback()
+        }else{
+          callback(new Error('IP格式错误'))
+        }
+      }else{
+        callback(new Error('不能为空'))
+      }
 
+    }
+    this.selectRule = (rule, value, callback) => {
+      console.log(value)
+      if (value){
+        callback()
+      }else(
+        callback(new EvalError('必须选择服务器，没有服务器的情况下需要先添加服务器'))
+      )
     }
     return {
       loading: false,
@@ -358,7 +399,7 @@ export default {
       index: 0,
       saveLoading: false,
       weights: '',
-      showAdvance: true,
+      showAdvance: false,
       cacheDispatch: {},
       advanceForm: {
         type: 'url',
@@ -412,23 +453,24 @@ export default {
         this.loading = false;
       }
     },
-    async save() {
-      this.saveLoading = true;
+    /* 保存基础调度 */
+    async saveDispatch() {
+
       this.dispatch.data.map((item) => {
         item.app_service_id = this.$route.params.app;
       });
+      this.saveLoading = true
       let res = await updAppWeight(this.dispatch.data);
       this.saveLoading = false;
       if (res.data.code === "success") {
-        this.$Message.info(`${res.data.result}`);
         let json = this.activeAside;
         json.appDefaultPublishConfList = this.dispatch.data;
         this.getAppAsideList('update');
         this.appSetActiveAside(json);
         this.GetselAppDispatch();
-        /* 修改app*/
+        this.$Message.success(`基础调度${res.data.result}`);
       } else {
-        this.$Message.error(`${res.data.result}`);
+        this.$Message.error(`基础调度${res.data.result}`);
       }
     },
     handleSubmit(name) {
@@ -491,24 +533,65 @@ export default {
     },
     /* 获取高级调度 */
     async selNgxDispatch() {
-      let res = await selNgxDispatch()
-      if (this.asyncOk(res)) {
-        // this.cacheDispatch = this.copyJson(res.data.result)
-        // this.advanceForm = res.data.result
+      let res = await selNgxDispatch({app_service_id: this.$route.params.app})
+      //console.log(res)
+      if (this.asyncOk(res) && res.data.result.type) {
+        this.cacheDispatch = this.copyJson(res.data.result)
+        this.advanceForm = res.data.result
       }
     },
-    /* 配置高级调度 */
-    ngxDispatch(fn) {
-      this.$refs['formValidate'].validate((valid) => {
-        if (valid) {
-          this.$Message.success('Success!');
-          fn()
+    /* 保存高级调度 */
+    advanceDispatch(){
+      if (this.showAdvance){
+        this.$refs['formValidate'].validate(async (valid) => {
+          if (valid) {
+            let json = {...this.advanceForm}
+            switch (json.type) {
+              case 'url':
+                json.dispatchParams.map(item => {
+                  item.param = item.urlPrepend + item.url
+                })
+                break
+              case 'ippart':
+                json.dispatchParams.map(item => {
+                  item.param = item.startIp + '-' + item.endIp
+                })
+                break
+              case 'cookie':
+                json.dispatchParams.map(item => {
+                  item.param = item.key + ',' + item.cookiePrepend + item.cookie
+                })
+                break
+              case 'request':
+                break
+              default: break
+            }
+            json.app_service_id = this.$route.params.app
+            this.saveLoading = true;
+            let res = await ngxDispatch(json)
+            this.saveLoading = false;
+            if(this.asyncOk(res)){
+              this.$Message.success('高级调度保存成功');
+              this.cacheDispatch = this.advanceForm
+            }else {
+              this.$Message.error(`高级调度${res.data.result}`);
+            }
 
-
-        } else {
-          this.$Message.error('Fail!');
-        }
-      })
+          } else {
+            this.$Message.error('请检查输入是否正确');
+          }
+        })
+      }
+      else {
+        return true
+      }
+    },
+    /* 保存 */
+    save() {
+      if(this.showAdvance){
+        this.advanceDispatch()
+      }
+      this.saveDispatch()
     }
   },
   watch: {
@@ -521,6 +604,7 @@ export default {
     },
   },
   mounted() {
+    this.selNgxDispatch()
     this.GetselAppDispatch();
   },
 };
@@ -529,7 +613,7 @@ export default {
 .dispatch {
   .table-wrap {
     width: 100%;
-    height: calc(100% - 60px);
+    height: calc(100% - 75px);
     .table {
       padding: 0 30px 0 20px;
       height: 100%;
@@ -593,10 +677,25 @@ export default {
   margin-bottom: 10px;
 }
   .dispatch-form-main{
-    border-right: 1px solid #eee;
+    border-right: 1px solid @green;
     padding-right: 20px;
   }
   .card{
     margin-bottom: 20px;
   }
+  .remove-icon{
+    cursor: pointer;
+    opacity: .6;
+    transition: all .3s;
+    &:hover{
+      opacity: 1;
+    }
+  }
+  .advance-card /deep/.ivu-card{
+    box-shadow: 0 1px 6px rgba(0,0,0,.2);
+  }
+  /deep/.ivu-card-head{
+    background: #f8f8f8;
+  }
+
 </style>
