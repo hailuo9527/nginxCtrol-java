@@ -1,4 +1,5 @@
 import axios from '@/libs/api.request'
+import { getToken } from '../libs/util'
 
 
 /* 查询所有实例配置信息 */
@@ -216,5 +217,22 @@ export const pushCheck = ({ nginx_conf_id }, l7ServerIds) => {
             nginx_conf_id
         },
         data: l7ServerIds
+    })
+}
+
+
+/**  导入nginx配置文件 */
+
+export const uploadNgConf = (file, {config_name}) => {
+    return axios.request({
+        url: '/uploadNgConf',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            AUTHORIZATION: getToken()
+        },
+        method: 'post',
+        processData: false, // 告诉axios不要去处理发送的数据(重要参数)
+        data: file,
+        params: { config_name }
     })
 }

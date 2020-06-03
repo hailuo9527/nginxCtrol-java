@@ -2,7 +2,10 @@
     <div class="config-list">
         <div class="config_header">
             <span class="config_title">Configurations</span>
-            <Button type="primary" size="large" icon="md-add" @click="$router.push('/newNginxConfig')">新建配置</Button>
+            <div>
+                <Button type="info" size="large" icon="md-cloud-upload" @click="openModal()">导入配置文件</Button>
+                <Button type="primary" size="large" icon="md-add" @click="$router.push('/newNginxConfig')" style="margin-left: 10px">新建配置</Button>
+            </div>
 
         </div>
         <div class="config_table_wrapper">
@@ -13,11 +16,30 @@
                 </template>
             </Table>
         </div>
-
+        <Modal v-model="importModal" title="导入配置文件" :mask-closable="false">
+            <Form ref="formInline" :model="formInline" :rules="ruleInline">
+                <FormItem prop="inputValue" label="配置文件名称">
+                    <Input type="text" v-model="formInline.inputValue" placeholder="配置文件名称"></Input>
+                </FormItem>
+            </Form>
+            <div>
+                <span style="display: block; float: left; line-height: 32px; margin-right: 10px;">文件导入</span>
+                <Upload
+                    :before-upload="handleUpload"
+                    action="/url">
+                    <Button icon="ios-cloud-upload-outline">导入文件</Button>
+                </Upload>
+            </div>
+            <div v-if="file !== null" class="file-content"><span>{{ file.name }}</span></div>
+            <div class="footer" slot="footer">
+                <Button @click="cancel()">取消</Button>
+                <Button type="primary" @click="upload()" :loading="loadingStatus">{{loadingStatus?'导入中...':'导入'}}</Button>
+            </div>
+        </Modal>
     </div>
 </template>
 <script>
-    import { getNginxConfALL, delNginxConf } from "../../../api/L7";
+    import { getNginxConfALL, delNginxConf, uploadNgConf } from "../../../api/L7";
 
     export default {
         data () {
@@ -54,7 +76,18 @@
                     }
                 ],
                 tableData: [],
-                loading: true
+                loading: true,
+                importModal: false,
+                formInline: {
+                    inputValue: ''
+                },
+                ruleInline: {
+                    inputValue: [
+                        {required: true, message: '不能为空', trigger: 'blur'}
+                    ]
+                },
+                file: null,
+                loadingStatus: false
             }
         },
         methods: {
@@ -102,6 +135,48 @@
                          //this.$Message.info('Clicked cancel');
                      }
                  });
+            },
+            openModal() {
+                this.importModal = true
+                this.formInline.inputValue = ''
+            },
+            cancel() {
+                this.importModal = false
+            },
+            //绑定 before-upload，并返回false，可以阻止默认上传流程，手动控制文件上传。
+            handleUpload (file) {
+                this.file = file;
+                return false;
+            },
+            //导入配置文件
+            async upload() {
+                this.$refs.formInline.validate( async (valid) => {
+                    if (valid) {
+                        if (this.file !== null) {
+                            this.loadingStatus = true
+                            let file = new FormData();
+                            file.append("file", this.file);
+                            let res = await uploadNgConf(file, {config_name: this.formInline.inputValue}) 
+                                if (res.data.code === '200') {
+                                    this.loadingStatus = false;
+                                    this.importModal = false
+                                    this.$Message.success({content: "文件 " + this.file.name + "导入成功！", duration: 3});
+                                    this.file = null;
+                                    this.getAllConfigInfo()
+                                } else {
+                                    this.loadingStatus = false;
+                                    this.$Message.error({
+                                       content: "文件 " + this.file.name + "导入失败！" + res.data.result, duration: 3
+                                    });
+                                    this.file = null;
+                                }                   
+                        } else {
+                            this.$Message.error({content: '请选择一份配置文件', duration: 3});
+                        }
+                    } else {
+                        this.$Message.error({content:'请输入配置文件名称', duration: 3});
+                    }
+                })
             }
         },
         mounted() {
@@ -136,5 +211,23 @@
             overflow-y: auto;
             padding: 0 40px;
         }
+    }
+    .file-content {
+        span {
+            color: #01c864;
+            font-size: 16px;
+        }
+        // .close-icon {
+        //     cursor: pointer;
+        //     float: right;
+        //     font-size: 20px;
+        //     display: none;
+        //     &:hover {
+        //         display: block;
+        //     }
+        // }
+        // &:hover {
+        //     background-color: #f3f3f3;
+        // }
     }
 </style>

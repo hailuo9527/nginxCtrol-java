@@ -67,7 +67,8 @@
                          v-for="(item, index) in virtualServerGroup">
                         <Icon type="md-create" class="ctrl-list-item__edit" @click="editVirtualServer(index,true)"/>
                         <h4 class="ctrl-server__server-name">
-                            <span>{{ item.domain_name.split(',')[0] || '*'}}</span>
+                            <span v-if="item.domain_name!==null">{{ item.domain_name.split(',')[0] || '*'}}</span>
+                            <span v-else>{{ item.domain_name=''}}</span>
                         </h4>
                         <div class="ctrl-server__protocols" >
                             http

@@ -144,7 +144,7 @@
               <span v-else v-for="item in diskWarning">
                 <span
                   class="r-text-position high-light"
-                  v-if="item.value >= 90"
+                  v-if="item.value <= 10"
                   >{{ item.name }}</span
                 >
                 <span class="r-text-position common_color_white" v-else>{{
@@ -351,7 +351,7 @@ export default {
                   this.bottom_line_healthy = false;
                   this.bottom_line_subhealthy = true;
                   this.bottom_line_unhealthy = false;
-                  this.status = true;
+                //   this.status = true;
                   break;
                 }
               }
@@ -371,7 +371,7 @@ export default {
             if (data.diskWarningCount != []) {
               this.state = false;
               for (let i = 0; i < disk_value.length; i++) {
-                if (disk_value[i] >= 90) {
+                if (disk_value[i] <= 10) {
                   this.prewarn_healthy = false;
                   this.prewarn_subhealthy = false;
                   this.prewarn_unhealthy = true;
@@ -386,7 +386,7 @@ export default {
               }
               if (!this.state) {
                 for (let i = 0; i < disk_value.length; i++) {
-                  if (disk_value[i] < 90) {
+                  if (disk_value[i] > 10) {
                     this.prewarn_healthy = false;
                     this.prewarn_subhealthy = true;
                     this.prewarn_unhealthy = false;
