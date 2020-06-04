@@ -177,7 +177,7 @@
       <div class="config-page__bottom-buttons_container">
         <button type="button"
                 @click="previewConfig"
-                :disabled="!configName"
+                :disabled="!canSaveConfig"
                 class="config-page__add-new ae-button__black ae-button__button ">
           <span class="ae-button__label">预览</span>
         </button>
