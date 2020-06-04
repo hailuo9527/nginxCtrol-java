@@ -83,6 +83,7 @@
               color="#01c864"
             />
           </Tooltip>
+          <Icon type="md-close" class="close-icon" @click="closeModal()"/>
         </div>
         <div class="input-filename" v-if="isOnline">
             <div style="width: 66px;line-height: 32px;"><span>软件名称</span></div>
@@ -278,6 +279,10 @@
           this.installModal = false
           this.isOnline = false
       },
+      closeModal() {
+          this.installModal = false
+          this.isOnline = false
+      },
       // 选择安装目标服务器
       onSelectionChange(selection) {
         this.selectedServer = selection
@@ -468,7 +473,7 @@
     // opacity: 0.2;
     transition: all 0.1s;
     margin-left: 10px;
-    margin-top: 5px;
+    margin-top: -2px;
     // &:hover {
     //   opacity: 1 !important;
     // }
@@ -514,5 +519,12 @@
 }
 .not-online {
     top: 100px
+}
+.close-icon {
+    cursor: pointer;
+    float: right;
+    font-size: 20px;
+    color: #fff;
+    margin-top: -2px;
 }
 </style>

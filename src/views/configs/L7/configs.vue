@@ -30,7 +30,7 @@
                     <Button icon="ios-cloud-upload-outline">导入文件</Button>
                 </Upload>
             </div>
-            <div v-if="file !== null" class="file-content"><span>{{ file.name }}</span></div>
+            <div v-if="file !== null" class="file-content"><span>{{ file.name }}</span><Icon type="md-close" class="close-icon" @click="close()"/></div>
             <div class="footer" slot="footer">
                 <Button @click="cancel()">取消</Button>
                 <Button type="primary" @click="upload()" :loading="loadingStatus">{{loadingStatus?'导入中...':'导入'}}</Button>
@@ -177,6 +177,9 @@
                         this.$Message.error({content:'请输入配置文件名称', duration: 3});
                     }
                 })
+            },
+            close() {
+                this.file = null;
             }
         },
         mounted() {
@@ -213,21 +216,21 @@
         }
     }
     .file-content {
+        padding: 10px;
+        background-color: #f3f3f3;
         span {
             color: #01c864;
             font-size: 16px;
         }
-        // .close-icon {
-        //     cursor: pointer;
-        //     float: right;
-        //     font-size: 20px;
-        //     display: none;
-        //     &:hover {
-        //         display: block;
-        //     }
-        // }
-        // &:hover {
-        //     background-color: #f3f3f3;
-        // }
+        .close-icon {
+            cursor: pointer;
+            float: right;
+            margin-top: 4px;
+            font-size: 20px;
+            opacity: 0.5;
+            &:hover {
+                opacity: 1;
+            }
+        }
     }
 </style>
