@@ -50,7 +50,7 @@
 
         </vxe-table>
       </div>
-      <div class="table" style="display: flex; align-items: center; justify-content: center; color: #f8f8f8" v-else>
+      <div class="table" style="display: flex; align-items: center; justify-content: center;color: #888" v-else>
         暂无数据
       </div>
     </div>

@@ -305,6 +305,11 @@
                 >HA</router-link
               >
               <span v-else class="tab_item disabled">HA</span>
+              <router-link
+                      :to="`/app/${$route.params.app}/config`"
+                      class="tab_item"
+              >配置</router-link
+              >
             </div>
           </div>
         </div>

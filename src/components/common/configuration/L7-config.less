@@ -50,23 +50,24 @@
     padding-top: 20px;
     z-index: 1;
     .main_item {
-        box-shadow: 0 2px 15px 0 rgba(5, 48, 118, 0.3);
-        background: #b6b5b5;
-        color: #fff;
-        // font-weight: bolder;
-        padding: 10px 15px 13px;
-        cursor: pointer;
-        position: relative;
-        margin-bottom: 10px;
-        &:hover{
-          .ctrl-list-item__edit{
-            visibility: visible;
-          }
+      box-shadow: 0 2px 15px 0 rgba(5, 48, 118, 0.3);
+      background: #b6b5b5;
+      color: #fff;
+      // font-weight: bolder;
+      padding: 10px 15px 13px;
+      cursor: pointer;
+      position: relative;
+      margin-bottom: 10px;
+      height: 90px;
+      &:hover{
+        .ctrl-list-item__edit{
+          visibility: visible;
         }
-        .main-value {
-            color: #2a79f8;
-            // margin-left: 11px;
-        }
+      }
+      .main-value {
+          color: #2a79f8;
+          // margin-left: 11px;
+      }
     }
     .servers{
       .server_item{
@@ -568,5 +569,32 @@
   }
   100%{
     opacity: .4;
+  }
+}
+
+.preview-wrap{
+  display: flex;
+  flex-direction: column;
+  height: calc(100%);
+  .preview-content{
+    flex: 1;
+    overflow: auto;
+    .edit-area{
+      &:focus{
+        outline: none;
+        border: 1px solid #333;
+      }
+    }
+  }
+  .preview-opera{
+    flex-basis: 40px;
+    border-top: 1px solid #e8eaec;
+    margin: 0 -16px;
+    padding: 16px 0 0 16px;
+    display: flex;
+    align-items: center;
+    .edit-button{
+      margin-right: 20px;
+    }
   }
 }

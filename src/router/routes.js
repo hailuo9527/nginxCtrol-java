@@ -50,14 +50,20 @@ let defaultRoutes = [
                         name: 'app-dispatch',
                         path: ':app/dispatch',
                         title: 'app-dispatch',
-                        component: () => import('@/views/app/child/dispatch.vue'),
+                        component: () => import(/* webpackChunkName: "dispatch" */'@/views/app/child/dispatch.vue'),
                     },
                     {
                         name: 'app-ha',
                         path: ':app/ha',
                         title: 'app-HA',
-                        component: () => import('@/views/app/child/ha.vue'),
+                        component: () => import(/* webpackChunkName: "ha" */'@/views/app/child/ha.vue'),
                     },
+                    {
+                        name: 'app-config',
+                        path: ':app/config',
+                        title: 'app-config',
+                        component: () => import(/* webpackChunkName: "L7-config" */'@/views/L7/child/config.vue'),
+                    }
                 ]
             },
             {

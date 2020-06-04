@@ -17,7 +17,7 @@
               <button class="tab_item" :disabled="canSaveAndCopyConfig"  :class="tab===2? 'active': ''" @click="tabChange(2)">历史版本</button>
            </div>
             <div class="tab-content" v-if="tab === 0">
-                <L7Config></L7Config>
+                <L7Config :configName="configName"></L7Config>
             </div>
            <div class="tab-content" v-if="tab === 1">
                <Device></Device>
@@ -78,7 +78,7 @@
             check() {
                 if (this.configName==="") {
                     this.errorTip = true
-                }              
+                }
             }
         },
 

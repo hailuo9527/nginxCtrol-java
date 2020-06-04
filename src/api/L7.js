@@ -165,6 +165,16 @@ export const selNginxConfByL7ID = ({l7ServerId}) => {
         }
     })
 }
+/* 通过app id 查询配置*/
+export const selNginxConfByAPPID = ({app_service_id}) => {
+    return axios.request({
+        url: '/selNginxConfByAPPID',
+        method: 'post',
+        params: {
+            app_service_id
+        }
+    })
+}
 /** 推送实例 */
 export const pushInstance = (ngcInstanceInfos) => {
     return axios.request({
@@ -234,5 +244,18 @@ export const uploadNgConf = (file, {config_name}) => {
         processData: false, // 告诉axios不要去处理发送的数据(重要参数)
         data: file,
         params: { config_name }
+    })
+}
+
+/* 手动编辑保存配置 */
+export const ManEditNginxConf = ({config_name, nginx_conf_id }, data) => {
+    return axios.request({
+        url: '/ManEditNginxConf',
+        method: 'post',
+        params: {
+            config_name,
+            nginx_conf_id
+        },
+        data: data
     })
 }
