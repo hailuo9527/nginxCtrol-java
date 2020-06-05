@@ -259,3 +259,13 @@ export const ManEditNginxConf = ({config_name, nginx_conf_id }, data) => {
         data: data
     })
 }
+
+
+/**  通过配置文件主键查询相关APP列表 */
+export const selRelevantAPPList = ({nginx_conf_id}) => {
+    return axios.request({
+        url: '/selRelevantAPPList',
+        method: 'post',
+        params: {nginx_conf_id}
+    })
+}

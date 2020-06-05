@@ -676,7 +676,7 @@ export default {
     next();
   },
   mounted() {
-    console.log(this.activeAside.appDefaultPublishConfList);
+    // console.log(this.activeAside.appDefaultPublishConfList);
   },
 };
 </script>

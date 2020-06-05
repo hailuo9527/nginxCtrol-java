@@ -14,6 +14,7 @@
            <div class="tab">
               <button class="tab_item"  :class="tab===0? 'active': ''" @click="tabChange(0)">配置</button>
               <button class="tab_item" :disabled="canSaveAndCopyConfig"  :class="tab===1? 'active': ''" @click="tabChange(1)">实例</button>
+              <button class="tab_item" :disabled="canSaveAndCopyConfig"  :class="tab===3? 'active': ''" @click="tabChange(3)">APP</button>
               <button class="tab_item" :disabled="canSaveAndCopyConfig"  :class="tab===2? 'active': ''" @click="tabChange(2)">历史版本</button>
            </div>
             <div class="tab-content" v-if="tab === 0">
@@ -25,6 +26,9 @@
            <div class="tab-content" v-if="tab === 2">
                <historical-version></historical-version>
            </div>
+           <div class="tab-content" v-if="tab === 3">
+               <config-app></config-app>
+           </div>
        </div>
 
    </div>
@@ -34,6 +38,7 @@
     import L7Config from '@/components/common/configuration/L7-config.vue'
     import Device from '@/components/common/configuration/Devices/Device.vue';
     import HistoricalVersion from '@/components/common/configuration/Devices/HistoricalVersion.vue';
+    import ConfigApp from '@/components/common/configuration/Devices/ConfigApp.vue';
     import { mapMutations, mapState } from 'vuex'
     export default {
         data () {
@@ -62,7 +67,8 @@
         components: {
             L7Config,
             Device,
-            HistoricalVersion
+            HistoricalVersion,
+            ConfigApp
         },
         methods: {
             ...mapMutations([

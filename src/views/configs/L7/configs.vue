@@ -59,6 +59,10 @@
                         key: 'instance_count'
                     },
                     {
+                        title: 'APP',
+                        key: 'app_count'
+                    },
+                    {
                         title: '历史版本',
                         key: 'version_no'
                     },
