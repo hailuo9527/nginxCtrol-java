@@ -11,12 +11,12 @@ export const selL7ServerInfoAll = (  ) => {
 }
 
 /* 添加实例配置信息 */
-export const addL7ServerInfo = ({l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort, remark}) => {
+export const addL7ServerInfo = ({l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort, impConfFlag, remark}) => {
     return axios.request({
         url: '/L7/addL7ServerInfo',
         method: 'post',
         params: {
-            l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort, remark
+            l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort, impConfFlag, remark
         }
     })
 }

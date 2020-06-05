@@ -107,6 +107,12 @@
           <FormItem label="ssh连接实例的端口" prop="l7ServerSSHPort">
             <Input v-model="add_l7_form.l7ServerSSHPort"></Input>
           </FormItem>
+          <FormItem label="是否导入实例中原配置文件" v-if="addMoment">
+            <i-switch v-model="add_l7_form.impConfFlag" style="margin-right: 218px">
+              <span slot="open">On</span>
+              <span slot="close">Off</span>
+            </i-switch>
+          </FormItem>
           <FormItem label="备注" v-if="addMoment">
             <Input v-model="add_l7_form.remark"></Input>
           </FormItem>
@@ -206,6 +212,7 @@ export default {
         l7ServerSSHName: "",
         l7ServerSSHPwd: "",
         l7ServerSSHPort: 22,
+        impConfFlag: false,
         remark: ""
       },
       ruleValidate: {
@@ -303,6 +310,7 @@ export default {
         (this.add_l7_form.l7ServerSSHName = ""),
         (this.add_l7_form.l7ServerSSHPwd = ""),
         (this.add_l7_form.l7ServerSSHPort = 22),
+        (this.add_l7_form.impConfFlag = false),
         (this.add_l7_form.remark = "");
       // console.log(this.add_l7_form)
       this.l7_model_add = true;
