@@ -431,7 +431,7 @@ export default {
                     }
                   });
                 } else {
-                  this.$Message.error(`${res.data.result}`);
+                  this.$Message.error({content: res.data.result, duration: 3});
                 }
               })
               .catch((err) => {
@@ -466,7 +466,7 @@ export default {
               }
             });
           } else {
-            this.$Message.error(res.data.result);
+            this.$Message.error({content: res.data.result, duration: 3});
           }
         },
       });

@@ -4,6 +4,7 @@
 
       <div class="table">
         <Table stripe  :loading="loading" max-height="500" border :columns="columns" :data="dispatch.data">
+          <template slot-scope="{ row }" slot="upstream_request">{{row.upstream_request || '无'}}</template>
           <template slot-scope="{ row, index }" slot="action">
             <Button
                     type="warning"
@@ -461,7 +462,7 @@
         },
         {
           title: "流量",
-          key: "upstream_request",
+          slot: "upstream_request",
           align: 'center'
         },
         {
