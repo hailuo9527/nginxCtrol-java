@@ -268,7 +268,7 @@
             if (this.asyncOk(res)) {
                 this.$Message.success(res.data.result)
             }else {
-                this.$Message.error(res.data.result)
+                this.$Notice.error({desc: res.data.result, duration: 0})
             }
         } else {
             this.isTableChoose = true
@@ -396,7 +396,7 @@
                 if (this.asyncOk(res)) {
                     this.$Message.success(res.data.result)
                 }else {
-                    this.$Message.error(res.data.result)
+                    this.$Notice.error({desc: res.data.result, duration: 0})
                 }
             } else {
                 this.isTableChoose = true

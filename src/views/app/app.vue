@@ -527,7 +527,7 @@ export default {
             /* 同步当前侧栏选中项状态 */
             this.resetAside();
           } else {
-            this.$Message.error(res.data.result);
+            this.$Notice.error({desc: res.data.result, duration: 0});
           }
         })
         .catch((err) => {
@@ -603,7 +603,7 @@ export default {
         /* 同步当前侧栏选中项状态 */
         this.resetAside();
       } else {
-        this.$Message.error(res.data.result);
+        this.$Notice.error({desc: res.data.result, duration: 0});
       }
     },
     /* 获取配置 */
