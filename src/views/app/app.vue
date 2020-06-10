@@ -411,69 +411,62 @@ export default {
     },
     /* 发布APP */
     pushApp() {
-      this.getAppAsideList().then((res) => {
-        if (res.data.code === "success") {
-          res.data.result.forEach(function(e, i) {
-            if (e.app_service_id === this.$route.params.app) {
-              if (e.appDefaultPublishConfList > 0 || e.nginx_conf_id !== null) {
-                this.appForm = this.copyJson(this.activeAside);
-                pushCheck(
-                  { nginx_conf_id: this.appForm.nginx_conf_id },
-                  this.appForm.l7_server_ids
-                ).then((res) => {
-                  if (
-                    this.asyncOk(res) &&
-                    this.isEmptyObject(res.data.result)
-                  ) {
-                    this.pushAppData();
-                  } else if (!this.isEmptyObject(res.data.result)) {
-                    this.$Modal.confirm({
-                      render: (h) => {
-                        return h("div", [
-                          h(
-                            "p",
-                            "您当前需要发布的配置文件中包含以下PLUS版本的配置信息："
-                          ),
-                          h("p", {
-                            domProps: {
-                              innerHTML: res.data.result.plus_conf_param,
-                            },
-                            style: {
-                              color: "#333",
-                              fontSize: "14px",
-                            },
-                          }),
-                          h("div", [
-                            h("span", "所选实例中"),
-                            res.data.result.l7ServerName.map((item) => {
-                              return h("span", {
-                                class: "l7ServerName",
-                                domProps: {
-                                  innerHTML: item,
-                                },
-                              });
-                            }),
-                            h("span", "不支持以上配置。"),
-                          ]),
-                          h("p", "继续发布将跳过以上实例发布。是否继续？"),
-                        ]);
+        console.log(this.activeAside)
+        if (
+          this.activeAside.appDefaultPublishConfList.length > 0 ||
+          this.activeAside.nginx_conf_id !== null
+        ) {
+          this.appForm = this.copyJson(this.activeAside);
+          pushCheck(
+            { nginx_conf_id: this.appForm.nginx_conf_id },
+            this.appForm.l7_server_ids
+          ).then((res) => {
+            if (this.asyncOk(res) && this.isEmptyObject(res.data.result)) {
+              this.pushAppData();
+            } else if (!this.isEmptyObject(res.data.result)) {
+              this.$Modal.confirm({
+                render: (h) => {
+                  return h("div", [
+                    h(
+                      "p",
+                      "您当前需要发布的配置文件中包含以下PLUS版本的配置信息："
+                    ),
+                    h("p", {
+                      domProps: {
+                        innerHTML: res.data.result.plus_conf_param,
                       },
-                      onOk: () => {
-                        this.pushAppData();
+                      style: {
+                        color: "#333",
+                        fontSize: "14px",
                       },
-                    });
-                  }
-                });
-              } else {
-                this.$Message.error({
-                  content: "请添加一组应用服务地址或者选择一份配置",
-                  duration: 5,
-                });
-              }
+                    }),
+                    h("div", [
+                      h("span", "所选实例中"),
+                      res.data.result.l7ServerName.map((item) => {
+                        return h("span", {
+                          class: "l7ServerName",
+                          domProps: {
+                            innerHTML: item,
+                          },
+                        });
+                      }),
+                      h("span", "不支持以上配置。"),
+                    ]),
+                    h("p", "继续发布将跳过以上实例发布。是否继续？"),
+                  ]);
+                },
+                onOk: () => {
+                  this.pushAppData();
+                },
+              });
             }
-          }, this);
+          });
+        } else {
+          this.$Message.error({
+            content: "请添加一组应用服务地址或者选择一份配置",
+            duration: 5,
+          });
         }
-      });
     },
     /* 提交发布数据 */
     pushAppData() {
