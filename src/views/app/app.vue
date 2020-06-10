@@ -170,7 +170,7 @@
               <span>状态</span>: {{ activeAside.is_sync ? "已同步" : "未同步" }}
             </span>
             <span class="publish">
-              <Button
+              <!-- <Button
                 type="primary"
                 @click="publicAppAuto"
                 :disabled="
@@ -179,9 +179,9 @@
                 "
               >
                 快捷发布
-              </Button>
-              <Button style="margin-left: 20px" @click="publicApp"
-                >手动发布</Button
+              </Button> -->
+              <Button style="margin-left: 20px" @click="pushApp" type="primary"
+                >发布</Button
               >
               <Modal v-model="appModal" width="480">
                 <p slot="header" style="color:#333;text-align:center">
@@ -306,9 +306,9 @@
               >
               <span v-else class="tab_item disabled">HA</span>
               <router-link
-                      :to="`/app/${$route.params.app}/config`"
-                      class="tab_item"
-              >配置</router-link
+                :to="`/app/${$route.params.app}/config`"
+                class="tab_item"
+                >配置</router-link
               >
             </div>
           </div>
@@ -410,65 +410,68 @@ export default {
       });
     },
     /* 发布APP */
-    pushApp(name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          if (this.appForm.vips.length <= this.appForm.l7_server_ids.length) {
-            //this.modal_loading = true;
-            pushCheck(
-              { nginx_conf_id: this.appForm.nginx_conf_id },
-              this.appForm.l7_server_ids
-            ).then((res) => {
-              if (this.asyncOk(res) && this.isEmptyObject(res.data.result)) {
-                this.appModal = false;
-                this.pushAppData();
-              } else if (!this.isEmptyObject(res.data.result)) {
-                this.$Modal.confirm({
-                  render: (h) => {
-                    return h("div", [
-                      h(
-                        "p",
-                        "您当前需要发布的配置文件中包含以下PLUS版本的配置信息："
-                      ),
-                      h("p", {
-                        domProps: {
-                          innerHTML: res.data.result.plus_conf_param,
-                        },
-                        style: {
-                          color: "#333",
-                          fontSize: "14px",
-                        },
-                      }),
-                      h("div", [
-                        h("span", "所选实例中"),
-                        res.data.result.l7ServerName.map((item) => {
-                          return h("span", {
-                            class: "l7ServerName",
-                            domProps: {
-                              innerHTML: item,
-                            },
-                          });
-                        }),
-                        h("span", "不支持以上配置。"),
-                      ]),
-                      h("p", "继续发布将跳过以上实例发布。是否继续？"),
-                    ]);
-                  },
-                  onOk: () => {
-                    this.appModal = false;
+    pushApp() {
+      this.getAppAsideList().then((res) => {
+        if (res.data.code === "success") {
+          res.data.result.forEach(function(e, i) {
+            if (e.app_service_id === this.$route.params.app) {
+              if (e.appDefaultPublishConfList > 0 || e.nginx_conf_id !== null) {
+                this.appForm = this.copyJson(this.activeAside);
+                pushCheck(
+                  { nginx_conf_id: this.appForm.nginx_conf_id },
+                  this.appForm.l7_server_ids
+                ).then((res) => {
+                  if (
+                    this.asyncOk(res) &&
+                    this.isEmptyObject(res.data.result)
+                  ) {
                     this.pushAppData();
-                  },
+                  } else if (!this.isEmptyObject(res.data.result)) {
+                    this.$Modal.confirm({
+                      render: (h) => {
+                        return h("div", [
+                          h(
+                            "p",
+                            "您当前需要发布的配置文件中包含以下PLUS版本的配置信息："
+                          ),
+                          h("p", {
+                            domProps: {
+                              innerHTML: res.data.result.plus_conf_param,
+                            },
+                            style: {
+                              color: "#333",
+                              fontSize: "14px",
+                            },
+                          }),
+                          h("div", [
+                            h("span", "所选实例中"),
+                            res.data.result.l7ServerName.map((item) => {
+                              return h("span", {
+                                class: "l7ServerName",
+                                domProps: {
+                                  innerHTML: item,
+                                },
+                              });
+                            }),
+                            h("span", "不支持以上配置。"),
+                          ]),
+                          h("p", "继续发布将跳过以上实例发布。是否继续？"),
+                        ]);
+                      },
+                      onOk: () => {
+                        this.pushAppData();
+                      },
+                    });
+                  }
+                });
+              } else {
+                this.$Message.error({
+                  content: "请添加一组应用服务地址或者选择一份配置",
+                  duration: 5,
                 });
               }
-            });
-          } else {
-            this.$Message.error({
-              content: "虚拟ip数量不能大于实例数量",
-              duration: 3,
-            });
-          }
-        } else {
-          this.$Message.error("请检查输入是否正确!");
+            }
+          }, this);
         }
       });
     },
@@ -527,7 +530,7 @@ export default {
             /* 同步当前侧栏选中项状态 */
             this.resetAside();
           } else {
-            this.$Notice.error({desc: res.data.result, duration: 0});
+            this.$Notice.error({ desc: res.data.result, duration: 0 });
           }
         })
         .catch((err) => {
@@ -603,7 +606,7 @@ export default {
         /* 同步当前侧栏选中项状态 */
         this.resetAside();
       } else {
-        this.$Notice.error({desc: res.data.result, duration: 0});
+        this.$Notice.error({ desc: res.data.result, duration: 0 });
       }
     },
     /* 获取配置 */
@@ -619,12 +622,13 @@ export default {
         app_service_id: this.$route.params.app,
       });
       if (this.asyncOk(res)) {
+        // console.log(res.data.result);
         this.L7List = res.data.result || [];
       }
     },
     /* 选择L7实例 */
     selectL7(item) {
-      console.log(item);
+      //   console.log(item);
     },
     /* 侧栏获取app详细信息 */
     async selAppDetails(id) {
@@ -675,9 +679,7 @@ export default {
     this.appSetActiveAside(this.asideList[0]);
     next();
   },
-  mounted() {
-    // console.log(this.activeAside.appDefaultPublishConfList);
-  },
+  mounted() {},
 };
 </script>
 <style lang="less">

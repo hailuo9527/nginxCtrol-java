@@ -198,6 +198,18 @@
           <FormItem>
             <Button type="dashed" @click="handleAdd" icon="md-add">添加</Button>
           </FormItem>
+          <FormItem label="选择配置" prop="nginx_conf_id" >
+            <popTip content="选择一个配置并发布到当前APP"></popTip>
+            <Select v-model="appForm.nginx_conf_id" filterable>
+              <Option v-for="item in configList" :value="item.nginx_conf_id">{{
+                item.config_name
+              }}</Option>
+            </Select>
+            <!-- <div v-if="!configList.length" class="">
+              暂无配置，
+              <router-link to="/newNginxConfig">点击创建</router-link>
+            </div> -->
+          </FormItem>
           <FormItem label="简介" prop="description">
             <Input v-model="appForm.description"></Input>
           </FormItem>
@@ -242,7 +254,7 @@ import {
   updAppInfo,
   selAppDetails,
 } from "../../api/app";
-import { selUsableL7Server } from "../../api/L7";
+import { selUsableL7Server, getNginxConfALL } from "../../api/L7";
 import { selAppInfoList } from "../../api/app";
 import PopTip from "@/components/common/pop-tip";
 
@@ -331,6 +343,7 @@ export default {
       searchString: "",
       activeItem: {},
       timer: null,
+      configList: null
     };
   },
   watch: {
@@ -390,6 +403,7 @@ export default {
         });
 
       this.appModal = true;
+      this.getAllConfigInfo()
     },
     //展示Model框，展示当前实例的数据
     editModel(item, index) {
@@ -404,6 +418,7 @@ export default {
           this.$set(this.appForm, "l7_server_ids", arr);
         }
       });
+      this.getAllConfigInfo()
     },
     // 新建APP
     //添加实例配置信息
@@ -431,14 +446,20 @@ export default {
                     }
                   });
                 } else {
-                  this.$Message.error({content: res.data.result, duration: 3});
+                  this.$Message.error({
+                    content: res.data.result,
+                    duration: 3,
+                  });
                 }
               })
               .catch((err) => {
                 console.log(err);
               });
           } else {
-            this.$Message.error({content: "虚拟ip数量不能大于实例数量", duration: 3});
+            this.$Message.error({
+              content: "虚拟ip数量不能大于实例数量",
+              duration: 3,
+            });
           }
         } else {
           this.$Message.error("请检查输入是否正确!");
@@ -466,7 +487,7 @@ export default {
               }
             });
           } else {
-            this.$Message.error({content: res.data.result, duration: 3});
+            this.$Message.error({ content: res.data.result, duration: 3 });
           }
         },
       });
@@ -498,7 +519,10 @@ export default {
                 console.log(err);
               });
           } else {
-            this.$Message.error({content: "虚拟ip数量不能大于实例数量", duration: 3});
+            this.$Message.error({
+              content: "虚拟ip数量不能大于实例数量",
+              duration: 3,
+            });
           }
         } else {
           this.$Message.error("请检查输入是否正确!");
@@ -514,6 +538,13 @@ export default {
     },
     handleRemove(index) {
       this.appForm.appDefaultPublishConfList.splice(index, 1);
+    },
+    /* 获取配置 */
+    async getAllConfigInfo() {
+      let res = await getNginxConfALL();
+      if (this.asyncOk(res)) {
+        this.configList = res.data.result || [];
+      }
     },
     /* 获取L7实例 */
     async selUsableL7Server(item) {
