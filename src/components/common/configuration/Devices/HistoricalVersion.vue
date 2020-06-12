@@ -10,13 +10,15 @@
       <template slot-scope="{ row, index }" slot="button">
         <div class="column" v-if="index !== 0"></div>
         <div class="indexColumn" v-else></div>
-        <div class="circle" v-if="index === 0">{{row.version_no}}</div>
+        <div class="circle" v-if="index === 0">{{ row.version_no }}</div>
         <div
           class="exceptIndex"
           v-if="index !== 0"
-          @click="changeStyle(index)"
-          :class="changestyle && num === index?'buttonStyle': '' "
-        >{{row.version_no}}</div>
+          @click="changeStyle(index, row.version_no)"
+          :class="changestyle && num === index ? 'buttonStyle' : ''"
+        >
+          {{ row.version_no }}
+        </div>
       </template>
       <template slot-scope="{ row }" slot="name">
         <strong>{{ row.user_name }}</strong>
@@ -30,12 +32,18 @@
       <template slot-scope="{ row, index }" slot="version_nane">
         <div
           class="version_name_father"
-          v-if="row.version_name === null || row.version_name === '' "
+          v-if="row.version_name === null || row.version_name === ''"
         >
           <div class="inclusion">
-            <h4 class="add_name" @click="change(row, index)" v-if="number !== index">修改名称</h4>
+            <h4
+              class="add_name"
+              @click="change(row, index)"
+              v-if="number !== index"
+            >
+              修改名称
+            </h4>
             <Input
-              v-if="StyleChange &&number === index"
+              v-if="StyleChange && number === index"
               ref="res"
               v-model="row.version_name"
               @on-blur="missBlurOne(row.version_name, row.id, index)"
@@ -48,7 +56,9 @@
               class="show_value"
               @click="valueChange(index)"
               v-if="number !== index"
-            >{{row.version_name}}</h4>
+            >
+              {{ row.version_name }}
+            </h4>
             <Input
               class="input_value"
               v-model="row.version_name"
@@ -60,13 +70,59 @@
         </div>
       </template>
     </Table>
-    <div class="compareButton" :class="changestyle?'compareChange' : '' ">对比和还原...</div>
+    <div
+      class="compareButton"
+      :class="changestyle ? 'compareChange' : ''"
+      @click="CompareData()"
+    >
+      对比和还原...
+    </div>
+    <Modal v-model="CompareModal" fullscreen>
+      <template slot="close">
+          <span></span>
+      </template>
+      <div>
+        <code-diff
+          :old-string="oldStr"
+          :new-string="newStr"
+          :context="1000"
+          outputFormat="side-by-side"
+          v-if="!Compareloading"
+        />
+        <div class="loading-spin">
+          <Loading color="#01c864" v-if="Compareloading" />
+        </div>
+      </div>
+      <div slot="footer">
+        <Button @click="CompareModal = false" style="margin-right: 10px"
+          >取消</Button
+        >
+        <Poptip
+          confirm
+          title="是否确定还原?"
+          ok-text="确定"
+          @on-ok="RevertData"
+          cancel-text="取消"
+          style="color: #000"
+        >
+          <Button type="primary" :disabled="isDiff">还原</Button>
+        </Poptip>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
-import { selNgcVersionByConfId, updNgcVersionNameByConfId } from "@/api/L7";
+import {
+  selNgcVersionByConfId,
+  updNgcVersionNameByConfId,
+  nginxConfCompare,
+  nginxConfRestore,
+} from "@/api/L7";
+import CodeDiff from "vue-code-diff";
+import Loading from "@/components/common/loading.vue";
 export default {
+  components: { CodeDiff, Loading },
   data() {
     return {
       StyleChange: false,
@@ -78,21 +134,27 @@ export default {
         {
           width: 80,
           align: "center",
-          slot: "button"
+          slot: "button",
         },
         { title: "创建人", slot: "name" },
         { title: "创建时间", slot: "insync" },
-        { title: "PLUS版本配置", slot: 'nginx_plus_status'},
-        { title: "版本名称", slot: "version_nane" }
+        { title: "PLUS版本配置", slot: "nginx_plus_status" },
+        { title: "版本名称", slot: "version_nane" },
       ],
-      TableValue: []
+      TableValue: [],
+      versionNumber: "",
+      CompareModal: false,
+      oldStr: "",
+      newStr: "",
+      Compareloading: false,
+      isDiff: false,
     };
   },
   methods: {
     // 查询nginx历史版本信息
     async getNgcVersionByConfId() {
       let res = await selNgcVersionByConfId({
-        nginx_conf_id: this.$route.query.nginx_conf_id
+        nginx_conf_id: this.$route.query.nginx_conf_id,
       });
       if (this.asyncOk(res)) {
         this.TableValue = res.data.result;
@@ -106,9 +168,10 @@ export default {
       let res = await updNgcVersionNameByConfId({ id, version_name });
     },
     // 点击后改变圆形div的样式
-    changeStyle(index) {
+    changeStyle(index, row) {
       this.changestyle = true;
       this.num = index;
+      this.versionNumber = row;
     },
     //点击后,隐藏add name和输入框聚焦
     change(row, index) {
@@ -143,11 +206,55 @@ export default {
       this.$nextTick(() => {
         this.$refs.re.focus();
       });
-    }
+    },
+    //配置文件不同版本比较
+    async CompareData() {
+      this.CompareModal = true;
+      this.Compareloading = true;
+      this.isDiff = true;
+      let res = await nginxConfCompare({
+        nginx_conf_id: this.$route.query.nginx_conf_id,
+        version: this.versionNumber,
+      });
+      if (res.data.code === "success") {
+        console.log(res);
+        if (res.data.result.conf_old === res.data.result.conf_new) {
+          let strNew = "VERSION:" + res.data.result.version_new + "\n";
+          let strOld = "VERSION:" + res.data.result.version_old + "\n";
+          this.oldStr = strOld.concat(res.data.result.conf_old);
+          this.newStr = strNew.concat(res.data.result.conf_new);
+          this.Compareloading = false;
+        } else {
+          let str_New = "VERSION:" + res.data.result.version_new + "\n";
+          let str_Old = "VERSION:" + res.data.result.version_old + "\n";
+          this.oldStr = str_Old.concat(res.data.result.conf_old);
+          this.newStr = str_New.concat(res.data.result.conf_new);
+          this.Compareloading = false;
+          this.isDiff = false;
+        }
+      } else {
+        this.Compareloading = false;
+        this.$Message.error(`${res.data.result}`);
+      }
+    },
+    //还原历史版本配置
+    async RevertData() {
+      let res = await nginxConfRestore({
+        nginx_conf_id: this.$route.query.nginx_conf_id,
+        version: this.versionNumber,
+      });
+      if (res.data.code === "success") {
+        this.CompareModal = false;
+        this.$Message.success("还原成功");
+        this.getNgcVersionByConfId();
+      } else {
+        this.$Message.error(`${res.data.result}`);
+      }
+    },
   },
   mounted() {
     this.getNgcVersionByConfId();
-  }
+  },
 };
 </script>
 
@@ -320,5 +427,11 @@ export default {
 /deep/.ivu-spin-fix {
   background-color: #f8f8f9;
   border: none;
+}
+.loading-spin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

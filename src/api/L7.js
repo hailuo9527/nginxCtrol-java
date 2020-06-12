@@ -269,3 +269,27 @@ export const selRelevantAPPList = ({nginx_conf_id}) => {
         params: {nginx_conf_id}
     })
 }
+
+
+/**  配置文件不同版本比较 */
+export const nginxConfCompare = ({nginx_conf_id, version}) => {
+    return axios.request({
+        url: '/nginxConfCompare',
+        method: 'post',
+        params: {
+            nginx_conf_id, version
+        }
+    })
+}
+
+
+/**  还原历史版本配置 */
+export const nginxConfRestore = ({nginx_conf_id, version}) => {
+    return axios.request({
+        url: '/nginxConfRestore',
+        method: 'post',
+        params: {
+            nginx_conf_id, version
+        }
+    })
+}

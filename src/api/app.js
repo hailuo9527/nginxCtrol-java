@@ -173,3 +173,23 @@ export const getListenPart = ({app_service_id}) => {
         }
     })
 }
+
+/**  APP未同步时差异对比 */
+
+export const compareAppInfo = ({app_service_id}) => {
+    return axios.request({
+        url: '/compareAppInfo',
+        method: 'post',
+        params: { app_service_id }
+    })
+}
+
+
+/** APP默认配置回滚 */
+export const appDefInfoRollBACK = ({app_service_id}) => {
+    return axios.request({
+        url: '/appDefInfoRollBACK',
+        method: 'post',
+        params: {app_service_id}
+    })
+}

@@ -29,6 +29,7 @@ export default {
     return {
       columns: [
         { title: "APP名称", key: "app_service_name" },
+        { title: "实例名称", key: "L7_server_name"},
         { title: "同步", key: "is_sync" },
         { title: "修改时间", key: "last_time" },
         { title: "修改人", key: "last_name" },
