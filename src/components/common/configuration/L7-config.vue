@@ -12,7 +12,7 @@
  */
 <template>
   <div class="l7_config_layout">
-    <div v-if="config.nginx_conf_id" class="l7_config_layout">
+    <div v-if="config.nginx_conf_id||$route.name ==='newNginxConfig'" class="l7_config_layout">
       <div class="l7_config_column column_header">
         <div class="header_item">
           main
@@ -619,7 +619,7 @@ export default {
           this.maindata.push(this.config.worker_processes);
         }
       } else if (this.asyncOk(res)) {
-        //console.log(defaultConfig)
+        // console.log(defaultConfig)
         this.virtualServerGroup = defaultConfig.ngcVirtualServers;
         this.ngcLocationsGroup =
           defaultConfig.ngcVirtualServers[0].ngcLocations || [];
@@ -898,7 +898,7 @@ export default {
   mounted() {
     /* 初始化配置 */
     this.initConfig();
-    // console.log(this.$route.params)
+    // console.log(this.$route.name)
     /* 绘制配置关系图 */
     window.addEventListener("resize", this.drawLine);
   },

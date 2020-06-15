@@ -107,8 +107,8 @@
           <FormItem label="ssh连接实例的端口" prop="l7ServerSSHPort">
             <Input v-model="add_l7_form.l7ServerSSHPort"></Input>
           </FormItem>
-          <FormItem label="是否导入实例中原配置文件" v-if="addMoment">
-            <i-switch v-model="add_l7_form.impConfFlag" style="margin-right: 218px">
+          <FormItem label="导入原配置" v-if="addMoment">
+            <i-switch v-model="add_l7_form.impConfFlag" style="margin-right: 300px">
               <span slot="open">On</span>
               <span slot="close">Off</span>
             </i-switch>

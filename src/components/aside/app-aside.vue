@@ -130,6 +130,18 @@
             <popTip
               content="实例为部署NGINX代理的服务器，开启热备份时至少选择两台实例"
             ></popTip>
+            <div
+              style="float: right;"
+              class="custom-ha"
+              v-if="appForm.configure_ha"
+            >
+              <FormItem label="自定义HA优先级">
+                <i-switch v-model="appForm.custom_priority">
+                  <span slot="open">On</span>
+                  <span slot="close">Off</span>
+                </i-switch>
+              </FormItem>
+            </div>
             <Select v-model="appForm.l7_server_ids" filterable multiple>
               <Option
                 v-for="item in L7List"
@@ -144,9 +156,9 @@
             </div>
           </FormItem>
           <div class="label">
-            应用服务地址
+            默认服务群组
             <PopTip
-              content="添加应用服务地址后可以使用一键发布功能"
+              content="添加默认服务群组后可以使用发布功能"
               style="margin-left: 5px;"
               placement="bottom"
             >
@@ -198,7 +210,7 @@
           <FormItem>
             <Button type="dashed" @click="handleAdd" icon="md-add">添加</Button>
           </FormItem>
-          <FormItem label="选择配置" prop="nginx_conf_id" >
+          <FormItem label="选择配置" prop="nginx_conf_id">
             <popTip content="选择一个配置并发布到当前APP"></popTip>
             <Select v-model="appForm.nginx_conf_id" filterable>
               <Option v-for="item in configList" :value="item.nginx_conf_id">{{
@@ -343,7 +355,7 @@ export default {
       searchString: "",
       activeItem: {},
       timer: null,
-      configList: null
+      configList: null,
     };
   },
   watch: {
@@ -403,7 +415,7 @@ export default {
         });
 
       this.appModal = true;
-      this.getAllConfigInfo()
+      this.getAllConfigInfo();
     },
     //展示Model框，展示当前实例的数据
     editModel(item, index) {
@@ -418,7 +430,7 @@ export default {
           this.$set(this.appForm, "l7_server_ids", arr);
         }
       });
-      this.getAllConfigInfo()
+      this.getAllConfigInfo();
     },
     // 新建APP
     //添加实例配置信息
@@ -571,6 +583,8 @@ export default {
         if (this.appForm.vips.length === 0) {
           this.appForm.vips.push("");
         }
+      } else {
+        this.appForm.custom_priority = false;
       }
     },
   },
@@ -610,5 +624,11 @@ export default {
   background: #f3f3f3;
   color: #333;
   //   margin-top: 10px;
+}
+.custom-ha {
+  float: right;
+  /deep/ .ivu-form-item-content {
+    float: right;
+  }
 }
 </style>

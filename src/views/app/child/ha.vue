@@ -20,15 +20,16 @@
                 align="center"
 
                 :data="tableData">
-          <vxe-table-column type="seq" fixed="left" width="160">
+          <vxe-table-column type="seq" fixed="left" >
             <template v-slot:header>
               <div class="first-col">
                 <div class="first-col-top">VIP</div>
-                <div class="first-col-bottom">成员</div>
+                <div class="first-col-bottom">成员名(成员)时间</div>
               </div>
             </template>
             <template v-slot="{ row }">
-              {{row.member}}
+              <div>{{row.member_name+'('+row.member+')'}}</div>
+              <div>{{row.utime||'同步中'}}</div>
             </template>
           </vxe-table-column>
           <vxe-table-column field="app_ha_info[index].vip" v-for="(item, index) in tableData[0].app_ha_info" :key="index">
@@ -74,6 +75,16 @@
           {
             title: '成员',
             key: 'member',
+            align: 'center'
+          },
+          {
+            title: '成员名',
+            key: 'member_name',
+            align: 'center'
+          },
+          {
+            title: '修改时间',
+            key: 'utime',
             align: 'center'
           },
           {
@@ -253,9 +264,9 @@
     position: absolute;
     left: -15px;
     top: 10px;
-    width: 170px;
+    width: 354px;
     height: 1px;
-    transform: rotate(20deg);
+    transform: rotate(8deg);
     background-color: #e8eaec;
   }
   .first-col .first-col-top {
