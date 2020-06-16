@@ -348,7 +348,7 @@
             ref="editConfig"
           ></div>
         </div>
-        <div class="preview-opera" v-if="this.$route.params.configName">
+        <div class="preview-opera" v-if="this.$route.params.configName||this.$route.name==='newNginxConfig'">
           <Button @click="configEditable = true" type="info" v-if="!configEditable">编辑</Button>
 
           <Button v-if="configEditable" @click="configEditable = false" class="edit-button">取消</Button>
@@ -607,7 +607,7 @@ export default {
         res = await selNginxConfByAPPID(json);
       }
       this.loading = false;
-      console.log(res);
+    //   console.log(res);
       if (this.asyncOk(res) && res.data.result) {
         this.config = res.data.result || {};
         if (this.config.ngcVirtualServers[0]) {
@@ -881,7 +881,7 @@ export default {
       };
       let res = await ManEditNginxConf(
         {
-          nginx_conf_id: this.config.nginx_conf_id,
+          nginx_conf_id: this.config.nginx_conf_id||'new',
           config_name: this.configName
         },
         json
@@ -889,7 +889,19 @@ export default {
       if (this.asyncOk(res)) {
         this.$Message.success("保存成功！");
         this.previewOpen = false;
-        this.initConfig();
+        if (this.$route.params.configName) {
+            this.initConfig();
+        } else {
+            this.$router.push({
+            name: "nginxConfig",
+            params: {
+              configName: this.configName
+            },
+            query: {
+              nginx_conf_id: res.data.result
+            }
+          });
+        }
       } else {
         this.$Message.error(res.data.result);
       }

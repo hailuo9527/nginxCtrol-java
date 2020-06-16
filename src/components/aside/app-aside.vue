@@ -303,7 +303,7 @@ export default {
       }
     };
     const selection = (rule, value, callback) => {
-      if (!value) {
+      if (value.length === 0) {
         return callback(new Error("至少选择一个实例"));
       } else {
         if (this.appForm.configure_ha && value.length < 2) {
@@ -313,7 +313,7 @@ export default {
       }
     };
     this.validaterule = (rule, value, callback) => {
-      let reg = /^\d*[1-9]$/;
+      let reg = /^\+?[1-9][0-9]*$/;
       if (value === "") {
         callback(new Error("权重不能为空"));
       } else if (!reg.test(value)) {

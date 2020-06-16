@@ -4,11 +4,24 @@
       <h3>日志</h3>
     </div>
     <div class="table-content">
+      <div class="select">
+        <Select
+          v-model="selectModel"
+          style="width:200px"
+          placeholder="请选择类型"
+          @on-select="selectValue"
+        >
+          <Option value="全部">全部</Option>
+          <Option v-for="item in filterValue" :value="item" :key="item">{{
+            item
+          }}</Option>
+        </Select>
+      </div>
       <Scroll :on-reach-bottom="handleReachBottom" :height="height">
         <Table
           :columns="TableColumns"
           :data="TableData"
-          :width="1023"
+          :width="1016"
           :loading="loading"
           :height="height"
         ></Table>
@@ -27,11 +40,6 @@ export default {
         {
           title: "操作类型",
           key: "moudle",
-          filters: [],
-          filterMultiple: false,
-          filterMethod(value, row) {
-            return row.moudle.indexOf(value) > -1;
-          },
         },
         {
           title: "用户名称",
@@ -52,10 +60,13 @@ export default {
       size: 20,
       moudle: "",
       status: false,
-      height: window.screen.availHeight-220,
+      height: window.screen.availHeight - 260,
+      selectModel: "",
+      filterValue: [],
     };
   },
   methods: {
+    //查询操作记录
     async GetAllLog() {
       this.loading = true;
       let res = await selSystemLogInfo({
@@ -74,17 +85,14 @@ export default {
         this.$Message.error(`${res.data.result}`);
       }
     },
+    //查询操作类型
     async GetMoudleType() {
       let res = await selLogMoudel();
       if (res.data.code === "success") {
-        res.data.result.forEach(function(e, index) {
-          this.$set(this.TableColumns[0].filters, index, {
-            label: e,
-            value: e,
-          });
-        }, this);
+        this.filterValue = res.data.result;
       }
     },
+    //下拉刷新
     handleReachBottom() {
       return new Promise(async (resolve) => {
         if (!this.status) {
@@ -114,6 +122,17 @@ export default {
         }
       });
     },
+    //选择操作类型
+    selectValue(data) {
+      if (data.value === "全部") {
+        this.moudle = "";
+      } else {
+        this.moudle = data.value;
+      }
+      this.page = 1;
+      this.size = 20;
+      this.GetAllLog();
+    },
   },
   mounted() {
     this.GetAllLog();
@@ -127,7 +146,7 @@ export default {
   width: 100%;
   height: 100%;
   position: relative;
-    // overflow-y: scroll;
+  // overflow-y: scroll;
   //   .table-content {
   //     //   position: relative;
   //       height: 100%;
@@ -158,4 +177,10 @@ export default {
 //     overflow: hidden;
 //     overflow-y: hidden;
 // }
+.select {
+  width: 1023px;
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 </style>

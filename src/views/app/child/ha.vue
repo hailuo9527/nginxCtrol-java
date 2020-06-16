@@ -20,7 +20,7 @@
                 align="center"
 
                 :data="tableData">
-          <vxe-table-column type="seq" fixed="left" >
+          <vxe-table-column type="seq" fixed="left" width="350">
             <template v-slot:header>
               <div class="first-col">
                 <div class="first-col-top">VIP</div>
@@ -264,7 +264,7 @@
     position: absolute;
     left: -15px;
     top: 10px;
-    width: 354px;
+    width: 350px;
     height: 1px;
     transform: rotate(8deg);
     background-color: #e8eaec;
