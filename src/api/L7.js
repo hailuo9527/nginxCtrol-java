@@ -33,12 +33,12 @@ export const delL7ServerInfo = ({l7ServerId}) => {
 }
 
 /* 修改实例信息接口 */
-export const updL7ServerInfo = ({l7ServerId, l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort }) => {
+export const updL7ServerInfo = ({l7ServerId, l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort, remark }) => {
     return axios.request({
         url: '/L7/updL7ServerInfo',
         method: 'post',
         params: {
-            l7ServerId, l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort
+            l7ServerId, l7ServerName, l7ServerSSHIp, l7ServerSSHName, l7ServerSSHPwd, l7ServerSSHPort, remark
         }
     })
 }

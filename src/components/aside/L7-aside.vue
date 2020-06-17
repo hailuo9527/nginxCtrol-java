@@ -1,47 +1,71 @@
 <template>
   <div class="aside-wrap">
     <div class="search">
-      <Input suffix="ios-search" placeholder="实例名" v-model.trim="searchString" clearable />
+      <Input
+        suffix="ios-search"
+        placeholder="实例名"
+        v-model.trim="searchString"
+        clearable
+      />
     </div>
 
     <div style="display: flex; justify-content: center">
       <div class="add-list" @click="addModel">
         <!--      <span>添加</span>-->
-        <Tooltip content="添加L7设备" placement="top" max-width="200" theme="light">
+        <Tooltip
+          content="添加L7设备"
+          placement="top"
+          max-width="200"
+          theme="light"
+        >
           <Icon type="md-add" color="#fff" :size="25" />
         </Tooltip>
         <!--<Icon type="md-add" color="#fff" :size="25"/>-->
       </div>
     </div>
-    <div class="aside-list" >
-      <div class="aside-list-wrap" v-if="!isEmptyObject(asideList) && !searchString">
+    <div class="aside-list">
+      <div
+        class="aside-list-wrap"
+        v-if="!isEmptyObject(asideList) && !searchString"
+      >
         <Menu :theme="theme2" :open-names="Object.keys(asideList)">
-          <Submenu :name="index" v-for="(item, index) in asideList" :key="index">
+          <Submenu
+            :name="index"
+            v-for="(item, index) in asideList"
+            :key="index"
+          >
             <template slot="title">
               <Icon type="ios-paper" />
-              {{index}}
+              {{ index }}
             </template>
             <MenuItem
-                    name="1-1"
-                    class="aside-item"
-                    :class="{'active': value.l7ServerId === $route.params.L7 , 'disable': !value.run_status}"
-                    v-for="(value, key) in item"
-                    :key="value.l7ServerId"
+              name="1-1"
+              class="aside-item"
+              :class="{
+                active: value.l7ServerId === $route.params.L7,
+                disable: !value.run_status,
+              }"
+              v-for="(value, key) in item"
+              :key="value.l7ServerId"
             >
               <div @click="changeAside(value)">
                 <div class="title">
-                  <span :class="value.usable_status ? 'online' : 'error'"></span>
-                  {{value.l7ServerName}}
+                  <span
+                    :class="value.usable_status ? 'online' : 'error'"
+                  ></span>
+                  {{ value.l7ServerName }}
                 </div>
-                <div class="info">{{value.nginxVersion || 'NGINX安装失败或未安装'}}</div>
+                <div class="info">
+                  {{ value.nginxVersion || "NGINX安装失败或未安装" }}
+                </div>
 
                 <Icon
-                        type="md-more"
-                        size="20"
-                        color="#000"
-                        title="编辑"
-                        class="menu"
-                        @click.stop="editModel(value)"
+                  type="md-more"
+                  size="20"
+                  color="#000"
+                  title="编辑"
+                  class="menu"
+                  @click.stop="editModel(value)"
                 />
               </div>
             </MenuItem>
@@ -51,44 +75,51 @@
 
       <div class="aside-list-wrap" style="padding: 0 10px;" v-if="searchString">
         <div
-                class="aside-item"
-                :class="{'active': item.l7ServerId === $route.params.L7 , 'disable': !item.run_status}"
-                @click="changeAside(item)"
-                v-for="(item, index) in filterAside"
-                :key="item.l7ServerId"
+          class="aside-item"
+          :class="{
+            active: item.l7ServerId === $route.params.L7,
+            disable: !item.run_status,
+          }"
+          @click="changeAside(item)"
+          v-for="(item, index) in filterAside"
+          :key="item.l7ServerId"
         >
           <div class="title">
             <span :class="item.usable_status ? 'online' : 'error'"></span>
-            {{item.l7ServerName}}
+            {{ item.l7ServerName }}
           </div>
-          <div class="info">{{item.nginxVersion || 'NGINX安装失败或未安装'}}</div>
+          <div class="info">
+            {{ item.nginxVersion || "NGINX安装失败或未安装" }}
+          </div>
 
           <Icon
-                  type="md-more"
-                  size="20"
-                  color="#000"
-                  title="编辑"
-                  class="menu"
-                  @click.stop="editModel(item)"
+            type="md-more"
+            size="20"
+            color="#000"
+            title="编辑"
+            class="menu"
+            @click.stop="editModel(item)"
           />
         </div>
         <div v-if="!filterAside.length" style="text-align: center">
           暂无数据
         </div>
       </div>
-      <div class="aside-list-wrap" style="text-align: center" v-if="isEmptyObject(asideList) && !searchString" >暂无数据</div>
       <div
-              class="load-wrap"
-              v-if="listLoading"
+        class="aside-list-wrap"
+        style="text-align: center"
+        v-if="isEmptyObject(asideList) && !searchString"
       >
+        暂无数据
+      </div>
+      <div class="load-wrap" v-if="listLoading">
         <Loading />
       </div>
     </div>
 
-
     <Modal v-model="l7_model_add" width="480">
       <p slot="header" style="color:#333;text-align:center">
-        <span>{{edit? '修改服务器配置': '添加NGINX服务器'}}</span>
+        <span>{{ edit ? "修改服务器配置" : "添加NGINX服务器" }}</span>
       </p>
       <div style="text-align:center">
         <Form ref="formValidate" :model="add_l7_form" :rules="ruleValidate">
@@ -102,18 +133,25 @@
             <Input v-model="add_l7_form.l7ServerSSHName" autocomplete></Input>
           </FormItem>
           <FormItem label="ssh连接实例的密码" prop="l7ServerSSHPwd">
-            <Input type="password" v-model="add_l7_form.l7ServerSSHPwd" autocomplete></Input>
+            <Input
+              type="password"
+              v-model="add_l7_form.l7ServerSSHPwd"
+              autocomplete
+            ></Input>
           </FormItem>
           <FormItem label="ssh连接实例的端口" prop="l7ServerSSHPort">
             <Input v-model="add_l7_form.l7ServerSSHPort"></Input>
           </FormItem>
           <FormItem label="导入原配置" v-if="addMoment">
-            <i-switch v-model="add_l7_form.impConfFlag" style="margin-right: 300px">
+            <i-switch
+              v-model="add_l7_form.impConfFlag"
+              style="margin-right: 300px"
+            >
               <span slot="open">On</span>
               <span slot="close">Off</span>
             </i-switch>
           </FormItem>
-          <FormItem label="备注" v-if="addMoment">
+          <FormItem label="备注">
             <Input v-model="add_l7_form.remark"></Input>
           </FormItem>
         </Form>
@@ -125,20 +163,23 @@
           ghost
           type="error"
           @click.stop="delL7ServerInfo(add_l7_form.l7ServerId)"
-        >删除</Button>
+          >删除</Button
+        >
         <Button @click="l7_model_add = false">取消</Button>
         <Button
           type="primary"
           :loading="modal_loading"
           @click="addL7('formValidate')"
           v-if="addMoment"
-        >确认</Button>
+          >确认</Button
+        >
         <Button
           type="primary"
           :loading="modal_loading"
           @click="updL7ServerInfo('formValidate')"
           v-else
-        >确认</Button>
+          >确认</Button
+        >
       </div>
     </Modal>
   </div>
@@ -148,7 +189,7 @@ import { mapActions, mapMutations, mapState } from "vuex";
 import {
   addL7ServerInfo,
   delL7ServerInfo,
-  updL7ServerInfo
+  updL7ServerInfo,
 } from "../../api/L7";
 import { selL7ServerInfoAll } from "../../api/L7";
 
@@ -205,6 +246,7 @@ export default {
     return {
       addMoment: true,
       l7_model_add: false,
+      l7_form: {},
       add_l7_form: {
         l7ServerId: "",
         l7ServerName: "",
@@ -213,41 +255,45 @@ export default {
         l7ServerSSHPwd: "",
         l7ServerSSHPort: 22,
         impConfFlag: false,
-        remark: ""
+        remark: "",
       },
       ruleValidate: {
         l7ServerId: [
-          { required: true, message: "序列号不能为空", trigger: "blur" }
+          { required: true, message: "序列号不能为空", trigger: "blur" },
         ],
         l7ServerName: [
-          { required: true, validator: validatel7ServerName, trigger: "blur" }
+          { required: true, validator: validatel7ServerName, trigger: "blur" },
         ],
         l7ServerSSHIp: [
-          { required: true, validator: validatel7ServerSSHIp, trigger: "blur" }
+          { required: true, validator: validatel7ServerSSHIp, trigger: "blur" },
         ],
         l7ServerSSHName: [
           {
             required: true,
             validator: validatel7ServerSSHName,
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         l7ServerSSHPwd: [
-          { required: true, validator: validatel7ServerSSHPwd, trigger: "blur" }
+          {
+            required: true,
+            validator: validatel7ServerSSHPwd,
+            trigger: "blur",
+          },
         ],
         l7ServerSSHPort: [
           {
             required: true,
             validator: validatel7ServerSSHPort,
-            trigger: "blur"
-          }
-        ]
+            trigger: "blur",
+          },
+        ],
       },
       modal_loading: false,
       edit: false,
       searchString: "",
       timer: null,
-      openMenu: []
+      openMenu: [],
     };
   },
   watch: {
@@ -259,24 +305,24 @@ export default {
         this.addMoment = true;
       }
     },
-    '$route'(nv, ov){
-      if(nv.path === '/L7'){
-        this.$router.replace(ov)
+    $route(nv, ov) {
+      if (nv.path === "/L7") {
+        this.$router.replace(ov);
       }
-    }
+    },
   },
   computed: {
     ...mapState({
-      asideList: state => state.L7.asideList,
-      l7ServerId: state => state.L7.activeAside.l7ServerId,
-      listLoading: state => state.L7.listLoading
+      asideList: (state) => state.L7.asideList,
+      l7ServerId: (state) => state.L7.activeAside.l7ServerId,
+      listLoading: (state) => state.L7.listLoading,
     }),
     // 匹配搜索
     filterAside: function() {
-      let asideList = []
-      Object.keys(this.asideList).map((item)=>{
-          asideList.push(...this.asideList[item])
-      })
+      let asideList = [];
+      Object.keys(this.asideList).map((item) => {
+        asideList.push(...this.asideList[item]);
+      });
 
       let searchString = this.searchString;
 
@@ -291,13 +337,13 @@ export default {
 
       // 返回过来后的数组
       return asideList;
-    }
+    },
   },
   methods: {
     ...mapActions(["getL7AsideList"]),
     ...mapMutations(["L7setActiveAside", "L7setAsideList"]),
     changeAside(item) {
-      console.log(this.l7ServerId);
+    //   console.log(this.l7ServerId);
       if (item.l7ServerId === this.l7ServerId) return;
       this.L7setActiveAside(item);
       this.$router.replace(`/L7/${item.l7ServerId}/chart`);
@@ -317,19 +363,20 @@ export default {
     },
     //添加实例配置信息
     addL7(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           this.modal_loading = true;
           addL7ServerInfo(this.add_l7_form)
-            .then(res => {
+            .then((res) => {
               // console.log(res);
               this.modal_loading = false;
               if (res.data.code === "success") {
                 this.l7_model_add = false;
-                this.getL7AsideList().then(res => {
+                this.getL7AsideList().then((res) => {
                   /* 第一次添加 */
                   if (this.asyncOk(res) && !this.$route.params.L7) {
-                    let item = res.data.result[Object.keys(res.data.result)[0][0]]
+                    let item =
+                      res.data.result[Object.keys(res.data.result)[0][0]];
                     this.L7setActiveAside(item);
                     this.$router.replace(`/L7/${this.l7ServerId}/chart`);
                   }
@@ -338,7 +385,7 @@ export default {
                 this.$Message.error(`${res.data.result}`);
               }
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err);
             });
         } else {
@@ -358,7 +405,7 @@ export default {
           this.l7_model_add = false;
           if (this.asyncOk(res)) {
             this.$Message.success("删除成功！");
-            this.getL7AsideList(true).then(res => {
+            this.getL7AsideList(true).then((res) => {
               if (this.asyncOk(res) && !res.data.result.length) {
                 this.$router.push(`/L7`);
               }
@@ -369,28 +416,37 @@ export default {
           } else {
             this.$Message.error("删除失败！");
           }
-        }
+        },
       });
     },
     //修改实例配置信息
     async updL7ServerInfo(name) {
-      this.$refs[name].validate(valid => {
+      this.$refs[name].validate((valid) => {
         if (valid) {
           this.modal_loading = true;
+          this.l7_form.l7ServerId = this.add_l7_form.l7ServerId;
+          this.l7_form.l7ServerName = this.add_l7_form.l7ServerName;
+          this.l7_form.l7ServerSSHIp = this.add_l7_form.l7ServerSSHIp;
+          this.l7_form.l7ServerSSHName = this.add_l7_form.l7ServerSSHName;
+          this.l7_form.l7ServerSSHPwd = this.add_l7_form.l7ServerSSHPwd;
+          this.l7_form.l7ServerSSHPort = this.add_l7_form.l7ServerSSHPort;
+          this.l7_form.remark = this.add_l7_form.remark;
           updL7ServerInfo(this.add_l7_form)
-            .then(res => {
+            .then((res) => {
               //console.log(res);
               this.modal_loading = false;
               if (res.data.code === "success") {
                 this.l7_model_add = false;
                 this.$Message.success("修改成功");
-                this.getL7AsideList()
-                this.L7setActiveAside(this.add_l7_form)
+                this.getL7AsideList();
+                this.L7setActiveAside(this.l7_form);
+                if (this.l7_form.l7ServerId === this.$route.params.L7) return;
+                this.$router.replace(`/L7/${this.l7_form.l7ServerId}/chart`);
               } else {
                 this.$Message.error(`${res.data.result}`);
               }
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err);
             });
         } else {
@@ -400,35 +456,35 @@ export default {
     },
     //展示Model框，展示当前实例的数据
     editModel(item) {
-      // console.log(item);
+      //   console.log(item);
       this.edit = true;
+      this.l7_form = item;
       this.add_l7_form.l7ServerId = item.l7ServerId;
       this.add_l7_form.l7ServerName = item.l7ServerName;
       this.add_l7_form.l7ServerSSHIp = item.l7ServerSSHIp;
       this.add_l7_form.l7ServerSSHName = item.l7ServerSSHName;
       this.add_l7_form.l7ServerSSHPwd = item.l7ServerSSHPwd;
       this.add_l7_form.l7ServerSSHPort = item.l7ServerSSHPort;
+      this.add_l7_form.remark = item.remark;
       this.addMoment = false;
       this.l7_model_add = true;
-    }
+    },
   },
   created() {
-    this.getL7AsideList(true).then(res => {
+    this.getL7AsideList(true).then((res) => {
       if (this.asyncOk(res)) {
         if (!this.$route.params.L7) {
-          if( this.l7ServerId ){
+          if (this.l7ServerId) {
             this.$router.replace(`/L7/${this.l7ServerId}/chart`);
           }
-
-
         } else {
           let keys = Object.keys(this.asideList);
           let arr = [];
-          keys.map(item => {
+          keys.map((item) => {
             arr.push(...this.asideList[item]);
           });
-        //   console.log(arr);
-          arr.map(item => {
+          //   console.log(arr);
+          arr.map((item) => {
             if (item.l7ServerId === this.$route.params.L7) {
               this.L7setActiveAside(item);
             }
@@ -439,12 +495,12 @@ export default {
   },
   mounted() {
     this.timer = setInterval(() => {
-      this.getL7AsideList()
+      this.getL7AsideList();
     }, 1000 * 60);
   },
   beforeDestroy() {
     clearInterval(this.timer);
-  }
+  },
 };
 </script>
 <style lang="less" scoped>

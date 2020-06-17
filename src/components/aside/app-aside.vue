@@ -142,7 +142,7 @@
                 </i-switch>
               </FormItem>
             </div>
-            <Select v-model="appForm.l7_server_ids" filterable multiple>
+            <Select v-model="appForm.l7_server_ids" multiple>
               <Option
                 v-for="item in L7List"
                 :value="item.l7ServerId"
@@ -212,7 +212,7 @@
           </FormItem>
           <FormItem label="选择配置" prop="nginx_conf_id">
             <popTip content="选择一个配置并发布到当前APP"></popTip>
-            <Select v-model="appForm.nginx_conf_id" filterable>
+            <Select v-model="appForm.nginx_conf_id" clearable >
               <Option v-for="item in configList" :value="item.nginx_conf_id">{{
                 item.config_name
               }}</Option>
