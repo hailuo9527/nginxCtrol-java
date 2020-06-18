@@ -414,7 +414,7 @@ export default {
               }
             });
           } else {
-            this.$Message.error("删除失败！");
+            this.$Message.error({content: res.data.result, duration: 5});
           }
         },
       });

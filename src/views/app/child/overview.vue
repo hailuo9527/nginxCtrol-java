@@ -25,9 +25,19 @@ export default {
     veSankey,
   },
   data() {
-    this.colors = ['#e4b5fe', '#8085ee', '#add4ff','#add4ff', '#f5e483', '#6ab1fe','#fa80bc','#5BA9FF','#F967B0']
+    this.colors = [
+      "#e4b5fe",
+      "#8085ee",
+      "#add4ff",
+      "#add4ff",
+      "#f5e483",
+      "#6ab1fe",
+      "#fa80bc",
+      "#5BA9FF",
+      "#F967B0",
+    ];
     this.chartSettings = {
-        links: [],
+      links: [],
     };
     this.chartExtend = {
       series: {
@@ -43,13 +53,13 @@ export default {
         },
         lineStyle: {
           curveness: 0.3,
-          color: 'source'
+          color: "source",
         },
         nodeAlign: "left",
         itemStyle: {
-          borderType: 'solid',
-          borderColor: '#eee',
-        }
+          borderType: "solid",
+          borderColor: "#eee",
+        },
       },
     };
     /** chart表的点击事件 */
@@ -62,7 +72,7 @@ export default {
           this.option = this.copyJson(option);
           //let oldOption = copyJson(option)
           // console.log(e);
-        //   console.log(option);
+          //   console.log(option);
           let link = option.series[0].links;
           if (e.data.source === option.series[0].data[0].name) {
             for (let i = 0; i < this.chartSettings.links.length; i++) {
@@ -135,7 +145,6 @@ export default {
       this.chartSettings.links = [];
       let res = await appViewData({ app_service_id: this.$route.params.app });
       if (res.data.code === "success") {
-        // console.log(res.data.result);
         if (res.data.result.requests_total === "0") {
           this.dataEmpty = true;
         } else {
@@ -163,51 +172,55 @@ export default {
               );
             }
           }, this);
-          for (
-            let i = 0;
-            i < res.data.result.upstream_request_total.length;
-            i++
-          ) {
-            if (
-              res.data.result.upstream_request_total[i].upstream_request !== 0
+          if (res.data.result.upstream_request_total !== undefined) {
+            for (
+              let i = 0;
+              i < res.data.result.upstream_request_total.length;
+              i++
             ) {
-              //第三列柱子
-              this.$set(this.chartData.rows, this.chartData.rows.length, {
-                页面: res.data.result.upstream_request_total[i].upstream_server,
-                访问量:
-                  res.data.result.upstream_request_total[i].upstream_request,
-              });
-              for (let y = 0; y < res.data.result.appdata.length; y++) {
-                for (
-                  let x = 0;
-                  x < res.data.result.appdata[y].nginx_app_list.length;
-                  x++
-                ) {
-                  //第二列柱子和第三列柱子之间的连接
-                  if (
-                    res.data.result.upstream_request_total[i].upstream_server ==
-                      res.data.result.appdata[y].nginx_app_list[x]
-                        .upstream_server &&
-                    res.data.result.appdata[y].nginx_app_list[x]
-                      .upstream_request != "0"
+              if (
+                res.data.result.upstream_request_total[i].upstream_request !== 0
+              ) {
+                //第三列柱子
+                this.$set(this.chartData.rows, this.chartData.rows.length, {
+                  页面:
+                    res.data.result.upstream_request_total[i].upstream_server,
+                  访问量:
+                    res.data.result.upstream_request_total[i].upstream_request,
+                });
+                for (let y = 0; y < res.data.result.appdata.length; y++) {
+                  for (
+                    let x = 0;
+                    x < res.data.result.appdata[y].nginx_app_list.length;
+                    x++
                   ) {
-                    this.$set(
-                      this.chartSettings.links,
-                      this.chartSettings.links.length,
-                      {
-                        source:
-                          res.data.result.appdata[y].l7ServerName +
-                          "(" +
-                          res.data.result.appdata[y].ctime +
-                          ")",
-                        target:
-                          res.data.result.upstream_request_total[i]
-                            .upstream_server,
-                        value:
-                          res.data.result.appdata[y].nginx_app_list[x]
-                            .upstream_request,
-                      }
-                    );
+                    //第二列柱子和第三列柱子之间的连接
+                    if (
+                      res.data.result.upstream_request_total[i]
+                        .upstream_server ==
+                        res.data.result.appdata[y].nginx_app_list[x]
+                          .upstream_server &&
+                      res.data.result.appdata[y].nginx_app_list[x]
+                        .upstream_request != "0"
+                    ) {
+                      this.$set(
+                        this.chartSettings.links,
+                        this.chartSettings.links.length,
+                        {
+                          source:
+                            res.data.result.appdata[y].l7ServerName +
+                            "(" +
+                            res.data.result.appdata[y].ctime +
+                            ")",
+                          target:
+                            res.data.result.upstream_request_total[i]
+                              .upstream_server,
+                          value:
+                            res.data.result.appdata[y].nginx_app_list[x]
+                              .upstream_request,
+                        }
+                      );
+                    }
                   }
                 }
               }
