@@ -17,8 +17,8 @@
                             <Button  icon="md-close" class="tag"
                                      :key="codeIndex"
                                      v-if="code"
-                                     @click="removeTag(item, codeIndex)"
-                                     v-for="(code, codeIndex) in httpCodeList">{{code}}</Button>
+                                     @click="removeTag(item, index)"
+                                     v-for="(code, codeIndex) in form.ngcErrorPages[index].http_codes?form.ngcErrorPages[index].http_codes.split(','):''">{{code}}</Button>
                             <Input  v-model.trim="item.httpCodes" @on-blur="addHttpCode(index)"  @on-enter="addHttpCode(index)" placeholder="code"></Input>
                         </FormItem>
                         <FormItem label="REDIRECT TO" class="inline-form-item full-input" prop="redirect_to">
@@ -53,7 +53,7 @@
                 will show
                 <span class="error-pages-redirect">{{item.redirect_to}}</span>
                 with response
-                <span class="error-pages-response">{{item.response_code.split('=')[1]}}</span>
+                <span class="error-pages-response">{{item.response_code?item.response_code.split('=')[1]:''}}</span>
             </div>
 
         </div>
@@ -86,14 +86,14 @@
             }
             const resCodesRule = (rule, value, callback) => {
                 if (!value) {
-                    callback(new Error('不能为空'));
+                    callback();
                 } else {
                     let str = value.slice(0,1)
                     if (str !== '='){
                         callback(new Error('请输入正确的格式, 例如‘ =XXX’'));
                     } else {
                         let subStr = value.split('=')[1]
-                        console.log(subStr)
+                        // console.log(subStr)
                         let reg = /(^10[0-2]$)|(^20[0-6]$)|(^30[0-7]$)|(^4[0-1][0-7]$)|(^50[0-5]$)/
 
                         if (!reg.test(subStr)){
@@ -120,7 +120,6 @@
                         { validator: resCodesRule, trigger: 'blur' }
                     ]
                 },
-                httpCodeList: []
             }
         },
         methods: {
@@ -139,7 +138,6 @@
                         arr.map((item, key)=> {
                             if (!item) arr.splice(key,1)
                         })
-                        this.httpCodeList = arr
                         this.form.ngcErrorPages[index].http_codes = arr.join(',')
                         this.form.ngcErrorPages[index].httpCodes = ''
                     }
@@ -161,7 +159,7 @@
                 let flag = true
                 for(let item of this.$refs['form']){
                     item.validate(valid => {
-                        console.log(valid)
+                        // console.log(valid)
                         if (!valid) {
                             flag = false
                         }
@@ -188,10 +186,9 @@
         },
 
         mounted() {
-            console.log(this.data)
             if (!this.data.error_pages_state && this.modify){
                 this.backConfig(this.data,emptyConfig.ngcVirtualServers[0])
-                console.log(this.form)
+                // console.log(this.form)
             }
         }
     }

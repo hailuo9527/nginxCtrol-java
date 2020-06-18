@@ -16,11 +16,11 @@
             <div  class="ctrl-edit-item ">
                 <div class="ctrl-edit-properties__row">
                     <span class="label">PATH</span>
-                    <span class="value">{{form.error_log_path}}</span>
+                    <span class="value">{{form.error_log_path||'无'}}</span>
                 </div>
                 <div class="ctrl-edit-properties__row">
                     <span class="label">LEVEL</span>
-                    <span class="value">{{form.error_log_level}}</span>
+                    <span class="value">{{form.error_log_level||'无'}}</span>
                 </div>
             </div>
 
