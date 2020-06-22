@@ -120,7 +120,7 @@
 </template>
 <script>
   import {installNginx, selOerationSystemVersion, selUploadFile, uploadFile, delFile, onInstall} from "../../api/upload";
-  import {mapState} from 'vuex'
+  import {mapState,mapActions} from 'vuex'
 
   export default {
     data() {
@@ -138,6 +138,10 @@
           {
             title: '文件路径',
             key: 'file_path'
+          },
+          {
+              title: '文件大小',
+              key: 'size'
           },
           {
             title: '上传时间',
@@ -212,6 +216,7 @@
       }
     },
     methods: {
+        ...mapActions(["getL7AsideList"]),
       // 获取文件列表
       async selUploadFile() {
         this.loading = true
@@ -431,6 +436,7 @@
     mounted() {
       this.selUploadFile()
       this.getVersionList()
+      this.getL7AsideList()
     }
   }
 </script>

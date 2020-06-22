@@ -13,23 +13,28 @@
       :data="TableData"
       width="815"
       style="margin: 0 auto;margin-top: 50px;"
-      :loading="loading"
       v-else
       :max-height="500"
       @on-row-click="RouteToApp"
     >
     </Table>
+    <!--loading-->
+    <div class="loading-wrap " v-if="loading">
+      <Loading />
+    </div>
   </div>
 </template>
 
 <script>
 import { selRelevantAPPList } from "@/api/L7";
+import loading from "@/components/common/loading";
 export default {
+  components: { loading },
   data() {
     return {
       columns: [
         { title: "APP名称", key: "app_service_name" },
-        { title: "实例名称", key: "L7_server_name"},
+        { title: "实例名称", key: "L7_server_name" },
         { title: "同步", key: "is_sync" },
         { title: "修改时间", key: "last_time" },
         { title: "修改人", key: "last_name" },
@@ -45,15 +50,15 @@ export default {
       let res = await selRelevantAPPList({
         nginx_conf_id: this.$route.query.nginx_conf_id,
       });
-      this.loading = false;
+        this.loading = false;
       if (res.data.code === "success") {
         this.TableData = res.data.result || [];
       }
     },
     //点击表格某一行跳转到APP
     RouteToApp(row, index) {
-        this.$router.replace(`/app/${row.app_service_id}/overview`);
-    }
+      this.$router.replace(`/app/${row.app_service_id}/overview`);
+    },
   },
   mounted() {
     this.GetselRelevantAPPList();
@@ -87,5 +92,22 @@ export default {
   color: #d8d8d8;
   font: 24px "RobotoMedium", Arial, sans-serif;
   font-weight: normal;
+}
+.loading-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 99999;
+  background: #f8f8f9;
+}
+.tableContent {
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 </style>
