@@ -62,14 +62,14 @@ const  emptyConfig = {
                         {
                             headers_id: '',
                             locations_id: '',
-                            headers_key: '',
-                            headers_value: '',
+                            headers_key: 'Host',
+                            headers_value: '$host',
                             version_no: ''
                         }
                     ],
                     buffering_state: false,
                     allow_to_buffer_on_disk_state: false,
-                    http_version: '',
+                    http_version: '1.1',
                     connect_timeout: '',
                     intercept_errors_state: false,
                     allow_deny_state: false,

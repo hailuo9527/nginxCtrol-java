@@ -17,7 +17,7 @@
         <FormItem label class="inline-form-item" prop="upstream_zone_name">
           <Input placeholder="name" v-model.trim="form.upstream_zone_name"></Input>
         </FormItem>
-        <FormItem label class="inline-form-item">
+        <FormItem label class="inline-form-item" prop="upstream_zone_size">
           <Input placeholder="size" v-model.trim="form.upstream_zone_size"></Input>
         </FormItem>
       </div>
@@ -38,12 +38,30 @@ export default {
   mixins: [mixin],
   name: "UpstreamZone",
   data() {
+      const number = { type: 'number', message: '请输入数字', trigger: 'blur',
+      transform(value) {
+        return Number(value);
+      }
+     }
+     const upstreamZoneName = (rule, value, callback) => {
+        const reg = /^[^ ]+$/
+        if (value === '') {
+            callback(new Error('不能为空'))
+        }else if (!reg.test(value)){
+            callback(new Error('不能含有空格'))
+        } else {
+            callback()
+        }
+     };
     return {
       title: "zone",
       info: "这是要与upstream group一起使用的共享内存区域。Upstream zone保留组的配置、运行时状态和性能度量/计数器。",
       formRules: {
         upstream_zone_name: [
-          { required: true, message: '不能为空' }
+          { required: true, validator: upstreamZoneName }
+        ],
+        upstream_zone_size: [
+            number
         ]
       }
     };

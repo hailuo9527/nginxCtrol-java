@@ -32,12 +32,22 @@ export default {
   mixins: [mixin],
   name: "PersistentState",
   data() {
+      const persistentFile = (rule, value, callback) => {
+                const reg = /^[^ ]+$/
+                if (value === '') {
+                    callback(new Error('不能为空'))
+                }else if (!reg.test(value)){
+                        callback(new Error('不能含有空格'))
+                } else {
+                    callback()
+                }
+            };
     return {
       title: "PERSISTENT STATE",
       info: "指定保留upstream group状态的文件。",
       formRules: {
         persistent_file: [
-          {required: true, message: '不能为空'}
+          {required: true, validator: persistentFile}
         ]
       }
     };

@@ -40,7 +40,7 @@
             size="26"
             color="#333"
             class="add_handler"
-            v-if="!$route.params.L7"
+            v-if="!($route.params.L7||$route.params.app)"
             @click="editVirtualServer(0, false)"
           />
         </div>
@@ -59,7 +59,7 @@
             size="26"
             color="#333"
             class="add_handler"
-            v-if="!$route.params.L7"
+            v-if="!($route.params.L7||$route.params.app)"
             @click="editLocation(0,false)"
           />
         </div>
@@ -77,7 +77,7 @@
             size="26"
             color="#333"
             class="add_handler"
-            v-if="!$route.params.L7"
+            v-if="!($route.params.L7||$route.params.app)"
             @click="editUpstream(0, false)"
           />
         </div>
@@ -338,8 +338,15 @@
       </div>
     </div>
     <Drawer title="配置预览" v-model="previewOpen" width="50%">
-      <!--<pre contenteditable="true">{{previewData}}</pre>-->
+      <!-- <pre contenteditable="true">{{previewData}}</pre> -->
       <div class="preview-wrap">
+        <!-- <div class="preview-content"> -->
+          <!-- <pre
+            :contenteditable="configEditable"
+            class="edit-area"
+            ref="editConfig"
+          >{{previewData}}</pre> -->
+        <!-- </div> -->
         <div class="preview-content">
           <div
             :contenteditable="configEditable"
@@ -850,12 +857,12 @@ export default {
       let res = await previewNginxConf(this.config);
       if (this.asyncOk(res)) {
         this.previewData = res.data.result || "";
-        let strArr = this.previewData.split("\n");
-        strArr = strArr.map(item => {
-          return item + "<br>";
-        });
-        this.previewData = strArr.join("");
-        this.previewData = this.previewData.replace(/\s/g, "&nbsp");
+    //     let strArr = this.previewData.split("\n");
+    //     strArr = strArr.map(item => {
+    //       return item + "<br>";
+    //     });
+    //     this.previewData = strArr.join("");
+    //     this.previewData = this.previewData.replace(/\s/g, "&nbsp");
       }
     },
     /*/!* 通过实例主键ID查询该实例是否与配置文件或者APP关联 *!/

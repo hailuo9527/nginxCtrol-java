@@ -32,9 +32,12 @@ import mixin from "../mixins";
 export default {
   mixins: [mixin],
   data() {
+    const reg = /^(?!(\d+)$)[\u4e00-\u9fffa-zA-Z\d\-_]+$/;
     const validateName = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("不能为空"));
+      } else if (!reg.test(value)) {
+          callback(new Error("不能全数字或者存在空格"));
       } else {
         callback();
       }

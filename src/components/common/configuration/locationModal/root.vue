@@ -36,13 +36,22 @@
     export default {
         mixins: [mixin],
         data () {
-
+            const rootPath = (rule, value, callback) => {
+                const reg = /^[^ ]+$/
+                if (value === '') {
+                    callback(new Error('不能为空'))
+                }else if (!reg.test(value)){
+                        callback(new Error('不能含有空格'))
+                } else {
+                    callback()
+                }
+            };
             return {
                 title: 'ROOT',
                 info: '直接为静态内容提供服务时，为其定义根目录。',
                 formRules: {
                     root_path: [
-                        { required: true, message: '不能为空' }
+                        { required: true, validator: rootPath }
                     ]
                 },
             }

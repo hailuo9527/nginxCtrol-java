@@ -16,7 +16,7 @@
                              v-if="item"
                              @click="removeTag(item)"
                              v-for="(item, index) in form.domain_name.split(',')">{{item}}</Button>
-                    <Input  v-model.trim="form.domainName" @on-blur="addDomainName" @on-enter="addDomainName" placeholder="name"></Input>
+                    <Input  v-model.trim="form.domainName" @on-blur="addDomainName" @on-enter="addDomainName" @on-keydown="keyDown" placeholder="name"></Input>
                 </FormItem>
             </Form>
 
@@ -86,6 +86,11 @@
 
 
             },
+            keyDown(e) {
+                if (e.code === 'Space') {
+                    this.addDomainName()
+                }
+            }
         },
 
         mounted() {

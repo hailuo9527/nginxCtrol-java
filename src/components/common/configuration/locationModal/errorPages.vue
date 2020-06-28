@@ -105,6 +105,16 @@
                 }
                 callback()
             }
+            const redirectTo = (rule, value, callback) => {
+                const reg = /^[^ ]+$/
+                if (!value) {
+                    callback(new Error('不能为空'))
+                }else if (!reg.test(value)){
+                        callback(new Error('不能含有空格'))
+                } else {
+                    callback()
+                }
+            }
             return {
                 title: 'ERROR PAGES',
                 activeForm: 0,
@@ -114,7 +124,7 @@
                         { validator: httpCodesRule }
                     ],
                     redirect_to: [
-                        { required: 'true', message:'不能为空' }
+                        { required: 'true', validator: redirectTo }
                     ],
                     response_code: [
                         { validator: resCodesRule, trigger: 'blur' }

@@ -19,7 +19,7 @@
                                  v-if="item"
                                  @click="removeTag(item)"
                                  v-for="(item, index) in form.index_files.split(',')">{{item}}</Button>
-                        <Input  v-model.trim="form.indexFiles" @on-blur="addIndexFiles" @on-enter="addIndexFiles" placeholder="files"></Input>
+                        <Input  v-model.trim="form.indexFiles" @on-blur="addIndexFiles" @on-enter="addIndexFiles" @on-keydown="keyDown" placeholder="files"></Input>
                     </FormItem>
                 </div>
 
@@ -44,10 +44,14 @@
         mixins: [mixin],
         data () {
             const indexFile = (rule, value, callback) => {
+                const reg = /^[^ ]+$/
                 if (value === '') {
-                    callback(new Error('至少需要一个文件'));
+                    callback(new Error('至少需要一个文件'))
+                }else if (!reg.test(value)){
+                        callback(new Error('不能含有空格'))
+                } else {
+                    callback()
                 }
-                callback();
             };
             return {
                 title: 'INDEX FILES',
@@ -91,6 +95,11 @@
 
 
             },
+            keyDown(e) {
+                if (e.code === 'Space') {
+                    this.addIndexFiles()
+                }
+            }
         },
 
         mounted() {

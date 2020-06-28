@@ -15,10 +15,10 @@
        <Form ref="form" :model="form" :rules="formRules" @submit.native.prevent>
       <div style="display: flex; justify-content: space-between">
         <FormItem label class="inline-form-item" prop="queueing_number">
-          <Input placeholder="name" v-model.trim="form.queueing_number"></Input>
+          <Input placeholder="number" v-model.trim="form.queueing_number"></Input>
         </FormItem>
-        <FormItem label class="inline-form-item">
-          <Input placeholder="size" v-model.trim="form.queueing_time"></Input>
+        <FormItem label class="inline-form-item" prop="queueing_time">
+          <Input placeholder="time" v-model.trim="form.queueing_time"></Input>
         </FormItem>
       </div>
         </Form>
@@ -57,7 +57,7 @@ export default {
           { required: true, message: '不能为空'},
           number
         ],
-        queueing_time: [ time ]
+        queueing_time: [ { required: true, message: '不能为空'},time ]
       }
     };
   },

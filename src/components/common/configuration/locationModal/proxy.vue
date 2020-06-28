@@ -23,11 +23,11 @@
                             <FormItem label="" class="line-form-item" :prop="'ngcLocationHeaders.'+ index + '.headers_key'"
                                       :rules="{required: true, message: '不能为空', trigger: 'blur'}"
                             >
-                                <Input placeholder="Header" v-model.trim="item.headers_key"></Input>
+                                <Input placeholder="Header" v-model.trim="item.headers_key==null?item.headers_key='Host':item.headers_key"></Input>
                             </FormItem>
                             <FormItem label="" class="line-form-item" :prop="'ngcLocationHeaders.'+ index + '.headers_value'"
                                       :rules="{required: true, message: '不能为空', trigger: 'blur'}">
-                                <Input placeholder="Value" v-model.trim="item.headers_value"></Input>
+                                <Input placeholder="Value" v-model.trim="item.headers_value==null?item.headers_value='$host':item.headers_value"></Input>
                             </FormItem>
 
                             <div class="item-body-remove" >
@@ -61,7 +61,7 @@
 
                 </div>
                 <FormItem label="HTTP VERSION" class="inline-form-item">
-                    <Select v-model="form.http_version">
+                    <Select v-model="form.http_version==null?form.http_version='1.1':form.http_version">
                         <Option value="1.1">1.1</Option>
                         <Option value="1.0">1.0</Option>
                     </Select>
@@ -155,7 +155,8 @@
                     callback(new Error('不能为空'))
                 }else {
                     let reg = /(http|https):\/\/([\w.]+\/?)\S*/
-                    if(!reg.test(value)){
+                    const regexp = /^[^ ]+$/
+                    if(!reg.test(value)||!regexp.test(value)){
                         callback(new Error('请输入正确的URL'))
                     }else {
                         callback()

@@ -1,7 +1,7 @@
 <template>
   <div class="diy-footer-wrap">
     <!-- 页脚按钮 -->
-    <div class="diy-footer" v-if="$route.name !== 'L7Config'">
+    <div class="diy-footer" v-if="!($route.params.L7 || $route.params.app)">
       <div class="diy-footer_left">
         <Button @click="remove" v-if="showRemoveButton">删除{{name}}</Button>
       </div>

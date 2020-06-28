@@ -51,7 +51,7 @@
     </div>
 
     <div slot="show" class="ctrl-edit-item">
-      <Select v-model="form.load_balancing_method">
+      <Select v-model="form.load_balancing_method" :disabled="$route.params.L7||$route.params.app ? true : false">
         <Option value="weighted round-robin">weighted round-robin</Option>
         <Option value="hash">hash</Option>
         <Option value="ip_hash">ip_hash</Option>

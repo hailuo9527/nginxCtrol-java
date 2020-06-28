@@ -27,7 +27,7 @@
            <FormItem label="EXPIRES" class="line-form-item full-input common-color" prop="cookie_expires">
              <Input placeholder="time" v-model.trim="form.cookie_expires"></Input>
            </FormItem>
-           <FormItem label="DOMAIN" class="line-form-item full-input common-color">
+           <FormItem label="DOMAIN" class="line-form-item full-input common-color" prop="cookie_domain">
              <Input placeholder="domain" v-model.trim="form.cookie_domain"></Input>
            </FormItem>
            <FormItem label="HTTPONLY" class="aline-center common-color">
@@ -36,34 +36,34 @@
            <FormItem label="SECURE" class="aline-center common-color">
              <i-switch size="small" v-model="form.cookie_secure_state"></i-switch>
            </FormItem>
-           <FormItem label="PATH" class="line-form-item full-input common-color">
+           <FormItem label="PATH" class="line-form-item full-input common-color" prop="cookie_path">
              <Input placeholder="path" v-model.trim="form.cookie_path"></Input>
            </FormItem>
          </div>
          <div v-if="form.method === 'route'">
-           <FormItem label="VARIABLES" class="line-form-item full-input with-button"  prop="routeVariables">
+           <FormItem label="VARIABLES" class="line-form-item full-input with-button common-color"  prop="routeVariables">
              <Button  icon="md-close" class="tag"
                       :key="index"
                       v-if="item"
                       @click="removeTag(item)"
                       v-for="(item, index) in form.route_variables.split(',')">{{item}}</Button>
-             <Input placeholder="$variable"  @on-blur="addRouteVariables" @on-enter="addRouteVariables" v-model.trim="form.routeVariables"></Input>
+             <Input placeholder="$variable"  @on-blur="addRouteVariables" @on-enter="addRouteVariables" @on-keydown="keyDown" v-model.trim="form.routeVariables"></Input>
            </FormItem>
          </div>
          <div v-if="form.method === 'learn'">
-           <FormItem label="CREATE" class="line-form-item full-input" prop="leam_create">
+           <FormItem label="CREATE" class="line-form-item full-input common-color" prop="leam_create">
              <Input placeholder="$variable" v-model.trim="form.leam_create"></Input>
            </FormItem>
-           <FormItem label="LOOKUP" class="line-form-item full-input" prop="leam_lookup">
+           <FormItem label="LOOKUP" class="line-form-item full-input common-color" prop="leam_lookup">
              <Input placeholder="$variable" v-model.trim="form.leam_lookup"></Input>
            </FormItem>
-           <FormItem label="SHARED MEMORY ZONE" class="line-form-item full-input" prop="leam_shared_memory_zone">
+           <FormItem label="SHARED MEMORY ZONE" class="line-form-item full-input common-color" prop="leam_shared_memory_zone">
              <Input placeholder="name:size" v-model.trim="form.leam_shared_memory_zone"></Input>
            </FormItem>
-           <FormItem label="SESSION REMOVE TIMEOUT" class="line-form-item full-input">
+           <FormItem label="SESSION REMOVE TIMEOUT" class="line-form-item full-input common-color" prop="leam_session_remove_timeout">
              <Input placeholder="time" v-model.trim="form.leam_session_remove_timeout"></Input>
            </FormItem>
-           <FormItem label="CREATE SESSION RIGHT AFTER RECEIVING RESPONSE HEADERS" class="line-form-item full-input">
+           <FormItem label="CREATE SESSION RIGHT AFTER RECEIVING RESPONSE HEADERS" class="line-form-item full-input common-color">
              <i-switch size="small" v-model="form.leam_chrarrh"></i-switch>
            </FormItem>
          </div>
@@ -106,10 +106,11 @@ export default {
   name: "SessionPersistence",
   data() {
     const variables = (rule, value,callback) => {
+        const reg = /^[^ ]+$/
       if (!value) {
         callback(new Error('不能为空'))
       } else {
-        if (value.slice(0,1) !== '$'){
+        if (value.slice(0,1) !== '$' || !reg.test(value)){
           callback(new Error('请输入正确的变量'))
         }else {
           callback()
@@ -131,7 +132,7 @@ export default {
       callback()
     }
     const zoneRule = (rule, value, callback) => {
-
+        const reg = /^[^ ]+$/
       if (!value){
         callback(new Error('不能为空'))
       }else {
@@ -140,7 +141,7 @@ export default {
           callback(new Error('格式不正确'))
         }else {
           arr.forEach((item)=> {
-            if (!item) callback(new Error('格式不正确'))
+            if (!item || !reg.test(item)) callback(new Error('格式不正确'))
           })
           callback()
         }
@@ -150,13 +151,34 @@ export default {
 
       callback()
     }
+    const commonReg = (rule, value, callback) => {
+        const reg = /^[^ ]+$/
+        if (value === '') {
+            callback(new Error('不能为空'))
+        }else if (!reg.test(value)){
+            callback(new Error('不能含有空格'))
+        } else {
+            callback()
+        }
+    };
+    const time = { type: 'number', message: '请输入正确的时间', trigger: 'blur',
+      transform(value) {
+        return Number(value);
+      }
+    }
     return {
       title: "SESSION PERSISTENCE",
       info: "启用会话关联，这将导致来自同一客户端的请求传递到一组服务器中的同一服务器",
       formRules: {
         cookie: [
-          { required: true, message: '不能为空' },
+          { required: true, validator: commonReg },
 
+        ],
+        cookie_domain: [
+            {required: true, validator: commonReg }
+        ],
+        cookie_path: [
+            {required: true, validator: commonReg}
         ],
         cookie_expires: [
           {
@@ -185,6 +207,9 @@ export default {
           {
             validator: zoneRule
           }
+        ],
+        leam_session_remove_timeout: [
+            { required: true, message: '不能为空'},time
         ]
 
       },
@@ -224,6 +249,11 @@ export default {
 
 
     },
+    keyDown(e) {
+        if (e.code === 'Space') {
+            this.addRouteVariables()
+        }
+    }
   },
 
   mounted() {}

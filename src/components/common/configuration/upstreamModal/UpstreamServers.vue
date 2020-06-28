@@ -122,12 +122,22 @@ export default {
         return Number(value);
       }
     }
+    const upstreamServersName = (rule, value, callback) => {
+                const reg = /^[^ ]+$/
+                if (value === '') {
+                    callback(new Error('不能为空'))
+                }else if (!reg.test(value)){
+                        callback(new Error('不能含有空格'))
+                } else {
+                    callback()
+                }
+            };
     return {
       title: "server",
       info: "指定upstream group中的后端服务器。服务器由IP地址或FQDN标识。可以指定可选端口，默认端口为80。",
       formRules: {
         upstream_servers_name: [
-          { required: 'true', message: '不能为空' }
+          { required: 'true', validator: upstreamServersName }
         ],
         weight: [
               number

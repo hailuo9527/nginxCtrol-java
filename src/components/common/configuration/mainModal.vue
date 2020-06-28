@@ -11,8 +11,8 @@
       <div class="virtual_server_form" :class="!status ? 'main-color' : 'main'">
         <div class="main-head" :class="status ? 'head' : ''">
           <i-switch
-            v-model="$route.params.L7 ? (status = true) : status"
-            :disabled="$route.params.L7 ? true : false"
+            v-model="$route.params.L7||$route.params.app ? (status = true) : status"
+            :disabled="$route.params.L7||$route.params.app ? true : false"
             @on-change="changestatus"
           />
           <span>main</span>
@@ -35,7 +35,7 @@
               <Input
                 v-model.trim="form.work_rlimit_nofile"
                 placeholder="请输入数值"
-                :disabled="$route.params.L7 ? true : false"
+                :disabled="$route.params.L7||$route.params.app ? true : false"
               ></Input>
             </FormItem>
             <FormItem
@@ -46,7 +46,7 @@
               <Input
                 v-model.trim="form.worker_connections"
                 placeholder="请输入数值"
-                :disabled="$route.params.L7 ? true : false"
+                :disabled="$route.params.L7||$route.params.app ? true : false"
               ></Input>
             </FormItem>
             <FormItem
@@ -57,7 +57,7 @@
               <Input
                 v-model.trim="form.worker_processes"
                 placeholder="请输入数值或者auto"
-                :disabled="$route.params.L7 ? true : false"
+                :disabled="$route.params.L7||$route.params.app ? true : false"
               ></Input>
             </FormItem>
           </Form>
@@ -82,7 +82,7 @@ export default {
   },
   data() {
     this.reg = (rule, value, callback) => {
-      let reg = /^\d*[1-9]$/;
+      let reg = /^\+?[1-9][0-9]*$/;
       if (value === "") {
         callback(new Error("值不能为空"));
       } else if (!reg.test(value)) {
@@ -92,7 +92,7 @@ export default {
       }
     };
     this.processesreg = (rule, value, callback) => {
-      let reg = /(^\d*[1-9]$)|(^auto$)/;
+      let reg = /(^\+?[1-9][0-9]*$)|(^auto$)/;
       if (value === "") {
         callback(new Error("值不能为空"));
       } else if (!reg.test(value)) {

@@ -841,10 +841,14 @@ export default {
                 break;
               case "app_vip":
                 this.newStr = this.newStr.concat(
-                  "虚拟IP:" + res.data.result[i].new_str + "\n"
+                  res.data.result[i].new_str === "null"
+                    ? "虚拟IP:" + "无" + "\n"
+                    : "虚拟IP:" + res.data.result[i].new_str + "\n"
                 );
                 this.oldStr = this.oldStr.concat(
-                  "虚拟IP:" + res.data.result[i].old_str + "\n"
+                  res.data.result[i].old_str === "null"
+                    ? "虚拟IP:" + "无" + "\n"
+                    : "虚拟IP:" + res.data.result[i].old_str + "\n"
                 );
                 break;
               case "configure_ha":
@@ -877,6 +881,22 @@ export default {
                 );
                 this.oldStr = this.oldStr.concat(
                   "配置:" + res.data.result[i].old_str + "\n"
+                );
+                break;
+              case "custom_priority":
+                this.newStr = this.newStr.concat(
+                  "HA优先级状态:" + res.data.result[i].new_str + "\n"
+                );
+                this.oldStr = this.oldStr.concat(
+                  "HA优先级状态:" + res.data.result[i].old_str + "\n"
+                );
+                break;
+              case "ha_sort":
+                this.newStr = this.newStr.concat(
+                  "自定义HA优先级:" + res.data.result[i].new_str + "\n"
+                );
+                this.oldStr = this.oldStr.concat(
+                  "自定义HA优先级:" + res.data.result[i].old_str + "\n"
                 );
                 break;
             }

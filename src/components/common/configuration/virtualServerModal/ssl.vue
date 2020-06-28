@@ -45,14 +45,24 @@
     export default {
         mixins: [mixin],
         data () {
+            const commonReg = (rule, value, callback) => {
+                const reg = /^[^ ]+$/
+                if (value === '') {
+                    callback(new Error('不能为空'))
+                }else if (!reg.test(value)){
+                        callback(new Error('不能含有空格'))
+                } else {
+                    callback()
+                }
+            };
             return {
                 title: 'SSL CERTIFICATE',
                 formRules: {
                     ssl_key: [
-                        { required: true, message: '不能为空', trigger: 'blur' }
+                        { required: true, validator: commonReg, trigger: 'blur' }
                     ],
                     ssl_file: [
-                        { required: true, message: '不能为空', trigger: 'blur' }
+                        { required: true, validator: commonReg, trigger: 'blur' }
                     ]
                 }
             }

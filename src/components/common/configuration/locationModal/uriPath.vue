@@ -23,7 +23,7 @@
                 </FormItem>
                 <span class="options-label">match with</span>
                 <FormItem label="" class="inline-form-item options" prop="url_path_route_value">
-                    <Input placeholder="/" v-model="form.url_path_route_value"></Input>
+                    <Input placeholder="/" v-model.trim="form.url_path_route_value"></Input>
                 </FormItem>
 
             </Form>
@@ -48,7 +48,16 @@
     export default {
         mixins: [mixin],
         data () {
-
+            const urlPathRouteValue = (rule, value, callback) => {
+                const reg = /^[^ ]+$/
+                if (!value) {
+                    callback(new Error('不能为空'))
+                }else if (!reg.test(value)){
+                        callback(new Error('不能含有空格'))
+                } else {
+                    callback()
+                }
+            }
             return {
                 title: 'URI-PATH/ROUTE',
                 info: 'Location定义是NGINX中请求路由机制的核心。Location指定NGINX是代理一个特定的请求还是直接服务它。',
@@ -57,7 +66,7 @@
 
                     ],
                     url_path_route_value: [
-                        { required: true, message: '不能为空' },
+                        { required: true, validator: urlPathRouteValue },
                     ]
                 },
             }

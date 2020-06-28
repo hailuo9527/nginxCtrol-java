@@ -54,6 +54,16 @@ export default {
       }
 
     }
+    const healthcheckHost = (rule, value, callback) => {
+        const reg = /^[^ ]+$/
+        if (value === '') {
+            callback(new Error('不能为空'))
+        }else if (!reg.test(value)){
+            callback(new Error('不能含有空格'))
+        } else {
+            callback()
+        }
+    };
     return {
       title: "ACTIVE HEALTHCHECK",
       info: "为此upstream group中的服务器启用定期活动运行状况检查。",
@@ -62,7 +72,7 @@ export default {
           {validator: urlRule}
         ],
         healthcheck_host: [
-          { required: true, message: '不能为空'}
+          { required: true, validator: healthcheckHost}
         ]
       }
     };

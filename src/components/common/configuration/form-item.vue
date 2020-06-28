@@ -167,8 +167,8 @@
 
         },
         mounted() {
-            this.onlyShowConfig = !!this.$route.params.L7
-            this.actionButton = !!this.$route.params.L7
+            this.onlyShowConfig = !!(this.$route.params.L7||this.$route.params.app)
+            this.actionButton = !!(this.$route.params.L7||this.$route.params.app)
             if (this.onlyShow && !this.onlyShowConfig){
                 this.actionButton = true
             }

@@ -40,7 +40,7 @@
                 </div>
                 <div class="ctrl-edit-properties__row">
                     <span class="label">LOG FORMAT</span>
-                    <span class="">{{form.access_log_format}}</span>
+                    <span class="log-format">{{form.access_log_format}}</span>
                 </div>
             </div>
         </div>
