@@ -28,9 +28,10 @@
     <Modal
       v-model="DeviceModal"
       title="选择要关联的实例"
-      width="790"
+      width="50"
       ok-text="添加"
       @on-ok="addInstance"
+      :mask-closable="false"
     >
       <div class="main">
         <h3>

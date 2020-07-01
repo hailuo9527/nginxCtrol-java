@@ -73,7 +73,7 @@
                     <!-- 新建或修改配置弹窗 -->
                     <Modal
                             v-model="modal"
-                            :title="configMode?'修改配置': '新建配置'">
+                            :title="configMode?'修改配置': '新建配置'" :mask-closable="false">
                         <div style="padding: 20px">
                             <Form ref="newConfigForm" :model="newConfig" :rules="newConfigRules" :label-width="100" label-position="left">
                                 <FormItem label="负载均衡:"  prop="load_balance">

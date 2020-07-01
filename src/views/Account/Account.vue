@@ -97,7 +97,7 @@
       </Layout>
     </Layout>
     <!-- 添加用户信息的Modal -->
-    <Modal v-model="AddModel" :mask-closable="false">
+    <Modal v-model="AddModel" :mask-closable="false" width="40">
       <p slot="header" style="color:#333;text-align:center">
         <span>添加</span>
       </p>
@@ -144,7 +144,7 @@
       </div>
     </Modal>
     <!-- 修改用户的Modal -->
-    <Modal v-model="EditModel" :mask-closable="false">
+    <Modal v-model="EditModel" :mask-closable="false" width="40">
       <p slot="header" style="color:#333;text-align:center">
         <span>修改</span>
       </p>

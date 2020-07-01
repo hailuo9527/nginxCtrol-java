@@ -117,7 +117,7 @@
       </div>
     </div>
 
-    <Modal v-model="l7_model_add" width="480">
+    <Modal v-model="l7_model_add" width="40" :mask-closable="false">
       <p slot="header" style="color:#333;text-align:center">
         <span>{{ edit ? "修改服务器配置" : "添加NGINX服务器" }}</span>
       </p>

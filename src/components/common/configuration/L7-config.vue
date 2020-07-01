@@ -1,18 +1,13 @@
-/*
- * @Author: mikey.zhaopeng 
- * @Date: 2020-06-09 11:41:17 
- * @Last Modified by:   mikey.zhaopeng 
- * @Last Modified time: 2020-06-09 11:41:17 
- */
-/*
- * @Author: mikey.zhaopeng 
- * @Date: 2020-06-09 11:41:08 
- * @Last Modified by:   mikey.zhaopeng 
- * @Last Modified time: 2020-06-09 11:41:08 
- */
+/* * @Author: mikey.zhaopeng * @Date: 2020-06-09 11:41:17 * @Last Modified by:
+mikey.zhaopeng * @Last Modified time: 2020-06-09 11:41:17 */ /* * @Author:
+mikey.zhaopeng * @Date: 2020-06-09 11:41:08 * @Last Modified by: mikey.zhaopeng
+* @Last Modified time: 2020-06-09 11:41:08 */
 <template>
   <div class="l7_config_layout">
-    <div v-if="config.nginx_conf_id||$route.name ==='newNginxConfig'" class="l7_config_layout">
+    <div
+      v-if="config.nginx_conf_id || $route.name === 'newNginxConfig'"
+      class="l7_config_layout"
+    >
       <div class="l7_config_column column_header">
         <div class="header_item">
           main
@@ -40,7 +35,7 @@
             size="26"
             color="#333"
             class="add_handler"
-            v-if="!($route.params.L7||$route.params.app)"
+            v-if="!($route.params.L7 || $route.params.app)"
             @click="editVirtualServer(0, false)"
           />
         </div>
@@ -59,8 +54,8 @@
             size="26"
             color="#333"
             class="add_handler"
-            v-if="!($route.params.L7||$route.params.app)"
-            @click="editLocation(0,false)"
+            v-if="!($route.params.L7 || $route.params.app)"
+            @click="editLocation(0, false)"
           />
         </div>
       </div>
@@ -77,7 +72,7 @@
             size="26"
             color="#333"
             class="add_handler"
-            v-if="!($route.params.L7||$route.params.app)"
+            v-if="!($route.params.L7 || $route.params.app)"
             @click="editUpstream(0, false)"
           />
         </div>
@@ -99,24 +94,34 @@
       <div class="l7_config_column column_body">
         <div class="main">
           <div class="main_item">
-            <Icon type="md-create" class="ctrl-list-item__edit" @click="editMain(0, false)" />
+            <Icon
+              type="md-create"
+              class="ctrl-list-item__edit"
+              @click="editMain(0, false)"
+            />
             <div>
               <span>worker_rlimit_nofile:</span>
-              <span
-                class="main-value"
-              >{{config.work_rlimit_nofile ==null?'null':config.work_rlimit_nofile}}</span>
+              <span class="main-value">{{
+                config.work_rlimit_nofile == null
+                  ? "null"
+                  : config.work_rlimit_nofile
+              }}</span>
             </div>
             <div>
               <span>worker_connections:</span>
-              <span
-                class="main-value"
-              >{{config.worker_connections == null?'null':config.worker_connections}}</span>
+              <span class="main-value">{{
+                config.worker_connections == null
+                  ? "null"
+                  : config.worker_connections
+              }}</span>
             </div>
             <div>
               <span>worker_processes:</span>
-              <span
-                class="main-value"
-              >{{config.worker_processes==null?'null':config.worker_processes}}</span>
+              <span class="main-value">{{
+                config.worker_processes == null
+                  ? "null"
+                  : config.worker_processes
+              }}</span>
             </div>
           </div>
         </div>
@@ -129,17 +134,19 @@
             class="server_item"
             @click="selectVirtualServer(index)"
             :key="index"
-            :class="virtualServerIndex === index? 'selected': ''"
+            :class="virtualServerIndex === index ? 'selected' : ''"
             v-for="(item, index) in virtualServerGroup"
           >
             <Icon
               type="md-create"
               class="ctrl-list-item__edit"
-              @click="editVirtualServer(index,true)"
+              @click="editVirtualServer(index, true)"
             />
             <h4 class="ctrl-server__server-name">
-              <span v-if="item.domain_name!==null">{{ item.domain_name.split(',')[0] || '*'}}</span>
-              <span v-else>{{ item.domain_name=''}}</span>
+              <span v-if="item.domain_name !== null">{{
+                item.domain_name.split(",")[0] || "*"
+              }}</span>
+              <span v-else>{{ (item.domain_name = "") }}</span>
             </h4>
             <div class="ctrl-server__protocols">
               http
@@ -147,14 +154,16 @@
                 v-for="(http, index) in item.ngcListenings"
                 :key="index"
                 v-if="http.http2_state === 'on'"
-              >http2</span>
+                >http2</span
+              >
             </div>
             <div>
               <span
                 class="ctrl-server__port"
                 :key="index"
                 v-for="(port, index) in item.ngcListenings"
-              >:{{port.listening_address_port || '80'}}</span>
+                >:{{ port.listening_address_port || "80" }}</span
+              >
             </div>
           </div>
         </div>
@@ -168,38 +177,57 @@
             @click="selectLocation(index)"
             v-for="(item, index) in ngcLocationsGroup"
             :key="index"
-            :class="{ 'list-selected' : activeLocationIndex === index, 'line-selected': item.isLine && activeLocationIndex === null }"
+            :class="{
+              'list-selected': activeLocationIndex === index,
+              'line-selected': item.isLine && activeLocationIndex === null,
+            }"
           >
             <span
               class="ctrl-location"
-              :class="item.url_path_route_value === '/' ? 'ctrl-location_default' : ''"
-              @click="locationsIndex=index"
+              :class="
+                item.url_path_route_value === '/' ? 'ctrl-location_default' : ''
+              "
+              @click="locationsIndex = index"
             >
-              <span>{{item.url_path_route_value|| '无'}}</span>
-              <span
-                class="ctrl-location__label"
-              >{{item.url_path_route_value === '/' ? 'default route': ''}}</span>
+              <span>{{ item.url_path_route_value || "无" }}</span>
+              <span class="ctrl-location__label">{{
+                item.url_path_route_value === "/" ? "default route" : ""
+              }}</span>
             </span>
-            <Icon type="md-create" class="ctrl-list-item__edit" @click="editLocation(index,true)" />
+            <Icon
+              type="md-create"
+              class="ctrl-list-item__edit"
+              @click="editLocation(index, true)"
+            />
           </div>
         </div>
       </div>
       <!--upstream groups-->
-      <div class="l7_config_column column_body column_body_upstream" ref="upstreamGroup">
+      <div
+        class="l7_config_column column_body column_body_upstream"
+        ref="upstreamGroup"
+      >
         <div class="upstream-groups">
           <div
             v-if="config.ngcUpstreamGroups.length"
             v-for="(item, key) in config.ngcUpstreamGroups"
             :key="key"
-            :class="{'list-selected':upstreamIndex === key , 'line-selected': item.isLine && activeLocationIndex!== null}"
+            :class="{
+              'list-selected': upstreamIndex === key,
+              'line-selected': item.isLine && activeLocationIndex !== null,
+            }"
             @click="selectUpstream(key)"
             class="ctrl-list-item ctrl-list-item_corners"
           >
             <span ref="end" class="ctrl-list-item__corner-left">
               <span class="ctrl-list-item__corner-inner"></span>
             </span>
-            <span>{{item.group_name}}</span>
-            <Icon type="md-create" class="ctrl-list-item__edit" @click="editUpstream(key, true)" />
+            <span>{{ item.group_name }}</span>
+            <Icon
+              type="md-create"
+              class="ctrl-list-item__edit"
+              @click="editUpstream(key, true)"
+            />
             <span ref="start1" class="ctrl-list-item__corner-right">
               <span class="ctrl-list-item__corner-inner"></span>
             </span>
@@ -207,12 +235,15 @@
         </div>
       </div>
       <!--upstream servers-->
-      <div class="l7_config_column column_body column_body_upstream" ref="upstreamServers">
+      <div
+        class="l7_config_column column_body column_body_upstream"
+        ref="upstreamServers"
+      >
         <div class="upstream-groups">
           <div
             v-for="(item, end) in ngcUpstreamServers"
             :key="end"
-            :class="upstreamServerIndex === end? 'list-selected':'' "
+            :class="upstreamServerIndex === end ? 'list-selected' : ''"
             @click="selectUpServer(end)"
             class="ctrl-list-item ctrl-list-item_corners default"
           >
@@ -220,7 +251,7 @@
               <span class="ctrl-list-item__corner-inner"></span>
             </span>
             <!--<span>{{item.upstream_servers_name}}</span>-->
-            <span>{{item.upstream_servers_name}}</span>
+            <span>{{ item.upstream_servers_name }}</span>
             <!--<Icon type="md-create" class="ctrl-list-item__edit"  />-->
             <span class="ctrl-list-item__corner-right">
               <span class="ctrl-list-item__corner-inner"></span>
@@ -229,19 +260,31 @@
         </div>
       </div>
     </div>
-    <div v-else style="display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; color: #888">暂无配置</div>
+    <div
+      v-else
+      style="display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; color: #888"
+    >
+      暂无配置
+    </div>
     <!--loading-->
     <div class="loading-wrap" v-if="loading">
       <Loading />
-      
     </div>
     <!-- 关系连线 canvas -->
     <div class="ctrl-relations-canvas" ref="canvas">
-      <canvas width="2000" height="2000" id="canvas" style="width: 2000px; height: 2000px;"></canvas>
+      <canvas
+        width="2000"
+        height="2000"
+        id="canvas"
+        style="width: 2000px; height: 2000px;"
+      ></canvas>
     </div>
     <!-- 页脚按钮 -->
 
-    <div class="config-page__bottom-buttons" v-if="!($route.params.app || $route.params.L7)">
+    <div
+      class="config-page__bottom-buttons"
+      v-if="!($route.params.app || $route.params.L7)"
+    >
       <div class="config-page__bottom-buttons_container">
         <button
           type="button"
@@ -262,13 +305,18 @@
           <Modal
             v-model="copyAndSaveModel"
             :loading="copyAndSaveModelLoading"
-            width="790"
+            width="60"
             title="复制一个新的配置文件"
             @on-ok="copyAndSaveConfig"
+            :mask-closable="false"
           >
             <div class="copy-save-model">
               <div class="copy-save-model-title">输入想要保存的配置文件名</div>
-              <Input type="text" v-model="copyConfigName" placeholder="配置名"></Input>
+              <Input
+                type="text"
+                v-model="copyConfigName"
+                placeholder="配置名"
+              ></Input>
             </div>
           </Modal>
         </button>
@@ -279,10 +327,9 @@
           class="config-page__add-new ae-button__green ae-button__button"
           title="Save configuration"
         >
-          <span
-            class="ae-button__label"
-            :class="submitLoading? 'loop': ''"
-          >{{submitLoading? '正在保存': '保存'}}</span>
+          <span class="ae-button__label" :class="submitLoading ? 'loop' : ''">{{
+            submitLoading ? "正在保存" : "保存"
+          }}</span>
         </button>
       </div>
     </div>
@@ -292,10 +339,13 @@
         <div class="tip">
           <router-link
             v-if="config.nginx_conf_id"
-            :to="{name: 'nginxConfig',
-                                            params:{configName: config.config_name,},
-                                            query: {nginx_conf_id: config.nginx_conf_id}}"
-          >修改配置</router-link>
+            :to="{
+              name: 'nginxConfig',
+              params: { configName: config.config_name },
+              query: { nginx_conf_id: config.nginx_conf_id },
+            }"
+            >修改配置</router-link
+          >
         </div>
         <!--<div class="tip">
             <span v-if="!config.nginx_conf_id">没有关联任何配置</span>
@@ -319,7 +369,9 @@
       </div>
 
       <div class="instance-actions-container__links">
-        <router-link class="instance-actions-container__link" to="/nginxConfigs">查看全部配置</router-link>
+        <router-link class="instance-actions-container__link" to="/nginxConfigs"
+          >查看全部配置</router-link
+        >
         <div class="instance-actions-container__separator"></div>
         <button
           type="button"
@@ -340,13 +392,13 @@
     <Drawer title="配置预览" v-model="previewOpen" width="50%">
       <!-- <pre contenteditable="true">{{previewData}}</pre> -->
       <div class="preview-wrap">
-        <!-- <div class="preview-content"> -->
-          <!-- <pre
+        <!-- <div class="preview-content">
+          <pre
             :contenteditable="configEditable"
             class="edit-area"
             ref="editConfig"
-          >{{previewData}}</pre> -->
-        <!-- </div> -->
+          >{{previewData}}</pre>
+        </div> -->
         <div class="preview-content">
           <div
             :contenteditable="configEditable"
@@ -355,11 +407,29 @@
             ref="editConfig"
           ></div>
         </div>
-        <div class="preview-opera" v-if="this.$route.params.configName||this.$route.name==='newNginxConfig'">
-          <Button @click="configEditable = true" type="info" v-if="!configEditable">编辑</Button>
+        <div
+          class="preview-opera"
+          v-if="
+            this.$route.params.configName ||
+              this.$route.name === 'newNginxConfig'
+          "
+        >
+          <Button
+            @click="configEditable = true"
+            type="info"
+            v-if="!configEditable"
+            >编辑</Button
+          >
 
-          <Button v-if="configEditable" @click="configEditable = false" class="edit-button">取消</Button>
-          <Button v-if="configEditable" @click="saveEditedConfig" type="primary">保存</Button>
+          <Button
+            v-if="configEditable"
+            @click="configEditable = false"
+            class="edit-button"
+            >取消</Button
+          >
+          <Button v-if="configEditable" @click="saveEditedConfig" type="primary"
+            >保存</Button
+          >
         </div>
       </div>
     </Drawer>
@@ -421,7 +491,7 @@ import {
   selNginxConfByL7ID,
   selNginxConfByAPPID,
   getL7RelevanceConfig,
-  ManEditNginxConf
+  ManEditNginxConf,
 } from "../../../api/L7";
 import defaultConfig from "./defaultConfig";
 import emptyConfig from "./emptyConfig";
@@ -462,11 +532,12 @@ export default {
       copyConfigName: "",
       relevanceApp: null, // 关联的app
       maindata: [],
-      configEditable: false
+      configEditable: false,
+      temp: [],
     };
   },
   props: {
-    configName: ""
+    configName: "",
   },
   watch: {
     config(newVal, old) {
@@ -474,15 +545,15 @@ export default {
     },
     $route() {
       this.initConfig();
-    }
+    },
   },
   computed: {
     ...mapState({
-      canSaveConfig: state => state.L7.canSaveConfig,
-      canSaveAndCopyConfig: state => state.L7.canSaveAndCopyConfig,
-      configName: state => state.L7.configName,
-      l7ServerId: state => state.L7.activeAside.l7ServerId
-    })
+      canSaveConfig: (state) => state.L7.canSaveConfig,
+      canSaveAndCopyConfig: (state) => state.L7.canSaveAndCopyConfig,
+      configName: (state) => state.L7.configName,
+      l7ServerId: (state) => state.L7.activeAside.l7ServerId,
+    }),
   },
   components: {
     PopTip,
@@ -491,7 +562,7 @@ export default {
     VirtualServerModal,
     LocationModal,
     UpstreamModal,
-    MainModal
+    MainModal,
   },
   methods: {
     /* 打开新建弹窗 */
@@ -505,7 +576,7 @@ export default {
           break;
       }
     },
-    
+
     modalVisibleChange(data) {
       switch (data.name) {
         case "domainModal":
@@ -614,7 +685,7 @@ export default {
         res = await selNginxConfByAPPID(json);
       }
       this.loading = false;
-    //   console.log(res);
+      //   console.log(res);
       if (this.asyncOk(res) && res.data.result) {
         this.config = res.data.result || {};
         if (this.config.ngcVirtualServers[0]) {
@@ -784,30 +855,30 @@ export default {
         if (this.$route.params.configName) {
           this.$Message.success({
             content: "配置已更新成功",
-            duration: 3
+            duration: 3,
           });
           /* 更新配置 */
           this.getConfig();
         } else {
           this.$Message.success({
             content: "配置保存成功",
-            duration: 3
+            duration: 3,
           });
           this.$router.push({
             name: "nginxConfig",
             params: {
-              configName: this.configName
+              configName: this.configName,
             },
             query: {
-              nginx_conf_id: res.data.result
-            }
+              nginx_conf_id: res.data.result,
+            },
           });
         }
       } else {
         this.submitLoading = false;
         this.$Message.error({
           content: res.data.result,
-          duration: 3
+          duration: 3,
         });
       }
     },
@@ -821,13 +892,13 @@ export default {
       if (this.asyncOk(res)) {
         this.$Message.success({
           content: "配置已更新成功",
-          duration: 3
+          duration: 3,
         });
         this.$router.push("/nginxConfigs");
       } else {
         this.$Message.error({
           content: res.data.result,
-          duration: 3
+          duration: 3,
         });
       }
     },
@@ -854,15 +925,25 @@ export default {
     /* 预览配置 */
     async previewConfig() {
       this.previewOpen = true;
+      this.temp = [];
       let res = await previewNginxConf(this.config);
       if (this.asyncOk(res)) {
         this.previewData = res.data.result || "";
-    //     let strArr = this.previewData.split("\n");
-    //     strArr = strArr.map(item => {
-    //       return item + "<br>";
-    //     });
-    //     this.previewData = strArr.join("");
-    //     this.previewData = this.previewData.replace(/\s/g, "&nbsp");
+        let strArr = this.previewData.split("\n");
+        strArr = strArr.filter((item) => {
+          if (/#.*LINE/.test(item)) {
+            this.temp.push(item);
+          }
+          return !/#.*LINE/.test(item);
+          //   if (/#.*LINE/.test(item)) {
+          //       return "&nbsp"
+          //     //   return item + "<br>";
+          //   } else {
+          //       return item
+          //   }
+        });
+        this.previewData = strArr.join("\n");
+        // this.previewData = this.previewData.replace(/#.*LINE/g, "");
       }
     },
     /*/!* 通过实例主键ID查询该实例是否与配置文件或者APP关联 *!/
@@ -877,19 +958,31 @@ export default {
     async saveEditedConfig() {
       this.configEditable = false;
       let target = this.$refs.editConfig.innerHTML;
-
-      target = target.replace(/&nbsp;/g, " ");
-      target = target.replace(/<br>/g, "\n");
-      target = target.replace(/<div>/g, "");
-      target = target.replace(/<\/div>/g, "");
+      if (this.temp.length > 0) {
+        let strArr = target.split("\n");
+        strArr.forEach((item, index) => {
+          if (
+            /server \{/.test(item) ||
+            /location  \/ \{/.test(item) ||
+            /upstream.*\{/.test(item)
+          ) {
+            strArr.splice(index + 1, 0, this.temp.shift());
+          }
+        });
+        target = strArr.join("\n");
+      }
+      //   target = target.replace(/&nbsp;/g, " ");
+      //   target = target.replace(/<br>/g, "\n");
+      //   target = target.replace(/<div>/g, "");
+      //   target = target.replace(/<\/div>/g, "");
 
       let json = {
-        data: target
+        data: target,
       };
       let res = await ManEditNginxConf(
         {
-          nginx_conf_id: this.config.nginx_conf_id||'new',
-          config_name: this.configName
+          nginx_conf_id: this.config.nginx_conf_id || "new",
+          config_name: this.configName,
         },
         json
       );
@@ -897,22 +990,22 @@ export default {
         this.$Message.success("保存成功！");
         this.previewOpen = false;
         if (this.$route.params.configName) {
-            this.initConfig();
+          this.initConfig();
         } else {
-            this.$router.push({
+          this.$router.push({
             name: "nginxConfig",
             params: {
-              configName: this.configName
+              configName: this.configName,
             },
             query: {
-              nginx_conf_id: res.data.result
-            }
+              nginx_conf_id: res.data.result,
+            },
           });
         }
       } else {
         this.$Message.error(res.data.result);
       }
-    }
+    },
   },
   mounted() {
     /* 初始化配置 */
@@ -938,7 +1031,7 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.drawLine);
-  }
+  },
 };
 </script>
 <style lang="less" scoped>

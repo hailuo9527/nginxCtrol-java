@@ -105,6 +105,7 @@
       title="修改权重"
       :closable="false"
       :mask-closable="false"
+      width="40"
     >
       <div class="modal_content" v-if="modal">
         <Form ref="formDynamic" :model="dispatch">
@@ -455,6 +456,11 @@
     return {
       loading: false,
       columns: [
+        {
+            title: "服务群组名称",
+            key: "upstream_name",
+            align: 'center'
+        },
         {
           title: "IP",
           key: "upstream_server",

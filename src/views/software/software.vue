@@ -6,7 +6,7 @@
       <Button type="info" size="large" icon="md-flash" @click="onlineInstall()">在线安装</Button>
       <Button type="primary" size="large" icon="md-add" @click="uploadModal = true" style="margin-left: 10px">上传文件</Button>
       </div>
-      <Modal v-model="uploadModal" title="文件上传" >
+      <Modal v-model="uploadModal" title="文件上传" :mask-closable="false" width="40">
         <Form>
           <FormItem label='服务器版本'>
             <Select v-model="versionId" >
@@ -71,7 +71,7 @@
         </template>
       </Table>
     </div>
-    <Modal v-model="installModal" title="isOnline?'在线安装':'软件安装'" width="800" :closable="false" :mask-closable="false">
+    <Modal v-model="installModal" title="isOnline?'在线安装':'软件安装'" width="60" :closable="false" :mask-closable="false">
         <div slot='header'>
             <span v-if="isOnline" style="color: #fff">在线安装</span>
             <span v-if="!isOnline" style="color: #fff">软件安装</span>

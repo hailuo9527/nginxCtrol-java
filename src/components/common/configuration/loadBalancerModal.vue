@@ -1,6 +1,6 @@
 <template>
     <Modal
-            width="840"
+            width="50"
             v-model="domainModel"
             :transfer="true"
             @on-visible-change="change"

@@ -76,12 +76,20 @@
       @click="CompareData()"
     >
       对比和还原...
-    </div>
-    <Modal v-model="CompareModal" fullscreen>
+    </div>  
+    <Modal v-model="CompareModal" width="80" :mask-closable="false">
       <template slot="close">
-          <span></span>
+        <span></span>
       </template>
       <div>
+        <div slot="close" style="text-align: right;margin: -10px -6px 10px 0;" v-if="!Compareloading">
+          <Icon
+            type="md-close"
+            size="22"
+            style="cursor: pointer;"
+            @click="CompareModal = false"
+          />
+        </div>
         <code-diff
           :old-string="oldStr"
           :new-string="newStr"
@@ -217,7 +225,7 @@ export default {
         version: this.versionNumber,
       });
       if (res.data.code === "success") {
-        console.log(res);
+        // console.log(res);
         if (res.data.result.conf_old === res.data.result.conf_new) {
           let strNew = "VERSION:" + res.data.result.version_new + "\n";
           let strOld = "VERSION:" + res.data.result.version_old + "\n";

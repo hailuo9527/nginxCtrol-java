@@ -70,7 +70,7 @@
       </div>
     </div>
 
-    <Modal v-model="appModal" width="480">
+    <Modal v-model="appModal" width="40" :mask-closable="false">
       <p slot="header" style="color:#333;text-align:center">
         <span>{{ edit ? "修改APP配置" : "新建APP" }}</span>
       </p>

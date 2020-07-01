@@ -165,7 +165,7 @@
             <div class="add-button" @click="DisplayModel()">+</div>
           </div>
           <!-- 添加app的Modal -->
-          <Modal v-model="AddModel" width="400" :mask-closable="false">
+          <Modal v-model="AddModel" width="30" :mask-closable="false">
             <p slot="header" style="color:#333;text-align:center">
               <span>添加APP</span>
             </p>

@@ -180,9 +180,20 @@
                 v-if="!activeAside.is_sync"
                 @click="showModal()"
               />
-              <Modal v-model="compareModal" :mask="true" :width="960">
+              <Modal v-model="compareModal" :mask="true" width="80" :mask-closable="false">
                 <span slot="close"></span>
                 <div v-if="!Compareloading">
+                  <div
+                    slot="close"
+                    style="text-align: right;margin: -10px -6px 10px 0;"
+                  >
+                    <Icon
+                      type="md-close"
+                      size="22"
+                      style="cursor: pointer;"
+                      @click="compareModal = false"
+                    />
+                  </div>
                   <code-diff
                     :old-string="oldStr"
                     :new-string="newStr"
@@ -875,14 +886,22 @@ export default {
                   "监听端口:" + res.data.result[i].old_str + "\n"
                 );
                 break;
-              case "nginx_conf_id":
-                this.newStr = this.newStr.concat(
-                  "配置:" + res.data.result[i].new_str + "\n"
-                );
-                this.oldStr = this.oldStr.concat(
-                  "配置:" + res.data.result[i].old_str + "\n"
-                );
-                break;
+              //   case "nginx_conf_id":
+              //     this.newStr = this.newStr.concat(
+              //       "配置名:" + res.data.result[i].new_str + "\n"
+              //     );
+              //     this.oldStr = this.oldStr.concat(
+              //       "配置名:" + res.data.result[i].old_str + "\n"
+              //     );
+              //     break;
+              //   case "nginx_conf_str":
+              //     this.newStr = this.newStr.concat(
+              //       "配置内容:" + res.data.result[i].new_str + "\n"
+              //     );
+              //     this.oldStr = this.oldStr.concat(
+              //       "配置内容:" + res.data.result[i].old_str + "\n"
+              //     );
+              //     break;
               case "custom_priority":
                 this.newStr = this.newStr.concat(
                   "HA优先级状态:" + res.data.result[i].new_str + "\n"
@@ -901,6 +920,22 @@ export default {
                 break;
             }
           }
+        }
+        if (res.data.result.nginx_conf_id !== null) {
+          this.newStr = this.newStr.concat(
+            "配置名:" + res.data.result.nginx_conf_id.new_str + "\n"
+          );
+          this.oldStr = this.oldStr.concat(
+            "配置名:" + res.data.result.nginx_conf_id.old_str + "\n"
+          );
+        }
+        if (res.data.result.nginx_conf_str !== null) {
+          this.newStr = this.newStr.concat(
+            "配置内容:" + res.data.result.nginx_conf_str.new_str + "\n"
+          );
+          this.oldStr = this.oldStr.concat(
+            "配置内容:" + res.data.result.nginx_conf_str.old_str + "\n"
+          );
         }
         this.Compareloading = false;
       } else {

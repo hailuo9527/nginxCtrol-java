@@ -36,7 +36,7 @@
 
         </div>
 
-        <Modal v-model="l4_model_add" width="360">
+        <Modal v-model="l4_model_add" width="40" :mask-closable="false">
             <p slot="header" style="color:#333;text-align:center">
                 <span>添加机器</span>
             </p>

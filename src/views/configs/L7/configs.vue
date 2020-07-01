@@ -16,7 +16,7 @@
                 </template>
             </Table>
         </div>
-        <Modal v-model="importModal" title="导入配置文件" :mask-closable="false">
+        <Modal v-model="importModal" title="导入配置文件" :mask-closable="false" width="40">
             <Form ref="formInline" :model="formInline" :rules="ruleInline">
                 <FormItem prop="inputValue" label="配置文件名称">
                     <Input type="text" v-model="formInline.inputValue" placeholder="配置文件名称"></Input>
