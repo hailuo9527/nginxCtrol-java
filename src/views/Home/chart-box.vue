@@ -16,7 +16,7 @@
         <h4 class="overview-box__value-title">小时平均</h4>
         <span class="overview-box__l__content">
           <span class="overview-box__l__val">{{
-            numerify(data.requestCountCurrent, "0 a")
+            numerify(data.requestCountCurrent, "0.00a")
           }}</span>
           <span class="overview-box__l__delta"
             ><span v-if="data.requestRatio > 0">+</span
@@ -28,7 +28,7 @@
       <div class="overview-box__r">
         <h4 class="overview-box__value-title">前    值</h4>
         <span class="overview-box__r__val">{{
-          numerify(data.requestCountPast, "0 a")
+          numerify(data.requestCountPast, "0.00a")
         }}</span>
       </div>
       <div class="x-chart">

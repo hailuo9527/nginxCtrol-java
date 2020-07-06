@@ -29,3 +29,13 @@ export const uploadLicense = (file) => {
         data: file
     })
 }
+
+
+/**  获取系统ID  */
+
+export const selSysId = () => {
+    return axios.request({
+        url: '/selSysId',
+        method: 'post',
+    })
+}

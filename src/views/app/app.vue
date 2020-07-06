@@ -180,7 +180,12 @@
                 v-if="!activeAside.is_sync"
                 @click="showModal()"
               />
-              <Modal v-model="compareModal" :mask="true" width="80" :mask-closable="false">
+              <Modal
+                v-model="compareModal"
+                :mask="true"
+                width="80"
+                :mask-closable="false"
+              >
                 <span slot="close"></span>
                 <div v-if="!Compareloading">
                   <div
@@ -818,7 +823,6 @@ export default {
       if (res.data.code === "success") {
         for (let i in res.data.result) {
           if (res.data.result[i] !== null) {
-            this.popTip_status = true;
             switch (i) {
               case "appDefaultPublishConfList":
                 for (
@@ -931,11 +935,14 @@ export default {
         }
         if (res.data.result.nginx_conf_str !== null) {
           this.newStr = this.newStr.concat(
-            "配置内容:" + res.data.result.nginx_conf_str.new_str + "\n"
+            "配置内容:" + "\n" + res.data.result.nginx_conf_str.new_str + "\n"
           );
           this.oldStr = this.oldStr.concat(
-            "配置内容:" + res.data.result.nginx_conf_str.old_str + "\n"
+            "配置内容:" + "\n" + res.data.result.nginx_conf_str.old_str + "\n"
           );
+        }
+        if (this.newStr !== "当前" + "\n") {
+          this.popTip_status = true;
         }
         this.Compareloading = false;
       } else {

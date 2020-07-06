@@ -249,7 +249,7 @@
               }
           })
 
-          this.$set(this.tableConfig[4], 'filters', arr)
+          this.$set(this.tableConfig[5], 'filters', arr)
           let filterMethod  = function  (value, row){
             let str = row.operation_system_verion_name
             return str === value;
@@ -271,7 +271,7 @@
             this.installLoading = false
             this.installModal = false
             if (this.asyncOk(res)) {
-                this.$Message.success(res.data.result)
+                this.$Notice.info({desc: res.data.result, duration: 0})
             }else {
                 this.$Notice.error({desc: res.data.result, duration: 0})
             }
@@ -399,7 +399,7 @@
                 this.installModal = false
                 this.isOnline = false
                 if (this.asyncOk(res)) {
-                    this.$Message.success(res.data.result)
+                    this.$Notice.info({desc: res.data.result, duration: 0})
                 }else {
                     this.$Notice.error({desc: res.data.result, duration: 0})
                 }
