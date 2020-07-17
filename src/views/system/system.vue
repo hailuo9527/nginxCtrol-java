@@ -22,6 +22,10 @@
             <Icon type="md-ionitron" size="22" />
             <span>系统ID</span>
           </MenuItem>
+          <MenuItem name="download">
+            <Icon type="md-cloud-download" size="22" />
+            <span>下载</span>
+          </MenuItem>
         </Menu>
       </Sider>
       <Layout>
@@ -85,6 +89,13 @@
             <Loading v-if="loading" />
           </div>
         </div>
+        <div v-if="status === 3">
+            <div class="header" :style="num===2?'background: #f2f2f2':''">
+            <span style="font-size: 22px;font-weight: bold;">下载</span>
+          </div>
+          <Index v-if="num===1" @register="register"></Index>
+          <Register v-if="num===2" :isregister="isregister" @Return="Return"></Register>
+        </div>
       </Layout>
     </Layout>
   </div>
@@ -93,8 +104,10 @@
 <script>
 import { selLicense, uploadLicense, selSysId } from "@/api/system";
 import Loading from "@/components/common/loading.vue";
+import Index from "@/views/system/Download/index.vue";
+import Register from "@/views/system/Download/register.vue"
 export default {
-  components: { Loading },
+  components: { Loading, Index, Register },
   data() {
     return {
       message: "",
@@ -104,6 +117,8 @@ export default {
       isCollapsed: false,
       status: 1,
       msg: "",
+      num: 1,
+      isregister: ""
     };
   },
   computed: {
@@ -173,11 +188,21 @@ export default {
       if (name === "license") {
         this.status = 1;
         this.GetLicense();
-      } else {
+      } else if (name === 'systemId') {
         this.status = 2;
         this.GetSysId();
+      } else {
+          this.status = 3
+          this.num = 1
       }
     },
+    register(data) {
+        this.num = 2
+        this.isregister = data
+    },
+    Return() {
+        this.num = 1
+    }
   },
   mounted() {
     this.GetLicense();
@@ -253,5 +278,8 @@ export default {
 }
 /deep/.ivu-upload-select {
   cursor: pointer;
+}
+/deep/ .ivu-layout {
+    overflow: hidden;
 }
 </style>

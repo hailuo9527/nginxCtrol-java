@@ -102,14 +102,15 @@
     </div>
     <Modal
       v-model="modal"
-      title="修改权重"
-      :closable="false"
+      title="修改"
       :mask-closable="false"
       width="40"
     >
+      <div slot="close" style="margin-top: 4px;margin-right: 4px;"><Icon type="md-close" style="color: #fff" size="22" @click="cancel()" /></div>
       <div class="modal_content" v-if="modal">
-        <Form ref="formDynamic" :model="dispatch">
+        <Form ref="formDynamic" :model="dispatch" label-position="left" :label-width="70">
           <FormItem
+            label="修改权重"
             :rules="{ validator: validaterule }"
             :prop="'data.' + index + '.weight'"
           >
@@ -117,6 +118,18 @@
               v-model="dispatch.data[index].weight"
               placeholder="权重，数值越大权重越大"
             ></Input>
+          </FormItem>
+          <FormItem label="备份">
+               <i-switch v-model="dispatch.data[index].backup" size="large" @on-change="getStatus">
+                <span slot="open">On</span>
+                <span slot="close">Off</span>
+            </i-switch>
+          </FormItem>
+          <FormItem label="禁止">
+              <i-switch v-model="dispatch.data[index].down" size="large" @on-change="GetStatus">
+                <span slot="open">On</span>
+                <span slot="close">Off</span>
+            </i-switch>
           </FormItem>
         </Form>
       </div>
@@ -477,6 +490,16 @@
           align: 'center'
         },
         {
+            title: "备份",
+            key: "backup",
+            align: "center"
+        },
+        {
+            title: "禁止",
+            key: "down",
+            align: "center"
+        },
+        {
           title: "修改",
           slot: "action",
           width: 150,
@@ -548,6 +571,8 @@
       hasNotSavedAdvance: false,
       hasNotSavedDispatch: false,
       activeAdvanceIndex: 0, // 当前修改的是哪一项
+      backupStatus: "",
+      downStatus: ""
     };
   },
   computed: {
@@ -561,6 +586,8 @@
     modify(row, index) {
       this.index = index;
       this.weights = row.weight
+      this.backupStatus = row.backup
+      this.downStatus = row.down
       this.modal = true;
       this.upstream_server = row.upstream_server;
       this.upstream_request = row.upstream_request;
@@ -610,6 +637,20 @@
     cancel() {
         this.modal = false
         this.dispatch.data[this.index].weight = this.weights
+        this.dispatch.data[this.index].backup = this.backupStatus
+        this.dispatch.data[this.index].down = this.downStatus
+    },
+    //备份为true时禁止不能为true
+    getStatus(status) {
+        if (status&&this.dispatch.data[this.index].down) {
+            this.dispatch.data[this.index].down = false
+        }
+    },
+    //禁止为true时备份不能为true
+    GetStatus(status) {
+        if (status&&this.dispatch.data[this.index].backup) {
+            this.dispatch.data[this.index].backup = false
+        }
     },
     /* 添加 */
     handleAdd (target) {
@@ -760,18 +801,22 @@
     },
     /* 保存 */
     async save() {
-      this.saveLoading = true
-      if(this.hasNotSavedDispatch){
-        await this.saveDispatch()
-        this.hasNotSavedDispatch = false
-      }
+        if (this.activeAside.is_sync) {
+            this.saveLoading = true
+            if(this.hasNotSavedDispatch){
+                await this.saveDispatch()
+                this.hasNotSavedDispatch = false
+            }
 
-      else if(this.showAdvance && this.hasNotSavedAdvance){
-        await this.advanceDispatch()
-        this.hasNotSavedAdvance = false
-      }
+            else if(this.showAdvance && this.hasNotSavedAdvance){
+                await this.advanceDispatch()
+                this.hasNotSavedAdvance = false
+            }
 
-      this.saveLoading = false
+            this.saveLoading = false
+        } else {
+            this.$Message.error({content: "状态未同步,无法保存", duration: 3})
+        }
     }
   },
   watch: {

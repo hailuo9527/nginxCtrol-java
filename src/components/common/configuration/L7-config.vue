@@ -5,7 +5,7 @@ mikey.zhaopeng * @Date: 2020-06-09 11:41:08 * @Last Modified by: mikey.zhaopeng
 <template>
   <div class="l7_config_layout">
     <div
-      v-if="config.nginx_conf_id || $route.name === 'newNginxConfig'"
+      v-if="config || $route.name === 'newNginxConfig'"
       class="l7_config_layout"
     >
       <div class="l7_config_column column_header">
@@ -338,7 +338,7 @@ mikey.zhaopeng * @Date: 2020-06-09 11:41:08 * @Last Modified by: mikey.zhaopeng
       <div class="instance-actions-container__info">
         <div class="tip">
           <router-link
-            v-if="config.nginx_conf_id"
+            v-if="config && config.nginx_conf_id"
             :to="{
               name: 'nginxConfig',
               params: { configName: config.config_name },
@@ -534,15 +534,13 @@ export default {
       maindata: [],
       configEditable: false,
       temp: [],
+      tempCompare: "",
     };
   },
   props: {
     configName: "",
   },
   watch: {
-    config(newVal, old) {
-      // console.log(...arguments)
-    },
     $route() {
       this.initConfig();
     },
@@ -614,41 +612,55 @@ export default {
             end[this.upstreamServerIndex]
           );
         } else {
-          end.map((item, index) => {
-            drawLine(this.$refs.canvas, start[this.upstreamIndex], end[index]);
-          });
+          if (end !== undefined) {
+            end.map((item, index) => {
+              drawLine(
+                this.$refs.canvas,
+                start[this.upstreamIndex],
+                end[index]
+              );
+            });
+          }
         }
       });
     },
     drawLocationsToGroup(start, end) {
       this.clearCanvas();
       if (this.activeLocationIndex !== null) {
-        this.config.ngcUpstreamGroups.map((value, key) => {
-          if (
-            this.ngcLocationsGroup[this.activeLocationIndex].proxy_url.split(
-              "//"
-            )[1] === value.group_name
-          ) {
-            value.isLine = true;
-            drawLine(
-              this.$refs.canvas,
-              start[this.activeLocationIndex],
-              end[key]
-            );
-          } else {
-            value.isLine = false;
+        JSON.parse(JSON.stringify(this.config)).ngcUpstreamGroups.map(
+          (value, key) => {
+            if (
+              this.ngcLocationsGroup[this.activeLocationIndex].proxy_url.split(
+                "//"
+              )[1] === value.group_name
+            ) {
+              value.isLine = true;
+              drawLine(
+                this.$refs.canvas,
+                start[this.activeLocationIndex],
+                end[key]
+              );
+            } else {
+              value.isLine = false;
+            }
           }
-        });
+        );
       } else {
         this.ngcLocationsGroup.map((item, index) => {
-          if (
-            item.proxy_url.split("//")[1] ===
-            this.config.ngcUpstreamGroups[this.upstreamIndex].group_name
-          ) {
-            this.$set(item, "isLine", true);
-            drawLine(this.$refs.canvas, start[index], end[this.upstreamIndex]);
-          } else {
-            this.$set(item, "isLine", false);
+          if (this.upstreamIndex !== null) {
+            if (
+              item.proxy_url.split("//")[1] ===
+              this.config.ngcUpstreamGroups[this.upstreamIndex].group_name
+            ) {
+              this.$set(item, "isLine", true);
+              drawLine(
+                this.$refs.canvas,
+                start[index],
+                end[this.upstreamIndex]
+              );
+            } else {
+              this.$set(item, "isLine", false);
+            }
           }
         });
       }
@@ -662,13 +674,15 @@ export default {
       //获取节点
       let scrollDiv = this.$refs[el];
       //绑定事件
-      scrollDiv.addEventListener("scroll", () => {
-        if (start && end) {
-          callback(start, end);
-        } else {
-          callback();
-        }
-      });
+      if (scrollDiv !== undefined) {
+        scrollDiv.addEventListener("scroll", () => {
+          if (start && end) {
+            callback(start, end);
+          } else {
+            callback();
+          }
+        });
+      }
     },
     /* 获取配置 */
     async getConfig() {
@@ -688,23 +702,28 @@ export default {
       //   console.log(res);
       if (this.asyncOk(res) && res.data.result) {
         this.config = res.data.result || {};
+        this.tempCompare = JSON.stringify(this.config);
         if (this.config.ngcVirtualServers[0]) {
-          this.virtualServerGroup = this.config.ngcVirtualServers;
+          this.virtualServerGroup = JSON.parse(
+            JSON.stringify(res.data.result)
+          ).ngcVirtualServers;
           this.ngcLocationsGroup =
-            this.config.ngcVirtualServers[0].ngcLocations || [];
-          this.maindata.push(this.config.work_rlimit_nofile);
-          this.maindata.push(this.config.worker_connections);
-          this.maindata.push(this.config.worker_processes);
+            JSON.parse(JSON.stringify(res.data.result)).ngcVirtualServers[0]
+              .ngcLocations || [];
         }
-      } else if (this.asyncOk(res)) {
-        // console.log(defaultConfig)
-        this.virtualServerGroup = defaultConfig.ngcVirtualServers;
-        this.ngcLocationsGroup =
-          defaultConfig.ngcVirtualServers[0].ngcLocations || [];
-        this.config = defaultConfig;
         this.maindata.push(this.config.work_rlimit_nofile);
         this.maindata.push(this.config.worker_connections);
         this.maindata.push(this.config.worker_processes);
+      } else if (this.asyncOk(res)) {
+        this.config = res.data.result;
+        // console.log(defaultConfig)
+        // this.virtualServerGroup = defaultConfig.ngcVirtualServers;
+        // this.ngcLocationsGroup =
+        //   defaultConfig.ngcVirtualServers[0].ngcLocations || [];
+        // this.config = defaultConfig;
+        // this.maindata.push(this.config.work_rlimit_nofile);
+        // this.maindata.push(this.config.worker_connections);
+        // this.maindata.push(this.config.worker_processes);
       }
     },
     /* 初始化配置 */
@@ -727,9 +746,14 @@ export default {
     /* 编辑server配置*/
     editVirtualServer(index, modify) {
       // console.log(modify? '编辑': '新建')
+      let temp;
+      if (!modify) {
+        temp = JSON.stringify(emptyConfig.ngcVirtualServers[0]);
+        temp = JSON.parse(temp);
+      }
       this.ngcVirtualServers = modify
         ? this.config.ngcVirtualServers[index]
-        : emptyConfig.ngcVirtualServers[0];
+        : temp;
       this.editVirtualServerIndex = index;
       this.modify = modify;
       this.serverModal = true;
@@ -738,11 +762,16 @@ export default {
     editLocation(index, modify) {
       this.locationsIndex = index;
       // console.log(this.ngcLocations)
+      let temp;
+      if (!modify) {
+        temp = JSON.stringify(emptyConfig.ngcVirtualServers[0].ngcLocations[0]);
+        temp = JSON.parse(temp);
+      }
       this.ngcLocations = modify
         ? this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[
             index
           ]
-        : emptyConfig.ngcVirtualServers[0].ngcLocations[0];
+        : temp;
 
       this.modify = modify;
       this.locationModal = true;
@@ -771,6 +800,7 @@ export default {
       //data.ngcLocations = this.ngcLocationsGroup
       if (!this.modify) {
         this.config.ngcVirtualServers.push(data);
+        this.virtualServerGroup = this.config.ngcVirtualServers;
       } else {
         /* 缓存ngcLocations */
         let ngcLocations = this.config.ngcVirtualServers[
@@ -809,9 +839,9 @@ export default {
     /* 选择virtualServer */
     selectVirtualServer(index) {
       this.virtualServerIndex = index;
-      this.ngcVirtualServers = this.config.ngcVirtualServers[
-        this.virtualServerIndex
-      ];
+      this.ngcVirtualServers = JSON.parse(
+        JSON.stringify(this.config)
+      ).ngcVirtualServers[this.virtualServerIndex];
       //console.log(this.ngcVirtualServers)
       this.ngcLocationsGroup = this.ngcVirtualServers.ngcLocations;
       this.activeLocationIndex = null;
@@ -845,41 +875,49 @@ export default {
     },
     /* 提交配置 */
     async submitConfig() {
-      if (this.submitLoading) return;
-      this.submitLoading = true;
       this.config.config_name = this.configName;
-      let res = await editNginxConf(this.config);
-      if (this.asyncOk(res)) {
-        this.submitLoading = false;
-        //this.selectUpstream(0)
-        if (this.$route.params.configName) {
-          this.$Message.success({
-            content: "配置已更新成功",
-            duration: 3,
-          });
-          /* 更新配置 */
-          this.getConfig();
-        } else {
-          this.$Message.success({
-            content: "配置保存成功",
-            duration: 3,
-          });
-          this.$router.push({
-            name: "nginxConfig",
-            params: {
-              configName: this.configName,
-            },
-            query: {
-              nginx_conf_id: res.data.result,
-            },
-          });
-        }
-      } else {
-        this.submitLoading = false;
-        this.$Message.error({
-          content: res.data.result,
+      let temp = JSON.stringify(this.config);
+      if (temp === this.tempCompare) {
+        this.$Message.warning({
+          content: "您未作出任何修改,无法保存",
           duration: 3,
         });
+      } else {
+        if (this.submitLoading) return;
+        this.submitLoading = true;
+        let res = await editNginxConf(this.config);
+        if (this.asyncOk(res)) {
+          this.submitLoading = false;
+          //this.selectUpstream(0)
+          if (this.$route.params.configName) {
+            this.$Message.success({
+              content: "配置已更新成功",
+              duration: 3,
+            });
+            /* 更新配置 */
+            this.getConfig();
+          } else {
+            this.$Message.success({
+              content: "配置保存成功",
+              duration: 3,
+            });
+            this.$router.push({
+              name: "nginxConfig",
+              params: {
+                configName: this.configName,
+              },
+              query: {
+                nginx_conf_id: res.data.result,
+              },
+            });
+          }
+        } else {
+          this.submitLoading = false;
+          this.$Message.error({
+            content: res.data.result,
+            duration: 3,
+          });
+        }
       }
     },
     /* 保存并复制配置 */
@@ -907,11 +945,26 @@ export default {
       //console.log(data)
       switch (data) {
         case "serverModal":
-          this.config.ngcVirtualServers.splice(this.editVirtualServerIndex, 1);
-          // console.log(this.config.ngcVirtualServers)
-          this.ngcLocationsGroup =
-            this.config.ngcVirtualServers.ngcLocations || [];
-          break;
+          if (this.$route.params.configName) {
+            this.config.ngcVirtualServers.splice(
+              this.editVirtualServerIndex,
+              1
+            );
+            this.ngcLocationsGroup =
+              this.config.ngcVirtualServers.ngcLocations || [];
+            break;
+          } else if (this.$route.name === "newNginxConfig") {
+            let tp = JSON.stringify(this.config);
+            this.config = JSON.parse(tp);
+            this.config.ngcVirtualServers.splice(
+              this.editVirtualServerIndex,
+              1
+            );
+            this.virtualServerGroup = this.config.ngcVirtualServers;
+            this.ngcLocationsGroup =
+              this.config.ngcVirtualServers.ngcLocations || [];
+            break;
+          }
         case "location":
           this.config.ngcVirtualServers[
             this.virtualServerIndex
@@ -943,6 +996,7 @@ export default {
           //   }
         });
         this.previewData = strArr.join("\n");
+        this.$refs.editConfig.innerHTML = this.previewData;
         // this.previewData = this.previewData.replace(/#.*LINE/g, "");
       }
     },
@@ -956,54 +1010,72 @@ export default {
 
     /* 保存手动编辑的配置 */
     async saveEditedConfig() {
-      this.configEditable = false;
-      let target = this.$refs.editConfig.innerHTML;
-      if (this.temp.length > 0) {
-        let strArr = target.split("\n");
-        strArr.forEach((item, index) => {
-          if (
-            /server \{/.test(item) ||
-            /location  \/ \{/.test(item) ||
-            /upstream.*\{/.test(item)
-          ) {
-            strArr.splice(index + 1, 0, this.temp.shift());
-          }
+      let tp = JSON.stringify(this.previewData);
+      tp = JSON.parse(tp);
+      let tg = JSON.stringify(this.$refs.editConfig.innerHTML);
+      tg = JSON.parse(tg);
+      tp = tp.replace(/\s+/g, "");
+      tp = tp.replace(/<\/?.+?>/g, "");
+      tp = tp.replace(/[\r\n]/g, "");
+      tg = tg.replace(/\s+/g, "");
+      tg = tg.replace(/<\/?.+?>/g, "");
+      tg = tg.replace(/[\r\n]/g, "");
+      if (tg === tp) {
+        this.configEditable = true;
+        this.$Message.warning({
+          content: "您未作出任何修改,无法保存",
+          duration: 3,
         });
-        target = strArr.join("\n");
-      }
-      //   target = target.replace(/&nbsp;/g, " ");
-      //   target = target.replace(/<br>/g, "\n");
-      //   target = target.replace(/<div>/g, "");
-      //   target = target.replace(/<\/div>/g, "");
-
-      let json = {
-        data: target,
-      };
-      let res = await ManEditNginxConf(
-        {
-          nginx_conf_id: this.config.nginx_conf_id || "new",
-          config_name: this.configName,
-        },
-        json
-      );
-      if (this.asyncOk(res)) {
-        this.$Message.success("保存成功！");
-        this.previewOpen = false;
-        if (this.$route.params.configName) {
-          this.initConfig();
-        } else {
-          this.$router.push({
-            name: "nginxConfig",
-            params: {
-              configName: this.configName,
-            },
-            query: {
-              nginx_conf_id: res.data.result,
-            },
-          });
-        }
       } else {
-        this.$Message.error(res.data.result);
+        let target = this.$refs.editConfig.innerHTML;
+        if (this.temp.length > 0) {
+          let strArr = target.split("\n");
+          strArr.forEach((item, index) => {
+            if (
+              /server \{/.test(item) ||
+              /location  \/ \{/.test(item) ||
+              /upstream.*\{/.test(item)
+            ) {
+              strArr.splice(index + 1, 0, this.temp.shift());
+            }
+          });
+          target = strArr.join("\n");
+        }
+        target = target.replace(/&nbsp;/g, " ");
+        target = target.replace(/<br>/g, "\n");
+        target = target.replace(/<div>/g, "");
+        target = target.replace(/<\/div>/g, "");
+
+        let json = {
+          data: target,
+        };
+        let res = await ManEditNginxConf(
+          {
+            nginx_conf_id: this.config.nginx_conf_id || "new",
+            config_name: this.configName,
+          },
+          json
+        );
+        if (this.asyncOk(res)) {
+          this.configEditable = false;
+          this.$Message.success("保存成功！");
+          this.previewOpen = false;
+          if (this.$route.params.configName) {
+            this.initConfig();
+          } else {
+            this.$router.push({
+              name: "nginxConfig",
+              params: {
+                configName: this.configName,
+              },
+              query: {
+                nginx_conf_id: res.data.result,
+              },
+            });
+          }
+        } else {
+          this.$Message.error(res.data.result);
+        }
       }
     },
   },

@@ -8,7 +8,7 @@
             <FormItem prop="usernumber">
               <Input
                 v-model="loginForm.usernumber"
-                placeholder="Enter your usernumber"
+                placeholder="Enter your username"
               ></Input>
             </FormItem>
             <FormItem prop="password" class="password">

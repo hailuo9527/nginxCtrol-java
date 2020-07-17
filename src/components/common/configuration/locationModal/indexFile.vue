@@ -18,7 +18,7 @@
                                  :key="index"
                                  v-if="item"
                                  @click="removeTag(item)"
-                                 v-for="(item, index) in form.index_files.split(',')">{{item}}</Button>
+                                 v-for="(item, index) in form.index_files?form.index_files.split(','):''">{{item}}</Button>
                         <Input  v-model.trim="form.indexFiles" @on-blur="addIndexFiles" @on-enter="addIndexFiles" @on-keydown="keyDown" placeholder="files"></Input>
                     </FormItem>
                 </div>
@@ -29,7 +29,7 @@
 
         <div slot="show">
             <div  class="ctrl-edit-item" >
-                <div class="name-list" v-for="(item, index) in form.index_files.split(',')">
+                <div class="name-list" v-for="(item, index) in form.index_files?form.index_files.split(','):''">
                     <span  class="tag" >{{item}}</span>
                 </div>
             </div>
