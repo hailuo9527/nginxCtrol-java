@@ -22,12 +22,12 @@ export const addL7ServerInfo = ({l7ServerName, l7ServerSSHIp, l7ServerSSHName, l
 }
 
 /* 删除实例信息接口 */
-export const delL7ServerInfo = ({l7ServerId}) => {
+export const delL7ServerInfo = ({l7ServerId, is_init_conf}) => {
     return axios.request({
         url: '/L7/delL7ServerInfo',
         method: 'post',
         params: {
-            l7ServerId
+            l7ServerId, is_init_conf
         }
     })
 }

@@ -182,6 +182,22 @@
         >
       </div>
     </Modal>
+    <Modal v-model="initModal" :mask-closable="false" width="416">
+      <span slot="close"></span>
+      <div style="padding: 12px 0 0 12px;">
+        <Icon type="ios-help-circle" style="color: #ff9900; font-size: 28px" />
+        <span style="font-size: 16px;margin-left: 12px">提示</span>
+        <div style="margin-left: 40px;margin-top: 12px">
+          是否初始化实例配置？
+        </div>
+      </div>
+      <div slot="footer">
+        <Button @click="cancleInit()" :loading="disinitloading" style="border: 0;">否</Button>
+        <Button type="primary" @click="confirmInit()" :loading="initloading"
+          >是</Button
+        >
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -294,6 +310,10 @@ export default {
       searchString: "",
       timer: null,
       openMenu: [],
+      initModal: false,
+      code: "",
+      initloading: false,
+      disinitloading: false,
     };
   },
   watch: {
@@ -395,29 +415,60 @@ export default {
     },
     //删除实例配置信息
     async delL7ServerInfo(code) {
+      this.code = code;
       this.$Modal.confirm({
         title: "提示",
         content: "<p>确定要删除这条吗？删除后该设备信息将会丢失！</p>",
         loading: true,
         onOk: async () => {
-          let res = await delL7ServerInfo({ l7ServerId: code });
           this.$Modal.remove();
-          this.l7_model_add = false;
-          if (this.asyncOk(res)) {
-            this.$Message.success("删除成功！");
-            this.getL7AsideList(true).then((res) => {
-              if (this.asyncOk(res) && !res.data.result.length) {
-                this.$router.push(`/L7`);
-              }
-              if (code === this.$route.params.L7) {
-                this.$router.replace(`/L7/${this.l7ServerId}/chart`);
-              }
-            });
-          } else {
-            this.$Message.error({content: res.data.result, duration: 5});
-          }
+          this.initModal = true;
         },
       });
+    },
+    //取消初始化实例配置
+    async cancleInit() {
+      this.disinitloading = true;
+      let temp = false;
+      let res = await delL7ServerInfo({ l7ServerId: code, is_init_conf: temp });
+      this.disinitloading = false;
+      this.initModal = false;
+      this.l7_model_add = false;
+      if (this.asyncOk(res)) {
+        this.$Message.success("删除成功！");
+        this.getL7AsideList(true).then((res) => {
+          if (this.asyncOk(res) && !res.data.result.length) {
+            this.$router.push(`/L7`);
+          }
+          if (this.code === this.$route.params.L7) {
+            this.$router.replace(`/L7/${this.l7ServerId}/chart`);
+          }
+        });
+      } else {
+        this.$Message.error({ content: res.data.result, duration: 5 });
+      }
+    },
+    //确定初始化实例配置
+    async confirmInit() {
+      this.initloading = true;
+      let temp = true;
+      let res = await delL7ServerInfo({ l7ServerId: code, is_init_conf: temp });
+      this.initloading = false;
+      this.initModal = false;
+      this.l7_model_add = false;
+      if (this.asyncOk(res)) {
+        this.$Message.success("删除成功！");
+        this.getL7AsideList(true).then((res) => {
+          if (this.asyncOk(res) && !res.data.result.length) {
+            this.$router.push(`/L7`);
+          }
+          if (this.code === this.$route.params.L7) {
+            this.$router.replace(`/L7/${this.l7ServerId}/chart`);
+          }
+        });
+      } else {
+        this.$Message.error({ content: res.data.result, duration: 5 });
+      }
     },
     //修改实例配置信息
     async updL7ServerInfo(name) {
@@ -531,5 +582,8 @@ export default {
 /deep/.ivu-menu-light.ivu-menu-vertical
   .ivu-menu-item-active:not(.ivu-menu-submenu):after {
   display: none;
+}
+/deep/.ivu-modal-footer {
+  border: #fff;
 }
 </style>

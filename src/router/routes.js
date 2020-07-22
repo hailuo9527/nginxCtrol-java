@@ -256,19 +256,7 @@ let defaultRoutes = [
                 component: () => import('@/views/login/login.vue')
             }
         ]
-    },
-    // {
-    //     path: "/index",
-    //     name: "Index",
-    //     component: () => import("@/views/system/Download/index.vue")
-    //   },
-    //   {
-    //     path: "/register",
-    //     name: "register",
-    //     component: () =>
-    //       import(/* webpackChunkName: "about" */ "@/views/system/Download/register.vue")
-    // }
-
+    }
 ];
 const routes = [
     ...err,

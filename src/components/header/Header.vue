@@ -59,6 +59,9 @@
           <DropdownItem name="System">
             <span style="font-size: 14px">系统</span>
           </DropdownItem>
+          <DropdownItem name="Download">
+            <span style="font-size: 14px">下载</span>
+          </DropdownItem>
           <DropdownItem name="LogOut">
             <span style="font-size: 14px">退出</span>
           </DropdownItem>
@@ -92,6 +95,9 @@ export default {
           break;
         case "System":
             this.$router.push({path: '/system'})
+            break;
+        case "Download":
+            window.open("https://nc.naccenter.cn/download")
             break;
         case "LogOut":
             removeToken()

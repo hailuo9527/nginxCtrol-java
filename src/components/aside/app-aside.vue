@@ -256,6 +256,22 @@
         >
       </div>
     </Modal>
+    <Modal v-model="initModal" :mask-closable="false" width="416">
+      <span slot="close"></span>
+      <div style="padding: 12px 0 0 12px;">
+        <Icon type="ios-help-circle" style="color: #ff9900; font-size: 28px" />
+        <span style="font-size: 16px;margin-left: 12px">提示</span>
+        <div style="margin-left: 40px;margin-top: 12px">
+          是否初始化实例配置？
+        </div>
+      </div>
+      <div slot="footer">
+        <Button @click="cancleInit()" :loading="disinitloading" style="border: 0;">否</Button>
+        <Button type="primary" @click="confirmInit()" :loading="initloading"
+          >是</Button
+        >
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -356,6 +372,10 @@ export default {
       activeItem: {},
       timer: null,
       configList: null,
+      initModal: false,
+      id: "",
+      initloading: false,
+      disinitloading: false,
     };
   },
   watch: {
@@ -480,29 +500,66 @@ export default {
     },
     /* 删除APp */
     delApp(id) {
+      this.id = id;
       this.$Modal.confirm({
         title: "提示",
         content: "<p>确定要移除这个APP吗？</p>",
         loading: true,
-        onOk: async () => {
-          let res = await delAppInfo({ app_server_id: id });
+        onOk: () => {
           this.$Modal.remove();
-          this.appModal = false;
-          if (this.asyncOk(res)) {
-            this.$Message.success("删除成功！");
-            this.getAppAsideList(true).then((res) => {
-              if (this.asyncOk(res) && !res.data.result.length) {
-                this.$router.push(`/app`);
-              }
-              if (id === this.$route.params.app) {
-                this.$router.replace(`/app/${this.appServerId}/overview`);
-              }
-            });
-          } else {
-            this.$Message.error({ content: res.data.result, duration: 3 });
-          }
+          this.initModal = true;
         },
       });
+    },
+    //取消初始化实例配置
+    async cancleInit() {
+      this.disinitloading = true;
+      let temp = false;
+      let res = await delAppInfo({
+        app_server_id: this.id,
+        is_init_conf: temp,
+      });
+      this.disinitloading = false;
+      this.initModal = false;
+      this.appModal = false;
+      if (this.asyncOk(res)) {
+        this.$Message.success("删除成功！");
+        this.getAppAsideList(true).then((res) => {
+          if (this.asyncOk(res) && !res.data.result.length) {
+            this.$router.push(`/app`);
+          }
+          if (this.id === this.$route.params.app) {
+            this.$router.replace(`/app/${this.appServerId}/overview`);
+          }
+        });
+      } else {
+        this.$Message.error({ content: res.data.result, duration: 3 });
+      }
+    },
+    //确定初始化实例配置
+    async confirmInit() {
+      this.initloading = true;
+      let temp = true;
+      let res = await delAppInfo({
+        app_server_id: this.id,
+        is_init_conf: temp,
+      });
+      this.initloading = false;
+      this.initModal = false;
+      this.appModal = false;
+      if (this.asyncOk(res)) {
+        this.$Message.success("删除成功！");
+        this.getAppAsideList(true).then((res) => {
+          if (this.asyncOk(res) && !res.data.result.length) {
+            this.$router.push(`/app`);
+          }
+          if (this.id === this.$route.params.app) {
+            this.$router.replace(`/app/${this.appServerId}/overview`);
+          }
+        });
+      } else {
+        this.$Message.error({ content: res.data.result, duration: 3 });
+      }
     },
     /* 重置activeAside */
     resetAside() {
@@ -630,5 +687,8 @@ export default {
   /deep/ .ivu-form-item-content {
     float: right;
   }
+}
+/deep/.ivu-modal-footer {
+  border: #fff;
 }
 </style>

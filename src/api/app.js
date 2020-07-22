@@ -29,12 +29,12 @@ export const updAppInfo = (applicationInfo) => {
 *   删除 app
 *
 * */
-export const delAppInfo = ({app_server_id }) => {
+export const delAppInfo = ({app_server_id, is_init_conf }) => {
     return axios.request({
         url: '/delAppInfo',
         method: 'post',
         params: {
-            app_server_id
+            app_server_id, is_init_conf
         }
     })
 }
