@@ -821,6 +821,9 @@ export default {
         this.config.ngcVirtualServers[
           this.virtualServerIndex
         ].ngcLocations.push(data);
+        this.ngcLocationsGroup = this.config.ngcVirtualServers[
+          this.virtualServerIndex
+        ].ngcLocations;
       } else {
         this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[
           this.locationsIndex

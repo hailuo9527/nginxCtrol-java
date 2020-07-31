@@ -5,6 +5,8 @@
       <div class="table">
         <Table stripe  :loading="loading" max-height="500" border :columns="columns" :data="dispatch.data">
           <template slot-scope="{ row }" slot="upstream_request">{{row.upstream_request || '无'}}</template>
+          <template slot-scope="{ row }" slot="backup">{{row.backup?'on':'off'}}</template>
+          <template slot-scope="{ row }" slot="down">{{row.down?'on':'off'}}</template>
           <template slot-scope="{ row, index }" slot="action">
             <Button
                     type="warning"
@@ -125,7 +127,7 @@
                 <span slot="close">Off</span>
             </i-switch>
           </FormItem>
-          <FormItem label="禁止">
+          <FormItem label="停用">
               <i-switch v-model="dispatch.data[index].down" size="large" @on-change="GetStatus">
                 <span slot="open">On</span>
                 <span slot="close">Off</span>
@@ -491,12 +493,12 @@
         },
         {
             title: "备份",
-            key: "backup",
+            slot: "backup",
             align: "center"
         },
         {
-            title: "禁止",
-            key: "down",
+            title: "停用",
+            slot: "down",
             align: "center"
         },
         {
@@ -640,13 +642,13 @@
         this.dispatch.data[this.index].backup = this.backupStatus
         this.dispatch.data[this.index].down = this.downStatus
     },
-    //备份为true时禁止不能为true
+    //备份为true时停用不能为true
     getStatus(status) {
         if (status&&this.dispatch.data[this.index].down) {
             this.dispatch.data[this.index].down = false
         }
     },
-    //禁止为true时备份不能为true
+    //停用为true时备份不能为true
     GetStatus(status) {
         if (status&&this.dispatch.data[this.index].backup) {
             this.dispatch.data[this.index].backup = false

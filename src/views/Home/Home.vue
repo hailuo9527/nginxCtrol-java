@@ -304,7 +304,7 @@ export default {
           this.instanceOn = data.instanceOn;
           this.cpuWarning = data.cpuWarning;
           this.diskWarning = data.diskWarning;
-          this.instancePercent = data.instancePercent * 100;
+          this.instancePercent = parseInt(data.instancePercent * 100);
           if (data.instancePercent == 1) {
             this.ishealthy = true;
             this.issubhealthy = false;

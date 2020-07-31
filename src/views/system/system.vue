@@ -20,7 +20,7 @@
           </MenuItem>
           <MenuItem name="systemId">
             <Icon type="md-ionitron" size="22" />
-            <span>系统ID</span>
+            <span>系统信息</span>
           </MenuItem>
         </Menu>
       </Sider>
@@ -77,12 +77,32 @@
         </div>
         <div class="container" v-if="status === 2">
           <div class="header">
-            <span style="font-size: 22px;font-weight: bold;">系统ID</span>
+            <span style="font-size: 22px;font-weight: bold;">系统信息</span>
           </div>
           <div style="padding: 32px 40px;">
-            <Icon type="md-key" v-if="!loading" size="26" />
-            <span v-if="!loading">{{ msg }}</span>
-            <Loading v-if="loading" />
+            <div>
+              <Icon
+                type="md-compass"
+                size="22"
+                style="color: #39f;"
+              />系统核心版本:
+              <span>{{ result.sys_version }}</span>
+            </div>
+            <div>
+              <Icon
+                type="md-podium"
+                size="22"
+                style="color: #39f;"
+              />系统应用版本:
+              <span>{{ result.app_version }}</span>
+            </div>
+            <div>
+              <Icon type="md-key" size="26" style="color: #39f;" />系统ID:
+            </div>
+            <div style="padding: 4px 0 0 70px;">
+              <span>{{ result.sid }}</span>
+            </div>
+            <!-- <Loading v-if="loading" /> -->
           </div>
         </div>
       </Layout>
@@ -103,7 +123,7 @@ export default {
       loading: false,
       isCollapsed: false,
       status: 1,
-      msg: "",
+      result: "",
     };
   },
   computed: {
@@ -161,7 +181,7 @@ export default {
       this.loading = true;
       let res = await selSysId();
       if (res.data.code === "success") {
-        this.msg = res.data.result;
+        this.result = res.data.result;
         this.loading = false;
       } else {
         this.loading = false;
@@ -177,7 +197,7 @@ export default {
         this.status = 2;
         this.GetSysId();
       }
-    }
+    },
   },
   mounted() {
     this.GetLicense();
@@ -255,6 +275,6 @@ export default {
   cursor: pointer;
 }
 /deep/ .ivu-layout {
-    overflow: hidden;
+  overflow: hidden;
 }
 </style>

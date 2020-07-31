@@ -430,7 +430,7 @@ export default {
     async cancleInit() {
       this.disinitloading = true;
       let temp = false;
-      let res = await delL7ServerInfo({ l7ServerId: code, is_init_conf: temp });
+      let res = await delL7ServerInfo({ l7ServerId: this.code, is_init_conf: temp });
       this.disinitloading = false;
       this.initModal = false;
       this.l7_model_add = false;
@@ -452,7 +452,7 @@ export default {
     async confirmInit() {
       this.initloading = true;
       let temp = true;
-      let res = await delL7ServerInfo({ l7ServerId: code, is_init_conf: temp });
+      let res = await delL7ServerInfo({ l7ServerId: this.code, is_init_conf: temp });
       this.initloading = false;
       this.initModal = false;
       this.l7_model_add = false;
