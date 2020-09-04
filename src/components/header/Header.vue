@@ -30,6 +30,9 @@
           </Dropdown> -->
       </div>
       <div class="header_nav_item">
+        <router-link class="header_nav_item_label" to="/VMware">VMware</router-link>
+      </div>
+      <div class="header_nav_item">
         <router-link class="header_nav_item_label" to="/software">软件仓库</router-link>
       </div>
 <!--      <div class="header_nav_item">-->

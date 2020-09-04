@@ -54,3 +54,52 @@ export const selRoleInfo = () => {
         method: 'post'
     })
 }
+
+
+/**  查询用户操作权限 */
+export const selUserPermission = ({user_id}) => {
+    return axios.request({
+        url: '/selUserPermission',
+        method: 'post',
+        params: { user_id }
+    })
+}
+
+
+/**  新增用户操作权限 */
+export const insUserPermission = (data) => {
+    return axios.request({
+        url: '/insUserPermission',
+        method: 'post',
+        data: data
+    })
+}
+
+
+/** 删除用户操作权限  */
+export const delUserPermission = ({user_id}) => {
+    return axios.request({
+        url: '/delUserPermission',
+        method: 'post',
+        params: { user_id }
+    })
+}
+
+
+/**  修改用户操作权限 */
+export const uptUserPermission = (data) => {
+    return axios.request({
+        url: '/uptUserPermission',
+        method: 'post',
+        data: data
+    })
+}
+
+
+/**  查询所有APP绑定权限信息 */
+export const selPermissionByApp = () => {
+    return axios.request({
+        url: '/selPermissionByApp',
+        method: 'post'
+    })
+}

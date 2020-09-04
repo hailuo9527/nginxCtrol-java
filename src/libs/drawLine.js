@@ -57,8 +57,8 @@ function drawLine (canvas, start, end) {
     ctx.moveTo(getLineStart(start).x, getLineStart(start).y); // 创建起点
 
 
-    let r = (getLineEnd(end).x - getLineStart(start).x)/2
-    let x1 = getLineStart(start).x + r
+    let r = (getLineEnd(end).x - getLineStart(start).x)/3
+    let x1 = getLineStart(start).x + r+10
     let y1 = getLineStart(start).y
     let x2 = x1
 
@@ -75,7 +75,7 @@ function drawLine (canvas, start, end) {
     }
     //console.log(getLineStart(start).y ,getLineEnd(end).y )
     if ( parseInt(getLineStart(start).y) === parseInt(getLineEnd(end).y) ) { // 水平连线时
-        ctx.lineTo(getLineEnd(end).x, getLineEnd(end).y);
+        ctx.lineTo(getLineEnd(end).x+10, getLineEnd(end).y);
     } else {
         ctx.arcTo(x1, y1, x2, y2, r);   // 创建一个弧
         if(getLineStart(start).y > getLineEnd(end).y){

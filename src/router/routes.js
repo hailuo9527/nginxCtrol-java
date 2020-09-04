@@ -244,6 +244,42 @@ let defaultRoutes = [
                 name: 'system',
                 path: '/system',
                 component: () => import('@/views/system/system.vue')
+            },
+            {
+                name: 'VMware',
+                path: '/VMware',
+                component: () => import('@/views/VMware/VMware.vue'),
+                children: [
+                    {
+                        name: 'VMware-virtual',
+                        path: 'virtual',
+                        title: 'VMware-virtual',
+                        component: () => import('@/views/VMware/child/Virtual.vue'),
+                    },
+                    {
+                        name: 'VMware-datastorage',
+                        path: 'datastorage',
+                        title: 'VMware-datastorage',
+                        component: () => import('@/views/VMware/child/DataStorage.vue'),
+                    },
+                    {
+                        name: 'Vmware-resourcepool',
+                        path: 'resourcepool',
+                        title: 'Vmware-resourcepool',
+                        component: () => import('@/views/VMware/child/ResourcePool.vue'),
+                    }, {
+                        name: 'Vmware-template',
+                        path: 'template',
+                        title: 'Vmware-template',
+                        component: () => import('@/views/VMware/child/Template.vue'),
+                    },
+                    {
+                        name: 'Vmware-customization',
+                        path: 'customization',
+                        title: 'Vmware-customization',
+                        component: () => import('@/views/VMware/child/Customization.vue'),
+                    },
+                ]
             }
         ]
     },
@@ -256,7 +292,7 @@ let defaultRoutes = [
                 component: () => import('@/views/login/login.vue')
             }
         ]
-    }
+    },
 ];
 const routes = [
     ...err,

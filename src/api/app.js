@@ -193,3 +193,13 @@ export const appDefInfoRollBACK = ({app_service_id}) => {
         params: {app_service_id}
     })
 }
+
+
+/** 导入生产应用 */
+export const impApp = (data) => {
+    return axios.request({
+        url: '/impApp',
+        method: 'post',
+        data: data
+    })
+}

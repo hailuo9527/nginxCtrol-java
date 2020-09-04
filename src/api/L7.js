@@ -62,6 +62,17 @@ export const getNginxConfALL = (  ) => {
     })
 }
 
+
+/**  查询所有有权限的Nginx配置方案 */
+export const getNginxConfALLForPremission = () => {
+    return axios.request({
+        url: '/getNginxConfALLForPremission',
+        method: 'post'
+    })
+}
+
+
+
 /* 查询指定Nginx的配置文件 */
 export const getNginxConf = ({ nginx_conf_id, version_no }) => {
     return axios.request({
@@ -136,11 +147,11 @@ export const addInstance = ( nginx_conf_id, l7ServerIds ) => {
     })
 }
 /**删除实例 */
-export const delInstance = ({nginx_conf_id}, ids) => {
+export const delInstance = ({nginx_conf_id, is_init_conf}, ids) => {
     return axios.request({
         url: '/delInstance',
         method: 'post',
-        params: {nginx_conf_id},
+        params: {nginx_conf_id, is_init_conf},
         data: ids,
     })
 }
@@ -218,6 +229,16 @@ export const selUsableL7Server = ({ app_service_id }) => {
     })
 }
 
+
+/**  获取所有未绑定APP的实例（导入生产APP时调用）  */
+export const ListL7ServerInfoByImpApp = () => {
+    return axios.request({
+        url: '/L7/ListL7ServerInfoByImpApp',
+        method: 'post'
+    })
+}
+
+
 /* 发布时检查配置文件是否适用所选实例 */
 export const pushCheck = ({ nginx_conf_id }, l7ServerIds) => {
     return axios.request({
@@ -291,5 +312,27 @@ export const nginxConfRestore = ({nginx_conf_id, version}) => {
         params: {
             nginx_conf_id, version
         }
+    })
+}
+
+
+/**  加锁 */
+export const locking = ({primaryKey, type}) => {
+    return axios.request({
+        url: '/locking',
+        method: 'post',
+        params: {
+            primaryKey, type
+        }
+    })
+}
+
+
+/**  解锁 */
+export const unLock = ({ lock_id }) => {
+    return axios.request({
+        url: '/unLock',
+        method: 'post',
+        params: { lock_id }
     })
 }

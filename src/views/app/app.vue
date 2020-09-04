@@ -39,7 +39,6 @@
                       {{ activeAside.is_sync ? "已同步" : "未同步" }}
                     </div>
                   </div>
-
                   <row-item title="入口URL">
                     <div class="row-item" v-if="detailInfo.urls">
                       <div class="info-list">
@@ -66,12 +65,12 @@
                   <row-item title="后端服务器">
                     <div
                       class="row-item"
-                      v-if="detailInfo.appDefaultPublishConfList"
+                      v-if="detailInfo.appUpServerBlockList"
                     >
                       <div class="info-list">
                         <div
                           class="list-item no-item"
-                          v-if="!detailInfo.appDefaultPublishConfList.length"
+                          v-if="!detailInfo.appUpServerBlockList.length"
                         >
                           暂无数据
                         </div>
@@ -79,12 +78,8 @@
                           class="list-item"
                           v-else
                           :key="item.l7ServerId"
-                          v-for="item in detailInfo.appDefaultPublishConfList"
+                          v-for="item in detailInfo.appUpServerBlockList"
                         >
-                          <!-- <router-link :to="`/L7/${item.l7ServerId}/chart`">
-                                            <Icon type="ios-color-filter-outline" />
-                                            {{item.l7ServerName}}
-                                        </router-link>-->
                           <Row>
                             <Col span="18">
                               <span>地址： {{ item.upstream_server }}</span>
@@ -236,73 +231,6 @@
                   </Poptip>
                 </div>
               </Modal>
-              <!-- <Tooltip :max-width="2000" @on-popper-show="showPoptip">
-                <Icon
-                  type="md-git-compare"
-                  size="20"
-                  style="cursor: pointer"
-                  v-if="!activeAside.is_sync"
-                />
-                <div slot="content" v-if="state">
-                    <template v-if="popTip_status">
-                      <div class="pop-tips" v-for="item in popTipArr">
-                        <div class="pop-left">
-                          <div style="display: flex; flex: 1;">
-                            <div style="margin-right: 6px">
-                              <h5 style="white-space: nowrap;">
-                                {{
-                                  item.name == "appDefaultPublishConfList"
-                                    ? "应用服务地址:"
-                                    : "" || item.name == "app_vip"
-                                    ? "虚拟IP:"
-                                    : "" || item.name == "configure_ha"
-                                    ? "热备状态:"
-                                    : "" || item.name == "l7_server_ids"
-                                    ? "实例:"
-                                    : "" || item.name == "listen"
-                                    ? "监听端口:"
-                                    : "" || item.name == "nginx_conf_id"
-                                    ? "配置:"
-                                    : ""
-                                }}
-                              </h5>
-                            </div>
-                            <div>
-                              <h5 style="word-break: break-all;">
-                                {{ item.new_str }}
-                              </h5>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="pop-right">
-                          <h5 style="text-align: end;color: skyblue;">
-                            {{ item.old_str == "null" ? "无" : item.old_str }}
-                          </h5>
-                        </div>
-                      </div>
-                      <div
-                        style="display: flex;flex-direction: row-reverse;margin-top: 10px;"
-                      >
-                        <Poptip
-                          confirm
-                          title="是否确定回滚?"
-                          ok-text="确定"
-                          @on-ok="RollBack"
-                          cancel-text="取消"
-                          style="color: #000"
-                        >
-                          <Button type="primary">回滚</Button>
-                        </Poptip>
-                      </div>
-                    </template>
-                    <template
-                      ><div slot="content" v-if="!popTip_status">
-                        您还没修改过APP配置或还未发布
-                      </div></template
-                    >
-                </div>
-                <div slot="content" v-else></div>
-              </Tooltip> -->
             </div>
             <span class="publish">
               <!-- <Button
@@ -564,11 +492,14 @@ export default {
     },
     /* 发布APP */
     pushApp() {
-      //   console.log(this.activeAside);
-      if (
-        this.activeAside.appDefaultPublishConfList.length > 0 ||
-        this.activeAside.nginx_conf_id !== null
-      ) {
+      let temp = this.activeAside.appUpgroupBlockList.map(function(item) {
+        if (item.appUpServerBlockList.length > 0) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      if (temp || this.activeAside.nginx_conf_id !== null) {
         this.appForm = this.copyJson(this.activeAside);
         pushCheck(
           { nginx_conf_id: this.appForm.nginx_conf_id },
@@ -687,14 +618,6 @@ export default {
     },
     /* 重置activeAside */
     resetAside() {
-      /*this.getAppAsideList().then((res) => {
-          if (res.data.code === 'success') {
-            let target = res.data.result.filter((item) => {
-              return item.app_service_id === this.activeAside.app_service_id
-            })
-            this.appSetActiveAside(target[0] || {})
-          }
-        })*/
       this.getAppAsideList("update");
     },
     /* 一键发布 */
@@ -782,7 +705,7 @@ export default {
       let res = await selAppDetails({
         app_server_id: this.activeAside.app_service_id,
       });
-      //console.log(res)
+      //   console.log(res)
       if (this.asyncOk(res)) {
         this.detailInfo = res.data.result || {};
       }
@@ -824,35 +747,13 @@ export default {
         for (let i in res.data.result) {
           if (res.data.result[i] !== null) {
             switch (i) {
-              case "appDefaultPublishConfList":
-                for (
-                  let newnum = 0;
-                  newnum < res.data.result[i].new_str.length;
-                  newnum++
-                ) {
-                  this.newStr = this.newStr.concat(
-                    "默认服务群组:" +
-                      res.data.result[i].new_str[newnum].upstream_server +
-                      " " +
-                      "权重:" +
-                      res.data.result[i].new_str[newnum].weight +
-                      "\n"
-                  );
-                }
-                for (
-                  let oldnum = 0;
-                  oldnum < res.data.result[i].old_str.length;
-                  oldnum++
-                ) {
-                  this.oldStr = this.oldStr.concat(
-                    "默认服务群组:" +
-                      res.data.result[i].old_str[oldnum].upstream_server +
-                      " " +
-                      "权重:" +
-                      res.data.result[i].old_str[oldnum].weight +
-                      "\n"
-                  );
-                }
+              case "configure_ha":
+                this.newStr = this.newStr.concat(
+                  "热备状态:" + res.data.result[i].new_str + "\n"
+                );
+                this.oldStr = this.oldStr.concat(
+                  "热备状态:" + res.data.result[i].old_str + "\n"
+                );
                 break;
               case "app_vip":
                 this.newStr = this.newStr.concat(
@@ -866,46 +767,6 @@ export default {
                     : "虚拟IP:" + res.data.result[i].old_str + "\n"
                 );
                 break;
-              case "configure_ha":
-                this.newStr = this.newStr.concat(
-                  "热备状态:" + res.data.result[i].new_str + "\n"
-                );
-                this.oldStr = this.oldStr.concat(
-                  "热备状态:" + res.data.result[i].old_str + "\n"
-                );
-                break;
-              case "l7_server_ids":
-                this.newStr = this.newStr.concat(
-                  "实例:" + res.data.result[i].new_str + "\n"
-                );
-                this.oldStr = this.oldStr.concat(
-                  "实例:" + res.data.result[i].old_str + "\n"
-                );
-                break;
-              case "listen":
-                this.newStr = this.newStr.concat(
-                  "监听端口:" + res.data.result[i].new_str + "\n"
-                );
-                this.oldStr = this.oldStr.concat(
-                  "监听端口:" + res.data.result[i].old_str + "\n"
-                );
-                break;
-              //   case "nginx_conf_id":
-              //     this.newStr = this.newStr.concat(
-              //       "配置名:" + res.data.result[i].new_str + "\n"
-              //     );
-              //     this.oldStr = this.oldStr.concat(
-              //       "配置名:" + res.data.result[i].old_str + "\n"
-              //     );
-              //     break;
-              //   case "nginx_conf_str":
-              //     this.newStr = this.newStr.concat(
-              //       "配置内容:" + res.data.result[i].new_str + "\n"
-              //     );
-              //     this.oldStr = this.oldStr.concat(
-              //       "配置内容:" + res.data.result[i].old_str + "\n"
-              //     );
-              //     break;
               case "custom_priority":
                 this.newStr = this.newStr.concat(
                   "HA优先级状态:" + res.data.result[i].new_str + "\n"
@@ -921,6 +782,199 @@ export default {
                 this.oldStr = this.oldStr.concat(
                   "自定义HA优先级:" + res.data.result[i].old_str + "\n"
                 );
+                break;
+              case "l7_server_ids":
+                this.newStr = this.newStr.concat(
+                  "实例:" + res.data.result[i].new_str + "\n"
+                );
+                this.oldStr = this.oldStr.concat(
+                  "实例:" + res.data.result[i].old_str + "\n"
+                );
+                break;
+              case "app_server_block":
+                for (
+                  let newnum = 0;
+                  newnum < res.data.result[i].new_str.length;
+                  newnum++
+                ) {
+                  this.newStr = this.newStr.concat(
+                    res.data.result[i].new_str[newnum].server_name === ""
+                      ? "server_name:" + "无" + "\n"
+                      : "server_name:" +
+                          res.data.result[i].new_str[newnum].server_name +
+                          "\n"
+                  );
+                  this.newStr = this.newStr.concat(
+                    "监听端口:" +
+                      res.data.result[i].new_str[newnum].listen +
+                      "\n"
+                  );
+                  if (
+                    res.data.result[i].new_str[newnum].appLocationBlockList
+                      .length > 0
+                  ) {
+                    for (
+                      let newLocationnum = 0;
+                      newLocationnum <
+                      res.data.result[i].new_str[newnum].appLocationBlockList
+                        .length;
+                      newLocationnum++
+                    ) {
+                      this.newStr = this.newStr.concat(
+                        "proxy_url:" +
+                          res.data.result[i].new_str[newnum]
+                            .appLocationBlockList[newLocationnum].proxy_url +
+                          "\n"
+                      );
+                      this.newStr = this.newStr.concat(
+                        res.data.result[i].new_str[newnum].appLocationBlockList[
+                          newLocationnum
+                        ].url_path_route_key === ""
+                          ? "url_path_route_key:" + "无" + "\n"
+                          : "url_path_route_key:" +
+                              res.data.result[i].new_str[newnum]
+                                .appLocationBlockList[newLocationnum]
+                                .url_path_route_key +
+                              "\n"
+                      );
+                      this.newStr = this.newStr.concat(
+                        "url_path_route_value:" +
+                          res.data.result[i].new_str[newnum]
+                            .appLocationBlockList[newLocationnum]
+                            .url_path_route_value +
+                          "\n"
+                      );
+                    }
+                  }
+                }
+
+                for (
+                  let oldnum = 0;
+                  oldnum < res.data.result[i].old_str.length;
+                  oldnum++
+                ) {
+                  this.oldStr = this.oldStr.concat(
+                    res.data.result[i].old_str[oldnum].server_name === ""
+                      ? "server_name:" + "无" + "\n"
+                      : "server_name:" +
+                          res.data.result[i].old_str[oldnum].server_name +
+                          "\n"
+                  );
+                  this.oldStr = this.oldStr.concat(
+                    "监听端口:" +
+                      res.data.result[i].old_str[oldnum].listen +
+                      "\n"
+                  );
+                  if (
+                    res.data.result[i].old_str[oldnum].appLocationBlockList
+                      .length > 0
+                  ) {
+                    for (
+                      let oldLocationnum = 0;
+                      oldLocationnum <
+                      res.data.result[i].old_str[oldnum].appLocationBlockList
+                        .length;
+                      oldLocationnum++
+                    ) {
+                      this.oldStr = this.oldStr.concat(
+                        "proxy_url:" +
+                          res.data.result[i].old_str[oldnum]
+                            .appLocationBlockList[oldLocationnum].proxy_url +
+                          "\n"
+                      );
+                      this.oldStr = this.oldStr.concat(
+                        res.data.result[i].old_str[oldnum].appLocationBlockList[
+                          oldLocationnum
+                        ].url_path_route_key === ""
+                          ? "url_path_route_key:" + "无" + "\n"
+                          : "url_path_route_key:" +
+                              res.data.result[i].old_str[oldnum]
+                                .appLocationBlockList[oldLocationnum]
+                                .url_path_route_key +
+                              "\n"
+                      );
+                      this.oldStr = this.oldStr.concat(
+                        "url_path_route_value:" +
+                          res.data.result[i].old_str[oldnum]
+                            .appLocationBlockList[oldLocationnum]
+                            .url_path_route_value +
+                          "\n"
+                      );
+                    }
+                  }
+                }
+                break;
+              case "app_group_block":
+                for (
+                  let newnum = 0;
+                  newnum < res.data.result[i].new_str.length;
+                  newnum++
+                ) {
+                  this.newStr = this.newStr.concat(
+                    "应用服务名称:" +
+                      res.data.result[i].new_str[newnum].upstream_name +
+                      "\n"
+                  );
+                  if (
+                    res.data.result[i].new_str[newnum].appUpServerBlockList
+                      .length > 0
+                  ) {
+                    for (
+                      let newUpServernum = 0;
+                      newUpServernum <
+                      res.data.result[i].new_str[newnum].appUpServerBlockList
+                        .length;
+                      newUpServernum++
+                    ) {
+                      this.newStr = this.newStr.concat(
+                        "应用服务成员:" +
+                          res.data.result[i].new_str[newnum]
+                            .appUpServerBlockList[newUpServernum]
+                            .upstream_server +
+                          "" +
+                          "权重:" +
+                          res.data.result[i].new_str[newnum]
+                            .appUpServerBlockList[newUpServernum].weight +
+                          "\n"
+                      );
+                    }
+                  }
+                }
+                for (
+                  let oldnum = 0;
+                  oldnum < res.data.result[i].old_str.length;
+                  oldnum++
+                ) {
+                  this.oldStr = this.oldStr.concat(
+                    "应用服务名称:" +
+                      res.data.result[i].old_str[oldnum].upstream_name +
+                      "\n"
+                  );
+                  if (
+                    res.data.result[i].old_str[oldnum].appUpServerBlockList
+                      .length > 0
+                  ) {
+                    for (
+                      let oldUpServernum = 0;
+                      oldUpServernum <
+                      res.data.result[i].old_str[oldnum].appUpServerBlockList
+                        .length;
+                      oldUpServernum++
+                    ) {
+                      this.oldStr = this.oldStr.concat(
+                        "应用服务成员:" +
+                          res.data.result[i].old_str[oldnum]
+                            .appUpServerBlockList[oldUpServernum]
+                            .upstream_server +
+                          "" +
+                          "权重:" +
+                          res.data.result[i].old_str[oldnum]
+                            .appUpServerBlockList[oldUpServernum].weight +
+                          "\n"
+                      );
+                    }
+                  }
+                }
                 break;
             }
           }
@@ -950,69 +1004,6 @@ export default {
         this.$Message.error(`${res.data.result}`);
       }
     },
-
-    async compareAppInfo() {
-      this.popTip_loading = true;
-      this.popTip_status = false;
-      this.popTipArr = [];
-      this.state = false;
-      let res = await compareAppInfo({
-        app_service_id: this.$route.params.app,
-      });
-      this.state = true;
-      if (res.data.code === "success") {
-        for (let i in res.data.result) {
-          if (res.data.result[i] !== null) {
-            this.popTip_status = true;
-            if (i === "appDefaultPublishConfList") {
-              let obj = {};
-              let new_str = [];
-              let old_str = [];
-              for (
-                let newnum = 0;
-                newnum < res.data.result[i].new_str.length;
-                newnum++
-              ) {
-                new_str.push(
-                  res.data.result[i].new_str[newnum].upstream_server +
-                    "————" +
-                    res.data.result[i].new_str[newnum].weight
-                );
-              }
-              for (
-                let oldnum = 0;
-                oldnum < res.data.result[i].old_str.length;
-                oldnum++
-              ) {
-                old_str.push(
-                  res.data.result[i].old_str[oldnum].upstream_server +
-                    "————" +
-                    res.data.result[i].old_str[oldnum].weight
-                );
-              }
-              obj.new_str = new_str;
-              obj.old_str = old_str;
-              this.popTipArr.push(
-                Object.defineProperty(obj, "name", { value: i })
-              );
-            } else {
-              this.popTipArr.push(
-                Object.defineProperty(res.data.result[i], "name", { value: i })
-              );
-            }
-          }
-        }
-        this.popTip_loading = false;
-        // console.log(this.popTipArr);
-      } else {
-        this.popTip_loading = false;
-        this.$Message.error(`${res.data.result}`);
-      }
-    },
-    //差异对比提示框显示
-    showPoptip() {
-      this.compareAppInfo();
-    },
     //APP默认配置回滚
     async RollBack() {
       let res = await appDefInfoRollBACK({
@@ -1021,7 +1012,6 @@ export default {
       this.compareModal = false;
       if (res.data.code === "success") {
         this.$Message.success("回滚成功");
-        // this.compareAppInfo();
         this.resetAside();
       } else {
         this.$Message.error(`${res.data.result}`);

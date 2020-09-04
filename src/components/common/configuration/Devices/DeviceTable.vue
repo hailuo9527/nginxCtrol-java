@@ -57,7 +57,7 @@
         @click="changeStyle ? pushCheck(pushsSelectedInstance) : ''"
         >推送选中实例</Button
       >
-     <!-- <Button size="large" class="commonTwo" @click="pushCheck(pushAllInstance)"
+      <!-- <Button size="large" class="commonTwo" @click="pushCheck(pushAllInstance)"
         >推送所有实例</Button
       >-->
     </div>
@@ -90,6 +90,27 @@
         </Select>
       </div>
     </Modal>
+    <Modal v-model="initModal" :mask-closable="false" width="416">
+      <span slot="close"></span>
+      <div style="padding: 12px 0 0 12px;">
+        <Icon type="ios-help-circle" style="color: #ff9900; font-size: 28px" />
+        <span style="font-size: 16px;margin-left: 12px">提示</span>
+        <div style="margin-left: 40px;margin-top: 12px">
+          是否初始化实例配置？
+        </div>
+      </div>
+      <div slot="footer">
+        <Button
+          @click="cancleInit()"
+          :loading="disinitloading"
+          style="border: 0;"
+          >否</Button
+        >
+        <Button type="primary" @click="confirmInit()" :loading="initloading"
+          >是</Button
+        >
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -100,11 +121,11 @@ import {
   delInstance,
   selNgcInstanceList,
   pushInstance,
-  pushCheck
+  pushCheck,
 } from "@/api/L7";
 export default {
   props: {
-    TableValue: Array
+    TableValue: Array,
   },
   data() {
     return {
@@ -114,7 +135,7 @@ export default {
         { title: "同步", slot: "insync" },
         { title: "修改时间", slot: "last", width: 160 },
         { title: "修改人", slot: "by", width: 170 },
-        { slot: "action", align: "center", title: "", width: 60 }
+        { slot: "action", align: "center", title: "", width: 60 },
       ],
       DeviceModal: false,
       SelectModel: [],
@@ -125,7 +146,10 @@ export default {
       TableData: [],
       changeStyle: false,
       loading: false,
-      selectedValue: []
+      selectedValue: [],
+      initModal: false,
+      initloading: false,
+      disinitloading: false,
     };
   },
   watch: {},
@@ -138,7 +162,7 @@ export default {
     async addInstance() {
       this.DeviceModal = false;
       if (this.data !== []) {
-        this.data.forEach(item => {
+        this.data.forEach((item) => {
           for (let i = 0; i < this.List.length; i++) {
             if (item === this.List[i].l7ServerName) {
               this.l7ServerIds.push(this.List[i].l7ServerId);
@@ -162,7 +186,7 @@ export default {
     // 查询可用（空闲）的nginx实例
     async getL7ServerInfoAll() {
       this.DeviceModal = true;
-      let res = await selUsableL7Server({app_service_id: ''});
+      let res = await selUsableL7Server({ app_service_id: "" });
       if (this.asyncOk(res)) {
         this.List = res.data.result;
       }
@@ -174,24 +198,10 @@ export default {
         title: "提示",
         content: "<p>确定删除此条列表吗？</p>",
         loading: true,
-        onOk: async () => {
-          let res = await delInstance(
-            {
-              nginx_conf_id: this.$route.query.nginx_conf_id
-            },
-            this.ids
-          );
-          if (this.asyncOk(res)) {
-            this.ids = [];
-            this.selectedValue = [];
-            this.$Modal.remove();
-            this.$Message.info("删除成功");
-            this.getNgcInstanceList();
-          } else {
-            this.$Modal.remove();
-            this.$Message.error("删除失败");
-          }
-        }
+        onOk: () => {
+          this.$Modal.remove();
+          this.initModal = true;
+        },
       });
     },
     // 删除勾选中的实例
@@ -199,31 +209,17 @@ export default {
       if (this.selectedValue == "") {
         this.$Message.info("请选中要移除的实例");
       } else {
-        this.ids = this.selectedValue.map(el => {
+        this.ids = this.selectedValue.map((el) => {
           return el.id;
         });
         this.$Modal.confirm({
           title: "提示",
           content: "<p>确定删除此条列表吗？</p>",
           loading: true,
-          onOk: async () => {
-            let res = await delInstance(
-              {
-                nginx_conf_id: this.$route.query.nginx_conf_id
-              },
-              this.ids
-            );
-            if (this.asyncOk(res)) {
-              this.ids = [];
-              this.selectedValue = [];
-              this.$Modal.remove();
-              this.$Message.info("删除成功");
-              this.getNgcInstanceList();
-            } else {
-              this.$Modal.remove();
-              this.$Message.error("删除失败");
-            }
-          }
+          onOk: () => {
+            this.$Modal.remove();
+            this.initModal = true;
+          },
         });
       }
     },
@@ -254,90 +250,102 @@ export default {
       }
     },
     pushCheck(fn) {
-      let arr = this.selectedValue.map(item => {
-        return item.l7_server_id
-      })
-      pushCheck({nginx_conf_id: this.$route.query.nginx_conf_id}, arr).then(res => {
-        if(this.asyncOk(res) && this.isEmptyObject(res.data.result)) {
-          fn()
-        }else if (!this.isEmptyObject(res.data.result)){
-          this.$Modal.confirm({
-            render: (h) => {
-              return h('div', [
-                h('p','您当前需要发布的配置文件中包含以下PLUS版本的配置信息：'),
-                h('p',{
-                  domProps: {
-                    innerHTML: res.data.result.plus_conf_param
-                  },
-                  style: {
-                    color: '#333',
-                    fontSize: '14px'
-                  },
-                } ),
-                h('div', [
-                  h('span', '所选实例中'),
-                  res.data.result.l7ServerName.map(item => {
-                    return h('span', {
-                      'class': 'l7ServerName',
-                      domProps: {
-                        innerHTML: item
-                      },
-                    })
+      let arr = this.selectedValue.map((item) => {
+        return item.l7_server_id;
+      });
+      pushCheck({ nginx_conf_id: this.$route.query.nginx_conf_id }, arr).then(
+        (res) => {
+          if (this.asyncOk(res) && this.isEmptyObject(res.data.result)) {
+            fn();
+          } else if (!this.isEmptyObject(res.data.result)) {
+            this.$Modal.confirm({
+              render: (h) => {
+                return h("div", [
+                  h(
+                    "p",
+                    "您当前需要发布的配置文件中包含以下PLUS版本的配置信息："
+                  ),
+                  h("p", {
+                    domProps: {
+                      innerHTML: res.data.result.plus_conf_param,
+                    },
+                    style: {
+                      color: "#333",
+                      fontSize: "14px",
+                    },
                   }),
-                  h('span', '不支持以上配置。'),
-                ]),
-                h('p','继续发布将跳过以上实例发布。是否继续？')
-              ])
-            },
-            onOk: () => {
-             fn()
-
-            }
-          })
+                  h("div", [
+                    h("span", "所选实例中"),
+                    res.data.result.l7ServerName.map((item) => {
+                      return h("span", {
+                        class: "l7ServerName",
+                        domProps: {
+                          innerHTML: item,
+                        },
+                      });
+                    }),
+                    h("span", "不支持以上配置。"),
+                  ]),
+                  h("p", "继续发布将跳过以上实例发布。是否继续？"),
+                ]);
+              },
+              onOk: () => {
+                fn();
+              },
+            });
+          }
         }
-      })
+      );
     },
     /* 显示loading */
-    showSpin(){
+    showSpin() {
       this.$Spin.show({
         render: (h) => {
-          return h('Spin', [
-            h('div', {
-              'class': 'loader',
-            },[
-              h('svg',{
-                'class': 'circular',
-                attrs: {
-                  viewBox: '25 25 50 50',
-                }
-              },[
-                h('circle',{
-                  'class': 'path',
-                  attrs: {
-                    cx: '50',
-                    cy: '50',
-                    r: '20',
-                    fill: 'none',
-                    'stroke-width': '2',
-                    'stroke-miterlimit': '0'
-                  }
-                })
-              ])
-            ]),
-            h('div', {
+          return h("Spin", [
+            h(
+              "div",
+              {
+                class: "loader",
+              },
+              [
+                h(
+                  "svg",
+                  {
+                    class: "circular",
+                    attrs: {
+                      viewBox: "25 25 50 50",
+                    },
+                  },
+                  [
+                    h("circle", {
+                      class: "path",
+                      attrs: {
+                        cx: "50",
+                        cy: "50",
+                        r: "20",
+                        fill: "none",
+                        "stroke-width": "2",
+                        "stroke-miterlimit": "0",
+                      },
+                    }),
+                  ]
+                ),
+              ]
+            ),
+            h("div", {
               domProps: {
-                innerHTML: '正在推送'
+                innerHTML: "正在推送",
               },
               style: {
-                color: '#333',
-                fontSize: '14px'
+                color: "#333",
+                fontSize: "14px",
               },
-            })
-          ])
-        }
+            }),
+          ]);
+        },
       });
     },
-  /*  //推送全部实例
+    /*  //推送全部实例
     async pushAllInstance() {
       this.showSpin()
       this.selectedValue = this.TableValue
@@ -355,10 +363,10 @@ export default {
       if (this.selectedValue == "") {
         this.$Message.info("请选中要推送的实例");
       } else {
-        this.showSpin()
+        this.showSpin();
 
         let res = await pushInstance(this.selectedValue);
-        this.$Spin.hide()
+        this.$Spin.hide();
         if (this.asyncOk(res)) {
           this.$Message.info(`${res.data.result}`);
           this.getNgcInstanceList();
@@ -366,15 +374,59 @@ export default {
           this.$Message.error(`${res.data.result}`);
         }
       }
-    }
+    },
+    //取消初始化实例配置
+    async cancleInit() {
+      this.disinitloading = true;
+      let temp = false;
+      let res = await delInstance(
+        {
+          nginx_conf_id: this.$route.query.nginx_conf_id,
+          is_init_conf: temp,
+        },
+        this.ids
+      );
+      this.disinitloading = false;
+      this.initModal = false;
+      if (this.asyncOk(res)) {
+        this.ids = [];
+        this.selectedValue = [];
+        this.$Message.info("删除成功");
+        this.getNgcInstanceList();
+      } else {
+        this.$Message.error(`${res.data.result}`);
+      }
+    },
+    //确定初始化实例配置
+    async confirmInit() {
+      this.initloading = true;
+      let temp = true;
+      let res = await delInstance(
+        {
+          nginx_conf_id: this.$route.query.nginx_conf_id,
+          is_init_conf: temp,
+        },
+        this.ids
+      );
+      this.initloading = false;
+      this.initModal = false;
+      if (this.asyncOk(res)) {
+        this.ids = [];
+        this.selectedValue = [];
+        this.$Message.info("删除成功");
+        this.getNgcInstanceList();
+      } else {
+        this.$Message.error(`${res.data.result}`);
+      }
+    },
   },
   mounted() {
     this.TableData = this.TableValue;
     this.$Message.config({
       top: 50,
-      duration: 3
+      duration: 3,
     });
-  }
+  },
 };
 </script>
 
@@ -432,11 +484,20 @@ export default {
   border: none;
 }
 @keyframes ani-demo-spin {
-  from { transform: rotate(0deg);}
-  50%  { transform: rotate(180deg);}
-  to   { transform: rotate(360deg);}
+  from {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
-/deep/.demo-spin-icon-load{
+/deep/.demo-spin-icon-load {
   animation: ani-demo-spin 1s linear infinite;
+}
+/deep/.ivu-modal-footer {
+  border: #fff;
 }
 </style>

@@ -8,19 +8,19 @@
             <FormItem prop="usernumber">
               <Input
                 v-model="loginForm.usernumber"
-                placeholder="Enter your username"
+                placeholder="请输入账号"
               ></Input>
             </FormItem>
             <FormItem prop="password" class="password">
               <Input
                 v-model="loginForm.password"
-                placeholder="Enter your password"
+                placeholder="请输入密码"
                 type="password"
                 @on-enter="toLogin"
               ></Input>
             </FormItem>
           </Form>
-          <div class="forgot" @click="forgotPanel = true">忘记密码？</div>
+          <!-- <div class="forgot" @click="forgotPanel = true">忘记密码？</div> -->
           <Button
             type="primary"
             class="submit"
@@ -73,7 +73,7 @@ export default {
   data() {
     const validatePassCheck = (rule, value, callback) => {
       if (value === "") {
-        return callback(new Error("请输入密码"));
+        return callback(new Error("密码不能为空"));
       } else if (value !== this.loginForm.password) {
         return callback(new Error("两次密码不一致"));
       } else {
@@ -113,7 +113,7 @@ export default {
         if (valid) {
           this.login_to();
         } else {
-          this.$Message.error("Fail!");
+          this.$Message.error("登录失败!");
         }
       });
 

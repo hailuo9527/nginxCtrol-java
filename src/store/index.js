@@ -5,6 +5,7 @@ import login from './module/login'
 import app from './module/app'
 import L4 from './module/L4'
 import L7 from './module/L7'
+import VMware from './module/VMware'
 import common from './module/common'
 
 Vue.use(Vuex)
@@ -17,7 +18,7 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    login, L4, L7, common, app
+    login, L4, L7, common, app, VMware
   },
   plugins: [createPersistedState({
     reducer(val) {

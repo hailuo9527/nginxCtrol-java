@@ -44,7 +44,7 @@
             <!-- <Loading v-if="loading" /> -->
           </div>
           <div style="position: absolute;bottom: 0;width: 100%">
-            <div style="width: 278px;position: absolute;left: 28%;bottom: 0;">
+            <div style="width: 278px;position: absolute;left: 28%;bottom: 20px;">
               <Upload multiple action="/url" :before-upload="handleUpload">
                 <div class="upload">
                   <div class="upload-content">
@@ -96,12 +96,8 @@
               />系统应用版本:
               <span>{{ result.app_version }}</span>
             </div>
-            <div>
               <Icon type="md-key" size="26" style="color: #39f;" />系统ID:
-            </div>
-            <div style="padding: 4px 0 0 70px;">
               <span>{{ result.sid }}</span>
-            </div>
             <!-- <Loading v-if="loading" /> -->
           </div>
         </div>

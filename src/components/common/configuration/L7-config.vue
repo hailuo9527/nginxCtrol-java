@@ -128,9 +128,13 @@ mikey.zhaopeng * @Date: 2020-06-09 11:41:08 * @Last Modified by: mikey.zhaopeng
       </div>
 
       <!--virtual servers-->
-      <div class="l7_config_column column_body column_body_servers">
+      <div
+        class="l7_config_column column_body column_body_servers"
+        ref="virtualservers"
+      >
         <div class="servers">
           <div
+            ref="start2"
             class="server_item"
             @click="selectVirtualServer(index)"
             :key="index"
@@ -172,7 +176,6 @@ mikey.zhaopeng * @Date: 2020-06-09 11:41:08 * @Last Modified by: mikey.zhaopeng
       <div class="l7_config_column column_body" ref="locations">
         <div class="locations">
           <div
-            ref="start"
             class="ctrl-list-item"
             @click="selectLocation(index)"
             v-for="(item, index) in ngcLocationsGroup"
@@ -194,11 +197,17 @@ mikey.zhaopeng * @Date: 2020-06-09 11:41:08 * @Last Modified by: mikey.zhaopeng
                 item.url_path_route_value === "/" ? "default route" : ""
               }}</span>
             </span>
+            <span ref="end2" class="ctrl-list-item__corner-left">
+              <span class="ctrl-list-item__corner-inner"></span>
+            </span>
             <Icon
               type="md-create"
               class="ctrl-list-item__edit"
               @click="editLocation(index, true)"
             />
+            <span ref="start" class="ctrl-list-item__corner-right">
+              <span class="ctrl-list-item__corner-inner"></span>
+            </span>
           </div>
         </div>
       </div>
@@ -206,6 +215,7 @@ mikey.zhaopeng * @Date: 2020-06-09 11:41:08 * @Last Modified by: mikey.zhaopeng
       <div
         class="l7_config_column column_body column_body_upstream"
         ref="upstreamGroup"
+        style="padding-left: 18px;padding-right: 14px;"
       >
         <div class="upstream-groups">
           <div
@@ -520,6 +530,7 @@ export default {
       modify: false, // 新增/修改配置， 默认新增
       virtualServerIndex: 0, // 选中的virtualServer 序号
       editVirtualServerIndex: 0, // 编辑的virtualServer 序号
+      activevirtualServerIndex: null,
       locationsIndex: 0, // locations 序号
       activeLocationIndex: null,
       upstreamIndex: null, // upstream 序号
@@ -626,48 +637,150 @@ export default {
     },
     drawLocationsToGroup(start, end) {
       this.clearCanvas();
-      if (this.activeLocationIndex !== null) {
-        JSON.parse(JSON.stringify(this.config)).ngcUpstreamGroups.map(
-          (value, key) => {
+      this.$nextTick(() => {
+        if (this.activeLocationIndex !== null) {
+          let temp = false;
+          JSON.parse(JSON.stringify(this.config)).ngcUpstreamGroups.map(
+            (value, key) => {
+              if (
+                this.ngcLocationsGroup[
+                  this.activeLocationIndex
+                ].proxy_url.split("//")[1] === value.group_name
+              ) {
+                temp = true;
+                value.isLine = true;
+                drawLine(
+                  this.$refs.canvas,
+                  start[this.activeLocationIndex],
+                  end[key]
+                );
+                this.ngcUpstreamServers = value.ngcUpstreamServers || [];
+                this.ngcUpstreamServers.map((item2, index2) => {
+                  this.$nextTick(() => {
+                    drawLine(
+                      this.$refs.canvas,
+                      this.$refs.start1[key],
+                      this.$refs.end1[index2]
+                    );
+                  });
+                }, this);
+              } else {
+                if (!temp) {
+                  this.ngcUpstreamServers = [];
+                }
+                value.isLine = false;
+              }
+            }
+          );
+        } else {
+          let temp = false;
+          this.ngcLocationsGroup.map((item, index) => {
+            //   if (this.upstreamIndex !== null) {
+            // if (
+            //   item.proxy_url.split("//")[1] ===
+            //   this.config.ngcUpstreamGroups[this.upstreamIndex].group_name
+            // ) {
+            //   this.$set(item, "isLine", true);
+            //   drawLine(
+            //     this.$refs.canvas,
+            //     start[index],
+            //     end[this.upstreamIndex]
+            //   );
+            // } else {
+            //   this.$set(item, "isLine", false);
+            // }
+            //   }
+            JSON.parse(JSON.stringify(this.config)).ngcUpstreamGroups.map(
+              function(item1, index1) {
+                if (item.proxy_url.split("//")[1] === item1.group_name) {
+                  temp = true;
+                  this.$set(item1, "isLine", true);
+                  drawLine(this.$refs.canvas, start[index], end[index1]);
+                  this.ngcUpstreamServers = item1.ngcUpstreamServers || [];
+                  this.ngcUpstreamServers.map((item2, index2) => {
+                    this.$nextTick(() => {
+                      drawLine(
+                        this.$refs.canvas,
+                        this.$refs.start1[index1],
+                        this.$refs.end1[index2]
+                      );
+                    });
+                  }, this);
+                } else {
+                  if (!temp) {
+                    this.ngcUpstreamServers = [];
+                  }
+                  this.$set(item1, "isLine", false);
+                }
+              },
+              this
+            );
+          });
+        }
+      });
+    },
+    drawServerToLocations(start, end) {
+      this.clearCanvas();
+      this.$nextTick(() => {
+        if (this.activevirtualServerIndex !== null) {
+          this.ngcLocationsGroup.map((value, key) => {
             if (
-              this.ngcLocationsGroup[this.activeLocationIndex].proxy_url.split(
-                "//"
-              )[1] === value.group_name
+              this.virtualServerGroup[this.activevirtualServerIndex]
+                .virtual_id === value.virtual_id
             ) {
               value.isLine = true;
-              drawLine(
-                this.$refs.canvas,
-                start[this.activeLocationIndex],
-                end[key]
-              );
+              if (start !== undefined && end !== undefined) {
+                drawLine(
+                  this.$refs.canvas,
+                  start[this.activevirtualServerIndex],
+                  end[key]
+                );
+              }
             } else {
               value.isLine = false;
             }
-          }
-        );
-      } else {
-        this.ngcLocationsGroup.map((item, index) => {
-          if (this.upstreamIndex !== null) {
+          });
+        } else if (this.activeLocationIndex !== null) {
+          this.virtualServerGroup.map((item, index) => {
             if (
-              item.proxy_url.split("//")[1] ===
-              this.config.ngcUpstreamGroups[this.upstreamIndex].group_name
+              item.virtual_id ===
+              this.ngcLocationsGroup[this.activeLocationIndex].virtual_id
             ) {
               this.$set(item, "isLine", true);
               drawLine(
                 this.$refs.canvas,
                 start[index],
-                end[this.upstreamIndex]
+                end[this.activeLocationIndex]
               );
             } else {
               this.$set(item, "isLine", false);
             }
+          });
+        } else {
+          if (this.upstreamIndex !== null) {
+            this.ngcLocationsGroup.map((item, index) => {
+              if (
+                item.proxy_url.split("//")[1] ===
+                this.ngcUpstreamGroups.group_name
+              ) {
+                this.virtualServerGroup.map((value, key) => {
+                  if (item.virtual_id === value.virtual_id) {
+                    this.$set(value, "isLine", true);
+                    drawLine(this.$refs.canvas, start[key], end[index]);
+                  } else {
+                    this.$set(value, "isLine", false);
+                  }
+                }, this);
+              }
+            });
           }
-        });
-      }
+        }
+      });
     },
     drawLine() {
       this.drawGroupToServers(this.$refs.start1, this.$refs.end1);
       this.drawLocationsToGroup(this.$refs.start, this.$refs.end);
+      this.drawServerToLocations(this.$refs.start2, this.$refs.end2);
     },
     /* 滚动重绘 */
     checkDivScrollTop(el, callback, start, end) {
@@ -711,6 +824,15 @@ export default {
             JSON.parse(JSON.stringify(res.data.result)).ngcVirtualServers[0]
               .ngcLocations || [];
         }
+        /** 加载页面画线 start */
+        this.activevirtualServerIndex = 0;
+        this.activeLocationIndex = null;
+        this.upstreamServerIndex = null;
+        this.$nextTick(() => {
+          this.drawServerToLocations(this.$refs.start2, this.$refs.end2);
+          this.drawLocationsToGroup(this.$refs.start, this.$refs.end);
+        });
+        /** 加载页面画线 end */
         this.maindata.push(this.config.work_rlimit_nofile);
         this.maindata.push(this.config.worker_connections);
         this.maindata.push(this.config.worker_processes);
@@ -842,39 +964,47 @@ export default {
     /* 选择virtualServer */
     selectVirtualServer(index) {
       this.virtualServerIndex = index;
+      this.activevirtualServerIndex = index;
       this.ngcVirtualServers = JSON.parse(
         JSON.stringify(this.config)
       ).ngcVirtualServers[this.virtualServerIndex];
-      //console.log(this.ngcVirtualServers)
       this.ngcLocationsGroup = this.ngcVirtualServers.ngcLocations;
       this.activeLocationIndex = null;
-      this.clearCanvas();
+      this.upstreamServerIndex = null;
+      //   this.ngcUpstreamServers = [];
+      //   this.clearCanvas();
+      this.drawServerToLocations(this.$refs.start2, this.$refs.end2);
+      this.drawLocationsToGroup(this.$refs.start, this.$refs.end);
+      //   this.drawGroupToServers(this.$refs.start1, this.$refs.end1);
     },
     /* 选择location */
     selectLocation(index) {
       this.activeLocationIndex = index;
       this.upstreamIndex = null;
+      this.activevirtualServerIndex = null;
       this.ngcUpstreamServers = [];
-
       //this.ngcLocations = this.config.ngcVirtualServers[this.virtualServerIndex].ngcLocations[]
       this.drawLocationsToGroup(this.$refs.start, this.$refs.end);
+      this.drawServerToLocations(this.$refs.start2, this.$refs.end2);
     },
     /* 切换upgroup */
     selectUpstream(index) {
       this.upstreamIndex = index;
       this.upstreamServerIndex = null;
       this.activeLocationIndex = null;
+      this.activevirtualServerIndex = null;
       this.ngcUpstreamGroups = this.config.ngcUpstreamGroups[index];
       this.ngcUpstreamServers = this.ngcUpstreamGroups.ngcUpstreamServers || [];
-      this.$nextTick(() => {
-        this.drawGroupToServers(this.$refs.start1, this.$refs.end1);
-        this.drawLocationsToGroup(this.$refs.start, this.$refs.end);
-      });
+      //   this.$nextTick(() => {
+      //     this.drawGroupToServers(this.$refs.start1, this.$refs.end1);
+      //     this.drawLocationsToGroup(this.$refs.start, this.$refs.end);
+      //     this.drawServerToLocations(this.$refs.start2, this.$refs.end2);
+      //   });
     },
     /* 切换upserver */
     selectUpServer(index) {
       this.upstreamServerIndex = index;
-      this.drawLine();
+      //   this.drawLine();
     },
     /* 提交配置 */
     async submitConfig() {
@@ -953,6 +1083,7 @@ export default {
               this.editVirtualServerIndex,
               1
             );
+            this.virtualServerGroup = this.config.ngcVirtualServers;
             this.ngcLocationsGroup =
               this.config.ngcVirtualServers.ngcLocations || [];
             break;
@@ -972,6 +1103,9 @@ export default {
           this.config.ngcVirtualServers[
             this.virtualServerIndex
           ].ngcLocations.splice(this.locationsIndex, 1);
+          this.ngcLocationsGroup =
+            this.config.ngcVirtualServers[this.virtualServerIndex]
+              .ngcLocations || [];
           break;
         case "upstream":
           this.config.ngcUpstreamGroups.splice(this.upstreamIndex, 1);
@@ -1090,6 +1224,12 @@ export default {
     window.addEventListener("resize", this.drawLine);
   },
   updated() {
+    this.checkDivScrollTop(
+      "virtualservers",
+      this.drawServerToLocations,
+      this.$refs.start2,
+      this.$refs.end2
+    );
     this.checkDivScrollTop(
       "locations",
       this.drawLocationsToGroup,
