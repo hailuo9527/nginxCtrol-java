@@ -1,153 +1,49 @@
 <template>
-    <div class="layout">
-        <div class="logo">ngController</div>
-        <div class="layout_content" v-if="loading">
-            <Header/>
-            <router-view class="content"/>
-        </div>
-
-        <!--<div class="layout_content" v-if="!loading">
-            <Header/>
-            <router-view class="content"/>
-        </div>-->
+    <div class="layout_default">
+        <header>
+            <!-- 导航栏 -->
+            <Header></Header>
+        </header>
+        <ViewSplit>
+            <!-- 导航路由 -->
+            <div slot="splitTop" style="height:100%;">
+                <router-view />
+            </div>
+            <!-- 底部任务栏 -->
+            <div slot="splitBottom">
+                <Taskbar></Taskbar>
+            </div>
+        </ViewSplit>
     </div>
 </template>
 <script>
-    import Header from '@/components/header/Header.vue'
-    import { mapActions } from 'vuex'
-    export default {
-        name: 'layout_default',
-        data () {
-          return {
-              loading: false
-          }
-        },
-        components: {
-            Header
-        },
-        methods: {
-            ...mapActions(['getAsideList', 'getL7AsideList', 'getAppAsideList']),
-            handleSpinCustom() {
-                this.$Spin.show({
-                    render: (h) => {
-                        return h('Spin', [
-                            h('div', {
-                                'class': 'loader',
-                            },[
-                                h('svg',{
-                                    'class': 'circular',
-                                    attrs: {
-                                        viewBox: '25 25 50 50',
-                                    }
-                                },[
-                                    h('circle',{
-                                        'class': 'path',
-                                        attrs: {
-                                            cx: '50',
-                                            cy: '50',
-                                            r: '20',
-                                            fill: 'none',
-                                            'stroke-width': '2',
-                                            'stroke-miterlimit': '0'
-                                        }
-                                    })
-                                ])
-                            ]),
-
-                        ])
-                    }
-                });
-                /*this.getAsideList().then(res => {
-                    if(res.data.code === 'success') {
-                        this.getL7AsideList().then(res => {
-                            if(res.data.code === 'success'){
-                                this.getAppAsideList().then(res => {
-                                    if(res.data.code === 'success'){
-                                        this.loading = true
-                                        this.$Spin.hide();
-                                    }
-                                })
-
-                            }
-                        })
-                    }
-                })*/
-                this.loading = true
-                this.$Spin.hide();
-            }
-        },
-        mounted() {
-           //
-             this.handleSpinCustom()
-        }
-    }
+import Header from "@/components/header/Header.vue";
+import ViewSplit from "@/components/layout/ViewSplit";
+import Taskbar from "@/components/footer/Taskbar";
+export default {
+    name: "layout_default",
+    data() {
+        return {};
+    },
+    components: {
+        Header,
+        ViewSplit,
+        Taskbar,
+    },
+};
 </script>
 <style lang="less">
-    @import "default";
-    .loader {
-        width: 100px;
-        height: 50px;
-        position: relative;
-        margin: 0 auto;
+.layout_default {
+    width: 100%;
+    height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    header {
+        height: 70px;
     }
-    @keyframes rotate {
-        100%{
-            transform: rotate(1turn);
-        }
-
+    .view-split {
+        height: calc(100vh - 70px);
     }
-    @keyframes dash {
-        0% {
-            stroke-dasharray: 1, 200;
-            stroke-dashoffset: 0;
-        }
-        50% {
-            stroke-dasharray: 89, 200;
-            stroke-dashoffset: -35;
-        }
-        100% {
-            stroke-dasharray: 89, 200;
-            stroke-dashoffset: -124;
-        }
-    }
-    @keyframes color {
-        /* 0%, 100% {
-              stroke: #d62d20;
-          }
-         40% {
-             stroke: #0057e7;
-         }
-         66% {
-             stroke: #008744;
-         }
-         80%, 90% {
-             stroke: #ffa700;
-         }*/
-        0%, 100% {
-            stroke: #000;
-        }
-
-    }
-
-    .circular {
-        -webkit-animation: rotate 2s linear infinite;
-        animation: rotate 2s linear infinite;
-        height: 100%;
-        -webkit-transform-origin: center center;
-        transform-origin: center center;
-        width: 100%;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: auto;
-    }
-    .path {
-        stroke-dasharray: 1,200;
-        stroke-dashoffset: 0;
-        -webkit-animation: dash 1.5s ease-in-out infinite,color 6s ease-in-out infinite;
-        animation: dash 1.5s ease-in-out infinite,color 6s ease-in-out infinite;
-        stroke-linecap: round;
-    }
+}
 </style>
